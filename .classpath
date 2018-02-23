@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/jackson-annotations-2.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/jackson-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/jackson-databind-2.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/java-cup-0.11a.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/ScaleSpace_Filters.jar"/>
+	<classpathentry kind="lib" path="D:/Active_Seg/GOOGLESUMMERCODE2016-master/GOOGLESUMMERCODE2016-master/jars/weka-dev-3.7.11.jar"/>
+	<classpathentry kind="lib" path="D:/ij150-win-java8/ImageJ/ij.jar" sourcepath="D:/ij150-win-java8/ImageJ/ij.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
