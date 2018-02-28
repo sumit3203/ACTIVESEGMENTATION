@@ -14,7 +14,9 @@ public class ProjectInfo {
 	private String createdDate;
 	private String modifyDate;
 	private int classes;
-	private String path;
+	private String projectPath;
+	private String pluginPath;
+	
 	private String trainingStack;
 	private String testingStack;
 	private List<Map<String,String>> filters= new ArrayList<Map<String,String>>();
@@ -41,12 +43,7 @@ public class ProjectInfo {
 	public void setModifyDate(String modifyDate) {
 		this.modifyDate = modifyDate;
 	}
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
+	
 	public List<Map<String, String>> getFilters() {
 		return filters;
 	}
@@ -104,6 +101,18 @@ public class ProjectInfo {
 	}
 	public String getTrainingStack() {
 		return trainingStack;
+	}
+	public String getProjectPath() {
+		return projectPath;
+	}
+	public void setProjectPath(String projectPath) {
+		this.projectPath = projectPath;
+	}
+	public String getPluginPath() {
+		return pluginPath;
+	}
+	public void setPluginPath(String pluginPath) {
+		this.pluginPath = pluginPath;
 	}
 	public void setTrainingStack(String trainingStack) {
 		this.trainingStack = trainingStack;

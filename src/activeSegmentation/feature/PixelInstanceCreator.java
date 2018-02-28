@@ -64,7 +64,7 @@ public class PixelInstanceCreator implements IFeature {
 
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		originalImage= IJ.openImage(projectInfo.getTrainingStack());
-		featurePath=projectInfo.getPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
+		featurePath=projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
 		File[] featureImages=new File(featurePath+"SLICE-1/").listFiles();
 		this.numberOfFeatures=featureImages.length;
 		labels=new String[numberOfFeatures];

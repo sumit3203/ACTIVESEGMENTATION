@@ -54,7 +54,7 @@ public class TestFile {
 		metaInfo.setComment("Dummy");
 		metaInfo.setCreatedDate("12/06/2016");
 		metaInfo.setModifyDate("12/07/2016");
-		metaInfo.setPath("C://Program Files//ImageJ//plugins//activeSegmentation//");
+		metaInfo.setProjectPath("C://Program Files//ImageJ//plugins//activeSegmentation//");
 		Map<String,String> keywordList= new HashMap<String, String>();
 		keywordList.put("Class1", "BCK");
 		keywordList.put("Class2", "CELL");

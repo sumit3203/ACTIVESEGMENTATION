@@ -49,8 +49,7 @@ public class Active_Segmentation_ implements PlugIn {
        // System.out.println(Active_Segmentation_.class.getProtectionDomain().getCodeSource().getLocation());
 		IProjectManager dataManager= new ProjectManagerImp();
 		
-		
-		
+	
 		
 		
 		//ILearningManager  learningManager= new ClassifierManager(dataManager);

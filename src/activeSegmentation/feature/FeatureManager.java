@@ -331,8 +331,8 @@ public class FeatureManager implements IFeatureManager {
 
 		for(FeatureInfo featureInfo : projectInfo.getFeatureList() ){
 			int classNum=featureInfo.getClassLabel();
-			System.out.println(projectInfo.getPath()+featureInfo.getZipFile());
-			List<Roi> classRoiList=openZip(projectInfo.getPath()+featureInfo.getZipFile());
+			System.out.println(projectInfo.getProjectPath()+featureInfo.getZipFile());
+			List<Roi> classRoiList=openZip(projectInfo.getProjectPath()+featureInfo.getZipFile());
 			System.out.println(classRoiList.size());
 			for( String s: featureInfo.getSliceList().keySet()){
 				Integer sliceNum= Integer.parseInt(s.substring(s.length()-1));
@@ -396,8 +396,8 @@ public class FeatureManager implements IFeatureManager {
 
 			String fileName=Common.ROISET+classIndex+Common.FORMAT;
 			if(classRois!=null & classRois.size()>0){
-				System.out.println("examples"+projectInfo.getPath());
-				saveExamples(projectInfo.getPath()+fileName,classRois );
+				System.out.println("examples"+projectInfo.getProjectPath());
+				saveExamples(projectInfo.getProjectPath()+fileName,classRois );
 				featureInfo.setZipFile(fileName);
 			}
 

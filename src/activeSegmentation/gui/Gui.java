@@ -58,7 +58,7 @@ public class Gui {
 		System.out.println(event.toString());
 		if(event ==FILTER_BUTTON_PRESSED ){
 			if(filterPanel==null){
-			   filterPanel=new FilterPanel(new FilterManager(projectManager,"D://ij150-win-java8/ImageJ/plugins/activeSegmentation/"));
+			   filterPanel=new FilterPanel(new FilterManager(projectManager));
 			SwingUtilities.invokeLater(filterPanel);
 			}
 

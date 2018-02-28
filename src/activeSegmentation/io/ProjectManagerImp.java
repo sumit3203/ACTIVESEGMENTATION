@@ -160,7 +160,7 @@ public class ProjectManagerImp implements IProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			projectInfo.setPath(path);
+			projectInfo.setProjectPath(path);
 			System.out.println("SAVING");
 			mapper.writeValue(new File(path+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
 
@@ -184,15 +184,16 @@ public class ProjectManagerImp implements IProjectManager {
 	@Override
 	public ProjectInfo createProject(String projectName, String projectType,String projectDirectory, 
 		     String projectDescription,
-			String trainingImage,String testImage){
+			String trainingImage,String pluginDir){
 
 		projectInfo= new ProjectInfo();
 		path=projectDirectory;
 		System.out.println(path);
-		projectInfo.setPath(projectDirectory);
+		projectInfo.setProjectPath(projectDirectory);
 		projectInfo.setProjectName(projectName);
 		projectInfo.setProjectType(projectType);
 		projectInfo.setProjectDescription(projectDescription);
+		projectInfo.setPluginPath(pluginDir);
 		//DEFAULT 2 classes
 		projectInfo.setClasses(2);
 		if(trainingImage!= null && !trainingImage.isEmpty()){
@@ -203,13 +204,13 @@ public class ProjectManagerImp implements IProjectManager {
 			IJ.saveAs(trainingImagePlus,trainingImage.substring(trainingImage.lastIndexOf(".")),projectString+"/images/training");
 			projectInfo.setTrainingStack(projectString+"/images/training"+trainingImage.substring(trainingImage.lastIndexOf(".")));
 		}
-		if(testImage!= null && !testImage.isEmpty()){
+		/*if(testImage!= null && !testImage.isEmpty()){
 			ImagePlus testImagePlus=IJ.openImage(trainingImage);
 			String projectString=path+projectName+"/"+ "Testing";
 			createProjectSpace(projectString, testImagePlus.getImageStackSize());
 			projectInfo.setTrainingStack(projectString+"/images/Testing."+trainingImage.substring(trainingImage.lastIndexOf(".")));
 			IJ.saveAs(testImagePlus,testImage.substring(testImage.lastIndexOf(".")),projectString+"/filters");
-		}
+		}*/
 		writeMetaInfo(projectInfo);
 		return projectInfo;
 	}

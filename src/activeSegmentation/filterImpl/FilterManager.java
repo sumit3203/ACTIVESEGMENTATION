@@ -72,14 +72,14 @@ public class FilterManager implements IFilterManager {
 	
 	
 
-	public FilterManager(IProjectManager projectManager, String path){
+	public FilterManager(IProjectManager projectManager){
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		System.out.println(projectManager.getMetaInfo().getTrainingStack());
 		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 		try {
-			System.out.println("path"+path);
-			loadFilters(path);
+			System.out.println(this.projectInfo.getPluginPath());
+			loadFilters(this.projectInfo.getPluginPath());
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
@@ -91,17 +91,16 @@ public class FilterManager implements IFilterManager {
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
-		// IN ORIGINAL WILL BE LOADED FROM PROPERTY FILE
 
 		File f=new File(home);
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
 		for(String plugin: plugins){
-			System.out.println(plugin);
-			System.out.println(installJarPlugins(home+plugin));
+			//System.out.println(plugin);
+			//System.out.println(installJarPlugins(home+"/"+plugin));
 			if(plugin.endsWith(Common.JAR))
 			{ 
-				classes.addAll(installJarPlugins(home+plugin));
+				classes.addAll(installJarPlugins(home+"/"+plugin));
 			}
 			else if (plugin.endsWith(Common.DOTCLASS)){
 				classes.add(plugin);
@@ -110,11 +109,11 @@ public class FilterManager implements IFilterManager {
 		}
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 		for(String plugin: classes){
-			System.out.println(plugin);
+			//System.out.println(plugin);
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 			for(Class<?> cs:classesList){
 				if(cs.getSimpleName().equals(Common.IFILTER)){
-					System.out.println(cs.getSimpleName());
+					//System.out.println(cs.getSimpleName());
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
 					filterMap.put(thePlugIn.getKey(), thePlugIn);
 				}
@@ -153,7 +152,7 @@ public class FilterManager implements IFilterManager {
 					 * */
 					
 					//String projectPath="D:/astrocytes/training/filters/";
-					String projectString=projectInfo.getPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
+					String projectString=projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
 					
 					for(int i=1; i<=originalImage.getStackSize(); i++){
 		
@@ -318,7 +317,7 @@ public class FilterManager implements IFilterManager {
 			if(filterMap.get(key).getImageStack()!= null && 
 					filterMap.get(key).getImageStack().size()>0 ){
 				IJ.save(new ImagePlus(key,filterMap.get(key).getImageStack()), 
-						projectInfo.getPath()+key+".tif" );
+						projectInfo.getProjectPath()+key+".tif" );
 				filters.put(Common.FILTERFILELIST,key+".tif" );
 			}
 				
@@ -339,8 +338,8 @@ public class FilterManager implements IFilterManager {
 			updateFilterSetting(filterName, filter);
 			if(null!=filter.get(Common.FILTERFILELIST)){
 				String fileName=filter.get(Common.FILTERFILELIST);
-				System.out.println(projectInfo.getPath()+fileName);
-				ImagePlus image=new ImagePlus(projectInfo.getPath()+fileName);
+				System.out.println(projectInfo.getProjectPath()+fileName);
+				ImagePlus image=new ImagePlus(projectInfo.getProjectPath()+fileName);
 				image.show();
 				filterMap.get(filterName).setImageStack(image.getImageStack());
 
