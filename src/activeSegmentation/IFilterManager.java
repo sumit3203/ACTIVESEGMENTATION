@@ -5,14 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-
-
-
-
-
-
-
-import weka.core.Instance;
 import ij.ImagePlus;
 import ij.ImageStack;
 

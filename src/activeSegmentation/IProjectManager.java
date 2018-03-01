@@ -1,8 +1,6 @@
 package activeSegmentation;
 
-import ij.gui.Roi;
 
-import java.util.List;
 
 import activeSegmentation.io.ProjectInfo;
 import weka.core.Instances;

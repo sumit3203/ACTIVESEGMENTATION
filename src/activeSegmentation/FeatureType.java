@@ -3,7 +3,6 @@ package activeSegmentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import ij.ImagePlus;
 import ij.ImageStack;
 import ijaux.scale.ZernikeMoment.Complex;
 

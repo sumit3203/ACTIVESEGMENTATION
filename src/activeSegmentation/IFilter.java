@@ -1,7 +1,6 @@
 package activeSegmentation;
 
 
-import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ImageProcessor;
 

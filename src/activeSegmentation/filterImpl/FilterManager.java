@@ -5,6 +5,9 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,15 +18,16 @@ import java.util.zip.ZipInputStream;
 
 
 
+
+
+
 import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
 import activeSegmentation.filterImpl.ApplyZernikeFilter;
 import activeSegmentation.IProjectManager;
-import activeSegmentation.feature.InstanceUtil;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.io.ProjectInfo;
-import weka.core.Instance;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -88,6 +92,7 @@ public class FilterManager implements IFilterManager {
 		
 	}
 
+	
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
@@ -96,16 +101,18 @@ public class FilterManager implements IFilterManager {
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
 		for(String plugin: plugins){
-			//System.out.println(plugin);
+			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+			System.out.println(plugin);
 			//System.out.println(installJarPlugins(home+"/"+plugin));
 			if(plugin.endsWith(Common.JAR))
 			{ 
 				classes.addAll(installJarPlugins(home+"/"+plugin));
+				//addFile(home+"/"+plugin);
 			}
 			else if (plugin.endsWith(Common.DOTCLASS)){
 				classes.add(plugin);
 			}
-			break;
+			//break;
 		}
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 		for(String plugin: classes){
@@ -114,7 +121,10 @@ public class FilterManager implements IFilterManager {
 			for(Class<?> cs:classesList){
 				if(cs.getSimpleName().equals(Common.IFILTER)){
 					//System.out.println(cs.getSimpleName());
+					//IJ.log(plugin);
+					//IJ.debugMode=true;
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
+				   
 					filterMap.put(thePlugIn.getKey(), thePlugIn);
 				}
 			}
@@ -359,4 +369,49 @@ public class FilterManager implements IFilterManager {
 		return originalImage.duplicate();
 	}
 
+	
+	
+	//
+	
+	 /**
+     * Parameters of the method to add an URL to the System classes. 
+     */
+    private static final Class<?>[] parameters = new Class[]{URL.class};
+
+    /**
+     * Adds a file to the classpath.
+     * @param s a String pointing to the file
+     * @throws IOException
+     */
+    public static void addFile(String s) throws IOException {
+        File f = new File(s);
+        addFile(f);
+    }
+
+    /**
+     * Adds a file to the classpath
+     * @param f the file to be added
+     * @throws IOException
+     */
+    public static void addFile(File f) throws IOException {
+        addURL(f.toURI().toURL());
+    }
+
+    /**
+     * Adds the content pointed by the URL to the classpath.
+     * @param u the URL pointing to the content to be added
+     * @throws IOException
+     */
+    public static void addURL(URL u) throws IOException {
+        URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+        Class<?> sysclass = URLClassLoader.class;
+        try {
+            Method method = sysclass.getDeclaredMethod("addURL",parameters);
+            method.setAccessible(true);
+            method.invoke(sysloader,new Object[]{ u }); 
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new IOException("Error, could not add URL to system classloader");
+        }        
+    }
 }
