@@ -50,8 +50,9 @@ public class ApplyZernikeFilter extends RecursiveTask<Pair<Integer,Complex>>{
 	@Override
 	protected Pair<Integer,Complex> compute() {
 		//Update index of a given image 
-		filter.updatePosition(index);
-		return filter.applyFilter(imp);
+	//	filter.updatePosition(index);
+	//	return filter.applyFilter(imp);
+		return null;
 	}
 	
 	/**
@@ -63,10 +64,10 @@ public class ApplyZernikeFilter extends RecursiveTask<Pair<Integer,Complex>>{
 	public static ArrayList<Pair<Integer,Complex>> ComputeValues(ImagePlus originalImage, IFilter filter) {
     	ArrayList<Pair<Integer,Complex>> arr= new ArrayList<Pair<Integer,Complex>>();    	
     	synchronized(filter) {
-    		filter.updatePosition(1);
-    		Pair<Integer,Complex> rv = filter.applyFilter(originalImage.getImageStack().getProcessor(1));
-    		arr.add(rv);
-    		filter.notifyAll();
+    	//	filter.updatePosition(1);
+    	//	Pair<Integer,Complex> rv = filter.applyFilter(originalImage.getImageStack().getProcessor(1));
+    	//	arr.add(rv);
+    	//	filter.notifyAll();
     	}
 		long prevTime=System.currentTimeMillis();		
 		List<ApplyZernikeFilter> tasks = new ArrayList<>();

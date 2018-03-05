@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import activeSegmentation.IProjectManager;
+import activeSegmentation.ProjectType;
 
 
 public class CreatProject implements Runnable {
@@ -38,12 +39,13 @@ public class CreatProject implements Runnable {
 	private JTextField projectDField= new JTextField();
 	private JTextField trainingImageP = new JTextField();
 	private JTextField pluginsDir = new JTextField();
-	String[] projects = { "Segmentation", "Classification" };
-	JComboBox<String> projectList = new JComboBox<String>(projects);
+	
+	JComboBox<ProjectType> projectList;
 	private JFrame createProject;
 	private IProjectManager projectManager;
 	public CreatProject(IProjectManager projectManager) {
 		this.projectManager=projectManager;
+		projectList= new JComboBox<ProjectType>(ProjectType.values());
 	}
 	/** main GUI panel (containing the buttons panel on the left,
 	 *  the image in the center and the annotations panel on the right */
@@ -51,7 +53,7 @@ public class CreatProject implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		
 		JFrame mainFrame = new JFrame();
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

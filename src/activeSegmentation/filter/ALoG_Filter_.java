@@ -66,7 +66,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	private int nPasses=1;
 	private int pass;
-	private int position_id;
 
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
@@ -95,11 +94,9 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Anisotropic Laplace of Gaussian";
 	
-	//private final String type="Segmentation";
+	private final int TYPE=1;
 	
-	//private final String PATH="D:/ij150-win-java8/ImageJ/plugins/activeSegmentation/images/ALOG/";
-
-
+	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
 	
@@ -151,30 +148,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		image.show();
 	}
 
-	/**
-	 * 
-	 * This method Apply filter to input image (in place)
-	 * @param inputImage input image
-	 * @param size kernel size (it must be odd)
-	 * @param nAngles number of angles
-	 * @return false if error
-	 */
-	@Override
-	public Pair<Integer,ImageStack> applyFilter(ImageProcessor ip){
-		int index = position_id;
-		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
-			GScaleSpace sp=new GScaleSpace(sigma);
-			imageStack = filter(ip.duplicate(), sp,sigma,imageStack);
-			/*for(int i=1;i<=imageStack.size();i++){
-				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, imageStack.getProcessor(i)), PATH+FILTER_KEY+"_"+index+imageStack.getSliceLabel(i)+"_"+sigma+".tiff" );
-					
-			}*/
-			
-		}
-		initialseimageStack(imageStack);
-		return new Pair<Integer,ImageStack>(index, imageStack);
-	}
+	
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath) {
@@ -412,7 +386,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 
-
 		return this.settings;
 	}
 
@@ -430,7 +403,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-
+		
 		return true;
 	}
 
@@ -445,42 +418,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		return this.FILTER_NAME;
 	}
 
-
-	/**
-	 * Get stack size
-	 * @param sliceNum
-	 * @return number of slices in the stack
-	 */
-	@Override
-	public int getSize(){
-		return imageStack.getSize();
-	}
-	/**
-	 * Get slice label
-	 * @param index slice index (from 1 to max size)
-	 * @return slice label
-	 */
-	@Override
-	public String getSliceLabel(int index){
-		return imageStack.getSliceLabel(index);
-	}
-	/**
-	 * Get stack height
-	 * @return stack height
-	 */
-	@Override
-	public int getHeight(){
-		return imageStack.getHeight();
-	}
-	/**
-	 * Get stack width
-	 * @return stack width
-	 */
-	@Override
-	public int getWidth(){
-		return imageStack.getWidth();
-	}
-
+	
 	private Double log(double x){
 
 		return (x*x-2)* Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
@@ -526,26 +464,16 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	}
 
 	@Override
-	public ImageStack getImageStack() {
-		return imageStack;
-	}
-
-
-	@Override
-	public void setImageStack(ImageStack imageStack) {
-		this.imageStack = imageStack;
-	}
-
-	@Override
-	public void updatePosition(int position) {
+	public int getFilterType() {
 		// TODO Auto-generated method stub
-		this.position_id=position;
+		return this.TYPE;
 	}
 
 	@Override
-	public int getDegree() {
+	public <T> T getFeatures() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
+
 
 }

@@ -11,7 +11,6 @@ import java.util.Vector;
 import activeSegmentation.Common;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
-import activeSegmentation.IFilterManager;
 import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.WekaDataSet;
 import weka.core.Attribute;

@@ -376,6 +376,8 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "CURVATOR";
+	
+	private final int TYPE=1;
 
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
@@ -407,22 +409,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		this.imageStack = img;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pair<Integer,ImageStack> applyFilter(ImageProcessor ip){
-		int index = position_id;
-		System.out.println("INNNNNNN");
-		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-		System.out.println(sz);
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){	
-			System.out.println("");
-			GScaleSpace sp=new GScaleSpace(sigma);
-			System.out.println("INNNNNNN SP");
-			imageStack = filter(ip.duplicate(), sp,sigma,imageStack);
-		}
-		setImageStack(imageStack);
-		return new Pair<Integer,ImageStack>(index, imageStack);
-	}
 
 
 	@Override
@@ -592,45 +578,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return this.FILTER_NAME;
 	}
 
-	/**
-	 * Get stack size
-	 * @param sliceNum
-	 * @return number of slices in the stack
-	 */
-	@Override
-	public int getSize(){
-		return imageStack.getSize();
-	}
 
-
-	/**
-	 * Get slice label
-	 * @param index slice index (from 1 to max size)
-	 * @return slice label
-	 */
-	@Override
-	public String getSliceLabel(int index){
-		return imageStack.getSliceLabel(index);
-	}
-
-
-	/**
-	 * Get stack height
-	 * @return stack height
-	 */
-	@Override
-	public int getHeight(){
-		return imageStack.getHeight();
-	}
-
-	/**
-	 * Get stack width
-	 * @return stack width
-	 */
-	@Override
-	public int getWidth(){
-		return imageStack.getWidth();
-	}
 
 
 	@Override
@@ -651,27 +599,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	}
 
 
-	@Override
-	public ImageStack getImageStack() {
-		return imageStack;
-	}
-
-
-	@Override
-	public void setImageStack(ImageStack imageStack) {
-		this.imageStack = imageStack;
-	}
-
-	@Override
-	public void updatePosition(int position) {
-		this.position_id=position;
-	}
-
-	@Override
-	public int getDegree() {
-		return 0;
-	}
-
 
 	@Override
 	public boolean reset() {
@@ -679,5 +606,19 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		return true;
+	}
+
+
+	@Override
+	public int getFilterType() {
+		// TODO Auto-generated method stub
+		return this.TYPE;
+	}
+
+
+	@Override
+	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

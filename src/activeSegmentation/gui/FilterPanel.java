@@ -2,10 +2,11 @@ package activeSegmentation.gui;
 
 
 
+import ij.IJ;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -43,12 +44,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 
+
+
+
+import javax.swing.SwingUtilities;
+
 import activeSegmentation.Common;
 import activeSegmentation.IFilterManager;
+import activeSegmentation.IProjectManager;
+import activeSegmentation.filterImpl.FilterManager;
 
 public class FilterPanel implements Runnable {
 
 	private IFilterManager filterManager;
+	private IProjectManager projectManager;
 	private JTabbedPane pane;
 	private JList filterList;
 	private Map<String,List<JTextField>> textMap;
@@ -77,8 +86,9 @@ public class FilterPanel implements Runnable {
 	
 	final JFrame frame = new JFrame("FILTER");
 
-	public FilterPanel(IFilterManager filterManager) {
-		this.filterManager =filterManager;
+	public FilterPanel(IProjectManager projectManager) {
+		this.projectManager= projectManager;
+		this.filterManager =new FilterManager(projectManager);
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
 		textMap= new HashMap<String, List<JTextField>>();
@@ -223,7 +233,8 @@ public class FilterPanel implements Runnable {
 				i++;
 			}
 			filterManager.updateFilterSetting(key, settingsMap);		
-			//filterManager.saveFiltersMetaData();
+			filterManager.saveFiltersMetaData();
+			IJ.log("FILTER SETTINGS SAVED");
 
 		}
 
@@ -239,8 +250,8 @@ public class FilterPanel implements Runnable {
 
 		if(event==VIEW_BUTTON_PRESSED){
 	      // filterManager.getFinalImage().show();
-		/*	ViewFilterResults viewPanel=new ViewFilterResults(controller);
-				SwingUtilities.invokeLater(viewPanel);*/
+			new ViewFilterResults(this.projectManager);
+				//viewPanel.show();
 		}
 
 	}

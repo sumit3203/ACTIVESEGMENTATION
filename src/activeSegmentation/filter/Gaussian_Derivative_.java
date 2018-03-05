@@ -101,8 +101,8 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Gaussian Derivatives";
 
-	//private final String PATH="D:/ij150-win-java8/ImageJ/plugins/activeSegmentation/images/GAUSSIAN/";
-
+	private final int TYPE=1;
+	
 	private Map< String, String > settings= new HashMap<String, String>();
 
 	private ImageStack imageStack;
@@ -388,40 +388,8 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 		return FILTER_NAME;
 	}
 
-	/**
-	 * Get stack size
-	 * @param sliceNum
-	 * @return number of slices in the stack
-	 */
-	@Override
-	public int getSize(){
-		return imageStack.getSize();
-	}
-	/**
-	 * Get slice label
-	 * @param index slice index (from 1 to max size)
-	 * @return slice label
-	 */
-	@Override
-	public String getSliceLabel(int index){
-		return imageStack.getSliceLabel(index);
-	}
-	/**
-	 * Get stack height
-	 * @return stack height
-	 */
-	@Override
-	public int getHeight(){
-		return imageStack.getHeight();
-	}
-	/**
-	 * Get stack width
-	 * @return stack width
-	 */
-	@Override
-	public int getWidth(){
-		return imageStack.getWidth();
-	}
+	
+
 
 	private Double gaussian(double x){
 
@@ -464,27 +432,17 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 	}
 
 	@Override
-	public ImageStack getImageStack() {
-		return imageStack;
-	}
-
-
-	@Override
-	public void setImageStack(ImageStack imageStack) {
-		this.imageStack = imageStack;
-	}
-
-	@Override
-	public void updatePosition(int position) {
+	public int getFilterType() {
 		// TODO Auto-generated method stub
-		this.position_id = position;
+		return this.TYPE;
 	}
 
 	@Override
-	public int getDegree() {
+	public <T> T getFeatures() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
+	
 
 }

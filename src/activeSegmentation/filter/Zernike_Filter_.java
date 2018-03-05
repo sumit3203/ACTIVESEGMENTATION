@@ -24,6 +24,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public final static String DEG="Degree";
 	private int degree= Prefs.getInt(DEG, 4);
 	private int position_id=-1;
+	
 
 	/** A string key identifying this factory. */
 	private final  String FILTER_KEY = "ZMC";
@@ -42,6 +43,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Zernike Moments";
+	private final int TYPE=2;
 	
 	ZernikeMoment zm = null;
 	
@@ -76,9 +78,10 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	
 	@Override
-	public Pair<Integer,Complex> applyFilter(ImageProcessor ip) {
+	public void applyFilter(ImageProcessor image, String path) {
 		// TODO Auto-generated method stub
-		return filter(ip.duplicate());
+	
+		filter(image.duplicate());
 	}
 
 	/**
@@ -113,29 +116,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return FILTER_NAME;
 	}
 
-	@Override
-	public int getSize() {
-		// TODO Auto-generated method stub
-		return imageStack.getSize();
-	}
 
-	@Override
-	public String getSliceLabel(int index) {
-		// TODO Auto-generated method stub
-		return imageStack.getSliceLabel(index);
-	}
-
-	@Override
-	public int getHeight() {
-		// TODO Auto-generated method stub
-		return imageStack.getHeight();
-	}
-
-	@Override
-	public int getWidth() {
-		// TODO Auto-generated method stub
-		return imageStack.getWidth();
-	}
 
 	@Override
 	public Image getImage() {
@@ -160,17 +141,6 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public ImageStack getImageStack() {
-		// TODO Auto-generated method stub
-		return imageStack;
-	}
-
-	@Override
-	public void setImageStack(ImageStack imageStack) {
-		// TODO Auto-generated method stub
-		this.imageStack = imageStack;
-	}
 
 	@Override
 	public boolean dialogItemChanged(GenericDialog arg0, AWTEvent arg1) {
@@ -191,15 +161,18 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	}
 
 	@Override
-	public void updatePosition(int position) {
+	public int getFilterType() {
 		// TODO Auto-generated method stub
-		this.position_id = position;
+		return this.TYPE;
 	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String path) {
+	public <T> T getFeatures() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
+
+
+
 
 }

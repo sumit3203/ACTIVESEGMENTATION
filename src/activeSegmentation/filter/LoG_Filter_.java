@@ -116,12 +116,10 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Laplacian of Gaussian";
 
-	//private final String PATH="D:/ij150-win-java8/ImageJ/plugins/activeSegmentation/images/LOG/";
-
+	private final int TYPE=1;
 	private Map< String, String > settings= new HashMap<String, String>();
 
 	private ImageStack imageStack;
-	private int position_id;
 
 
 	/**
@@ -147,28 +145,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		FloatProcessor fp=filter(ip,sp,sep,scnorm);
 		image.setProcessor(fp);
 		image.updateAndDraw();
-	}
-
-	/**
-	 * Apply filter to input image (in place)
-	 * @param inputImage input image
-	 * @param size kernel size (it must be odd)
-	 * @param nAngles number of angles
-	 * @return false if error
-	 */
-	public Pair<Integer,ImageStack> applyFilter(ImageProcessor ip){
-		int index = position_id;
-		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
-			GScaleSpace sp=new GScaleSpace(sigma);
-			ImageProcessor fp=filter(ip.duplicate(), sp,sep, scnorm);
-			//new ImagePlus(FILTER_KEY+"_" + sigma, fp).
-		//	IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+".tif" );
-
-			imageStack.addSlice( FILTER_KEY+"_" + sigma, fp);		
-		}
-		setImageStack(imageStack);
-		return new Pair<Integer,ImageStack>(index, imageStack);
 	}
 
 	@Override
@@ -367,40 +343,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	}
 
 
-	/**
-	 * Get stack size
-	 * @param sliceNum
-	 * @return number of slices in the stack
-	 */
-	@Override
-	public int getSize(){
-		return imageStack.getSize();
-	}
-	/**
-	 * Get slice label
-	 * @param index slice index (from 1 to max size)
-	 * @return slice label
-	 */
-	@Override
-	public String getSliceLabel(int index){
-		return imageStack.getSliceLabel(index);
-	}
-	/**
-	 * Get stack height
-	 * @return stack height
-	 */
-	@Override
-	public int getHeight(){
-		return imageStack.getHeight();
-	}
-	/**
-	 * Get stack width
-	 * @return stack width
-	 */
-	@Override
-	public int getWidth(){
-		return imageStack.getWidth();
-	}
+
 
 
 	private Double log(double x){
@@ -444,31 +387,21 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public ImageStack getImageStack() {
-		return imageStack;
-	}
 
 
 	@Override
-	public void setImageStack(ImageStack imageStack) {
-		this.imageStack = imageStack;
-	}
-
-
-
-	@Override
-	public void updatePosition(int position) {
+	public int getFilterType() {
 		// TODO Auto-generated method stub
-		this.position_id = position;
+		return this.TYPE;
 	}
+
+
 
 	@Override
-	public int getDegree() {
+	public <T> T getFeatures() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
-
 
 
 

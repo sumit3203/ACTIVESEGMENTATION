@@ -2,17 +2,10 @@ package activeSegmentation.io;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.gui.Roi;
-import ij.io.RoiDecoder;
-import ij.io.RoiEncoder;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -20,20 +13,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import activeSegmentation.Common;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
 
@@ -43,7 +29,6 @@ import weka.core.Instances;
 public class ProjectManagerImp implements IProjectManager {
 
 	private IDataSet dataSet;
-	private String path;
 	private ProjectInfo projectInfo;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	
@@ -93,7 +78,7 @@ public class ProjectManagerImp implements IProjectManager {
 		try{
 			out = new BufferedWriter(
 					new OutputStreamWriter(
-							new FileOutputStream( path+filename ) ) );
+							new FileOutputStream( projectInfo.getProjectPath()+filename ) ) );
 
 			final Instances header = new Instances(data, 0);
 			out.write(header.toString());
@@ -160,9 +145,8 @@ public class ProjectManagerImp implements IProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			projectInfo.setProjectPath(path);
 			System.out.println("SAVING");
-			mapper.writeValue(new File(path+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
+			mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
 
 			System.out.println("DONE");
 
@@ -187,8 +171,7 @@ public class ProjectManagerImp implements IProjectManager {
 			String trainingImage,String pluginDir){
 
 		projectInfo= new ProjectInfo();
-		path=projectDirectory;
-		System.out.println(path);
+		
 		projectInfo.setProjectPath(projectDirectory);
 		projectInfo.setProjectName(projectName);
 		projectInfo.setProjectType(projectType);
@@ -198,7 +181,7 @@ public class ProjectManagerImp implements IProjectManager {
 		projectInfo.setClasses(2);
 		if(trainingImage!= null && !trainingImage.isEmpty()){
 			ImagePlus trainingImagePlus=IJ.openImage(trainingImage);
-			String projectString=path+"/"+projectName+"/"+ "Training";
+			String projectString=projectDirectory+"/"+projectName+"/"+ "Training";
 			System.out.println(projectString);
 			createProjectSpace(projectString, trainingImagePlus.getImageStackSize());
 			IJ.saveAs(trainingImagePlus,trainingImage.substring(trainingImage.lastIndexOf(".")),projectString+"/images/training");
@@ -237,15 +220,7 @@ public class ProjectManagerImp implements IProjectManager {
 	}
 
 
-	@Override
-	public String getPath() {
-		return path;
-	}
 
-	@Override
-	public void setPath(String path) {
-		this.path = path;
-	}
 
 	
 

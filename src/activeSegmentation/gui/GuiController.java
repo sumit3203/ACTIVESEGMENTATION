@@ -96,7 +96,7 @@ public class GuiController {
 		System.out.println("filterFlag"+filterFlag);
 		System.out.println("featureFlag"+featureFlag);
 		System.out.println("learingFlag"+learningFlag);
-		dataManager.setPath(path);
+		//dataManager.setPath(path);
 		dataManager.getMetaInfo();
 		if(filterFlag)
 		filterManager.setFiltersMetaData();

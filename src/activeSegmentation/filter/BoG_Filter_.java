@@ -74,9 +74,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	private static int sz= Prefs.getInt(LEN, 2);
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
-	//private static float sigma=(float) Prefs.getDouble(SIGMA, 2.0f);
 	private float[][] kernel=null;
-	private int position_id=-1;
 
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
@@ -98,9 +96,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Bi-Laplacian of Gaussian";
-	private final String PATH="D:/ij150-win-java8/ImageJ/plugins/activeSegmentation/images/BOG/";
-
-
+	
 	private Map< String, String > settings= new HashMap<String, String>();
 
 	private ImageStack imageStack;
@@ -139,26 +135,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
   
 
-	
-	/**
-	 * Apply filter to input image (in place)
-	 * @param inputImage input image
-	 * @param size kernel size (it must be odd)
-	 * @param nAngles number of angles
-	 * @return false if error
-	 */
-	public Pair<Integer,ImageStack> applyFilter(ImageProcessor ip){
-		int index = position_id;
-		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
-			GScaleSpace sp=new GScaleSpace(sigma);
-			ImageProcessor fp=filter(ip.duplicate(), sp,sep, isiso);
-			IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+Common.TIFFORMAT );
-			imageStack.addSlice( FILTER_KEY+"_" + sigma, fp);		
-		}
-		initialseimageStack(imageStack);
-		return new Pair<Integer,ImageStack>(index, imageStack);	
-	}
+
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath) {
@@ -409,41 +386,6 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 
 
-	/**
-	 * Get stack size
-	 * @param sliceNum
-	 * @return number of slices in the stack
-	 */
-	@Override
-	public int getSize(){
-		return imageStack.getSize();
-	}
-	/**
-	 * Get slice label
-	 * @param index slice index (from 1 to max size)
-	 * @return slice label
-	 */
-	@Override
-	public String getSliceLabel(int index){
-		return imageStack.getSliceLabel(index);
-	}
-	/**
-	 * Get stack height
-	 * @return stack height
-	 */
-	@Override
-	public int getHeight(){
-		return imageStack.getHeight();
-	}
-	/**
-	 * Get stack width
-	 * @return stack width
-	 */
-	@Override
-	public int getWidth(){
-		return imageStack.getWidth();
-	}
-
 
 	private Double bog(double x){
 
@@ -486,26 +428,16 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		this.isEnabled= isEnabled;
 	}
 	@Override
-	public ImageStack getImageStack() {
-		return imageStack;
-	}
-
-
-	@Override
-	public void setImageStack(ImageStack imageStack) {
-		this.imageStack = imageStack;
-	}
-
-	@Override
-	public void updatePosition(int position) {
-		// TODO Auto-generated method stub
-		this.position_id=position;
-	}
-	@Override
-	public int getDegree() {
+	public int getFilterType() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

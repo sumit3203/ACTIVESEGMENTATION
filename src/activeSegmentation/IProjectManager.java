@@ -73,19 +73,6 @@ public interface IProjectManager {
 	 */
 	public ProjectInfo getMetaInfo();
 	
-	/**
-	 * This method will get the path of the working dire
-	 * @param  filename
-	 * @return string
-	 */
-	public String getPath();
-	
-	/**
-	 * This method will set the path of the working directory
-	 * @param  filename
-	 * 
-	 */
-	public void setPath(String path);
 	
 	/**
 	 * This method will set the dataset

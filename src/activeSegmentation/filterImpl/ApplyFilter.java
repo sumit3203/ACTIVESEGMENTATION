@@ -51,8 +51,9 @@ public class ApplyFilter extends RecursiveTask<Pair<Integer,ImageStack>>{
 	@Override
 	protected Pair<Integer,ImageStack> compute() {
 		// TODO Auto-generated method stub
-		filter.updatePosition(index);
-		return filter.applyFilter(imp);
+		//filter.updatePosition(index);
+		//return filter.applyFilter(imp);
+		return null;
 	}
 	
 	/**

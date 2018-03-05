@@ -21,12 +21,14 @@ import java.util.zip.ZipInputStream;
 
 
 
+
 import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
 import activeSegmentation.filterImpl.ApplyZernikeFilter;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
+import activeSegmentation.ProjectType;
 import activeSegmentation.io.ProjectInfo;
 import ij.IJ;
 import ij.ImagePlus;
@@ -64,35 +66,39 @@ public class FilterManager implements IFilterManager {
 
 	private Map<String,IFilter> filterMap= new HashMap<String, IFilter>();
 	private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
-	
+
 	private ImagePlus finalImage;
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
-	
+
 	private ImagePlus originalImage;
 
-	
+	private ProjectType projectType;
 
-	
-	
+
+
 
 	public FilterManager(IProjectManager projectManager){
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
-		System.out.println(projectManager.getMetaInfo().getTrainingStack());
+		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
+		System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
+		IJ.log("Loading Filters");
+		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
 		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 		try {
-			System.out.println(this.projectInfo.getPluginPath());
+			//System.out.println(this.projectInfo.getPluginPath());
 			loadFilters(this.projectInfo.getPluginPath());
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		IJ.log("Filters Loaded");
 	}
 
-	
+
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
@@ -102,7 +108,7 @@ public class FilterManager implements IFilterManager {
 		List<String> classes=new ArrayList<String>();
 		for(String plugin: plugins){
 			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-			System.out.println(plugin);
+			//System.out.println(plugin);
 			//System.out.println(installJarPlugins(home+"/"+plugin));
 			if(plugin.endsWith(Common.JAR))
 			{ 
@@ -124,22 +130,25 @@ public class FilterManager implements IFilterManager {
 					//IJ.log(plugin);
 					//IJ.debugMode=true;
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
-				   
-					filterMap.put(thePlugIn.getKey(), thePlugIn);
+					if(thePlugIn.getFilterType()==projectType.getProjectType()){
+						filterMap.put(thePlugIn.getKey(), thePlugIn);
+					}
+
 				}
 			}
 
 		}
 
+		setFiltersMetaData();
 
 	}
 
-	
+
 
 	public void applyFilters(){
 		//originalImage=image.duplicate();
 		System.out.println(originalImage.getImageStackSize());
-		
+
 		for(IFilter filter: filterMap.values()){
 			System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
@@ -160,27 +169,27 @@ public class FilterManager implements IFilterManager {
 					 * Duplicate image to filter and let filter store data in 
 					 * Directory
 					 * */
-					
+
 					//String projectPath="D:/astrocytes/training/filters/";
 					String projectString=projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
-					
+
 					for(int i=1; i<=originalImage.getStackSize(); i++){
-		
+
 						filter.applyFilter(originalImage.getStack().getProcessor(i),projectString+"SLICE-"+i);
 					}
-					
-				
+
+
 				}
-					
+
 			}
 
 		}
-	
+
 	}
 
 
 	private void generateFinalImage(){
-		
+
 		ImageStack classified = new ImageStack(originalImage.getWidth(), originalImage.getHeight());
 		int numChannels=featurStackMap.get(1).getfinalStack().getSize();
 		for (int i = 1; i <= originalImage.getStackSize(); i++){
@@ -217,12 +226,11 @@ public class FilterManager implements IFilterManager {
 
 		return filterMap.get(key).updateSettings(settingsMap);
 	}
-	
+
 	public int getNumOfFeatures(String featureName) {
-		if(featureName.equals("classLevel"))
-			return filterMap.get("ZMC").getDegree();
-		else
-			return featurStackMap.get(featurStackMap.size()).getfinalStack().getSize();
+		/*	if(featureName.equals("classLevel"))
+			return filterMap.get("ZMC").getDegree();*/
+		return 0;
 	}
 
 	/**
@@ -255,11 +263,11 @@ public class FilterManager implements IFilterManager {
 		return featurStackMap.get(sliceNum).getfinalStack();
 	}
 
-/*	public Instance createInstance(String featureName, int x, int y, int classIndex, int sliceNum) {
+	/*	public Instance createInstance(String featureName, int x, int y, int classIndex, int sliceNum) {
 		return filterUtil.createInstance(x, y, classIndex,
 				featurStackMap.get(sliceNum).getfinalStack(), colorFeatures, oldColorFormat);
 	}
-	
+
 	public Instance createInstance(String featureName, int classIndex, int sliceNum){
 		try {
 			return filterUtil.createInstance(featurStackMap.get(sliceNum).getzernikeMoments(), classIndex);
@@ -314,8 +322,8 @@ public class FilterManager implements IFilterManager {
 
 	@Override
 	public void saveFiltersMetaData(){	
-		 projectInfo= projectManager.getMetaInfo();
-        System.out.println("meta Info"+projectInfo.toString());
+		projectInfo= projectManager.getMetaInfo();
+		System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<Map<String,String>>();
 		for(String key: getFilters()){
 			Map<String,String> filters = new HashMap<String,String>();
@@ -324,35 +332,30 @@ public class FilterManager implements IFilterManager {
 			for(String setting: filtersetting.keySet()){
 				filters.put(setting, filtersetting.get(setting));		
 			}
-			if(filterMap.get(key).getImageStack()!= null && 
-					filterMap.get(key).getImageStack().size()>0 ){
-				IJ.save(new ImagePlus(key,filterMap.get(key).getImageStack()), 
-						projectInfo.getProjectPath()+key+".tif" );
-				filters.put(Common.FILTERFILELIST,key+".tif" );
+			filters.put("enabled","false" );
+			if(isFilterEnabled(key)){
+				filters.put("enabled","true" );	
 			}
-				
+
 			filterObj.add(filters);
 		}
-			
+
 		projectInfo.setFilters(filterObj);
-	//	dataManager.writeMetaInfo(metaInfo);
+		projectManager.writeMetaInfo(projectInfo);
 	}
 
 
 	@Override
 	public void setFiltersMetaData(){
-        projectInfo= projectManager.getMetaInfo();
+		projectInfo= projectManager.getMetaInfo();
 		List<Map<String,String>> filterObj= projectInfo.getFilters();
 		for(Map<String, String> filter: filterObj){
 			String filterName=filter.get(Common.FILTER);
 			updateFilterSetting(filterName, filter);
-			if(null!=filter.get(Common.FILTERFILELIST)){
-				String fileName=filter.get(Common.FILTERFILELIST);
-				System.out.println(projectInfo.getProjectPath()+fileName);
-				ImagePlus image=new ImagePlus(projectInfo.getProjectPath()+fileName);
-				image.show();
-				filterMap.get(filterName).setImageStack(image.getImageStack());
-
+			if(filter.get("enabled").equalsIgnoreCase("true")){
+				filterMap.get(filterName).setEnabled(true);
+			}else{
+				filterMap.get(filterName).setEnabled(false);
 			}
 		}
 
@@ -363,55 +366,55 @@ public class FilterManager implements IFilterManager {
 
 		return filterMap.get(key).getImage();
 	}
-	
+
 	@Override
 	public ImagePlus getOriginalImage() {
 		return originalImage.duplicate();
 	}
 
-	
-	
+
+
 	//
-	
-	 /**
-     * Parameters of the method to add an URL to the System classes. 
-     */
-    private static final Class<?>[] parameters = new Class[]{URL.class};
 
-    /**
-     * Adds a file to the classpath.
-     * @param s a String pointing to the file
-     * @throws IOException
-     */
-    public static void addFile(String s) throws IOException {
-        File f = new File(s);
-        addFile(f);
-    }
+	/**
+	 * Parameters of the method to add an URL to the System classes. 
+	 */
+	private static final Class<?>[] parameters = new Class[]{URL.class};
 
-    /**
-     * Adds a file to the classpath
-     * @param f the file to be added
-     * @throws IOException
-     */
-    public static void addFile(File f) throws IOException {
-        addURL(f.toURI().toURL());
-    }
+	/**
+	 * Adds a file to the classpath.
+	 * @param s a String pointing to the file
+	 * @throws IOException
+	 */
+	public static void addFile(String s) throws IOException {
+		File f = new File(s);
+		addFile(f);
+	}
 
-    /**
-     * Adds the content pointed by the URL to the classpath.
-     * @param u the URL pointing to the content to be added
-     * @throws IOException
-     */
-    public static void addURL(URL u) throws IOException {
-        URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-        Class<?> sysclass = URLClassLoader.class;
-        try {
-            Method method = sysclass.getDeclaredMethod("addURL",parameters);
-            method.setAccessible(true);
-            method.invoke(sysloader,new Object[]{ u }); 
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw new IOException("Error, could not add URL to system classloader");
-        }        
-    }
+	/**
+	 * Adds a file to the classpath
+	 * @param f the file to be added
+	 * @throws IOException
+	 */
+	public static void addFile(File f) throws IOException {
+		addURL(f.toURI().toURL());
+	}
+
+	/**
+	 * Adds the content pointed by the URL to the classpath.
+	 * @param u the URL pointing to the content to be added
+	 * @throws IOException
+	 */
+	public static void addURL(URL u) throws IOException {
+		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+		Class<?> sysclass = URLClassLoader.class;
+		try {
+			Method method = sysclass.getDeclaredMethod("addURL",parameters);
+			method.setAccessible(true);
+			method.invoke(sysloader,new Object[]{ u }); 
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new IOException("Error, could not add URL to system classloader");
+		}        
+	}
 }

@@ -58,7 +58,7 @@ public class Gui {
 		System.out.println(event.toString());
 		if(event ==FILTER_BUTTON_PRESSED ){
 			if(filterPanel==null){
-			   filterPanel=new FilterPanel(new FilterManager(projectManager));
+			   filterPanel=new FilterPanel(projectManager);
 			SwingUtilities.invokeLater(filterPanel);
 			}
 
