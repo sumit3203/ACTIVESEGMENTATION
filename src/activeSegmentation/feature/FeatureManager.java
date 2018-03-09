@@ -607,7 +607,7 @@ public class FeatureManager implements IFeatureManager {
 		}
 		ImagePlus classifiedImage= new ImagePlus("Classified Image", classStack);
 		classifiedImage.setCalibration(originalImage.getCalibration());
-		classifiedImage.show();
+		//classifiedImage.show();
 		return classifiedImage;
 	}
 }

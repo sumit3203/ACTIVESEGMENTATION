@@ -75,7 +75,7 @@ public class ViewFilterResults extends ImageWindow  {
 	JLabel total;
 	List<String> imageFileNames;
 	int sliceNum,featureNum,totalSlices,totalFeatures;
-	
+
 	public ViewFilterResults(IProjectManager projectManager) {
 		super(createImageIcon("no-image.jpg"));
 		this.projectManager = projectManager;
@@ -97,31 +97,31 @@ public class ViewFilterResults extends ImageWindow  {
 			return null;
 		}
 	}   
-	
+
 	private int loadImages(String directory){
 		imageFileNames.clear();
 		File folder = new File(directory);
-        File[] images = folder.listFiles();
-        for (File file : images) {
-            if (file.isFile()) {
-            	imageFileNames.add(file.getName());
-            }
-        }
-        return imageFileNames.size();
+		File[] images = folder.listFiles();
+		for (File file : images) {
+			if (file.isFile()) {
+				imageFileNames.add(file.getName());
+			}
+		}
+		return imageFileNames.size();
 	}
-	
+
 	private int loadSlices(String directory){
 		int count=0;
 		File folder = new File(directory);
-        File[] images = folder.listFiles();
-        for (File file : images) {
-            if (file.isDirectory()) {
-            	 count++;
-            }
-        }
-       return count;
+		File[] images = folder.listFiles();
+		for (File file : images) {
+			if (file.isDirectory()) {
+				count++;
+			}
+		}
+		return count;
 	}
-	
+
 	public void showPanel() {
 
 		JFrame frame = new JFrame("VISUALIZATION");
@@ -134,7 +134,7 @@ public class ViewFilterResults extends ImageWindow  {
 			this.sliceNum=1;
 			this.totalFeatures=loadImages(projectString+"/SLICE-1/");
 		}
-		
+
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JList frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
@@ -158,7 +158,7 @@ public class ViewFilterResults extends ImageWindow  {
 		roiPanel.setBounds(605,250,150,250);
 		roiPanel.add(scrollPane);
 		panel.add(roiPanel);
-		
+
 		JPanel slicePanel= new JPanel();
 		slicePanel.setBounds(605,20,350,80);
 		slicePanel.setBorder(BorderFactory.createTitledBorder("SLICES"));
@@ -194,35 +194,36 @@ public class ViewFilterResults extends ImageWindow  {
 		dasedLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		dasedLine.setForeground(Color.BLACK);
 		dasedLine.setBounds(  670, 130, 10, 20 );
-		 total= new JLabel("Total");
+		total= new JLabel("Total");
 		total.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		total.setForeground(Color.BLACK);
 		total.setBounds( 500, 600, 80, 30);		
 		if(this.totalFeatures>0){
 			imageNum.setText("1");
 			total.setText(Integer.toString(totalFeatures));
-			
+
 		}
 		features.add(imageNum);
 		features.add(dasedLine);
 		features.add(total);
 		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-        frame.add(features);
+		frame.add(features);
 		frame.add(panel);
 		frame.pack();
 		frame.setSize(1000,600);
 		frame.setLocationRelativeTo(null);
-	    frame.setVisible(true);
-	
+		frame.setVisible(true);
+
 	}
 
 
 
-   private void loadImage(int sliceNum, int featureNum){
-	   ImagePlus image= new ImagePlus(projectString+"/SLICE-"+sliceNum+"/"+imageFileNames.get(featureNum-1));
+	private void loadImage(int sliceNum, int featureNum){
+
+		ImagePlus image= new ImagePlus(projectString+"/SLICE-"+sliceNum+"/"+imageFileNames.get(featureNum-1));
 		setImage(image);
 		updateImage(image);
-   }
+	}
 
 	public void doAction( final ActionEvent event )
 	{
@@ -240,11 +241,10 @@ public class ViewFilterResults extends ImageWindow  {
 
 		}
 		if(event==NEXT_BUTTON_PRESSED && featureNum<totalFeatures ){
-		//	System.out.println("IN NEXT BUTTOn");
+			//	System.out.println("IN NEXT BUTTOn");
 			featureNum=featureNum+1;
 			imageNum.setText(Integer.toString(featureNum));
 			loadImage(sliceNum, featureNum);
-
 		}
 
 		if(event==SLICE_PREVIOUS_BUTTON_PRESSED && sliceNum>1){
@@ -264,7 +264,7 @@ public class ViewFilterResults extends ImageWindow  {
 			sliceField.setText(Integer.toString(sliceNum));
 			total.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
-			
+
 		}
 
 
@@ -322,7 +322,7 @@ public class ViewFilterResults extends ImageWindow  {
 
 	public static void main(String[] args) {
 		new ImageJ();
-		
+
 		//projectInfo.setProjectName("testproject");
 		IProjectManager projectManager= new ProjectManagerImp();
 		projectManager.loadProject("C:\\Users\\HP\\Documents\\SUMIT\\ACTIVE_SEG\\testproject\\testproject.json");

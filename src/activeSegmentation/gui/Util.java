@@ -68,6 +68,8 @@ public class Util {
 		colors.add(Color.red);
 		colors.add(Color.cyan);
 		colors.add(Color.magenta);
+		colors.add(Color.yellow);
+		colors.add(Color.black);
 		return colors;
 	}
 
