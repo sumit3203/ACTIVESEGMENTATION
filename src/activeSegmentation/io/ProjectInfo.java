@@ -8,7 +8,7 @@ import java.util.Map;
 public class ProjectInfo {
 
 	private String projectName;
-	private String projectType;
+	private Enum projectType;
 	private String projectDescription;
 	private String comment="Default Comment";
 	private String createdDate;
@@ -93,11 +93,11 @@ public class ProjectInfo {
 	public void setProjectDescription(String projectDescription) {
 		this.projectDescription = projectDescription;
 	}
-	public String getProjectType() {
+	public Enum getProjectType() {
 		return projectType;
 	}
-	public void setProjectType(String projectType) {
-		this.projectType = projectType;
+	public void setProjectType(Enum projectType2) {
+		this.projectType = projectType2;
 	}
 	public String getTrainingStack() {
 		return trainingStack;

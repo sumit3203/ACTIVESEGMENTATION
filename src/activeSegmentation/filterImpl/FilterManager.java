@@ -73,7 +73,7 @@ public class FilterManager implements IFilterManager {
 
 	private ImagePlus originalImage;
 
-	private ProjectType projectType;
+	private ProjectType projectType=  ProjectType.SEGMENTATION ;
 
 
 
@@ -81,13 +81,13 @@ public class FilterManager implements IFilterManager {
 	public FilterManager(IProjectManager projectManager){
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
-		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
-		System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
+		//projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
+		//System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
 		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
-		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
+	
 		try {
-			//System.out.println(this.projectInfo.getPluginPath());
+			System.out.println(this.projectInfo.getPluginPath());
 			loadFilters(this.projectInfo.getPluginPath());
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
@@ -96,6 +96,7 @@ public class FilterManager implements IFilterManager {
 		}
 
 		IJ.log("Filters Loaded");
+		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 	}
 
 

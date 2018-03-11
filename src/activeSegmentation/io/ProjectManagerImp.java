@@ -166,7 +166,7 @@ public class ProjectManagerImp implements IProjectManager {
 	}
 
 	@Override
-	public ProjectInfo createProject(String projectName, String projectType,String projectDirectory, 
+	public ProjectInfo createProject(String projectName, Enum projectType,String projectDirectory, 
 		     String projectDescription,
 			String trainingImage,String pluginDir){
 
@@ -217,6 +217,13 @@ public class ProjectManagerImp implements IProjectManager {
 			file.mkdirs();
 		}
 		return true;
+	}
+
+	@Override
+	public ProjectInfo createProject(String projectName, String projectType, String projectDirectory,
+			String projectDescription, String trainingImage, String testImage) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

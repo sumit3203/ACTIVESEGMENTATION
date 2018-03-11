@@ -88,6 +88,9 @@ public interface IProjectManager {
 	
 
 	public ProjectInfo createProject(String projectName, String projectType, String projectDirectory, String projectDescription,String trainingImage,String testImage);
+
+	ProjectInfo createProject(String projectName, Enum projectType, String projectDirectory, String projectDescription,
+			String trainingImage, String pluginDir);
 	
 	
 	

@@ -25,8 +25,8 @@ import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filterImpl.FilterManager;
 
 public class Gui {
-	private JFrame mainFrame;
-	private JPanel controlPanel;
+	private JFrame mainFrame=null;
+	private JPanel controlPanel=null;
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent( this, 0, "Feature" );
@@ -38,12 +38,13 @@ public class Gui {
 
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent( this, 3, "Evaluation" );
-	private LearningPanel learningPanel;
-	private FilterPanel filterPanel;
-	private FeaturePanel featurePanel;
+	
+	private LearningPanel learningPanel=null;
+	private FilterPanel filterPanel=null;
+	private FeaturePanel featurePanel=null;
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
-	private IProjectManager projectManager;
+	private IProjectManager projectManager=null;
 
 	public Gui(IProjectManager projectManager){
 		this.projectManager=projectManager;

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/ij.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/jackson-annotations-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/jackson-core-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/jackson-databind-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/java-cup-0.11a.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/pentaho-package-manager-1.0.8.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/ImageJ/plugins/JARS/weka-dev-3.7.11.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-annotations-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-databind-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/java-cup-0.11a.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/weka-dev-3.7.11.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ij"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/act_segm_filters.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

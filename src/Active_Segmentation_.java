@@ -4,11 +4,14 @@
 
 
 
+import java.io.File;
+
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.IProjectManager;
 import activeSegmentation.gui.CreatProject;
 import activeSegmentation.io.ProjectManagerImp;
+import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
 
@@ -23,6 +26,8 @@ public class Active_Segmentation_ implements PlugIn {
 
 	}
 
+	private final String filesep = System.getProperty("file.separator");
+	private String jarpath=filesep+"jars"+filesep;
 
 	/**
 	 * This method will be an entry point into the Plugin. All the
@@ -33,6 +38,10 @@ public class Active_Segmentation_ implements PlugIn {
 	 */
 	@Override
 	public void run(String arg0) {
+		IJ.log(System.getProperty("plugins.dir"));
+		String home = System.getProperty("plugins.dir")+jarpath;//+"\\plugins\\activeSegmentation\\";
+		System.out.println("jars home:  "+home);
+		
 		IProjectManager dataManager= new ProjectManagerImp();
 
 		CreatProject creatProject= new CreatProject(dataManager);
@@ -44,8 +53,22 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 	public static void main(String[] args) {
-		new ImageJ();
-		new Active_Segmentation_().run("");
+		System.out.println(args[0]);
+		try {
+			File f=new File(args[0]);
+			if (f.exists() && f.isDirectory() ) {
+
+				System.setProperty("plugins.dir", args[0]);
+				new Active_Segmentation_().run("");
+
+			} else {
+				throw new IllegalArgumentException();
+			}
+		} catch (Exception ex) {
+			IJ.log("plugins.dir misspecified\n");
+			ex.printStackTrace();
+		}
+
 	}
 
 }
