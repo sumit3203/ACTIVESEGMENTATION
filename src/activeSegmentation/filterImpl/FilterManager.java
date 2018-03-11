@@ -73,14 +73,13 @@ public class FilterManager implements IFilterManager {
 
 	private ImagePlus originalImage;
 
-	private ProjectType projectType=  ProjectType.SEGMENTATION ;
-
-
+	private Enum<?> projectType=  ProjectType.SEGMENTATION ;
 
 
 	public FilterManager(IProjectManager projectManager){
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
+		//this.projectType=projectInfo.getProjectType();
 		//projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
 		//System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
@@ -131,7 +130,7 @@ public class FilterManager implements IFilterManager {
 					//IJ.log(plugin);
 					//IJ.debugMode=true;
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
-					if(thePlugIn.getFilterType()==projectType.getProjectType()){
+					if(thePlugIn.getFilterType()==((ProjectType) projectType).getProjectType()){
 						filterMap.put(thePlugIn.getKey(), thePlugIn);
 					}
 

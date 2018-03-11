@@ -87,9 +87,9 @@ public interface IProjectManager {
 	public IDataSet getDataSet();
 	
 
-	public ProjectInfo createProject(String projectName, String projectType, String projectDirectory, String projectDescription,String trainingImage,String testImage);
+	//public ProjectInfo createProject(String projectName, String projectType, String projectDirectory, String projectDescription,String trainingImage,String testImage);
 
-	ProjectInfo createProject(String projectName, Enum projectType, String projectDirectory, String projectDescription,
+	ProjectInfo createProject(String projectName, Enum<?> projectType, String projectDirectory, String projectDescription,
 			String trainingImage, String pluginDir);
 	
 	

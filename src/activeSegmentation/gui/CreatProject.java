@@ -145,9 +145,10 @@ public class CreatProject implements Runnable {
 			String projectDescription=projectDField.getText();
 			String trainingImage=trainingImageP.getText();
 			String pluginDir=pluginsDir.getText();
-			String projectType=projectList.getSelectedItem().toString();
+			int projectType=projectList.getSelectedIndex();
+			
 			System.out.println(projectName+"--"+ projectType);
-			projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
+			projectManager.createProject(projectName,  ProjectType.values()[projectType], projectDirectory, projectDescription, 
 					trainingImage, pluginDir);	
 			createProject.setVisible(false);
 			createProject.dispose();
