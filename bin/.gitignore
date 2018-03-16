@@ -1,3 +1,7 @@
+/activeSegmentation/
+/dsp/
+/ijaux/
+/samples/
 /Active_Segmentation_.class
 /IconDemoApp$1.class
 /IconDemoApp$2.class
@@ -5,7 +9,3 @@
 /IconDemoApp.class
 /MissingIcon.class
 /Weka_Segmentation_.class
-/activeSegmentation/
-/dsp/
-/ijaux/
-/samples/

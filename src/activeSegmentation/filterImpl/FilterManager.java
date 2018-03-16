@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -15,13 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-
-
-
-
-
-
 import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
 import activeSegmentation.filterImpl.ApplyZernikeFilter;
@@ -41,6 +35,7 @@ import ijaux.scale.ZernikeMoment.Complex;
  *   
  * 
  * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ *  version 2
  *
  *
  * @contents
@@ -62,7 +57,7 @@ import ijaux.scale.ZernikeMoment.Complex;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class FilterManager implements IFilterManager {
+public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String,IFilter> filterMap= new HashMap<String, IFilter>();
 	private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
@@ -73,8 +68,26 @@ public class FilterManager implements IFilterManager {
 
 	private ImagePlus originalImage;
 
-	private Enum<?> projectType=  ProjectType.SEGMENTATION ;
+	//private Enum<?> projectType=  ProjectType.SEGMENTATION ;
 
+	public FilterManager(IProjectManager dataManager){
+		super(new URL[0], IJ.class.getClassLoader());
+		this.projectManager= dataManager;
+		String path = projectManager.getMetaInfo().	getPluginPath();
+		this.projectInfo=projectManager.getMetaInfo();
+		try {
+			System.out.println("jar path: "+path);
+			loadFilters(path);
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException
+				|  IOException e) {
+			e.printStackTrace();
+		}
+		IJ.log("Filters Loaded");
+		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
+		
+	}
+	/*
 
 	public FilterManager(IProjectManager projectManager){
 		this.projectManager= projectManager;
@@ -98,7 +111,19 @@ public class FilterManager implements IFilterManager {
 		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 	}
 
-
+*/
+	
+	 private void addJar(File f) throws IOException {
+	        if (f.getName().endsWith(".jar")) {
+				 
+	            try {
+	                addURL(f.toURI().toURL());
+	            } catch (MalformedURLException e) {
+					System.out.println("PluginClassLoader: "+e);
+	            }
+	        }
+	    }
+	/*
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
@@ -142,7 +167,52 @@ public class FilterManager implements IFilterManager {
 		setFiltersMetaData();
 
 	}
+*/
+	 public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
+		IOException, ClassNotFoundException {
 
+
+			File f=new File(home);
+			String[] plugins = f.list();
+			List<String> classes=new ArrayList<String>();
+			for(String plugin: plugins){
+				if(plugin.endsWith(Common.JAR))	{ 
+					classes.addAll(installJarPlugin(home, plugin));
+					String cp=System.getProperty("java.class.path");
+					cp+=";"+ home + plugin;
+					System.setProperty("java.class.path", cp);
+					System.out.println("classpath:  "+cp);
+					File g = new File(home,plugin);
+					if (g.isFile())
+						addJar(g);
+				}
+				else if (plugin.endsWith(Common.DOTCLASS)){
+					classes.add(plugin);
+				}
+				//break;
+			}
+
+			for(String plugin: classes){
+				
+				Class<?>[] classesList=(loadClass(plugin)).getInterfaces();
+				for(Class<?> cs:classesList){
+					if(cs.getSimpleName().equals(Common.IFILTER)){
+						//System.out.println(cs.getSimpleName());
+						System.out.println(plugin);
+					
+						IFilter	thePlugIn =  (IFilter) Class.forName(plugin).newInstance(); 
+						//if(thePlugIn.getFilterType()==((ProjectType) projectType).getProjectType()){
+							filterMap.put(thePlugIn.getKey(), thePlugIn);
+						//}
+
+					}
+				}
+
+			}
+
+			setFiltersMetaData();
+
+		}
 
 
 	public void applyFilters(){
@@ -245,18 +315,22 @@ public class FilterManager implements IFilterManager {
 
 
 
-	private  List<String> installJarPlugins(String home) throws IOException {
+	private  List<String> installJarPlugin(String home, String plugin) throws IOException {
 		List<String> classNames = new ArrayList<String>();
-		ZipInputStream zip = new ZipInputStream(new FileInputStream(home));
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(home+plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(Common.DOTCLASS)) {
 				String className = entry.getName().replace('/', '.'); // including ".class"
+				//System.out.println("0 + "+className);
 				classNames.add(className.substring(0, className.length() - Common.DOTCLASS.length()));
+				
 			}
 		}
+		zip.close();
 
 		return classNames;
 	}
+	
 
 	public ImageStack getImageStack(int sliceNum)
 	{
@@ -386,25 +460,28 @@ public class FilterManager implements IFilterManager {
 	 * @param s a String pointing to the file
 	 * @throws IOException
 	 */
+	/*
 	public static void addFile(String s) throws IOException {
 		File f = new File(s);
 		addFile(f);
 	}
-
+*/
 	/**
 	 * Adds a file to the classpath
 	 * @param f the file to be added
 	 * @throws IOException
 	 */
+	/*
 	public static void addFile(File f) throws IOException {
 		addURL(f.toURI().toURL());
 	}
-
+*/
 	/**
 	 * Adds the content pointed by the URL to the classpath.
 	 * @param u the URL pointing to the content to be added
 	 * @throws IOException
 	 */
+	/*
 	public static void addURL(URL u) throws IOException {
 		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
 		Class<?> sysclass = URLClassLoader.class;
@@ -417,4 +494,5 @@ public class FilterManager implements IFilterManager {
 			throw new IOException("Error, could not add URL to system classloader");
 		}        
 	}
+	*/
 }
