@@ -55,10 +55,6 @@ public class TestFile {
 		metaInfo.setCreatedDate("12/06/2016");
 		metaInfo.setModifyDate("12/07/2016");
 		metaInfo.setProjectPath("C://Program Files//ImageJ//plugins//activeSegmentation//");
-		Map<String,String> keywordList= new HashMap<String, String>();
-		keywordList.put("Class1", "BCK");
-		keywordList.put("Class2", "CELL");
-		metaInfo.setKeywordList(keywordList);
 		
 		List<Map<String,String>> filters= new ArrayList<Map<String,String>>();
 		Map<String,String> filterMap= new HashMap<String, String>();
@@ -77,7 +73,6 @@ public class TestFile {
 		filters.add(filterMap);
 		filters.add(filterMap1);
 		FeatureInfo featureInfo= new FeatureInfo();
-		featureInfo.setClassLabel(1);
 		featureInfo.setZipFile("Roiset1.zip");
 		Map<String,List<String>> sliceList= new HashMap<String, List<String>>();
 		List<String> rois=new ArrayList<String>();
@@ -90,7 +85,7 @@ public class TestFile {
 		rois1.add("0002-0295-0623");	
 		sliceList.put("slice1", rois);	
 		sliceList.put("slice2", rois1);
-		featureInfo.setSliceList(sliceList);
+		featureInfo.setTrainingList(sliceList);
 		metaInfo.setFilters(filters);
 		
 		
