@@ -23,8 +23,8 @@ import activeSegmentation.feature.FeatureManagerNew;
 
 
 public class Gui {
-	private JFrame mainFrame;
-	private JPanel controlPanel;
+	private JFrame mainFrame=null;
+	private JPanel controlPanel=null;
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent( this, 0, "Feature" );
@@ -36,12 +36,23 @@ public class Gui {
 
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent( this, 3, "Evaluation" );
+<<<<<<< HEAD
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	private IProjectManager projectManager;
+=======
+	
+	private LearningPanel learningPanel=null;
+	private FilterPanel filterPanel=null;
+	private FeaturePanel featurePanel=null;
+
+	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
+	private IProjectManager projectManager=null;
+
+>>>>>>> 700275c529f6d28413100ef34528e8cd290f9f71
 	public Gui(IProjectManager projectManager){
 		this.projectManager=projectManager;
 		prepareGUI();
