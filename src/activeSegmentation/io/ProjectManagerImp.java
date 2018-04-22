@@ -175,7 +175,6 @@ public class ProjectManagerImp implements IProjectManager {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public String createProject(String projectName, String projectType,String projectDirectory, 
 			String projectDescription,
 			String trainingImage){
@@ -185,12 +184,6 @@ public class ProjectManagerImp implements IProjectManager {
 			return returnedMessage;
 		}
 		setDirectory();
-=======
-	public ProjectInfo createProject(String projectName, Enum<?> projectType,String projectDirectory, 
-		     String projectDescription,
-			String trainingImage,String pluginDir){
-
->>>>>>> 700275c529f6d28413100ef34528e8cd290f9f71
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory);
 		projectInfo.setProjectName(projectName);
@@ -315,14 +308,7 @@ public class ProjectManagerImp implements IProjectManager {
 		return true;
 	}
 
-	/*
-	public ProjectInfo createProject(String projectName, String projectType, String projectDirectory,
-			String projectDescription, String trainingImage, String testImage) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-*/
 
 
 

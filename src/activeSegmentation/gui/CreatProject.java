@@ -53,7 +53,6 @@ public class CreatProject implements Runnable {
 	/** main GUI panel (containing the buttons panel on the left,
 	 *  the image in the center and the annotations panel on the right */
 	Panel all = new Panel();
-	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -148,21 +147,12 @@ public class CreatProject implements Runnable {
 			String projectDirectory=projectFField.getText();
 			String projectDescription=projectDField.getText();
 			String trainingImage=trainingImageP.getText();
-<<<<<<< HEAD
 			//String pluginDir=pluginsDir.getText();
 			String projectType=projectList.getSelectedItem().toString();
 			System.out.println(projectName+"--"+ projectType);
 			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
 					trainingImage);	
 			if("DONE".equalsIgnoreCase(message)) {
-=======
-			String pluginDir=pluginsDir.getText();
-			int projectType=projectList.getSelectedIndex();
-			
-			System.out.println(projectName+"--"+ projectType);
-			projectManager.createProject(projectName,  ProjectType.values()[projectType], projectDirectory, projectDescription, 
-					trainingImage, pluginDir);	
->>>>>>> 700275c529f6d28413100ef34528e8cd290f9f71
 			createProject.setVisible(false);
 			createProject.dispose();
 			new Gui(projectManager);

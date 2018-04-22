@@ -62,7 +62,7 @@ public class FilterPanel implements Runnable {
 	private IFilterManager filterManager;
 	private IProjectManager projectManager;
 	private JTabbedPane pane;
-	private JList<String> filterList;
+	private JList filterList;
 	private Map<String,List<JTextField>> textMap;
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	
@@ -282,7 +282,7 @@ public class FilterPanel implements Runnable {
 	private void updateFiterList() {
 		// TODO Auto-generated method stub
 		Set<String> filters= filterManager.getFilters();  
-		Vector<String> listModel = new Vector<String>();
+		Vector listModel = new Vector();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){
 
@@ -296,11 +296,11 @@ public class FilterPanel implements Runnable {
 
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
-			JList<?> theList = ( JList<?>) mouseEvent.getSource();
+			JList theList = ( JList) mouseEvent.getSource();
 			if (mouseEvent.getClickCount() == 2) {
 				int index = theList.getSelectedIndex();
 				if (index >= 0) {
-				//	String item =theList.getSelectedValue().toString();
+					String item =theList.getSelectedValue().toString();
 					String filter=(String)filterList.getSelectedValue();
 					filterManager.enableFilter(filter);
 					pane.removeAll();
