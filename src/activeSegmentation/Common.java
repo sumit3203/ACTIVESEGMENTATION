@@ -84,5 +84,11 @@ public class Common {
 	public static final String FILENAME="project.json";
 	
 	public static final String TRAININGIMAGE="trainingstack";
+	public static final String PROJECTDIR="PROJECTDIR";
+	public static final String FEATURESDIR="FEATURESDIR";
+	public static final String FILTERSDIR="FILTERSDIR";
+	public static final String LEARNINGDIR="LEARNINGDIR";
+	public static final String IMAGESDIR="IMAGESDIR";
+	public static final String EVALUATIONDIR="EVALUATIONDIR";
 	
 }

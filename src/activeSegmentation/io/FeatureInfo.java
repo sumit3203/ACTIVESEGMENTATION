@@ -6,14 +6,23 @@ import java.util.Map;
 
 public class FeatureInfo {
 
-	private int classLabel;
+	private String key;
+	private String label;
 	private String zipFile;
-	private Map<String, List<String>> sliceList= new HashMap<String, List<String>>();
-	public int getClassLabel() {
-		return classLabel;
+	private int color;
+	private Map<String, List<String>> trainingList= new HashMap<String, List<String>>();
+	private Map<String, List<String>> testingList= new HashMap<String, List<String>>();
+	public String getKey() {
+		return key;
 	}
-	public void setClassLabel(int classLabel) {
-		this.classLabel = classLabel;
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	public String getZipFile() {
 		return zipFile;
@@ -21,20 +30,32 @@ public class FeatureInfo {
 	public void setZipFile(String zipFile) {
 		this.zipFile = zipFile;
 	}
-	public Map<String, List<String>> getSliceList() {
-		return sliceList;
+	public int getColor() {
+		return color;
 	}
-	public void setSliceList(Map<String, List<String>> sliceList) {
-		this.sliceList = sliceList;
+	public void setColor(int color) {
+		this.color = color;
+	}
+	public Map<String, List<String>> getTrainingList() {
+		return trainingList;
+	}
+	public void setTrainingList(Map<String, List<String>> trainingList) {
+		this.trainingList = trainingList;
+	}
+	public Map<String, List<String>> getTestingList() {
+		return testingList;
+	}
+	public void setTestingList(Map<String, List<String>> testingList) {
+		this.testingList = testingList;
+	}
+
+	public void addTrainingRois(String key, List<String> roisName) {
+	
+		this.trainingList.put(key, roisName);
 	}
 	
-	public void addSlice(String sliceName, List<String> rois){
-		sliceList.put(sliceName, rois);
+	public void addTestingRois(String key, List<String> roisName) {
+		
+		this.testingList.put(key, roisName);
 	}
-	@Override
-	public String toString() {
-		return "FeatureInfo [classLabel=" + classLabel + ", zipFile=" + zipFile
-				+ ", sliceList=" + sliceList + "]";
-	}
-	
 }

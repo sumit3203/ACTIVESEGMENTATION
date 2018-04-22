@@ -16,11 +16,10 @@ public class ProjectInfo {
 	private int classes;
 	private String projectPath;
 	private String pluginPath;
-	
+	private Map<String,String> projectDirectory= new HashMap<String, String>();
 	private String trainingStack;
 	private String testingStack;
 	private List<Map<String,String>> filters= new ArrayList<Map<String,String>>();
-	private Map<String,String> keywordList= new HashMap<String, String>();
 	private List<FeatureInfo> featureList= new ArrayList<FeatureInfo>();
 	private Map<String,String> learning= new HashMap<String, String>();
 
@@ -56,12 +55,7 @@ public class ProjectInfo {
 	public void setFeatureList(List<FeatureInfo> featureList) {
 		this.featureList = featureList;
 	}
-	public Map<String, String> getKeywordList() {
-		return keywordList;
-	}
-	public void setKeywordList(Map<String, String> keywordList) {
-		this.keywordList = keywordList;
-	}
+
 	public Map<String, String> getLearning() {
 		return learning;
 	}
@@ -110,6 +104,12 @@ public class ProjectInfo {
 	}
 	public String getPluginPath() {
 		return pluginPath;
+	}
+	public Map<String, String> getProjectDirectory() {
+		return projectDirectory;
+	}
+	public void setProjectDirectory(Map<String, String> projectDirectory) {
+		this.projectDirectory = projectDirectory;
 	}
 	public void setPluginPath(String pluginPath) {
 		this.pluginPath = pluginPath;

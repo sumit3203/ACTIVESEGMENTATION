@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -62,32 +63,27 @@ import ijaux.scale.ZernikeMoment.Complex;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class FilterManager implements IFilterManager {
+public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String,IFilter> filterMap= new HashMap<String, IFilter>();
 	private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
-
-	private ImagePlus finalImage;
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
-
-	private ImagePlus originalImage;
 
 	private ProjectType projectType;
 
 
 
-
 	public FilterManager(IProjectManager projectManager){
+		super(new URL[0], IJ.class.getClassLoader());
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
 		System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
 		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
-		this.originalImage= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 		try {
-			//System.out.println(this.projectInfo.getPluginPath());
+			System.out.println(this.projectInfo.getPluginPath());
 			loadFilters(this.projectInfo.getPluginPath());
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
@@ -102,7 +98,7 @@ public class FilterManager implements IFilterManager {
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
-
+        System.out.println("home"+home);
 		File f=new File(home);
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
@@ -112,8 +108,15 @@ public class FilterManager implements IFilterManager {
 			//System.out.println(installJarPlugins(home+"/"+plugin));
 			if(plugin.endsWith(Common.JAR))
 			{ 
-				classes.addAll(installJarPlugins(home+"/"+plugin));
+				classes.addAll(installJarPlugins(home,plugin));
 				//addFile(home+"/"+plugin);
+				String cp=System.getProperty("java.class.path");
+				cp+=";"+ home + plugin;
+				System.setProperty("java.class.path", cp);
+				System.out.println("classpath:  "+cp);
+				File g = new File(home,plugin);
+				if (g.isFile())
+					addJar(g);
 			}
 			else if (plugin.endsWith(Common.DOTCLASS)){
 				classes.add(plugin);
@@ -143,16 +146,37 @@ public class FilterManager implements IFilterManager {
 
 	}
 
-
-
+	 private void addJar(File f) throws IOException {
+	        if (f.getName().endsWith(".jar")) {
+				 
+	            try {
+	                addURL(f.toURI().toURL());
+	            } catch (MalformedURLException e) {
+					System.out.println("PluginClassLoader: "+e);
+	            }
+	        }
+	    }
+	private List<String> loadImages(String directory){
+		List<String> imageList= new ArrayList<String>();
+		File folder = new File(directory);
+		File[] images = folder.listFiles();
+		for (File file : images) {
+			if (file.isFile()) {
+				imageList.add(file.getName());
+			}
+		}
+		return imageList;
+	}
 	public void applyFilters(){
-		//originalImage=image.duplicate();
-		System.out.println(originalImage.getImageStackSize());
 
+		String projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
+		String filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
 		for(IFilter filter: filterMap.values()){
 			System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
 				if(filter.getName().equals("Zernike Moments")){
+					//BUG for CLASSASIFICATION WILL BE FIXED LATER
+					ImagePlus originalImage=null;
 					ArrayList<Pair<Integer,Complex>> arr=ApplyZernikeFilter.ComputeValues(originalImage, filter);
 					for(Pair<Integer, Complex> pr:arr){
 						FeatureType featureType;
@@ -165,19 +189,12 @@ public class FilterManager implements IFilterManager {
 					}
 				}
 				else{
-					/*
-					 * Duplicate image to filter and let filter store data in 
-					 * Directory
-					 * */
 
-					//String projectPath="D:/astrocytes/training/filters/";
-					String projectString=projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+ "Training"+"/filters/";
 
-					for(int i=1; i<=originalImage.getStackSize(); i++){
-
-						filter.applyFilter(originalImage.getStack().getProcessor(i),projectString+"SLICE-"+i);
+					List<String>images= loadImages(projectString);
+					for(String image: images) {
+						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")));
 					}
-
 
 				}
 
@@ -187,24 +204,6 @@ public class FilterManager implements IFilterManager {
 
 	}
 
-
-	private void generateFinalImage(){
-
-		ImageStack classified = new ImageStack(originalImage.getWidth(), originalImage.getHeight());
-		int numChannels=featurStackMap.get(1).getfinalStack().getSize();
-		for (int i = 1; i <= originalImage.getStackSize(); i++){
-			System.out.println("print in"+featurStackMap.get(i).getfinalStack().size());
-			for (int c = 1; c <= numChannels; c++){
-				classified.addSlice(featurStackMap.get(i).getfinalStack().getSliceLabel(c), 
-						featurStackMap.get(i).getfinalStack().getProcessor(c));	
-			}
-		}
-		finalImage = new ImagePlus(Common.FILTERRESULT, classified);
-		finalImage.setDimensions(numChannels, originalImage.getImageStack().getSize(), originalImage.getNFrames());
-		if (originalImage.getImageStack().getSize()*originalImage.getNFrames() > 1)
-			finalImage.setOpenAsHyperStack(true);
-
-	}
 
 	public Set<String> getFilters(){
 		return filterMap.keySet();
@@ -245,9 +244,9 @@ public class FilterManager implements IFilterManager {
 
 
 
-	private  List<String> installJarPlugins(String home) throws IOException {
+	private  List<String> installJarPlugins(String home,String plugin) throws IOException {
 		List<String> classNames = new ArrayList<String>();
-		ZipInputStream zip = new ZipInputStream(new FileInputStream(home));
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(home+plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(Common.DOTCLASS)) {
 				String className = entry.getName().replace('/', '.'); // including ".class"
@@ -277,24 +276,6 @@ public class FilterManager implements IFilterManager {
 		}
 		return null;
 	}*/
-
-	@Override
-	public int getOriginalImageSize() {
-		// TODO Auto-generated method stub
-		return originalImage.getImageStackSize();
-	}
-
-
-	@Override
-	public ImagePlus getFinalImage() {
-		generateFinalImage();
-		return finalImage.duplicate();
-	}
-
-	@Override
-	public void setFinalImage(ImagePlus finalImage) {
-		this.finalImage = finalImage;
-	}
 
 
 	@Override
@@ -367,45 +348,38 @@ public class FilterManager implements IFilterManager {
 		return filterMap.get(key).getImage();
 	}
 
-	@Override
-	public ImagePlus getOriginalImage() {
-		return originalImage.duplicate();
-	}
-
-
-
 	//
 
 	/**
 	 * Parameters of the method to add an URL to the System classes. 
 	 */
-	private static final Class<?>[] parameters = new Class[]{URL.class};
+//	private static final Class<?>[] parameters = new Class[]{URL.class};
 
 	/**
 	 * Adds a file to the classpath.
 	 * @param s a String pointing to the file
 	 * @throws IOException
 	 */
-	public static void addFile(String s) throws IOException {
+/*	public static void addFile(String s) throws IOException {
 		File f = new File(s);
 		addFile(f);
-	}
+	}*/
 
 	/**
 	 * Adds a file to the classpath
 	 * @param f the file to be added
 	 * @throws IOException
 	 */
-	public static void addFile(File f) throws IOException {
+/*	public static void addFile(File f) throws IOException {
 		addURL(f.toURI().toURL());
-	}
+	}*/
 
 	/**
 	 * Adds the content pointed by the URL to the classpath.
 	 * @param u the URL pointing to the content to be added
 	 * @throws IOException
 	 */
-	public static void addURL(URL u) throws IOException {
+	/*public static void addURL(URL u) throws IOException {
 		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
 		Class<?> sysclass = URLClassLoader.class;
 		try {
@@ -416,5 +390,5 @@ public class FilterManager implements IFilterManager {
 			t.printStackTrace();
 			throw new IOException("Error, could not add URL to system classloader");
 		}        
-	}
+	}*/
 }

@@ -114,7 +114,7 @@ public class GuiController {
 	
 	public void createProject(String projectName,String projectType,String projectDirectory, String projectDescription,
 			String trainingImage,String testImage){
-		dataManager.createProject(projectName,projectType, projectDirectory, projectDescription, trainingImage, testImage);
+		//dataManager.createProject(projectName,projectType, projectDirectory, projectDescription, trainingImage, testImage);
 	//	projectManager.createProject(project);
 		
 	}
@@ -170,7 +170,7 @@ public class GuiController {
 	}*/
 	
 	public HashMap<Integer,Integer> classlevelTraining(String featureType){
-		learningManager.trainClassifier();
+	/*	learningManager.trainClassifier();
 		List<double[]> classificationResult=learningManager.applyClassifier(featureManager.extractAll(featureType));
 		int t=0;
 		HashMap<Integer,Integer> indextolabel = new HashMap<Integer, Integer>();
@@ -181,7 +181,8 @@ public class GuiController {
 				t++;
 			}
 		}
-		return indextolabel;
+		return indextolabel;*/
+		return null;
 	}
 	
 	public ImagePlus computeFeaturespixellevel(String featureType) {

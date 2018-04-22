@@ -1,11 +1,13 @@
 package activeSegmentation.gui;
 
 
+import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
-import ij.io.SaveDialog;
+import ij.process.ImageProcessor;
+import ij.process.LUT;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -20,7 +22,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +65,14 @@ public class FeaturePanelNew extends ImageWindow  {
 	/** alpha composite for the result overlay image */
 	Composite overlayAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, overlayOpacity / 100f);
 	private ImageOverlay resultOverlay;
+	LUT overlayLUT;
+	/** flag to display the overlay image */
+	private boolean showColorOverlay=false;
+	ImagePlus classifiedImage;
+	// Create overlay LUT
+	byte[] red = new byte[ 256 ];
+	byte[] green = new byte[ 256 ];
+	byte[] blue = new byte[ 256 ];
 
 	private Map<String, JList> exampleList;
 	private Map<String, JList> allexampleList;
@@ -118,7 +127,7 @@ public class FeaturePanelNew extends ImageWindow  {
 
 
 	public void showPanel() {
-		frame = new JFrame("VISUALIZATION");
+		frame = new JFrame("FEATURE PANEL");
 		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
 		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
@@ -144,10 +153,10 @@ public class FeaturePanelNew extends ImageWindow  {
 		classPanel.setBounds(605,20,350,100);
 		classPanel.setPreferredSize(new Dimension(350, 100));
 		classPanel.setBorder(BorderFactory.createTitledBorder("CLASSES"));
-		addClassPanel();
 		JScrollPane classScrolPanel = new JScrollPane(classPanel);
 		classScrolPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		classScrolPanel.setBounds(605,20,350,80);
+		addClassPanel();
 		panel.add(classScrolPanel);
 		JPanel features= new JPanel();
 		features.setBounds(605,120,350,100);
@@ -195,7 +204,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		dataJPanel.setBackground(Color.GRAY);
 		panel.add(dataJPanel);
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
-		roiPanel.setPreferredSize(new Dimension(350, 400));
+		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
 		scrollPane.setBounds(605,300,350,250);
@@ -205,6 +214,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		frame.setSize(1000,600);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		updateGui();
 
 	}
 
@@ -214,6 +224,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		jCheckBoxList.clear();
 		jTextList.clear();
 		int classes=featureManager.getNumOfClasses();
+		IJ.log(Integer.toString(classes));
 		if(classes%3==0){
 			int tempSize=classes/3;
 			classPanel.setPreferredSize(new Dimension(340, 80+30*tempSize));	
@@ -325,6 +336,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			featureManager.addClass();
 			addClassPanel();
 			validateFrame();
+			updateGui();
 		}
 		if(event==DELETE_BUTTON_PRESSED){          
 			if(featureManager.getNumOfClasses()>2){
@@ -336,8 +348,12 @@ public class FeaturePanelNew extends ImageWindow  {
 			}	
 			addClassPanel();
 			validateFrame();
+			updateGui();
 		}
 
+		if(event==SAVE_BUTTON_PRESSED){
+			featureManager.saveFeatureMetadata();
+		}
 		if(event==SAVECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {
 				if (checkBox.isSelected()) {
@@ -351,15 +367,33 @@ public class FeaturePanelNew extends ImageWindow  {
 			ImagePlus image=featureManager.getPreviousImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
+			if (showColorOverlay){
+				classifiedImage=featureManager.getClassifiedImage();
+				updateResultOverlay(classifiedImage);
+			}
 			updateGui();
 		}
 		if(event==NEXT_BUTTON_PRESSED  ){
 			ImagePlus image=featureManager.getNextImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
+			if (showColorOverlay){
+				classifiedImage=featureManager.getClassifiedImage();
+				updateResultOverlay(classifiedImage);
+			}
 			imagePanel.add(ic);
 			updateGui();
 		}
+		if(event==COMPUTE_BUTTON_PRESSED){
+			IJ.log("compute");
+			classifiedImage=featureManager.compute();
+			toggleOverlay();
+		}
+		if(event==TOGGLE_BUTTON_PRESSED){
+
+			toggleOverlay();
+		}
+
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
 			Color c;
@@ -393,6 +427,41 @@ public class FeaturePanelNew extends ImageWindow  {
 	}
 
 
+	/**
+	 * Toggle between overlay and original image with markings
+	 */
+	void toggleOverlay()
+	{
+		showColorOverlay = !showColorOverlay;
+		if (showColorOverlay && (null != classifiedImage))
+		{
+			updateResultOverlay(classifiedImage);
+		}
+		else{
+			resultOverlay.setImage(null);
+			displayImage.updateAndDraw();
+		}
+	}
+
+	public void updateResultOverlay(ImagePlus classifiedImage)
+	{
+		ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
+		overlay = overlay.convertToByte(false);
+		setLut(featureManager.getColors());
+		overlay.setColorModel(overlayLUT);
+		resultOverlay.setImage(overlay);
+		displayImage.updateAndDraw();
+	}
+	public void setLut(List<Color> colors ){
+		int i=0;
+		for(Color color: colors){
+			red[i] = (byte) color.getRed();
+			green[i] = (byte) color.getGreen();
+			blue[i] = (byte) color.getBlue();
+			i++;
+		}
+		overlayLUT = new LUT(red, green, blue);
+	}
 	private void updateGui(){	
 		try{
 			drawExamples();
@@ -499,7 +568,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	}
 
 	private void downloadRois(String key) {
-        String type=learningType.getSelectedItem().toString();
+		String type=learningType.getSelectedItem().toString();
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -515,20 +584,20 @@ public class FeaturePanelNew extends ImageWindow  {
 	}
 
 	private void uploadExamples(String key) {
-		 String type=learningType.getSelectedItem().toString();
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			int rVal = fileChooser.showOpenDialog(null);
-			if (rVal == JFileChooser.APPROVE_OPTION) {
-				 featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type);
-			}
-		
+		String type=learningType.getSelectedItem().toString();
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		int rVal = fileChooser.showOpenDialog(null);
+		if (rVal == JFileChooser.APPROVE_OPTION) {
+			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type);
+		}
+
 	}
 	public static void main(String[] args) {
 		new ImageJ();
 		IProjectManager projectManager= new ProjectManagerImp();
-		projectManager.loadProject("C:\\Users\\HP\\Documents\\SUMIT\\ACTIVE_SEG\\testproject\\testproject.json");
+		projectManager.loadProject("C:\\Users\\sumit\\Documents\\testproject\\testproject.json");
 		new FeaturePanelNew(new FeatureManagerNew(projectManager));
 	}
 

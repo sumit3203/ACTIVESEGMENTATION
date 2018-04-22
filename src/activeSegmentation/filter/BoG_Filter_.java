@@ -82,6 +82,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public static boolean sep= Prefs.getBoolean(ISSEP, false);
 	private static boolean isiso= Prefs.getBoolean(ISO, true);
 	private boolean isEnabled=true;
+	private final int TYPE=1;
 
 	public boolean isFloat=false;
 	
@@ -430,7 +431,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	@Override
 	public int getFilterType() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.TYPE;
 	}
 	@Override
 	public <T> T getFeatures() {

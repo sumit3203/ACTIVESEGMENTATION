@@ -90,24 +90,17 @@ public class ClassifierManager implements ILearningManager {
 	}
 
     @Override
-	public List<double[]> applyClassifier(List<IDataSet> testDataSet){
+	public double[] applyClassifier(IDataSet dataSet){
 		System.out.println("Testing Results");
-		List<double[]> results= new ArrayList<double[]>();
-		for(IDataSet dataSet: testDataSet){
 			System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
 			System.out.println("WORK LOAD : "+ Common.WORKLOAD);
-			double[] classificationResult = new double[testDataSet.get(0).getNumInstances()];		
+			double[] classificationResult = new double[dataSet.getNumInstances()];		
 			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
 					classificationResult, currentClassifier);
 					pool.invoke(applyTask);
+							
 			
-				for(int j=0;j<classificationResult.length;j++){
-				//	System.out.println(classificationResult[j]);
-				}
-				
-			results.add(classificationResult);			
-		}
-		return results;
+		return classificationResult;
 	}
 
 

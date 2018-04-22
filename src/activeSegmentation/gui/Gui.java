@@ -11,18 +11,16 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.OceanTheme;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import activeSegmentation.IProjectManager;
-import activeSegmentation.feature.FeatureManager;
-import activeSegmentation.filterImpl.FilterManager;
+import activeSegmentation.feature.FeatureManagerNew;
+
 
 public class Gui {
 	private JFrame mainFrame;
@@ -40,11 +38,10 @@ public class Gui {
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent( this, 3, "Evaluation" );
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
-	private FeaturePanel featurePanel;
+	private FeaturePanelNew featurePanel;
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	private IProjectManager projectManager;
-
 	public Gui(IProjectManager projectManager){
 		this.projectManager=projectManager;
 		prepareGUI();
@@ -65,10 +62,15 @@ public class Gui {
 		}
 		if(event==FEATURE_BUTTON_PRESSED){
 			if(featurePanel== null){
-					ImagePlus image= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
+			/*		ImagePlus image= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
 			    featurePanel= new FeaturePanel(new FeatureManager(image.getStackSize(),projectManager),image);
+			    */
+				new FeaturePanelNew(new FeatureManagerNew(projectManager));
+				
 			}
 		}
+		
+		
 
 		if(event==LEARNING_BUTTON_PRESSED){
 			if(learningPanel==null)
@@ -80,8 +82,12 @@ public class Gui {
 			
 		//	EvaluationPanel evaluationPanel = new EvaluationPanel(dataManager, evaluation);
 		//	SwingUtilities.invokeLater(evaluationPanel);
+			
 		}
 	}
+	
+
+
 	private void prepareGUI(){
 		
 		//Make sure we have nice window decorations.

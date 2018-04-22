@@ -1,12 +1,14 @@
 package activeSegmentation.feature;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import activeSegmentation.Common;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
 import activeSegmentation.IFilterManager;
+import activeSegmentation.io.ClassInfo;
 import activeSegmentation.learning.WekaDataSet;
 import ij.ImagePlus;
 import weka.core.Attribute;
@@ -48,10 +50,10 @@ public class RoiInstanceCreator implements IFeature {
 	}
 	
 	@Override
-	public void createTrainingInstance(List<String> classLabels, int classes, List<?> features) {
+	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
 		// TODO Auto-generated method stub
 
-		@SuppressWarnings("unchecked")
+		/*@SuppressWarnings("unchecked")
 		List<ArrayList<Integer>> imageType = (List<ArrayList<Integer>>) features;
 		
 		ArrayList<Attribute> attributes = createFeatureHeader();
@@ -71,7 +73,7 @@ public class RoiInstanceCreator implements IFeature {
 					e.printStackTrace();
 				}
 			}	
-		}
+		}*/
 		
 	}
 	
@@ -116,7 +118,7 @@ public class RoiInstanceCreator implements IFeature {
 	}
 
 	@Override
-	public List<IDataSet> createAllInstance(List<String> classLabels, int classes) {
+	public IDataSet createAllInstance(String image) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -40,6 +40,7 @@ import activeSegmentation.IFeatureManager;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IFeature;
 import activeSegmentation.LearningType;
+import activeSegmentation.gui.Util;
 import activeSegmentation.io.ClassInfo;
 import activeSegmentation.io.FeatureInfo;
 import activeSegmentation.io.ProjectInfo;
@@ -77,26 +78,36 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
 	private Random rand = new Random();
-	private String projectString;
+	private String projectString,featurePath;
 	private int sliceNum,totalSlices;
 	private List<String> images;
 	private Map<String,IFeature> featureMap= new HashMap<String, IFeature>();
 	private static RoiManager roiman= new RoiManager();
 	private Map<String,ClassInfo> classes= new HashMap<String, ClassInfo>();
+	private List<Color> defaultColors;
+	ILearningManager  learningManager;
+
 	public FeatureManagerNew(IProjectManager projectManager)
 	{
 		this.projectManager= projectManager;
 		this.projectInfo=this.projectManager.getMetaInfo();
 		this.images= new ArrayList<String>();
-		this.projectString=this.projectInfo.getProjectPath()+"/"+this.projectInfo.getProjectName()+"/"+ "Training/images/";
+		this.projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
+		System.out.println();
+		this.featurePath=this.projectInfo.getProjectDirectory().get(Common.FEATURESDIR);
 		this.totalSlices=loadImages(this.projectString);
+		this.defaultColors=Util.setDefaultColors();
 		if(this.totalSlices>0){
 			this.sliceNum=1;
 		}
-		for(int i=1; i<=projectInfo.getClasses();i++ ){
-			addClass();
+		if( !setFeatureMetadata()) {
+			for(int i=1; i<=projectInfo.getClasses();i++ ){
+				addClass();
+			}
 		}
 		roiman.hide();
+		learningManager= new ClassifierManager(projectManager);
+		featureMap.put("Segmentation", new PixelInstanceCreator(projectInfo));
 	}
 
 
@@ -131,7 +142,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			}
 		}
 	}
-	
+
 	private boolean processibleRoi(Roi roi) {
 		boolean ret=(roi!=null && !(roi.getType()==Roi.LINE || 
 				roi.getType()==Roi.POLYLINE ||
@@ -146,10 +157,10 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	public void deleteExample(String key, int index, String type) {
 		String imageKey=this.images.get(sliceNum-1);
 		if(LearningType.valueOf(type).equals(LearningType.TESTING)){
-			classes.get(key).getTestingRois().get(imageKey).remove(index);
+			classes.get(key).deleteTestingRoi(imageKey, index);
 		}
 		else{
-		    classes.get(key).getTrainingRois().get(imageKey).remove(index);
+			classes.get(key).deleteTrainingRoi(imageKey, index);
 		}
 
 	}
@@ -159,22 +170,22 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	public List<Roi> getExamples(String key, String type) {
 		String imageKey=this.images.get(sliceNum-1);
 		if(LearningType.valueOf(type).equals(LearningType.TESTING)){
-			return classes.get(key).getTestingRois().get(imageKey);
+			return classes.get(key).getTestingRois(imageKey);
 		}
 		else{
-			return classes.get(key).getTrainingRois().get(imageKey);
+			return classes.get(key).getTrainingRois(imageKey);
 		}
 
 	}
-	
+
 	@Override
 	public Roi getRoi(String key, int index, String type) {
 		String imageKey=this.images.get(sliceNum-1);
 		if(LearningType.valueOf(type).equals(LearningType.TESTING)){
-			return classes.get(key).getTestingRois().get(imageKey).get(index);
+			return classes.get(key).getTestingRoi(imageKey, index);
 		}
 		else{
-			return classes.get(key).getTrainingRois().get(imageKey).get(index);
+			return classes.get(key).getTestingRoi(imageKey, index);
 		}
 	}  
 
@@ -194,9 +205,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	public int getRoiListSize(String key,String learningType) {
 		String imageKey=this.images.get(sliceNum-1);
 		if(LearningType.valueOf(learningType).equals(LearningType.TESTING)){
-              return classes.get(key).getTestingRoiSize(imageKey);
+			return classes.get(key).getTestingRoiSize(imageKey);
 		}else{
-			 return classes.get(key).getTrainingRoiSize(imageKey);	
+			return classes.get(key).getTrainingRoiSize(imageKey);	
 		}
 	}
 
@@ -218,17 +229,22 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		if(!classes.containsKey(key)){
 			Map<String,List<Roi>> trainingRois= new HashMap<String, List<Roi>>();	
 			Map<String,List<Roi>> testingRois= new HashMap<String, List<Roi>>();	
-			ClassInfo classInfo= new ClassInfo(key, "label"+classes.size(),getColor(),trainingRois, testingRois);
+			ClassInfo classInfo= new ClassInfo(key, "label"+classes.size(),getColor(classes.size()),trainingRois, testingRois);
 			classes.put(key, classInfo);
 		}
 	}
 
-	private Color getColor(){
-		float r = rand.nextFloat();
-		float g = rand.nextFloat();
-		float b = rand.nextFloat();
-		Color randomColor = new Color(r, g, b);
-		return randomColor;
+	private Color getColor(int number){
+		if(number<defaultColors.size()) {
+			return defaultColors.get(number);
+		}else {
+			float r = rand.nextFloat();
+			float g = rand.nextFloat();
+			float b = rand.nextFloat();
+			Color randomColor = new Color(r, g, b);
+			return randomColor;	
+		}
+
 	}
 	@Override
 	public void deleteClass(String key) {
@@ -236,39 +252,107 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 
-	@Override
-	public void setFeatureMetadata() {
+	public boolean setFeatureMetadata() {
+		boolean alreadysetClass=false;
+		projectInfo= projectManager.getMetaInfo();
+		for(FeatureInfo featureInfo : projectInfo.getFeatureList() ){
+			alreadysetClass=true;
+			Map<String,List<Roi>> trainingRois=loadRois(featureInfo.getZipFile(), featureInfo.getTrainingList());
+			Map<String,List<Roi>> testingRois=loadRois(featureInfo.getZipFile(), featureInfo.getTestingList());
+			ClassInfo classInfo = new ClassInfo(featureInfo.getKey(), featureInfo.getLabel(),
+					new Color(featureInfo.getColor()), trainingRois, testingRois);
+			classes.put(featureInfo.getKey(), classInfo);
+		}
+		return alreadysetClass;
+	}
 
+	private Map<String,List<Roi>> loadRois(String filename,  Map<String, List<String>> roiMapper){
+		Map<String,List<Roi>> roiMap= new HashMap<String,List<Roi>>();
+		List<Roi> classRoiList=openZip(featurePath+"/"+filename);
+		for( String imageKey: roiMapper.keySet()){
+			roiMap.put(imageKey, getRois(classRoiList, roiMapper.get(imageKey)));
+		}
 
+		return roiMap;
+	}
+	private List<Roi> getRois(List<Roi> classRoiList, List<String> roiNames){
+		List<Roi> roiList= new ArrayList<Roi>();
+		for(String name: roiNames){
+			System.out.println(name);
+			for(Roi roi: classRoiList){
+				System.out.println(roi.getName());
+				if(roi.getName().equalsIgnoreCase(name)){
+					roiList.add(roi);
+				}
+			}
+		}
+
+		return roiList;
 	}
 
 	@Override
 	public void saveFeatureMetadata() {
-		
+		projectInfo= projectManager.getMetaInfo();
+		projectInfo.resetFeatureInfo();
+		for(ClassInfo classInfo:classes.values()) {
+			List<Roi>  classRois= new ArrayList<Roi>();
+			FeatureInfo featureInfo=new FeatureInfo();
+			featureInfo.setKey(classInfo.getKey());
+			featureInfo.setLabel(classInfo.getLabel());
+			featureInfo.setColor(classInfo.getColor().getRGB());
+			for(String imageKey:classInfo.getTrainingRoiSlices()) {
+				List<String> trainingRois=new ArrayList<String>();
+				for(Roi roi: classInfo.getTrainingRois(imageKey)){
+					trainingRois.add(roi.getName());
+				}	
+				featureInfo.addTrainingRois(imageKey, trainingRois);
+				classRois.addAll(classInfo.getTrainingRois(imageKey));
+			}
+			for(String imageKey:classInfo.getTestingRoiSlices()) {
+				List<String> testingRois=new ArrayList<String>();
+				for(Roi roi: classInfo.getTestingRois(imageKey)){
+					testingRois.add(roi.getName());
+				}	
+				featureInfo.addTrainingRois(imageKey, testingRois);
+				classRois.addAll(classInfo.getTestingRois(imageKey));
+			}
 
+			String fileName=Common.ROISET+classInfo.getKey()+Common.FORMAT;
+			if(classRois!=null & classRois.size()>0){
+				//System.out.println("examples"+projectInfo.getProjectPath());
+				saveRois(featurePath+"/"+fileName,classRois);
+				featureInfo.setZipFile(fileName);
+			}
+			projectInfo.addFeature(featureInfo);
+		}
+
+		projectManager.writeMetaInfo(projectInfo);
 	}
 
 	@Override
 	public IDataSet extractFeatures(String featureType) {
-		
-		return null;
+
+		featureMap.get(featureType).createTrainingInstance(classes.values());
+		IDataSet dataset=featureMap.get(featureType).getDataSet();
+		projectManager.setData(dataset);
+		return dataset;
 	}
 
 	@Override
 	public Set<String> getFeatures() {
-		
+
 		return null;
 	}
 
 	@Override
 	public void addFeatures(IFeature feature) {
-		
+
 
 	}
 
 	@Override
 	public List<IDataSet> extractAll(String featureType) {
-		
+
 		return null;
 	}
 
@@ -277,13 +361,17 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		System.out.println(classKey+type);
 		List<Roi> rois= getExamples(classKey, type);
 		System.out.println(rois.size());
+		return saveRois(filename, rois);
+	}
+
+	private boolean saveRois(String filename, List<Roi> rois) {
 		DataOutputStream out = null;
 		try {
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(filename));
 			out = new DataOutputStream(new BufferedOutputStream(zos));
 			RoiEncoder re = new RoiEncoder(out);
 			for (Roi roi:rois) {
-                System.out.println(roi.getName());
+				System.out.println(roi.getName());
 				zos.putNextEntry(new ZipEntry(roi.getName()+".roi"));
 				re.write(roi);
 				out.flush();
@@ -296,20 +384,25 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			if (out!=null)
 				try {out.close();} catch (IOException e) {}
 		}
-
 		return true;
 	}
-
 	@Override
-	public void uploadExamples(String filename,String classKey,String type) {
-		
+	public void uploadExamples(String fileName,String classKey,String type) {
+
+
+
+		addExampleList(classKey, openZip(fileName), type);
+
+	}
+
+	private List<Roi> openZip(String fileName){
 		Hashtable rois = new Hashtable();
 		ZipInputStream in = null; 
 		List<Roi> roiList= new ArrayList<Roi>();
 		ByteArrayOutputStream out = null; 
 		int nRois = 0; 
 		try { 
-			in = new ZipInputStream(new FileInputStream(filename)); 
+			in = new ZipInputStream(new FileInputStream(fileName)); 
 			byte[] buf = new byte[1024]; 
 			int len; 
 			ZipEntry entry = in.getNextEntry(); 
@@ -344,11 +437,8 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 		if(nRois==0)
 			System.out.println("ERROR OCCURED");
-		
-		addExampleList(classKey, roiList, type);
-		
+		return roiList;
 	}
-	
 	private String getUniqueName(String name,Hashtable rois) {
 		String name2 = name;
 		int n = 1;
@@ -368,9 +458,23 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public ImagePlus compute(String featureType) {
-		
-		return null;
+	public ImagePlus compute() {
+		//IJ.debugMode=true;
+		IJ.log("TRAINING STARTED");
+		extractFeatures("Segmentation");
+		learningManager.trainClassifier();
+		IJ.log("TRAINING DONE");
+		for(String image : images) {
+			double[] classificationResult=learningManager.applyClassifier( featureMap.get("Segmentation").createAllInstance(image));
+			ImagePlus currentImage=getCurrentImage();
+			ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
+					currentImage.getHeight(), classificationResult);	
+			ImagePlus classifiedImage= new ImagePlus(image, classifiedSliceProcessor);
+			classifiedImage.setCalibration(currentImage.getCalibration());
+			IJ.save(classifiedImage,featurePath+image);
+		}
+
+		return getClassifiedImage();
 	}
 
 
@@ -391,7 +495,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 
 	@Override
 	public int getTotalSlice() {
-		
+
 		return this.images.size();
 	}
 
@@ -399,18 +503,27 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	@Override
 	public ImagePlus getCurrentImage() {
 		if(sliceNum==0){
-			createImageIcon("no-image.jpg");
+			return createImageIcon("no-image.jpg");
 		}
 		return new ImagePlus(projectString+this.images.get(sliceNum-1));
 	}
 
 
+
+	private ImagePlus getImage(String image) {
+		return new ImagePlus(projectString+image);	
+	}
+
 	@Override
 	public int getCurrentSlice() {
-		
+
 		return this.sliceNum;
 	}
 
+	@Override
+	public ImagePlus getClassifiedImage() {
+		return new ImagePlus(featurePath+this.images.get(sliceNum-1));
+	}
 
 	@Override
 	public ImagePlus getNextImage() {
@@ -439,6 +552,15 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 
-	
+	@Override
+	public List<Color> getColors() {
+		List<Color> colors=new ArrayList<>();
+		for(ClassInfo classInfo:classes.values()) {
+
+			colors.add(classInfo.getColor());
+		}
+		return colors;
+	}
+
 
 }

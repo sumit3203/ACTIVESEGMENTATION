@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.gui.CreatProject;
 import activeSegmentation.io.ProjectManagerImp;
+import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
 
@@ -33,8 +34,8 @@ public class Active_Segmentation_ implements PlugIn {
 	 */
 	@Override
 	public void run(String arg0) {
+	
 		IProjectManager dataManager= new ProjectManagerImp();
-
 		CreatProject creatProject= new CreatProject(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 

@@ -122,12 +122,6 @@ public interface IFeatureManagerNew {
 	public void deleteClass(String label);
 
 	/**
-	 * This method will set feature meta data for MetaInfo
-	 * 
-	 */
-	public void setFeatureMetadata();
-
-	/**
 	 * This method will set feature parameter of MetaInfo
 	 * and store feature data on session file
 	 * 
@@ -178,7 +172,7 @@ public interface IFeatureManagerNew {
 	 * @return List<Roi>
 	 */
 	public void uploadExamples(String filename,String classKey,String type);
-	public ImagePlus compute(String featureType);
+	public ImagePlus compute();
 
 	void updateColor(String key, Color value);
 	public int getCurrentSlice();
@@ -187,4 +181,8 @@ public interface IFeatureManagerNew {
 	public ImagePlus getNextImage();
 	public ImagePlus getPreviousImage();
 	public Roi getRoi(String classKey, int index, String type);
+
+	public List<Color> getColors();
+
+	public ImagePlus getClassifiedImage();
 }

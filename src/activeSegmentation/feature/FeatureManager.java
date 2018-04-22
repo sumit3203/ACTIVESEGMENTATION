@@ -310,7 +310,7 @@ public class FeatureManager implements IFeatureManager {
 
 	@Override
 	public void setFeatureMetadata(){
-		projectInfo= projectManager.getMetaInfo();
+	/*	projectInfo= projectManager.getMetaInfo();
 		Map<String,String> keywordList= projectInfo.getKeywordList();
 		if(keywordList!=null){
 			for(String key:keywordList.keySet()){
@@ -343,7 +343,7 @@ public class FeatureManager implements IFeatureManager {
 		}
 
 		System.out.println(examples.size());
-		System.out.println(projectInfo.toString());
+		System.out.println(projectInfo.toString());*/
 
 	}
 
@@ -364,7 +364,7 @@ public class FeatureManager implements IFeatureManager {
 
 	@Override
 	public void saveFeatureMetadata(){
-		projectInfo= projectManager.getMetaInfo();
+	/*	projectInfo= projectManager.getMetaInfo();
 		projectInfo.resetFeatureInfo();
 
 		Map<String, String> keywordList = new HashMap<String, String>();
@@ -406,14 +406,14 @@ public class FeatureManager implements IFeatureManager {
 
 		System.out.println("IN");
 		System.out.println(projectInfo.toString());
-		projectManager.writeMetaInfo(projectInfo);
+		projectManager.writeMetaInfo(projectInfo);*/
 
 	}
 
 	@Override
 	public IDataSet extractFeatures(String featureType){
 		
-		if(featureType.equals("classLevel"))
+	/*	if(featureType.equals("classLevel"))
 		{
 			featureMap.get(featureType).createTrainingInstance(new ArrayList<String>(classLabels.values()),
 					imageType.size(), imageType);
@@ -422,7 +422,7 @@ public class FeatureManager implements IFeatureManager {
 		else {
 			featureMap.get(featureType).createTrainingInstance(new ArrayList<String>(classLabels.values()),
 					numOfClasses, examples);
-		}
+		}*/
 		IDataSet dataset=featureMap.get(featureType).getDataSet();
 		projectManager.setData(dataset);
 		System.out.println("NUMBER OF INSTANCE "+dataset.toString());
@@ -430,15 +430,15 @@ public class FeatureManager implements IFeatureManager {
 
 	}
 	
-
 	@Override
 	public List<IDataSet> extractAll(String featureType){
 		List<IDataSet> dataset = null;
-		if(featureType.equals("pixelLevel"))
-			dataset= featureMap.get(featureType).createAllInstance(new ArrayList<String>(classLabels.values()),numOfClasses);
+		/*if(featureType.equals("pixelLevel"))
+		//	dataset= featureMap.get(featureType).createAllInstance(new ArrayList<String>(classLabels.values()),numOfClasses);
 		else
 			dataset = featureMap.get(featureType).createAllInstance(new ArrayList<String>(classLabels.values()),numOfClasses, imageTestType);
-		return dataset;
+			*/
+	return dataset;
 	}
 
 	@Override
@@ -592,7 +592,7 @@ public class FeatureManager implements IFeatureManager {
 	}
 	
 	public ImagePlus compute(String featureType){
-		extractFeatures(featureType);
+	/*	extractFeatures(featureType);
 		learningManager.trainClassifier();
 		List<double[]> classificationResult=learningManager.applyClassifier(extractAll(featureType));
 		
@@ -608,6 +608,7 @@ public class FeatureManager implements IFeatureManager {
 		ImagePlus classifiedImage= new ImagePlus("Classified Image", classStack);
 		classifiedImage.setCalibration(originalImage.getCalibration());
 		//classifiedImage.show();
-		return classifiedImage;
+		return classifiedImage;*/
+		return null;
 	}
 }

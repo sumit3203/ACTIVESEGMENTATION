@@ -64,7 +64,7 @@ public interface ILearningManager {
 	 * @param testDataSet
 	 * @return Predicted class of test DataSet
 	 */
-	public  List<double[]> applyClassifier(List<IDataSet> testDataSet);
+	public  double[] applyClassifier(IDataSet testDataSet);
 
 	public Set<String> getFeatureSelList();
 }

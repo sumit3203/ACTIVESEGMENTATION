@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 
 import activeSegmentation.IProjectManager;
 import activeSegmentation.ProjectType;
+import ij.IJ;
+import ij.WindowManager;
 
 
 public class CreatProject implements Runnable {
@@ -38,7 +40,8 @@ public class CreatProject implements Runnable {
 	private JTextField projectNField = new JTextField();
 	private JTextField projectDField= new JTextField();
 	private JTextField trainingImageP = new JTextField();
-	private JTextField pluginsDir = new JTextField();
+	private JLabel errorText= new JLabel("");
+	//private JTextField pluginsDir = new JTextField();
 	
 	JComboBox<ProjectType> projectList;
 	private JFrame createProject;
@@ -128,7 +131,7 @@ public class CreatProject implements Runnable {
 			fileChooser.setAcceptAllFileFilterUsed(false);
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
-				pluginsDir.setText(fileChooser.getSelectedFile().toString());
+				//pluginsDir.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
 		if(event== CANCEL_BUTTON_PRESSED){
@@ -144,18 +147,24 @@ public class CreatProject implements Runnable {
 			String projectDirectory=projectFField.getText();
 			String projectDescription=projectDField.getText();
 			String trainingImage=trainingImageP.getText();
-			String pluginDir=pluginsDir.getText();
+			//String pluginDir=pluginsDir.getText();
 			String projectType=projectList.getSelectedItem().toString();
 			System.out.println(projectName+"--"+ projectType);
-			projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
-					trainingImage, pluginDir);	
+			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
+					trainingImage);	
+			if("DONE".equalsIgnoreCase(message)) {
 			createProject.setVisible(false);
 			createProject.dispose();
 			new Gui(projectManager);
+			}
+			else {
+				errorText.setText(message);
+			}
 		}
 	}
 
 	private JFrame createProject(){
+		
 		JFrame mainFrame = new JFrame("Create Project");
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		mainFrame.setSize(600,500);
@@ -200,6 +209,7 @@ public class CreatProject implements Runnable {
 		projectFField.setBounds( 200, 220, 250, 30 );
 		controlFrame.add(projectFField);	
 		controlFrame.add(addButton("Browse",null, 460, 220, 100, 30, BROWSE_BUTTON_PRESSED));
+		if(null == WindowManager.getCurrentImage()) {
 		JLabel trainingImage= new JLabel("Training Image *:");
 		trainingImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
 		trainingImage.setBounds( 50, 260, 200, 30 );
@@ -208,15 +218,20 @@ public class CreatProject implements Runnable {
 		trainingImageP.setBounds( 200, 260, 250, 30 );
 		controlFrame.add(trainingImageP);	
 		controlFrame.add(addButton("Browse",null, 460, 260, 100, 30, TRAININGF_BUTTON_PRESSED));
-		JLabel testImage= new JLabel("Plugin Dir :");
+		}
+		/*JLabel testImage= new JLabel("Plugin Dir :");
 		testImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
 		testImage.setBounds( 50, 300, 200, 30 );
-		controlFrame.add(testImage);		
-		pluginsDir.setColumns(200);
-		pluginsDir.setBounds( 200, 300, 250, 30 );
-		controlFrame.add(pluginsDir);	
+		controlFrame.add(testImage);		*/
+		//pluginsDir.setColumns(200);
+		//pluginsDir.setBounds( 200, 300, 250, 30 );
+		//controlFrame.add(pluginsDir);	
+		errorText.setFont(new Font( "Arial", Font.BOLD, 12 ));
+		errorText.setBounds(30, 300, 600, 30 );
+		errorText.setForeground(Color.RED);
+		controlFrame.add(errorText);
 
-		controlFrame.add(addButton("Browse",null, 460, 300, 100, 30, TESTINGF_BUTTON_PRESSED));
+		//controlFrame.add(addButton("Browse",null, 460, 300, 100, 30, TESTINGF_BUTTON_PRESSED));
 		controlFrame.add(addButton("Finish",null, 30, 350, 220, 60, FINISH_BUTTON_PRESSED));
 		controlFrame.add(addButton("Cancel",null,270, 350, 200, 60, CANCEL_BUTTON_PRESSED));
 

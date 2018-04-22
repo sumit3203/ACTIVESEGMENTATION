@@ -2,7 +2,10 @@ package activeSegmentation;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import activeSegmentation.io.ClassInfo;
 
 /**
  * 				
@@ -40,8 +43,7 @@ public interface IFeature {
 	 * @param classes
 	 * @param features can be of pixel level features or class level features
 	 */
-	public void createTrainingInstance(List<String> classLabels,
-			int classes, List<?> features);
+	public void createTrainingInstance(Collection<ClassInfo> classInfos);
 	/**
 	 * 
 	 * @return Weka Format DataSet 
@@ -59,7 +61,7 @@ public interface IFeature {
 	 * @param classLabels
 	 * @param classes
 	 */
-	public List<IDataSet> createAllInstance(List<String> classLabels, int classes);
+	public IDataSet createAllInstance(String image);
 	
 	/**
 	 * Create Instances of Testing DataSet at Class level

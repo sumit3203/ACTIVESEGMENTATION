@@ -3,6 +3,7 @@ package activeSegmentation.gui;
 
 
 import ij.IJ;
+import ij.ImagePlus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -50,6 +51,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.Common;
+import activeSegmentation.IFeatureManager;
+import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.filterImpl.FilterManager;
@@ -88,6 +91,7 @@ public class FilterPanel implements Runnable {
 
 	public FilterPanel(IProjectManager projectManager) {
 		this.projectManager= projectManager;
+		
 		this.filterManager =new FilterManager(projectManager);
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
@@ -250,12 +254,20 @@ public class FilterPanel implements Runnable {
 
 		if(event==VIEW_BUTTON_PRESSED){
 	      // filterManager.getFinalImage().show();
-			new ViewFilterResults(this.projectManager);
-				//viewPanel.show();
+			new ViewFilterResults(this.projectManager,createImageIcon("no-image.jpg"));
+			
 		}
 
 	}
 
+	private  ImagePlus  createImageIcon(String path) {
+		java.net.URL imgURL = Gui.class.getResource(path);
+		if (imgURL != null) {
+			return new ImagePlus(imgURL.getPath());
+		} else {            
+			return null;
+		}
+	}
 	private void updateTabbedGui(String key){
 		int i=0;
 		Map<String,String> settingsMap=filterManager.getFilterSetting(key);

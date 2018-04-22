@@ -85,12 +85,6 @@ public interface IFilterManager {
 	
 	
 	/**
-	 * This method will return number of slices
-	 * @return return number of slices
-	 */
-	public int getOriginalImageSize();
-	
-	/**
 	 * This method will return processed image by particular filter
 	 * @param  filter key
 	 * @return extracted Image
@@ -117,17 +111,6 @@ public interface IFilterManager {
 	 */
 	public void enableFilter(String key);
 	
-	/**
-	 * 
-	 * @return  classified image
-	 */
-	public ImagePlus getFinalImage();
-	
-	/**
-	 * 
-	 * @param  set classified image
-	 */
-	public void setFinalImage(ImagePlus finalImage);
 	
 	/**
 	 * 
@@ -141,10 +124,5 @@ public interface IFilterManager {
 	 */
 	public void saveFiltersMetaData();
 	
-	/**
-	 * 
-	 *   @return give original training Image
-	 */
-	public ImagePlus getOriginalImage();
 
 }

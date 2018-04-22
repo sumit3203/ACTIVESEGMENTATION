@@ -86,6 +86,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	private boolean doCalib = false;
 	private Calibration cal=null;
+	private final int TYPE=1;
 
 	/**
 	 * 
@@ -369,7 +370,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	private boolean isEnabled=true;
 
-	private int position_id=1;
 
 	/** A string key identifying this factory. */
 	private final  String FILTER_KEY = "ZKFilter";
@@ -377,7 +377,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "CURVATOR";
 	
-	private final int TYPE=1;
 
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
