@@ -112,7 +112,7 @@ public class GuiController {
 		learningManager.saveLearningMetaData();
 	}
 	
-	public void createProject(String projectName,String projectType,String projectDirectory, String projectDescription,
+	public void createProject(String projectName, Enum<?> projectType,String projectDirectory, String projectDescription,
 			String trainingImage,String testImage){
 		//dataManager.createProject(projectName,projectType, projectDirectory, projectDescription, trainingImage, testImage);
 	//	projectManager.createProject(project);

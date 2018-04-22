@@ -40,10 +40,10 @@ public class Util {
 		return c;
 	}
 
-	public static  JList model(){
-		DefaultListModel traces = new DefaultListModel();
+	public static  JList<String> model(){
+		DefaultListModel<String> traces = new DefaultListModel<String>();
 		traces.addElement(" ");
-		JList list=new JList(traces);
+		JList<String> list=new JList<String>(traces);
 		list.setVisibleRowCount(5);
 		list.setFixedCellHeight(20);
 		list.setFixedCellWidth(100);
