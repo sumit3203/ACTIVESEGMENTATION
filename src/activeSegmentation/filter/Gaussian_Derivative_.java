@@ -5,6 +5,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
@@ -15,6 +16,7 @@ import ijaux.scale.*;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -189,7 +191,7 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);

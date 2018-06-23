@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
@@ -17,6 +18,7 @@ import ijaux.scale.*;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 import activeSegmentation.IFilter;
 import dsp.Conv;
@@ -411,7 +413,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 	@Override
-	public void applyFilter(ImageProcessor processor, String filterPath) {
+	public void applyFilter(ImageProcessor processor, String filterPath,List<Roi> roiList) {
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(processor.getWidth(),processor.getHeight());
 				GScaleSpace sp=new GScaleSpace(sigma);

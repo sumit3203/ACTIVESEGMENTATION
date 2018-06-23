@@ -4,6 +4,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
@@ -14,6 +15,7 @@ import ijaux.scale.*;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -151,7 +153,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());

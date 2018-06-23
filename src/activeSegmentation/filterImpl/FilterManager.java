@@ -193,7 +193,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 					List<String>images= loadImages(projectString);
 					for(String image: images) {
-						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")));
+						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 					}
 
 				}

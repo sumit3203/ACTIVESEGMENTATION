@@ -1,9 +1,11 @@
 package activeSegmentation;
 
 
+import ij.gui.Roi;
 import ij.process.ImageProcessor;
 
 import java.awt.Image;
+import java.util.List;
 import java.util.Map;
 
 public interface IFilter {
@@ -32,7 +34,7 @@ public interface IFilter {
 	//public <T> T applyFilter(ImageProcessor imageProcessor);
 	
 	
-	public void applyFilter(ImageProcessor image, String path);
+	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList);
 	
 	/**
 	 * Returns a unique key of filter

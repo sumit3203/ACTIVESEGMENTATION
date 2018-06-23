@@ -3,6 +3,7 @@ package activeSegmentation.filter;
 import java.awt.AWTEvent;
 import java.awt.Image;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import activeSegmentation.IFilter;
@@ -11,6 +12,7 @@ import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageProcessor;
@@ -78,7 +80,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String path) {
+	public void applyFilter(ImageProcessor image, String path,List<Roi> roiList) {
 		// TODO Auto-generated method stub
 	
 		filter(image.duplicate());
