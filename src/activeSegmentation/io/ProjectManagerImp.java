@@ -308,8 +308,10 @@ public class ProjectManagerImp implements IProjectManager {
 		return true;
 	}
 
-
-
+	 public void updateMetaInfo(ProjectInfo projectInfo)
+	  {
+	    this.projectInfo = projectInfo;
+	  }
 
 
 }
