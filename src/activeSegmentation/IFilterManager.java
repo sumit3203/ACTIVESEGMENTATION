@@ -79,9 +79,7 @@ public interface IFilterManager {
 	
 	public int getNumOfFeatures(String featureName) ;
 	
-	public String getLabel(int index);
 	
-	public ImageStack getImageStack(int sliceNum);
 	
 	
 	/**
