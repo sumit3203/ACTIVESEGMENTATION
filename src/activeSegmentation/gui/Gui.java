@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,143 +19,116 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import activeSegmentation.IEvaluation;
 import activeSegmentation.IProjectManager;
+import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.feature.FeatureManagerNew;
 
 
-public class Gui {
+public class Gui
+{
 	private JFrame mainFrame;
 	private JPanel controlPanel;
-
-	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent( this, 0, "Feature" );
-
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent( this, 1, "Filter" );
-	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent( this, 2, "Learning" );
-
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent( this, 3, "Evaluation" );
+	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent(this, 0, "Feature");
+	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent(this, 1, "Filter");
+	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent(this, 2, "Learning");
+	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
-
-	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
+	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
-	public Gui(IProjectManager projectManager){
-		this.projectManager=projectManager;
+
+	public Gui(IProjectManager projectManager)
+	{
+		this.projectManager = projectManager;
 		prepareGUI();
-		
 	}
 
-	
-	public void doAction( final ActionEvent event )
+	public void doAction(ActionEvent event)
 	{
 		System.out.println("IN DO ACTION");
 		System.out.println(event.toString());
-		if(event ==FILTER_BUTTON_PRESSED ){
-			if(filterPanel==null){
-			   filterPanel=new FilterPanel(projectManager);
-			SwingUtilities.invokeLater(filterPanel);
-			}
+		if ((event == this.FILTER_BUTTON_PRESSED)) {
+			if(this.filterPanel == null) {
+				this.filterPanel = new FilterPanel(this.projectManager);
+			}	
+			SwingUtilities.invokeLater(this.filterPanel);
+		}
 
+		if ((event == this.FEATURE_BUTTON_PRESSED)) {
+			if (this.featurePanel == null) {
+				new FeaturePanelNew(new FeatureManagerNew(this.projectManager));
+			}	
 		}
-		if(event==FEATURE_BUTTON_PRESSED){
-			if(featurePanel== null){
-			/*		ImagePlus image= IJ.openImage(projectManager.getMetaInfo().getTrainingStack());
-			    featurePanel= new FeaturePanel(new FeatureManager(image.getStackSize(),projectManager),image);
-			    */
-				new FeaturePanelNew(new FeatureManagerNew(projectManager));
-				
+			
+		if (event == this.LEARNING_BUTTON_PRESSED)
+		{
+			if (this.learningPanel == null) {
+				this.learningPanel = new LearningPanel(this.projectManager);
 			}
+			SwingUtilities.invokeLater(this.learningPanel);
 		}
-		
-		
-
-		if(event==LEARNING_BUTTON_PRESSED){
-			if(learningPanel==null)
-			   learningPanel = new LearningPanel();
-			SwingUtilities.invokeLater(learningPanel);
-		}
-		
-		if(event==EVALUATION_BUTTON_PRESSED){
-			
-		//	EvaluationPanel evaluationPanel = new EvaluationPanel(dataManager, evaluation);
-		//	SwingUtilities.invokeLater(evaluationPanel);
-			
+		if (event == this.EVALUATION_BUTTON_PRESSED)
+		{
+			IEvaluation evaluation = new EvaluationMetrics();
+			EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
+			SwingUtilities.invokeLater(evaluationPanel);
 		}
 	}
-	
 
+	private void prepareGUI()
+	{
+		this.mainFrame = new JFrame("ACTIVE SEGMENTATION");
+		this.mainFrame.getContentPane().setBackground(Color.GRAY);
+		this.mainFrame.setLocationRelativeTo(null);
 
-	private void prepareGUI(){
-		
-		//Make sure we have nice window decorations.
-		//JFrame.setDefaultLookAndFeelDecorated(true);
-		mainFrame = new JFrame("ACTIVE SEGMENTATION");
-		mainFrame.getContentPane().setBackground( Color.GRAY );
-		mainFrame.setLocationRelativeTo(null);
-		//mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(500,400);
+		this.mainFrame.setSize(550, 400);
 
-		controlPanel = new JPanel();
-		controlPanel.setLayout(null);
-		controlPanel.setBackground(Color.GRAY );
-		JLabel label= new JLabel("Active Segmentation");
-		label.setFont(new Font( "Arial", Font.BOLD, 32 ));
-		label.setBounds( 100, 50, 450, 100 );
+		this.controlPanel = new JPanel();
+		this.controlPanel.setLayout(null);
+		this.controlPanel.setBackground(Color.GRAY);
+		JLabel label = new JLabel("Active Segmentation");
+		label.setFont(new Font("Arial", 1, 32));
+		label.setBounds(100, 50, 450, 100);
 		label.setForeground(Color.ORANGE);
-		controlPanel.add(label);
-		controlPanel.add(addButton( "FILTERS", null, 25, 150, 200, 50,FILTER_BUTTON_PRESSED) );
-		controlPanel.add(addButton( "FEATURE EXTRACTION", null, 275, 150, 200, 50,FEATURE_BUTTON_PRESSED));
-		controlPanel.add(addButton("LEARNING", null, 25, 250, 200, 50, LEARNING_BUTTON_PRESSED ));
-		controlPanel.add(addButton( "EVALUATION", null, 275, 250, 200, 50, EVALUATION_BUTTON_PRESSED ));
-		
-		// postioning
+		this.controlPanel.add(label);
+		this.controlPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("FEATURE EXTRACTION", null, 275, 150, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("LEARNING", null, 25, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("EVALUATION", null, 275, 250, 200, 50, this.EVALUATION_BUTTON_PRESSED));
 
-		controlPanel.setLocation(0, 0);
-		mainFrame.add(controlPanel);
-		mainFrame.setVisible(true);  
-
+		this.controlPanel.setLocation(0, 0);
+		this.mainFrame.add(this.controlPanel);
+		this.mainFrame.setVisible(true);
 	}
-	
 
-	private ImageIcon createImageIcon(String path, String description) {
-		java.net.URL imgURL = CreatProject.class.getResource(path);
+	private ImageIcon createImageIcon(String path, String description)
+	{
+		URL imgURL = CreatProject.class.getResource(path);
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
-		} else {            
-			System.err.println("Couldn't find file: " + path);
-			return null;
 		}
-	} 
-	private JButton addButton( final String label, final ImageIcon icon, final int x,
-			final int y, final int width, final int height,final ActionEvent action)
-	{
-		final JButton button =  new JButton(label, icon);
-		button.setFont( FONT );
-		button.setBorderPainted(false); 
-		button.setFocusPainted(false); 
-		button.setBackground(new Color(192, 192, 192));
-		button.setForeground(Color.WHITE);
-		button.setBounds( x, y, width, height );
-		button.addActionListener( new ActionListener()
-		{
-			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
-				//System.out.println("CLICKED");
-				doAction(action);
-			}
-		} );
-
-		return button;
+		System.err.println("Couldn't find file: " + path);
+		return null;
 	}
 
-
-
-
-
-
+	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
+	{
+		JButton button = new JButton(label, icon);
+		button.setFont(FONT);
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
+		button.setBackground(new Color(192, 192, 192));
+		button.setForeground(Color.WHITE);
+		button.setBounds(x, y, width, height);
+		button.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				Gui.this.doAction(action);
+			}
+		});
+		return button;
+	}
 }
