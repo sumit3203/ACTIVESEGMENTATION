@@ -1,11 +1,9 @@
 package activeSegmentation;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.List;
-
-
-
-
+import java.util.Map;
 import java.util.Set;
 
 import ij.ImagePlus;
@@ -183,6 +181,8 @@ public interface IFeatureManagerNew {
 	public Roi getRoi(String classKey, int index, String type);
 
 	public List<Color> getColors();
+	public Map<String,Integer> getClassificationResultMap();
+	public String getProjectType();
 
 	public ImagePlus getClassifiedImage();
 }
