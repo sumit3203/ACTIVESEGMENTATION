@@ -16,6 +16,7 @@ import activeSegmentation.io.ClassInfo;
 import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.WekaDataSet;
 import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 import ij.IJ;
 import ij.ImagePlus;
@@ -205,7 +206,7 @@ public class PixelInstanceCreator implements IFeature {
 	private  ArrayList<Attribute> createFeatureHeader(){
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i=0; i<numberOfFeatures; i++){
-			System.out.println(labels[i]);
+			//System.out.println(labels[i]);
 			attributes.add(new Attribute(labels[i]));
 		}
 
@@ -277,9 +278,11 @@ public class PixelInstanceCreator implements IFeature {
 	}
 
 	@Override
-	public List<IDataSet> createAllInstance(List<String> classLabels, int classes, List<ArrayList<Integer>> testimageindex) {
+	public Instance createInstance(Roi roi) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

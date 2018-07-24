@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import activeSegmentation.io.ClassInfo;
+import ij.gui.Roi;
+import weka.core.Instance;
 
 /**
  * 				
@@ -69,6 +71,6 @@ public interface IFeature {
 	 * @param classes
 	 * @param testimageindex contains indexes of all images present in a particular class
 	 */
-	public List<IDataSet> createAllInstance(List<String> classLabels, int classes,List<ArrayList<Integer>> testimageindex);
+	public Instance createInstance(Roi roi);
 
 }
