@@ -35,7 +35,7 @@ import weka.core.Instances;
 public class ProjectManagerImp implements IProjectManager {
 
 	private IDataSet dataSet;
-	private ProjectInfo projectInfo;
+	private static ProjectInfo projectInfo;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<String,String>();
@@ -146,8 +146,8 @@ public class ProjectManagerImp implements IProjectManager {
 	}
 
 	@Override
-	public void writeMetaInfo( ProjectInfo projectInfo) {
-		this.projectInfo= projectInfo;
+	public void writeMetaInfo( ProjectInfo project) {
+		updateMetaInfo(projectInfo);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			projectInfo.setModifyDate(dateFormat.format(new Date()));
@@ -308,9 +308,9 @@ public class ProjectManagerImp implements IProjectManager {
 		return true;
 	}
 
-	 public void updateMetaInfo(ProjectInfo projectInfo)
+	 public void updateMetaInfo(ProjectInfo project)
 	  {
-	    this.projectInfo = projectInfo;
+	    projectInfo = project;
 	  }
 
 
