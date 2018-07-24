@@ -89,10 +89,10 @@ public class FilterPanel implements Runnable {
 	
 	final JFrame frame = new JFrame("FILTER");
 
-	public FilterPanel(IProjectManager projectManager) {
+	public FilterPanel(IProjectManager projectManager,IFeatureManagerNew  featureManager) {
 		this.projectManager= projectManager;
 		
-		this.filterManager =new FilterManager(projectManager);
+		this.filterManager =new FilterManager(projectManager, featureManager);
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
 		textMap= new HashMap<String, List<JTextField>>();

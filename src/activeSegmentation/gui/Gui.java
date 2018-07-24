@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.IEvaluation;
+import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.feature.FeatureManagerNew;
@@ -36,12 +37,14 @@ public class Gui
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
+	private static IFeatureManagerNew featureManager;
 	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
 
 	public Gui(IProjectManager projectManager)
 	{
 		this.projectManager = projectManager;
+		featureManager=new FeatureManagerNew(this.projectManager);
 		prepareGUI();
 	}
 
@@ -51,14 +54,16 @@ public class Gui
 		System.out.println(event.toString());
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
 			if(this.filterPanel == null) {
-				this.filterPanel = new FilterPanel(this.projectManager);
+				// for time being feature manager is passed , will think
+				// of better design later
+				this.filterPanel = new FilterPanel(this.projectManager,featureManager);
 			}	
 			SwingUtilities.invokeLater(this.filterPanel);
 		}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
 			if (this.featurePanel == null) {
-				new FeaturePanelNew(new FeatureManagerNew(this.projectManager));
+				new FeaturePanelNew(featureManager);
 			}	
 		}
 			
