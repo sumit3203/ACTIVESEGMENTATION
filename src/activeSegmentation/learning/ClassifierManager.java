@@ -9,6 +9,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.functions.SMO;
+import weka.core.Instance;
 import activeSegmentation.Common;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IProjectManager;
@@ -108,6 +109,19 @@ public class ClassifierManager implements ILearningManager {
 	public Set<String> getFeatureSelList() {
 		
 		return featureMap.keySet();
+	}
+
+
+	@Override
+	public double predict(Instance instance) {
+		// TODO Auto-generated method stub
+		try {
+			return currentClassifier.classifyInstance(instance);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 }
