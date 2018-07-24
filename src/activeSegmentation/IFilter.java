@@ -7,6 +7,7 @@ import ij.process.ImageProcessor;
 import java.awt.Image;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IFilter {
 	
@@ -76,6 +77,7 @@ public interface IFilter {
 	public int getFilterType();
 	
 	public <T> T getFeatures();
+	public Set<String> getFeatureNames();
 
 	
 }

@@ -477,5 +477,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		return null;
 	}
 
+	@Override
+	public Set<String> getFeatureNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

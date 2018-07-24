@@ -18,20 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -401,6 +388,14 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public Set<String> getFeatureNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

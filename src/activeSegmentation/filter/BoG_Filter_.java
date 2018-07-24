@@ -440,6 +440,11 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public Set<String> getFeatureNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 

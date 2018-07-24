@@ -445,6 +445,12 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 		return null;
 	}
 
+	@Override
+	public Set<String> getFeatureNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

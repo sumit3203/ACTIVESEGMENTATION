@@ -622,4 +622,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public Set<String> getFeatureNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
