@@ -10,6 +10,7 @@ import ij.io.RoiEncoder;
 import ij.plugin.frame.RoiManager;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import weka.core.Instance;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -110,7 +111,8 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 		roiman.hide();
 		learningManager = new ClassifierManager(projectManager);
-		featureMap.put("Segmentation", new PixelInstanceCreator(projectInfo));
+		featureMap.put("SEGMENTATION", new PixelInstanceCreator(projectInfo));
+		featureMap.put("CLASSIFICATION", new RoiInstanceCreator(projectInfo));
 	}
 
 	private int loadImages(String directory) {
@@ -203,6 +205,30 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			return classes.get(key).getTrainingRoiSize(imageKey);
 		}
 	}
+	
+	
+	@Override
+	public List<Roi> getExamples(String key, String type, String imageKey) {
+		System.out.println(key +"----"+type+"----"+imageKey);
+		if(LearningType.valueOf(type).equals(LearningType.BOTH)){
+			List<Roi> roiList=new ArrayList<Roi>();
+			if( classes.get(key).getTestingRois(imageKey)!=null) {
+				roiList.addAll(classes.get(key).getTestingRois(imageKey));
+			}
+			if( classes.get(key).getTrainingRois(imageKey)!=null) {
+				roiList.addAll(classes.get(key).getTrainingRois(imageKey));
+			}
+			System.out.println(roiList.size());
+			return roiList;
+		}
+		else if(LearningType.valueOf(type).equals(LearningType.TESTING)){
+			return classes.get(key).getTestingRois(imageKey);
+		}
+		else{
+			return classes.get(key).getTrainingRois(imageKey);
+		}
+	}
+
 
 	@Override
 	public void setClassLabel(String key, String label) {
@@ -322,7 +348,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 
 	@Override
 	public IDataSet extractFeatures(String featureType) {
-
+        System.out.println(featureType);
 		featureMap.get(featureType).createTrainingInstance(classes.values());
 		IDataSet dataset = featureMap.get(featureType).getDataSet();
 		projectManager.setData(dataset);
@@ -469,7 +495,11 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
-		return getDummyPrediction();
+		System.out.println(roi.getName());
+		Instance instance= featureMap.get(ProjectType.valueOf(projectInfo.getProjectType()).toString()).createInstance(roi);
+		System.out.println(instance.toString());
+		return (int) learningManager.predict(instance);
+		//return getDummyPrediction();
 	}
 	
 	public Map<String,Integer> getClassificationResultMap(){
@@ -488,10 +518,10 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		// IJ.debugMode=true;
 		IJ.log("TRAINING STARTED");
 		// extract features in weka format, returns IDataset object
-		//extractFeatures(ProjectType.valueOf(projectInfo.getProjectType()).toString());
+		extractFeatures(ProjectType.valueOf(projectInfo.getProjectType()).toString());
 		
 		// trains as per the setting of learning manager, we now have a trained classifier
-		//learningManager.trainClassifier();
+		learningManager.trainClassifier();
 		
 		IJ.log("TRAINING DONE");
 		
@@ -530,6 +560,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			
 			//segmentation setting
 			else {
+				
 				
 				//get the current image
 				ImagePlus currentImage = getCurrentImage();

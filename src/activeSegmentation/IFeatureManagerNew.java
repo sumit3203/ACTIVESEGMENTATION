@@ -72,6 +72,8 @@ public interface IFeatureManagerNew {
 	 * @return List<Roi>
 	 */
 	public List<Roi> getExamples(String classKey, String type);
+	
+	public List<Roi> getExamples(String key, String type,String image);
 
 
 	/**
