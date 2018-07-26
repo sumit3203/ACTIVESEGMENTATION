@@ -372,12 +372,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		return filterMap.get(key).getImage();
 	}
 	
-	public static void main(String[] args) {
-		new ImageJ();		
-		IProjectManager projectManager= new ProjectManagerImp();
-		projectManager.loadProject("C:\\Users\\sanje\\Documents\\hello\\hello.json");
-		new Gui(projectManager);		
-	}
 
 
 }
