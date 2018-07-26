@@ -209,7 +209,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	
 	@Override
 	public List<Roi> getExamples(String key, String type, String imageKey) {
-		System.out.println(key +"----"+type+"----"+imageKey);
+		//System.out.println(key +"----"+type+"----"+imageKey);
 		if(LearningType.valueOf(type).equals(LearningType.BOTH)){
 			List<Roi> roiList=new ArrayList<Roi>();
 			if( classes.get(key).getTestingRois(imageKey)!=null) {
@@ -218,7 +218,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			if( classes.get(key).getTrainingRois(imageKey)!=null) {
 				roiList.addAll(classes.get(key).getTrainingRois(imageKey));
 			}
-			System.out.println(roiList.size());
+			//System.out.println(roiList.size());
 			return roiList;
 		}
 		else if(LearningType.valueOf(type).equals(LearningType.TESTING)){
@@ -348,7 +348,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 
 	@Override
 	public IDataSet extractFeatures(String featureType) {
-        System.out.println(featureType);
+       // System.out.println(featureType);
 		featureMap.get(featureType).createTrainingInstance(classes.values());
 		IDataSet dataset = featureMap.get(featureType).getDataSet();
 		projectManager.setData(dataset);
@@ -374,9 +374,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 
 	@Override
 	public boolean saveExamples(String filename, String classKey, String type) {
-		System.out.println(classKey + type);
+		//System.out.println(classKey + type);
 		List<Roi> rois = getExamples(classKey, type);
-		System.out.println(rois.size());
+		//System.out.println(rois.size());
 		return saveRois(filename, rois);
 	}
 
@@ -387,7 +387,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			out = new DataOutputStream(new BufferedOutputStream(zos));
 			RoiEncoder re = new RoiEncoder(out);
 			for (Roi roi : rois) {
-				System.out.println(roi.getName());
+				//System.out.println(roi.getName());
 				zos.putNextEntry(new ZipEntry(roi.getName() + ".roi"));
 				re.write(roi);
 				out.flush();
@@ -461,6 +461,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 		if (nRois == 0)
 			System.out.println("ERROR OCCURED");
+			
 		return roiList;
 	}
 
@@ -495,9 +496,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
-		System.out.println(roi.getName());
+		//System.out.println(roi.getName());
 		Instance instance= featureMap.get(ProjectType.valueOf(projectInfo.getProjectType()).toString()).createInstance(roi);
-		System.out.println(instance.toString());
+		//System.out.println(instance.toString());
 		return (int) learningManager.predict(instance);
 		//return getDummyPrediction();
 	}
@@ -526,7 +527,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		IJ.log("TRAINING DONE");
 		
 		for (String image : images) {
-			System.out.println(image +" image");
+			//System.out.println(image +" image");
 																	
 			//classification setting
 			if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIFICATION)) {															

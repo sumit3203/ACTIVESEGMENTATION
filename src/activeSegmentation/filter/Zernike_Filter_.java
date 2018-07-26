@@ -96,9 +96,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 				}
 			}
 		}
-		for(String feature: features) {
-			System.out.println(feature);
-		}
+		
 		// if asked for moment of ROIs
 		if(list != null && list.size()>0){
 			for(int i=0;i<list.size();i++){

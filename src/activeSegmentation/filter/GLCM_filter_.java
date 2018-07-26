@@ -146,7 +146,7 @@ public class GLCM_filter_ implements IFilter {
         }
 		// if asked for GLCM of image, we do not have any use case where we need both at a time
 		else{
-            System.out.println("Image is not null");
+            //System.out.println("Image is not null");
 			filter(imageProcessor,s);
 		}
 

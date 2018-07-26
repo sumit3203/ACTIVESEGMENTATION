@@ -97,15 +97,15 @@ public class RoiInstanceCreator implements IFeature {
 			}
 
 		}
-		System.out.println(attributes.toString());
+		//System.out.println(attributes.toString());
 		numberOfFeatures=featureSIndex;
 		Map<String,List<Pair<String,double[]>>> featureList=projectInfo.getFeatures();
 		for(String featuresType: featureList.keySet()) {
-			System.out.println("Feature Type:"+ featuresType);
+		//	System.out.println("Feature Type:"+ featuresType);
 			List<Pair<String,double[]>> features=featureList.get(featuresType);
 			for(Pair<String,double[]> feature: features ) {
 				if(!instanceMap.containsKey(feature.first)) {
-					System.out.println(Arrays.toString(feature.second));
+					//System.out.println(Arrays.toString(feature.second));
 					instanceMap.put(feature.first, feature.second);
 				}
 				else {
@@ -132,7 +132,7 @@ public class RoiInstanceCreator implements IFeature {
 						double vector[]=instanceMap.get(roi.getName());
 						double classIndex[]= {index};
 						double[] newFeature=combine(vector, classIndex);
-						System.out.println(Arrays.toString(newFeature));
+						//System.out.println(Arrays.toString(newFeature));
 						trainingData.add(new DenseInstance(1.0,newFeature));
 					}
 					index++;
@@ -192,7 +192,7 @@ public class RoiInstanceCreator implements IFeature {
 
 	@Override
 	public Instance createInstance(Roi roi) {
-		System.out.println("IN ROI INSTANCE Creator"+roi.getName());
+		//System.out.println("IN ROI INSTANCE Creator"+roi.getName());
 		
 		double vector[]=instanceMap.get(roi.getName());
 		double classIndex[]= {0};

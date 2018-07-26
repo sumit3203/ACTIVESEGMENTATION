@@ -162,7 +162,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		float[] kern_diff= sp.diff2Gauss1D();
 		GScaleSpace.flip(kern_diff);
 
-		System.out.println("scnorm "+snorm);
+		//System.out.println("scnorm "+snorm);
 		if (snorm) {
 			double gamma=sp.getSigma(); 	 
 			for (int i=0; i<kern_diff.length; i++) {
@@ -191,7 +191,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 		Conv cnv=new Conv();
 		if (seperable) {
-			System.out.println("SEPRABLE");
+			//System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kern_diff);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);
@@ -199,15 +199,14 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
+		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 
 		if (convert) {
 
 			final double d1=0;
 			final double dr=sp. getScale();	
-			System.out.println("linear contrast adjustment y=ax+b \n " +
-					" b= " +d1 +" a= " + dr);
+			//System.out.println("linear contrast adjustment y=ax+b \n " +" b= " +d1 +" a= " + dr);
 
 			Conv.contrastAdjust(fpaux, dr, d1);
 		}

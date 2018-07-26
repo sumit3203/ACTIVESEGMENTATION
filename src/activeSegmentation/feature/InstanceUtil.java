@@ -99,7 +99,7 @@ public class InstanceUtil {
 			
 		}
 		
-		System.out.println("Zernike Values Checking:");
+		//System.out.println("Zernike Values Checking:");
 		for(int i=0;i<final_result.length;i++){
 			System.out.println(final_result[i]);
 		}

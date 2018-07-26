@@ -1,5 +1,4 @@
-package com.customplugin.activeseg.filter_core;
-
+package activeSegmentation.filter;
 import ij.process.ImageProcessor;
 
 
@@ -58,8 +57,8 @@ public class LegendreMoments_elm {
 
     public double[][] extractLegendreMoment(ImageProcessor ip){
 
-        System.out.println("Start Legendre moment extraction process...");
-        System.out.println();
+        //System.out.println("Start Legendre moment extraction process...");
+        //System.out.println();
 
         // Height and width of image
         M = ip.getHeight();

@@ -1,4 +1,5 @@
-package com.customplugin.activeseg.filter_core;
+package activeSegmentation.filter;
+
 
 import java.awt.Rectangle;
 import ij.process.ImageProcessor;

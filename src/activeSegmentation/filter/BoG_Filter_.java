@@ -224,25 +224,25 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 				cnv.convolveFloat1D(fpauxiso, kern_diff_2, 1); //Oy
 				
 				fpaux.copyBits(fpauxiso, 0, 0, Blitter.ADD);
-				System.out.println("separable & isotropic computation");
+				//System.out.println("separable & isotropic computation");
 			} else {
 				cnv.convolveSemiSep(fpaux, kernx, kern_diff_4);	
-				System.out.println("separable & non-isotropic computation");
+				//System.out.println("separable & non-isotropic computation");
 			}
 		} else {	
 			if (isotropic) {			
-				System.out.println("non-separable & isotropic computation");
+				//System.out.println("non-separable & isotropic computation");
 			} else {
 				for (int i=0; i<sz*sz; i++)
 					kernel2[i]=disp[0][i]+ disp[1][i];
-				System.out.println("non-separable & non-isotropic computation");
+				//System.out.println("non-separable & non-isotropic computation");
 			} // end else
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);
 		} // end else
 	 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
+		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 		
 		/*if (convert) {

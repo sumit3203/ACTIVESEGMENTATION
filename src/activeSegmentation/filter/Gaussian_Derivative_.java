@@ -260,7 +260,7 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
+		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();
 
 		return fpaux;
