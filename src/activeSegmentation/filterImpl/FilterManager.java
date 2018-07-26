@@ -30,16 +30,22 @@ import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.filterImpl.ApplyZernikeFilter;
+import activeSegmentation.gui.FeaturePanelNew;
+import activeSegmentation.gui.Gui;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
+import activeSegmentation.feature.FeatureManagerNew;
 import activeSegmentation.io.ProjectInfo;
+import activeSegmentation.io.ProjectManagerImp;
 import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Roi;
+import ij.process.ImageConverter;
 import ijaux.scale.Pair;
 import ijaux.scale.ZernikeMoment.Complex;
 
@@ -189,8 +195,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					for(String image: images) {
 						for(String key: featureManager.getClassKeys()) {
 							List<Roi> rois=featureManager.getExamples(key, LearningType.BOTH.name(), image);
+							// convert to gray-scale
+							ImagePlus imp = new ImagePlus(projectString+image);
+							ImageConverter ic= new ImageConverter(imp);
+					        ic.convertToGray8();
 							if(rois!=null && !rois.isEmpty()) {
-								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
+								filter.applyFilter(imp.getProcessor(),
 										filterString+image.substring(0, image.lastIndexOf(".")),
 										rois);
 								if(filter.getFeatures()!=null) {
@@ -360,6 +370,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	public Image getFilterImage(String key) {
 
 		return filterMap.get(key).getImage();
+	}
+	
+	public static void main(String[] args) {
+		new ImageJ();		
+		IProjectManager projectManager= new ProjectManagerImp();
+		projectManager.loadProject("C:\\Users\\sanje\\Documents\\hello\\hello.json");
+		new Gui(projectManager);		
 	}
 
 
