@@ -29,7 +29,6 @@ import java.util.zip.ZipInputStream;
 import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
 import activeSegmentation.IFeatureManagerNew;
-import activeSegmentation.filterImpl.ApplyZernikeFilter;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;

@@ -51,8 +51,8 @@ public class ClassifierManager implements ILearningManager {
 
 		try {
 			currentClassifier.buildClassifier(dataManager.getDataSet());
-			System.out.println("Training Results");
-			System.out.println(currentClassifier.toString());
+			//System.out.println("Training Results");
+			//System.out.println(currentClassifier.toString());
 			classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
 		} catch (Exception e) {
 		
@@ -92,9 +92,9 @@ public class ClassifierManager implements ILearningManager {
 
     @Override
 	public double[] applyClassifier(IDataSet dataSet){
-		System.out.println("Testing Results");
-			System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
-			System.out.println("WORK LOAD : "+ Common.WORKLOAD);
+		//System.out.println("Testing Results");
+		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
+		//	System.out.println("WORK LOAD : "+ Common.WORKLOAD);
 			double[] classificationResult = new double[dataSet.getNumInstances()];		
 			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
 					classificationResult, currentClassifier);

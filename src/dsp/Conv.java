@@ -154,7 +154,7 @@ public class Conv {
 		
 		time+=System.nanoTime();	
 		time/=1000.0f;
-		System.out.println("cloning time: " + time +" us");			
+		//System.out.println("cloning time: " + time +" us");			
 		time=-System.nanoTime();
 	
 		convolveFloat1D(xstack, kernx, Ox); // x
@@ -582,7 +582,7 @@ public class Conv {
 			}
 		}
 		
-		System.out.println("min " +min +" max " + max);
+		//System.out.println("min " +min +" max " + max);
 		
 		return new float[]{min,max}; 
 	}

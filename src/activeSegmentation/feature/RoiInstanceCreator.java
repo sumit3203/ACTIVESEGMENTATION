@@ -139,8 +139,8 @@ public class RoiInstanceCreator implements IFeature {
 				}
 			}
 		}
-     System.out.println("TRaininf Data Size"+trainingData.size());
-     System.out.println(trainingData.toString());
+     //System.out.println("TRaininf Data Size"+trainingData.size());
+    // System.out.println(trainingData.toString());
 	}
 
 	

@@ -182,8 +182,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 			
 		int sz= sp.getSize();
 		
-		if (debug)
-			System.out.println("sz " +sz);
+		/*if (debug)
+			System.out.println("sz " +sz);*/
 		
 		float[][] disp= new float[3][];
 

@@ -556,7 +556,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 					}
 				}
 										
-				System.out.println("the size of list of roi is in FM "+predictionResultClassification.size());								
+			//	System.out.println("the size of list of roi is in FM "+predictionResultClassification.size());								
 			}
 			
 			//segmentation setting

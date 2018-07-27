@@ -50,8 +50,8 @@ public class Gui
 
 	public void doAction(ActionEvent event)
 	{
-		System.out.println("IN DO ACTION");
-		System.out.println(event.toString());
+		//System.out.println("IN DO ACTION");
+		//System.out.println(event.toString());
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
 			if(this.filterPanel == null) {
 				// for time being feature manager is passed , will think
@@ -114,7 +114,7 @@ public class Gui
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
 		}
-		System.err.println("Couldn't find file: " + path);
+		//System.err.println("Couldn't find file: " + path);
 		return null;
 	}
 

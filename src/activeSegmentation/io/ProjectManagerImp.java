@@ -120,7 +120,7 @@ public class ProjectManagerImp implements IProjectManager {
 	@Override
 	public boolean loadProject(String fileName) {
 		// TODO Auto-generated method stub
-		System.out.println("IN LOAD PROJCT");
+		//System.out.println("IN LOAD PROJCT");
 		setDirectory();
 		//IJ.log(System.getProperty("plugins.dir"));
 		if(projectInfo==null){
@@ -129,7 +129,7 @@ public class ProjectManagerImp implements IProjectManager {
 				projectInfo= mapper.readValue(new File(fileName), ProjectInfo.class);
 				projectInfo.setPluginPath(activeSegDir);
 				//metaInfo.setPath(path);
-				System.out.println("done");
+				//System.out.println("done");
 
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
@@ -154,10 +154,10 @@ public class ProjectManagerImp implements IProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			System.out.println("SAVING");
+			//System.out.println("SAVING");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
 
-			System.out.println("DONE");
+			//System.out.println("DONE");
 
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
@@ -267,7 +267,7 @@ public class ProjectManagerImp implements IProjectManager {
 			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\";	
 		}
 
-		System.out.println(System.getProperty("plugins.dir"));
+		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
 	private void createProjectSpace(String projectDirectory, String projectName) {

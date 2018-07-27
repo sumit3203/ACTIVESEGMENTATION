@@ -149,7 +149,7 @@ public class CreatProject implements Runnable {
 			String trainingImage=trainingImageP.getText();
 			//String pluginDir=pluginsDir.getText();
 			String projectType=projectList.getSelectedItem().toString();
-			System.out.println(projectName+"--"+ projectType);
+			//System.out.println(projectName+"--"+ projectType);
 			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
 					trainingImage);	
 			if("DONE".equalsIgnoreCase(message)) {
@@ -270,7 +270,7 @@ public class CreatProject implements Runnable {
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
 		} else {            
-			System.err.println("Couldn't find file: " + path);
+			//System.err.println("Couldn't find file: " + path);
 			return null;
 		}
 	}   
