@@ -4,7 +4,9 @@ package activeSegmentation.filter;
 import activeSegmentation.IFilter;
 import activeSegmentation.filter.GLCMTextureDescriptors;
 import ij.IJ;
+import ij.ImagePlus;
 import ij.gui.Roi;
+import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.scale.Pair;
 
@@ -51,6 +53,10 @@ public class GLCM_filter_ implements IFilter {
 
 
 	public void filter(ImageProcessor ip,String roi_name){
+		ImagePlus imp = new ImagePlus("tempglcm", ip);
+		ImageConverter ic= new ImageConverter(imp);
+	    ic.convertToGray8();
+	    ip=imp.getProcessor();
 
 		GLCMTextureDescriptors glcm = new GLCMTextureDescriptors();
 		

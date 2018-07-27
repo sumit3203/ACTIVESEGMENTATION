@@ -162,10 +162,6 @@ public class GLCMTextureDescriptors {
 
 	public double [][] extractGLCMDescriptors(ImageProcessor ip){
 		reinitialize_glcm();
-		ImagePlus imp = new ImagePlus("temp", ip);
-		ImageConverter ic= new ImageConverter(imp);
-	    ic.convertToGray8();
-	    ip=imp.getProcessor();
 		// use the bounding rectangle ROI to roughly limit processing
 		Rectangle roi = ip.getRoi();
 		// get byte arrays for the image pixels and mask pixels

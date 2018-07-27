@@ -18,6 +18,7 @@ import ij.gui.GenericDialog;
 import ij.gui.Roi;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
+import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.scale.Pair;
 import ijaux.scale.ZernikeMoment;
@@ -88,6 +89,10 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	@Override
 	public void applyFilter(ImageProcessor imageProcessor, String s,List<Roi> list) {
 
+		ImagePlus imp = new ImagePlus("tempglcm", imageProcessor);
+		ImageConverter ic= new ImageConverter(imp);
+	    ic.convertToGray8();
+	    imageProcessor=imp.getProcessor();
 		for(int i=0;i<=degree;i++){
 			for(int j=0;j<=i;j++){
 				if((i-j)%2==0){
