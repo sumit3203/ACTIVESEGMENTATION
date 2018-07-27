@@ -379,7 +379,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		if(event==SAVECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {
 				if (checkBox.isSelected()) {
-					System.out.println(checkBox.getText());
+					//System.out.println(checkBox.getText());
 					String key=checkBox.getName();
 					featureManager.setClassLabel(key,jTextList.get(key).getText() );
 				}
@@ -601,7 +601,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
 					String[] arr= item.split(" ");
-					System.out.println("Class Id"+ arr[0].trim());
+					//System.out.println("Class Id"+ arr[0].trim());
 					int sliceNum=Integer.parseInt(arr[2].trim());
 					showSelected( arr[0].trim(),index);
 
