@@ -2,8 +2,12 @@ package activeSegmentation.filter;
 
 import java.awt.AWTEvent;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import activeSegmentation.IFilter;
 import ij.ImagePlus;
@@ -11,8 +15,10 @@ import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
+import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.scale.Pair;
 import ijaux.scale.ZernikeMoment;
@@ -23,11 +29,14 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	final int flags=DOES_ALL+KEEP_PREVIEW+ NO_CHANGES;
 	public final static String DEG="Degree";
 	private int degree= Prefs.getInt(DEG, 4);
-	private int position_id=-1;
-	
+
+	//private ArrayList<Pair<String,Pair<String[],Double[]>>> moment_vector = new ArrayList<>();
+	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<Pair<String,double[]>>();
+	private Set<String> features=new HashSet<String>();
 
 	/** A string key identifying this factory. */
 	private final  String FILTER_KEY = "ZMC";
+	private final static String ZM_FEATURE_KEY = "ZM";
 	
 	private ImagePlus img;
 	
@@ -78,10 +87,36 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String path) {
-		// TODO Auto-generated method stub
-	
-		filter(image.duplicate());
+	public void applyFilter(ImageProcessor imageProcessor, String s,List<Roi> list) {
+
+		ImagePlus imp = new ImagePlus("tempglcm", imageProcessor);
+		ImageConverter ic= new ImageConverter(imp);
+	    ic.convertToGray8();
+	    imageProcessor=imp.getProcessor();
+		for(int i=0;i<=degree;i++){
+			for(int j=0;j<=i;j++){
+				if((i-j)%2==0){
+					features.add(ZM_FEATURE_KEY+"_"+i+"_"+j+"_Real");
+					features.add(ZM_FEATURE_KEY+"_"+i+"_"+j+"_Imag");
+				}
+			}
+		}
+		
+		// if asked for moment of ROIs
+		if(list != null && list.size()>0){
+			for(int i=0;i<list.size();i++){
+				imageProcessor.setRoi(list.get(i));
+				ImageProcessor ip_roi = imageProcessor.crop();
+				//utility.display_image(ip_roi);
+				filter(ip_roi,list.get(i).getName());
+			}
+		}
+
+		// if asked for moment of image, we do not have any use case where we need both at a time
+		else{
+			filter(imageProcessor,s);
+		}
+
 	}
 
 	/**
@@ -89,15 +124,50 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 * This method is helper function for both applyFilter and run method
 	 * @param ip input image
 	 */
-	private Pair<Integer,Complex> filter(ImageProcessor ip){
-		int index = position_id;
+	private void filter(ImageProcessor ip,String roi_name){
+
+		Complex cp = new ZernikeMoment(degree).extractZernikeMoment(ip);
+		int counter = 0;
+		int k=0;
+		double[] moment_values = new double[features.size()];
+		for(int i=0;i<=degree;i++){
+			for(int j=0;j<=i;j++){
+				if((i-j)%2==0){
+				/*	String[] order_index = new String[3];
+					Double[] moment_values = new Double[2];
+					Pair<String[],Double[]> order = new Pair<>(order_index,moment_values);
+					Pair<String,Pair<String[],Double[]>> one_roi_moment = new Pair<>("",order);
+					order_index[0] = ZM_FEATURE_KEY;
+					order_index[1] = Integer.toString(i);
+					order_index[2] = Integer.toString(j);
+					order.first = order_index;
+					System.out.println("counter "+counter);*/
+					
+					moment_values[k] = cp.getReal()[counter];
+					k++;
+					moment_values[k] = cp.getImaginary()[counter];
+					counter++;
+					k++;
+					
+					
+					
+				}
+			}
+		}
+
+		Pair<String,double[]> roi_moment = new Pair<>(roi_name,moment_values);
+		
+		moment_vector.add(roi_moment);
+		/*int index = position_id;
 		ip.snapshot();
 		ip.getDefaultColorModel();
 		if(zm==null){
-			zm=new ZernikeMoment(degree); 
+			zm=new ZernikeMoment(degree);
 		}
-		return new Pair<Integer,Complex>(index, zm.extractZernikeMoment(ip));
-		        		
+		return new Pair<Integer,Complex>(index, zm.extractZernikeMoment(ip));*/
+
+
+
 	}
 
 	public int getDegree(){
@@ -166,13 +236,23 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return this.TYPE;
 	}
 
-	@Override
-	public <T> T getFeatures() {
+/*	@Override
+	public ArrayList<Pair<String,Pair<String[],Double[]>>> getFeatures() {
 		// TODO Auto-generated method stub
-		return null;
+		return moment_vector;
+	}*/
+
+	@Override
+	public ArrayList<Pair<String,double[]>> getFeatures() {
+		// TODO Auto-generated method stub
+		return moment_vector;
 	}
 
-
+	@Override
+	public Set<String> getFeatureNames() {
+		// TODO Auto-generated method stub
+		return this.features;
+	}
 
 
 }

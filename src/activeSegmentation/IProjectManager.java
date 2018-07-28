@@ -73,6 +73,7 @@ public interface IProjectManager {
 	 */
 	public ProjectInfo getMetaInfo();
 	
+	public void updateMetaInfo(ProjectInfo projectInfo);
 	
 	/**
 	 * This method will set the dataset

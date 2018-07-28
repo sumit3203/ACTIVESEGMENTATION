@@ -738,7 +738,7 @@ public class FeaturePanel extends StackWindow
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
 					String[] arr= item.split(" ");
-					System.out.println("Class Id"+ arr[0].trim());
+					//System.out.println("Class Id"+ arr[0].trim());
 					int sliceNum=Integer.parseInt(arr[2].trim());
 					
 					displayImage.setSlice(sliceNum);
@@ -796,7 +796,7 @@ public class FeaturePanel extends StackWindow
 				int index = theList.getSelectedIndex();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
-					System.out.println("ITEM : "+ item);
+					//System.out.println("ITEM : "+ item);
 					String[] arr= item.split(" ");
 					int classId= featureManager.getclassKey(arr[0].trim())-1;
 					featureManager.deleteImageType(classId,Integer.parseInt(arr[1].trim()));
@@ -877,7 +877,7 @@ public class FeaturePanel extends StackWindow
 			resultOverlay.setImage(overlay);
 			displayImage.updateAndDraw();
 		}else{
-			System.out.println(indextolabel.get(displayImage.getCurrentSlice())+"AAA"+displayImage.getCurrentSlice()); 
+			//System.out.println(indextolabel.get(displayImage.getCurrentSlice())+"AAA"+displayImage.getCurrentSlice()); 
 			if(!indextolabel.containsKey(displayImage.getCurrentSlice()))
 				 return;
 		     

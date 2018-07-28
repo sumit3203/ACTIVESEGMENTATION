@@ -4,6 +4,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
@@ -14,22 +15,10 @@ import ijaux.scale.Pair;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -148,7 +137,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 
 	
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
@@ -173,7 +162,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		float[] kern_diff= sp.diff2Gauss1D();
 		GScaleSpace.flip(kern_diff);
 
-		System.out.println("scnorm "+snorm);
+		//System.out.println("scnorm "+snorm);
 		if (snorm) {
 			double gamma=sp.getSigma(); 	 
 			for (int i=0; i<kern_diff.length; i++) {
@@ -202,7 +191,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 		Conv cnv=new Conv();
 		if (seperable) {
-			System.out.println("SEPRABLE");
+			//System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kern_diff);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);
@@ -210,15 +199,14 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
+		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 
 		if (convert) {
 
 			final double d1=0;
 			final double dr=sp. getScale();	
-			System.out.println("linear contrast adjustment y=ax+b \n " +
-					" b= " +d1 +" a= " + dr);
+			//System.out.println("linear contrast adjustment y=ax+b \n " +" b= " +d1 +" a= " + dr);
 
 			Conv.contrastAdjust(fpaux, dr, d1);
 		}
@@ -399,6 +387,14 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public Set<String> getFeatureNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

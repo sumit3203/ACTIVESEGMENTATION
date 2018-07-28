@@ -10,7 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,8 +28,9 @@ import java.util.zip.ZipInputStream;
 
 import activeSegmentation.Common;
 import activeSegmentation.FeatureType;
-import activeSegmentation.filterImpl.ApplyZernikeFilter;
+import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
+import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
@@ -34,6 +38,7 @@ import activeSegmentation.io.ProjectInfo;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.gui.Roi;
 import ijaux.scale.Pair;
 import ijaux.scale.ZernikeMoment.Complex;
 
@@ -66,15 +71,15 @@ import ijaux.scale.ZernikeMoment.Complex;
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String,IFilter> filterMap= new HashMap<String, IFilter>();
-	private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
+	//private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
 	private ProjectType projectType;
 
+	private IFeatureManagerNew  featureManager;
 
-
-	public FilterManager(IProjectManager projectManager){
+	public FilterManager(IProjectManager projectManager,IFeatureManagerNew  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
@@ -92,13 +97,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 
 		IJ.log("Filters Loaded");
+		this.featureManager= featureManager;
 	}
 
 
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
-        System.out.println("home"+home);
+		System.out.println("home"+home);
 		File f=new File(home);
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
@@ -146,16 +152,16 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	}
 
-	 private void addJar(File f) throws IOException {
-	        if (f.getName().endsWith(".jar")) {
-				 
-	            try {
-	                addURL(f.toURI().toURL());
-	            } catch (MalformedURLException e) {
-					System.out.println("PluginClassLoader: "+e);
-	            }
-	        }
-	    }
+	private void addJar(File f) throws IOException {
+		if (f.getName().endsWith(".jar")) {
+
+			try {
+				addURL(f.toURI().toURL());
+			} catch (MalformedURLException e) {
+				System.out.println("PluginClassLoader: "+e);
+			}
+		}
+	}
 	private List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<String>();
 		File folder = new File(directory);
@@ -171,35 +177,54 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 		String projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
+		//List<Pair<String,Pair<String[],Double[]>>> featureList= new ArrayList<Pair<String,Pair<String[],Double[]>>>();
+		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
+		List<String>images= loadImages(projectString);
+        Map<String,Set<String>> features= new HashMap<String,Set<String>>();
 		for(IFilter filter: filterMap.values()){
 			System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
-				if(filter.getName().equals("Zernike Moments")){
-					//BUG for CLASSASIFICATION WILL BE FIXED LATER
-					ImagePlus originalImage=null;
-					ArrayList<Pair<Integer,Complex>> arr=ApplyZernikeFilter.ComputeValues(originalImage, filter);
-					for(Pair<Integer, Complex> pr:arr){
-						FeatureType featureType;
-						if(!featurStackMap.containsKey(pr.first))
-							featureType = new FeatureType();
-						else
-							featureType = featurStackMap.get(pr.first);
-						featureType.add(pr.second);
-						featurStackMap.put(pr.first, featureType);
+				if(filter.getFilterType()==ProjectType.CLASSIFICATION.getProjectType()){
+					for(String image: images) {
+						for(String key: featureManager.getClassKeys()) {
+							List<Roi> rois=featureManager.getExamples(key, LearningType.BOTH.name(), image);
+							if(rois!=null && !rois.isEmpty()) {
+								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
+										filterString+image.substring(0, image.lastIndexOf(".")),
+										rois);
+								if(filter.getFeatures()!=null) {
+									features.put(filter.getKey(),filter.getFeatureNames());
+									List<Pair<String,double[]>> featureL=filter.getFeatures();
+									featureList.put(filter.getKey(),featureL);
+								}
+
+							}
+
+						}
 					}
+					
 				}
 				else{
 
-
-					List<String>images= loadImages(projectString);
 					for(String image: images) {
-						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")));
+						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 					}
 
 				}
 
 			}
 
+		}
+		if(featureList!=null) {
+			System.out.println(featureList.size());
+			IJ.log("Features computed"+featureList.size());
+			System.out.println(features.size());
+			projectInfo.setFeatures(featureList);
+			projectInfo.setFeatureNames(features);
+			/*	for(Pair<String,Double[]> featureL: featureList.values()) {
+				System.out.println(featureL.first);
+				System.out.println(Arrays.toString(featureL.second));
+			}*/
 		}
 
 	}
@@ -232,15 +257,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		return 0;
 	}
 
-	/**
-	 * Get a specific label of the reference stack
-	 * @param index slice index (>=1)
-	 * @return label name
-	 */
-	public String getLabel(int index)
-	{
-		return  featurStackMap.get(featurStackMap.size()).getfinalStack().getSliceLabel(index);
-	}
 
 
 
@@ -257,10 +273,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		return classNames;
 	}
 
-	public ImageStack getImageStack(int sliceNum)
-	{
-		return featurStackMap.get(sliceNum).getfinalStack();
-	}
+
 
 	/*	public Instance createInstance(String featureName, int x, int y, int classIndex, int sliceNum) {
 		return filterUtil.createInstance(x, y, classIndex,

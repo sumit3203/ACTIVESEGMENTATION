@@ -5,7 +5,9 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageWindow;
+import ij.gui.Overlay;
 import ij.gui.Roi;
+import ij.gui.TextRoi;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 
@@ -79,6 +81,9 @@ public class FeaturePanelNew extends ImageWindow  {
 
 	/** array of roi list overlays to paint the transparent rois of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
+	
+	/** Used only during classification setting*/
+	private Map<String,Integer> predictionResultClassification;
 
 	final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
 	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
@@ -98,6 +103,8 @@ public class FeaturePanelNew extends ImageWindow  {
 	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
 
 	private ImagePlus displayImage;
+	/** Used only in classification setting, in segmentation we get from feature manager*/
+	private ImagePlus tempClassifiedImage;
 	private JPanel imagePanel,classPanel,roiPanel;
 	private JTextField imageNum;
 	private JLabel total;
@@ -115,6 +122,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.exampleList = new HashMap<String, JList>();
 		this.allexampleList = new HashMap<String, JList>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
+		tempClassifiedImage = new ImagePlus();
 		setOverlay();
 		loadImage(displayImage);
 		this.hide();
@@ -191,8 +199,22 @@ public class FeaturePanelNew extends ImageWindow  {
 		learningType.addItemListener( new ItemListener() {
 
 			@Override
-			public void itemStateChanged(ItemEvent e) {			 
-				updateGui();	
+			public void itemStateChanged(ItemEvent e) {
+				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+					if(showColorOverlay) {
+						updateGui();
+						updateResultOverlay(null);
+					}
+					else {
+						updateGui();
+					}					
+				}
+				else {
+					updateGui();
+				}
+				
+				
+				// here we need to add for classification
 			}
 		});
 		dataJPanel.setBounds(720,240,100,40);
@@ -357,7 +379,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		if(event==SAVECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {
 				if (checkBox.isSelected()) {
-					System.out.println(checkBox.getText());
+					//System.out.println(checkBox.getText());
 					String key=checkBox.getName();
 					featureManager.setClassLabel(key,jTextList.get(key).getText() );
 				}
@@ -368,7 +390,12 @@ public class FeaturePanelNew extends ImageWindow  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				classifiedImage=featureManager.getClassifiedImage();
+				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+					classifiedImage = null;
+				}
+				else {
+					classifiedImage=featureManager.getClassifiedImage();
+				}				
 				updateResultOverlay(classifiedImage);
 			}
 			updateGui();
@@ -378,15 +405,39 @@ public class FeaturePanelNew extends ImageWindow  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				classifiedImage=featureManager.getClassifiedImage();
+				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+					classifiedImage = null;
+				}
+				else {
+					classifiedImage=featureManager.getClassifiedImage();
+				}
 				updateResultOverlay(classifiedImage);
 			}
 			imagePanel.add(ic);
 			updateGui();
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
+			if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+				// it means new round of training, so set result setting to false
+				showColorOverlay = false;
+				// removing previous markings and reset things
+				predictionResultClassification = null;
+				displayImage.setOverlay(null);
+				
+				// compute new predictions
+				featureManager.compute();				
+				predictionResultClassification = featureManager.getClassificationResultMap();
+				
+				// we do not need to get any image in classification setting, only predictions are needed
+				classifiedImage = null;
+			}
+			
+			//segmentation setting
+			else {
+				classifiedImage=featureManager.compute();
+			}
 			IJ.log("compute");
-			classifiedImage=featureManager.compute();
+			
 			toggleOverlay();
 		}
 		if(event==TOGGLE_BUTTON_PRESSED){
@@ -432,26 +483,80 @@ public class FeaturePanelNew extends ImageWindow  {
 	 */
 	void toggleOverlay()
 	{
-		showColorOverlay = !showColorOverlay;
-		if (showColorOverlay && (null != classifiedImage))
-		{
-			updateResultOverlay(classifiedImage);
+		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.SEGMENTATION)) {
+			showColorOverlay = !showColorOverlay;			
+			if (showColorOverlay && (null != classifiedImage)){
+				updateResultOverlay(classifiedImage);
+			}
+			else{
+				resultOverlay.setImage(null);
+				displayImage.updateAndDraw();
+			}
 		}
-		else{
-			resultOverlay.setImage(null);
-			displayImage.updateAndDraw();
-		}
+		
+		// classification setting, no classified image
+		else {			
+			showColorOverlay = !showColorOverlay;
+			// user wants to see results
+			if(showColorOverlay) {
+				updateResultOverlay(classifiedImage);
+			}
+			
+			// user wants to see original rois, no results
+			else {
+				
+				// remove result overlay
+				displayImage.setOverlay(null);
+				displayImage.updateAndDraw();
+				
+				//just show examples drawn by user
+				updateGui();
+			}
+		}		
 	}
 
 	public void updateResultOverlay(ImagePlus classifiedImage)
 	{
-		ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
-		overlay = overlay.convertToByte(false);
-		setLut(featureManager.getColors());
-		overlay.setColorModel(overlayLUT);
-		resultOverlay.setImage(overlay);
-		displayImage.updateAndDraw();
+		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.SEGMENTATION)) {
+			ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
+			overlay = overlay.convertToByte(false);
+			setLut(featureManager.getColors());
+			overlay.setColorModel(overlayLUT);
+			resultOverlay.setImage(overlay);
+			displayImage.updateAndDraw();
+		}
+		
+		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+			// remove previous overlay
+			displayImage.setOverlay(null);
+			displayImage.updateAndDraw();
+			
+			//get current slice
+			int currentSlice = featureManager.getCurrentSlice();			
+			Font font = new Font("Arial", Font.PLAIN, 38);           
+			Overlay overlay = new Overlay();		 		 			 			
+			ArrayList<Roi> rois;
+			for(String classKey:featureManager.getClassKeys()) {
+				//returns rois of current image slice of given class, current slice is updated internally
+				rois = (ArrayList<Roi>) featureManager.getExamples(classKey,learningType.getSelectedItem().toString());
+				if(rois!=null) {					
+					for (Roi roi:rois) {
+						int pred = predictionResultClassification.get(roi.getName());
+						TextRoi textroi = new TextRoi(roi.getBounds().x,roi.getBounds().y,
+								roi.getFloatWidth(),roi.getFloatHeight(),Integer.toString(pred),font);
+						textroi.setFillColor(roi.getFillColor());
+						//textroi.setNonScalable(true);
+						textroi.setPosition(currentSlice);
+						overlay.add(textroi);
+					}
+				}
+			}
+			// add result overlay
+			displayImage.setOverlay(overlay);			
+			displayImage.updateAndDraw();				
+		}
 	}
+	
 	public void setLut(List<Color> colors ){
 		int i=0;
 		for(Color color: colors){
@@ -462,7 +567,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		}
 		overlayLUT = new LUT(red, green, blue);
 	}
-	private void updateGui(){	
+	private void updateGui(){
 		try{
 			drawExamples();
 			updateExampleLists();
@@ -496,7 +601,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
 					String[] arr= item.split(" ");
-					System.out.println("Class Id"+ arr[0].trim());
+					//System.out.println("Class Id"+ arr[0].trim());
 					int sliceNum=Integer.parseInt(arr[2].trim());
 					showSelected( arr[0].trim(),index);
 
@@ -537,7 +642,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			final int y, final int width, final int height,
 			JComponent panel, final ActionEvent action,final Color color )
 	{
-		panel.add( button );
+		panel.add(button);
 		button.setText( label );
 		button.setIcon( icon );
 		button.setFont( FONT );
@@ -582,7 +687,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			featureManager.saveExamples(name, key,type);
 		}
 	}
-
+	
 	private void uploadExamples(String key) {
 		String type=learningType.getSelectedItem().toString();
 		JFileChooser fileChooser = new JFileChooser();
@@ -592,12 +697,12 @@ public class FeaturePanelNew extends ImageWindow  {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type);
 		}
-
 	}
+	
 	public static void main(String[] args) {
 		new ImageJ();
 		IProjectManager projectManager= new ProjectManagerImp();
-		projectManager.loadProject("C:\\Users\\sumit\\Documents\\testproject\\testproject.json");
+		projectManager.loadProject("C:\\Users\\sanje\\Documents\\class_algae\\class_algae.json");
 		new FeaturePanelNew(new FeatureManagerNew(projectManager));
 	}
 

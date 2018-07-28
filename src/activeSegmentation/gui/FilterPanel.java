@@ -89,10 +89,10 @@ public class FilterPanel implements Runnable {
 	
 	final JFrame frame = new JFrame("FILTER");
 
-	public FilterPanel(IProjectManager projectManager) {
+	public FilterPanel(IProjectManager projectManager,IFeatureManagerNew  featureManager) {
 		this.projectManager= projectManager;
 		
-		this.filterManager =new FilterManager(projectManager);
+		this.filterManager =new FilterManager(projectManager, featureManager);
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
 		textMap= new HashMap<String, List<JTextField>>();
@@ -196,15 +196,15 @@ public class FilterPanel implements Runnable {
 
 	public void doAction( final ActionEvent event )
 	{
-		System.out.println("IN DO ACTION");
-		System.out.println(event.toString());
+		//System.out.println("IN DO ACTION");
+		//System.out.println(event.toString());
 
 		Set<String> filters= filterManager.getFilters();  
 		for(String filter : filters){
 			if(event.getActionCommand()== filter){
 
 				filterManager.enableFilter(filter);
-				System.out.println(filter);
+				//System.out.println(filter);
 				pane.removeAll();
 				loadFilters();
 				updateFiterList();
@@ -327,13 +327,13 @@ public class FilterPanel implements Runnable {
 		button.setBackground(new Color(192, 192, 192));
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
-		System.out.println("ADDED");
+		//System.out.println("ADDED");
 		button.addActionListener( new ActionListener()
 		{
 			@Override
 			public void actionPerformed( final ActionEvent e )
 			{
-				System.out.println("CLICKED");
+				//System.out.println("CLICKED");
 				doAction(action);
 			}
 		});

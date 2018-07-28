@@ -4,6 +4,8 @@ package activeSegmentation;
 import java.util.List;
 import java.util.Set;
 
+import weka.core.Instance;
+
 /**
  * 				
  *   
@@ -65,6 +67,8 @@ public interface ILearningManager {
 	 * @return Predicted class of test DataSet
 	 */
 	public  double[] applyClassifier(IDataSet testDataSet);
+	
+	public double predict(Instance instance);
 
 	public Set<String> getFeatureSelList();
 }

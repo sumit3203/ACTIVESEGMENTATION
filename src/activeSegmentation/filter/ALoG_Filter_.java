@@ -4,6 +4,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
@@ -14,6 +15,7 @@ import ijaux.scale.*;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -151,7 +153,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
@@ -183,16 +185,16 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 			ip=ip.toFloat(0, null);
 
 		pass++;
-		System.out.println(settings.get(LEN)+"MG");
+		//System.out.println(settings.get(LEN)+"MG");
 		//GScaleSpace sp=new GScaleSpace(sigma);
 		float[] kernx= sp.gauss1D();
-		System.out.println("kernx :"+kernx.length);
+		//System.out.println("kernx :"+kernx.length);
 		GScaleSpace.flip(kernx);		
 		float[] kern_diff2= sp.diff2Gauss1D();
 		GScaleSpace.flip(kern_diff2);
-		System.out.println("kernx2 :"+kern_diff2.length);
+		//System.out.println("kernx2 :"+kern_diff2.length);
 		float[] kern_diff1=sp.diffGauss1D();
-		System.out.println("kernx1:"+kern_diff1.length);
+		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
 
 		kernel=new float[4][];
@@ -287,7 +289,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
 		lap_o.resetMinAndMax();
 		imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);
-		System.out.println("ALOG_FILTER");
+		//System.out.println("ALOG_FILTER");
 		return imageStack;
 	}
 
@@ -471,6 +473,12 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<String> getFeatureNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

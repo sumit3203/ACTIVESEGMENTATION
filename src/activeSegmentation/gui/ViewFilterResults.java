@@ -104,7 +104,7 @@ public class ViewFilterResults extends ImageWindow  {
 		if (imgURL != null) {
 			return new ImagePlus(imgURL.getPath());
 		} else {            
-			System.err.println("Couldn't find file: " + path);
+			//System.err.println("Couldn't find file: " + path);
 			return null;
 		}
 	}   

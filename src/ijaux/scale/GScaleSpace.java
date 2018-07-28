@@ -72,7 +72,7 @@ public class GScaleSpace {
 	public GScaleSpace (float sigma) {
 		r=(int)(swidth*sigma);
 		
-			System.out.println("r "+ r +" sigma "+ sigma);
+			//System.out.println("r "+ r +" sigma "+ sigma);
 		
 		this.sigma=sigma;
 	}
@@ -171,10 +171,10 @@ public class GScaleSpace {
 		//swidth=width; // we sample at least 3* sigma
 		double sigma2= (double) sigma;
 		int r=(int)(width*sigma2+1);
-		System.out.print("r: "+r);
+		//System.out.print("r: "+r);
 		int sz=2*r+1;
 		sigma2*=sigma2;
-		System.out.println("sigma**2: "+sigma2);
+		//System.out.println("sigma**2: "+sigma2);
 		
 	 	
 		float[] kernel=new float[sz];
@@ -319,8 +319,8 @@ public class GScaleSpace {
 		
 		double s=sigma*sigma;
 		
-		System.out.println("s^2: "+s);
-		System.out.println("width: "+swidth);
+		//System.out.println("s^2: "+s);
+		//System.out.println("width: "+swidth);
 		float[] kernel=new float[sz];
   
 		final double PIs=1/sqrt(2*Math.PI*s)/s;
@@ -337,8 +337,8 @@ public class GScaleSpace {
 	//konop's
 	public static float[]  diffGauss1D(float width, float sigma) {
 		
-		System.out.println("Width :"+width);
-		System.out.println("Sigma :"+sigma);
+		//System.out.println("Width :"+width);
+		//System.out.println("Sigma :"+sigma);
 		//swidth=width; // we sample at least 3* sigma
 		double s= (double) sigma;
 		int r=(int)(width*s);

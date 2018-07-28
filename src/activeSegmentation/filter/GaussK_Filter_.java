@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
@@ -17,6 +18,7 @@ import ijaux.scale.*;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 import activeSegmentation.IFilter;
 import dsp.Conv;
@@ -239,7 +241,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 		if (image.getStackSize()> 1) {
 			stackloc=" z= "+image.getCurrentSlice();
-			System.out.println("stack location "+stackloc);
+			//System.out.println("stack location "+stackloc);
 		}
 
 		int apos=2;
@@ -411,7 +413,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 	@Override
-	public void applyFilter(ImageProcessor processor, String filterPath) {
+	public void applyFilter(ImageProcessor processor, String filterPath,List<Roi> roiList) {
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(processor.getWidth(),processor.getHeight());
 				GScaleSpace sp=new GScaleSpace(sigma);
@@ -429,7 +431,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		if (!isFloat) 
 			ip=ip.toFloat(0, null);
 
-		System.out.println("IN REEAL CODE");
+		//System.out.println("IN REEAL CODE");
 		float[] kernx= sp.gauss1D();
 		SUtils.flip(kernx);		
 		float[] kern_diff2= sp.diff2Gauss1D();
@@ -463,7 +465,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 		}
-		System.out.println("Calculating Curvatue");
+		//System.out.println("Calculating Curvatue");
 		long time=-System.nanoTime();	
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
@@ -554,11 +556,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
-		System.out.println("sigma: " + sp.getSigma() + 
+		//System.out.println("elapsed time: " + time +" us");
+		/*System.out.println("sigma: " + sp.getSigma() + 
 				" scale: " + sp.getScale() + 
 				" kernel size: "+ sp.getSize()
-				);
+				);*/
 		//ImagePlus iamge=new ImagePlus("imafe", imageStack);
 		//image.show();
 		return imageStack;
@@ -617,6 +619,13 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	@Override
 	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Set<String> getFeatureNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

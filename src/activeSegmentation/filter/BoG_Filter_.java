@@ -4,6 +4,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import ij.gui.Roi;
 import ij.gui.DialogListener;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
@@ -15,6 +16,7 @@ import ijaux.scale.Pair;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -139,7 +141,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
@@ -180,8 +182,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 			
 		int sz= sp.getSize();
 		
-		if (debug)
-			System.out.println("sz " +sz);
+		/*if (debug)
+			System.out.println("sz " +sz);*/
 		
 		float[][] disp= new float[3][];
 
@@ -222,25 +224,25 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 				cnv.convolveFloat1D(fpauxiso, kern_diff_2, 1); //Oy
 				
 				fpaux.copyBits(fpauxiso, 0, 0, Blitter.ADD);
-				System.out.println("separable & isotropic computation");
+				//System.out.println("separable & isotropic computation");
 			} else {
 				cnv.convolveSemiSep(fpaux, kernx, kern_diff_4);	
-				System.out.println("separable & non-isotropic computation");
+				//System.out.println("separable & non-isotropic computation");
 			}
 		} else {	
 			if (isotropic) {			
-				System.out.println("non-separable & isotropic computation");
+				//System.out.println("non-separable & isotropic computation");
 			} else {
 				for (int i=0; i<sz*sz; i++)
 					kernel2[i]=disp[0][i]+ disp[1][i];
-				System.out.println("non-separable & non-isotropic computation");
+				//System.out.println("non-separable & non-isotropic computation");
 			} // end else
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);
 		} // end else
 	 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
+		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 		
 		/*if (convert) {
@@ -435,6 +437,11 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 	@Override
 	public <T> T getFeatures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Set<String> getFeatureNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

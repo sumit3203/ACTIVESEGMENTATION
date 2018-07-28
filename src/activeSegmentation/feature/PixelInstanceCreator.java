@@ -16,6 +16,7 @@ import activeSegmentation.io.ClassInfo;
 import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.WekaDataSet;
 import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 import ij.IJ;
 import ij.ImagePlus;
@@ -72,14 +73,14 @@ public class PixelInstanceCreator implements IFeature {
 		loadImages(this.projectString);
 		this.classLabels=new ArrayList<String>();
 		featurePath=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
-		System.out.println(featurePath);
+		//System.out.println(featurePath);
 		File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
 		this.numberOfFeatures=featureImages.length;
 		labels=new String[numberOfFeatures];
 		for(int i=0; i< featureImages.length; i++){
-			System.out.println(featureImages[i].getName());
+			//System.out.println(featureImages[i].getName());
 			String[] featureName=featureImages[i].getName().split("\\.");
-			System.out.println(featureName[0]);
+			//System.out.println(featureName[0]);
 			labels[i]=featureName[0];
 		}
 	}
@@ -152,7 +153,7 @@ public class PixelInstanceCreator implements IFeature {
 		ImageStack featureStack = new ImageStack(firstImage.getWidth(), firstImage.getHeight());
 		for(File file : images){
 			if (file.isFile()) {
-				System.out.println(file.getName());
+				//System.out.println(file.getName());
 				IJ.log(file.getName());
 				ImagePlus image=IJ.openImage(featurePath+localPath+"/"+file.getName());
 
@@ -205,7 +206,7 @@ public class PixelInstanceCreator implements IFeature {
 	private  ArrayList<Attribute> createFeatureHeader(){
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i=0; i<numberOfFeatures; i++){
-			System.out.println(labels[i]);
+			//System.out.println(labels[i]);
 			attributes.add(new Attribute(labels[i]));
 		}
 
@@ -238,7 +239,7 @@ public class PixelInstanceCreator implements IFeature {
 		Instances testingData;
 		ArrayList<Attribute> attributes = createFeatureHeader();
 		attributes.add(new Attribute(Common.CLASS, classLabels));
-		System.out.println(attributes.toString());
+		//System.out.println(attributes.toString());
 		// create initial set of instances
 		testingData =  new Instances(Common.INSTANCE_NAME, attributes, 1 );
 		// Set the index of the class attribute
@@ -252,7 +253,7 @@ public class PixelInstanceCreator implements IFeature {
 			}		
 		}
 		// increase number of instances for this class
-		System.out.println(testingData.get(1).toString());
+		//System.out.println(testingData.get(1).toString());
 		return testingData;		
 	}
 
@@ -267,7 +268,7 @@ public class PixelInstanceCreator implements IFeature {
 
 	@Override
 	public IDataSet getDataSet() {
-		System.out.println(trainingData.toString());
+		//System.out.println(trainingData.toString());
 		return new WekaDataSet(trainingData);
 	}
 
@@ -277,9 +278,11 @@ public class PixelInstanceCreator implements IFeature {
 	}
 
 	@Override
-	public List<IDataSet> createAllInstance(List<String> classLabels, int classes, List<ArrayList<Integer>> testimageindex) {
+	public Instance createInstance(Roi roi) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

@@ -35,7 +35,7 @@ import weka.core.Instances;
 public class ProjectManagerImp implements IProjectManager {
 
 	private IDataSet dataSet;
-	private ProjectInfo projectInfo;
+	private static ProjectInfo projectInfo;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<String,String>();
@@ -120,7 +120,7 @@ public class ProjectManagerImp implements IProjectManager {
 	@Override
 	public boolean loadProject(String fileName) {
 		// TODO Auto-generated method stub
-		System.out.println("IN LOAD PROJCT");
+		//System.out.println("IN LOAD PROJCT");
 		setDirectory();
 		//IJ.log(System.getProperty("plugins.dir"));
 		if(projectInfo==null){
@@ -129,7 +129,7 @@ public class ProjectManagerImp implements IProjectManager {
 				projectInfo= mapper.readValue(new File(fileName), ProjectInfo.class);
 				projectInfo.setPluginPath(activeSegDir);
 				//metaInfo.setPath(path);
-				System.out.println("done");
+				//System.out.println("done");
 
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
@@ -146,18 +146,18 @@ public class ProjectManagerImp implements IProjectManager {
 	}
 
 	@Override
-	public void writeMetaInfo( ProjectInfo projectInfo) {
-		this.projectInfo= projectInfo;
+	public void writeMetaInfo( ProjectInfo project) {
+		updateMetaInfo(projectInfo);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			projectInfo.setModifyDate(dateFormat.format(new Date()));
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			System.out.println("SAVING");
+			//System.out.println("SAVING");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
 
-			System.out.println("DONE");
+			//System.out.println("DONE");
 
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
@@ -267,7 +267,7 @@ public class ProjectManagerImp implements IProjectManager {
 			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\";	
 		}
 
-		System.out.println(System.getProperty("plugins.dir"));
+		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
 	private void createProjectSpace(String projectDirectory, String projectName) {
@@ -308,8 +308,10 @@ public class ProjectManagerImp implements IProjectManager {
 		return true;
 	}
 
-
-
+	 public void updateMetaInfo(ProjectInfo project)
+	  {
+	    projectInfo = project;
+	  }
 
 
 }
