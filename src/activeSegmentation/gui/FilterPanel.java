@@ -92,7 +92,7 @@ public class FilterPanel implements Runnable {
 	public FilterPanel(IProjectManager projectManager,IFeatureManagerNew  featureManager) {
 		this.projectManager= projectManager;
 		
-		this.filterManager =new FilterManager(projectManager, featureManager);
+		this.filterManager =new FilterManager(projectManager, featureManager);		
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
 		textMap= new HashMap<String, List<JTextField>>();
@@ -112,22 +112,22 @@ public class FilterPanel implements Runnable {
 		panel.setFont(Common.FONT);
         panel.setBackground(Color.GRAY);
         loadFilters();
-		pane.setSize(600, 300);
+		pane.setSize(600, 400);
 		filterList.addMouseListener(mouseListener);
 		JScrollPane scrollPane = Util.addScrollPanel(filterList,null);
-		scrollPane.setBounds(605,20,100,280);
+		scrollPane.setBounds(605,20,100,380);
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
 		updateFiterList();
-		addButton( new JButton(),"COMPUTE",null , 20, 320, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
-		addButton(new JButton(), "DEFAULT",null , 240, 320, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "SAVE",null , 350, 320, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
-		addButton(new JButton(), "VIEW",null , 460, 320, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
+		addButton( new JButton(),"COMPUTE",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
+		addButton(new JButton(), "DEFAULT",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
+		addButton(new JButton(), "SAVE",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
+		addButton(new JButton(), "VIEW",null , 460, 420, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
 
 
 		frame.add(pane);
 		frame.add(panel);
-		frame.setSize(730, 420);
+		frame.setSize(730, 520);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
