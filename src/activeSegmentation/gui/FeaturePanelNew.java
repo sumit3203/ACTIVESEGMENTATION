@@ -12,6 +12,7 @@ import ij.process.ImageProcessor;
 import ij.process.LUT;
 
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Composite;
@@ -61,6 +62,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
 	private IFeatureManagerNew featureManager;
 	/** opacity (in %) of the result overlay image */
 	int overlayOpacity = 33;
@@ -113,7 +115,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	private JComboBox<LearningType> learningType;
 	private JFrame frame;
 
-	public FeaturePanelNew(IFeatureManagerNew featureManager) {
+	public FeaturePanelNew(IFeatureManagerNew featureManager) {		
 		super(featureManager.getCurrentImage(),new CustomCanvas(featureManager.getCurrentImage()));
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
@@ -122,7 +124,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.exampleList = new HashMap<String, JList>();
 		this.allexampleList = new HashMap<String, JList>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
-		tempClassifiedImage = new ImagePlus();
+		tempClassifiedImage = new ImagePlus();		
 		setOverlay();
 		loadImage(displayImage);
 		this.hide();
@@ -135,7 +137,8 @@ public class FeaturePanelNew extends ImageWindow  {
 
 
 	public void showPanel() {
-		frame = new JFrame("FEATURE PANEL");
+		frame = new JFrame("FEATURE PANEL");	        
+		frame.setResizable(false);
 		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
 		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
@@ -152,11 +155,12 @@ public class FeaturePanelNew extends ImageWindow  {
 		panel.setFont(FONT);
 		panel.setBackground(Color.GRAY);
 		imagePanel = new JPanel();	
+		imagePanel.setLayout(new BorderLayout());
 		classPanel= new JPanel();
 		roiPanel= new JPanel();
-		imagePanel.setBackground(Color.GRAY);
-		imagePanel.add(ic);
-		imagePanel.setBounds( 10, 10, 560, 560 );
+		imagePanel.setBackground(Color.GRAY);		
+		imagePanel.add(ic,BorderLayout.CENTER);
+		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
 		panel.add(imagePanel);
 		classPanel.setBounds(605,20,350,100);
 		classPanel.setPreferredSize(new Dimension(350, 100));
@@ -232,8 +236,9 @@ public class FeaturePanelNew extends ImageWindow  {
 		scrollPane.setBounds(605,300,350,250);
 		panel.add(scrollPane);
 		frame.add(panel);
-		frame.pack();
+		//frame.pack();
 		frame.setSize(1000,600);
+		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		updateGui();
@@ -385,7 +390,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				}
 			}
 		}
-		if(event == PREVIOUS_BUTTON_PRESSED){
+		if(event == PREVIOUS_BUTTON_PRESSED){			
 			ImagePlus image=featureManager.getPreviousImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
@@ -398,9 +403,16 @@ public class FeaturePanelNew extends ImageWindow  {
 				}				
 				updateResultOverlay(classifiedImage);
 			}
+			
+			// force limit size of image window
+			if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}			
 			updateGui();
 		}
-		if(event==NEXT_BUTTON_PRESSED  ){
+		if(event==NEXT_BUTTON_PRESSED  ){			
 			ImagePlus image=featureManager.getNextImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
@@ -413,7 +425,14 @@ public class FeaturePanelNew extends ImageWindow  {
 				}
 				updateResultOverlay(classifiedImage);
 			}
-			imagePanel.add(ic);
+			
+			// force limit size of image window
+			if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}
+			//imagePanel.add(ic);
 			updateGui();
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
@@ -702,7 +721,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	public static void main(String[] args) {
 		new ImageJ();
 		IProjectManager projectManager= new ProjectManagerImp();
-		projectManager.loadProject("C:\\Users\\sanje\\Documents\\class_algae\\class_algae.json");
+		projectManager.loadProject("C:\\Users\\sanje\\Documents\\hello\\hello.json");
 		new FeaturePanelNew(new FeatureManagerNew(projectManager));
 	}
 
