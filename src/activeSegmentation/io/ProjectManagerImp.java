@@ -126,10 +126,16 @@ public class ProjectManagerImp implements IProjectManager {
 		if(projectInfo==null){
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				projectInfo= mapper.readValue(new File(fileName), ProjectInfo.class);
+				//System.out.println(fileName);
+				File projectFile=new File(fileName);
+				//System.out.println(projectFile.getParent());
+				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
 				projectInfo.setPluginPath(activeSegDir);
 				//metaInfo.setPath(path);
 				//System.out.println("done");
+				//System.out.println( projectInfo.getProjectName());
+				setProjectDir(projectFile.getParent(), null);
+				projectInfo.setProjectDirectory(projectDir);
 
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
@@ -270,15 +276,24 @@ public class ProjectManagerImp implements IProjectManager {
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
-	private void createProjectSpace(String projectDirectory, String projectName) {
-
-		String projectString=projectDirectory+"/"+projectName+"/"+"Training";
+	private void setProjectDir(String projectDirectory, String projectName) {
+		String projectString;
+		if(projectName!=null) {
+			projectString=projectDirectory+"/"+projectName+"/"+"Training";
+		}else {
+			projectString=projectDirectory+"/"+"Training";
+		}
+		
 		projectDir.put(Common.PROJECTDIR, projectString);
 		projectDir.put(Common.FILTERSDIR, projectString+"/filters/");
 		projectDir.put(Common.FEATURESDIR, projectString+"/features/");
 		projectDir.put(Common.LEARNINGDIR, projectString+"/learning/");
 		projectDir.put(Common.EVALUATIONDIR,projectString+"/evaluation/");
 		projectDir.put(Common.IMAGESDIR,projectString+"/images/");
+	}
+	private void createProjectSpace(String projectDirectory, String projectName) {
+
+		setProjectDir(projectDirectory, projectName);
 		createDirectory(projectDir.get(Common.PROJECTDIR));
 		createDirectory(projectDir.get(Common.FILTERSDIR));
 		createDirectory(projectDir.get(Common.FEATURESDIR));

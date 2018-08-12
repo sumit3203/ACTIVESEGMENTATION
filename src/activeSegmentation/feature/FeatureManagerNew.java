@@ -97,7 +97,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		this.projectInfo = this.projectManager.getMetaInfo();
 		this.images = new ArrayList<String>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
-		System.out.println();
+		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(Common.FEATURESDIR);
 		this.totalSlices = loadImages(this.projectString);
 		this.defaultColors = Util.setDefaultColors();

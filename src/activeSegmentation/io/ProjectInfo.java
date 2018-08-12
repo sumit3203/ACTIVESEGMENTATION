@@ -26,6 +26,7 @@ public class ProjectInfo
 	private int classes;
 	private String projectPath;
 	private String pluginPath;
+	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<String,String>();
 	private String trainingStack;
 	private String testingStack;
