@@ -1,7 +1,7 @@
 package activeSegmentation.feature;
 
 import ij.ImageStack;
-import ijaux.scale.ZernikeMoment.Complex;
+import ijaux.moments.ZernikeMoment.Complex;
 import weka.core.DenseInstance;
 
 /**

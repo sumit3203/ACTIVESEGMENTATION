@@ -20,9 +20,9 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
+import ijaux.moments.ZernikeMoment;
+import ijaux.moments.ZernikeMoment.Complex;
 import ijaux.scale.Pair;
-import ijaux.scale.ZernikeMoment;
-import ijaux.scale.ZernikeMoment.Complex;
 
 public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
 

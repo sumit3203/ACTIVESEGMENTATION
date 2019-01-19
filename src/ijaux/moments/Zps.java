@@ -1,4 +1,4 @@
-package ijaux.scale;
+package ijaux.moments;
 
 import java.util.ArrayList;
 

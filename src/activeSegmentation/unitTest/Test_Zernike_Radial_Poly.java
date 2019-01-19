@@ -7,8 +7,8 @@ import java.io.IOException;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageConverter;
-import ijaux.scale.ZernikeMoment;
-import ijaux.scale.Zps;
+import ijaux.moments.ZernikeMoment;
+import ijaux.moments.Zps;
 
 public class Test_Zernike_Radial_Poly {
 	/*

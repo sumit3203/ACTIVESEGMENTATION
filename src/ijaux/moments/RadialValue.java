@@ -1,4 +1,4 @@
-package ijaux.scale;
+package ijaux.moments;
 
 public class RadialValue {
 	double[][] Rmn;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ij.ImageStack;
-import ijaux.scale.ZernikeMoment.Complex;
+import ijaux.moments.ZernikeMoment.Complex;
 
 /*
  * This Class used for storing Class level features and Pixel level features.

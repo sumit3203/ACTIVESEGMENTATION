@@ -39,8 +39,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Roi;
+import ijaux.moments.ZernikeMoment.Complex;
 import ijaux.scale.Pair;
-import ijaux.scale.ZernikeMoment.Complex;
 
 /**
  * 				
