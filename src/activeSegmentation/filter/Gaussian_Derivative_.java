@@ -6,6 +6,7 @@ import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
+import ij.measure.Calibration;
 import ij.gui.DialogListener;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
@@ -138,19 +139,30 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 	
 	@Override
 	public int setup(String arg, ImagePlus imp) {
+		image=imp;
 		isFloat= (imp.getType()==ImagePlus.GRAY32);
 		isRGB = (imp.getType()==ImagePlus.COLOR_RGB);
+		cal=image.getCalibration();
+
 		return  flags;
 	}
 
+	private boolean doCalib = false;
+	
+	/*
+	 * This variable is to calibrate the Image Window
+	 */
+	private Calibration cal=null;
+
 	@Override
 	public void run(ImageProcessor ip) {
+		/*
 		try {
 			image.close();
 		} catch (Exception Ex){
 
 		}
-
+		 */
 		int r = (sz-1)/2;
 
 		if (wnd<0)
@@ -202,7 +214,7 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 
 	}
 	
-	public FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean sep,final boolean scnorm, int n,
+	private FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean sep,final boolean scnorm, int n,
 			int m){
 
 		ImageProcessor ipaux=ip.duplicate();
@@ -260,7 +272,7 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		//System.out.println("elapsed time: " + time +" us");
+		System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();
 
 		return fpaux;
@@ -309,6 +321,12 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 		gd.addPreviewCheckbox(pfr);
 		gd.addDialogListener(this);
 		gd.showDialog();
+		
+		if (cal!=null) {
+			if (!cal.getUnit().equals("pixel"))
+				gd.addCheckbox("units ( "+cal.getUnit() + " )", doCalib); 
+		}	
+		
 		if (gd.wasCanceled())
 			return DONE;
 
@@ -325,10 +343,13 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 		debug = gd.getNextBoolean();
 		sep = gd.getNextBoolean();
 		scnorm = gd.getNextBoolean();
+		
+		if (cal!=null)
+			doCalib=gd.getNextBoolean();
+		
 		sz = 2*r+1;
 		if (gd.wasCanceled())
 			return false;
-
 
 		return r>0;
 	}
@@ -341,7 +362,6 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		sep= Prefs.getBoolean(ISSEP, true);
@@ -377,27 +397,21 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 	}
 
 
-
 	@Override
 	public String getKey() {
-		// TODO Auto-generated method stub
 		return FILTER_KEY;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return FILTER_NAME;
 	}
 
-	
-
-
+ 
 	private Double gaussian(double x){
-
-		return Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
+		return Math.exp(-x*x/2.0) / (2.0*Math.sqrt(Math.PI));
 	}
-
+ 
 	@Override
 	public Image getImage(){
 
@@ -423,31 +437,26 @@ public class Gaussian_Derivative_ implements ExtendedPlugInFilter, DialogListene
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
 	@Override
 	public int getFilterType() {
-		// TODO Auto-generated method stub
 		return this.TYPE;
 	}
 
 	@Override
 	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

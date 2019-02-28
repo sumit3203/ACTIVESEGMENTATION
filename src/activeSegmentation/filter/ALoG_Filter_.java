@@ -120,7 +120,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	final int Ox=0, Oy=1, Oz=2;
 
-	// It is used to check whether to calibiration or not
+	// It is used to check whether to calibirate or not
 	private boolean doCalib = false;
 	/*
 	 * This variable is to calibrate the Image Window

@@ -157,7 +157,7 @@ public class Conv {
 		//System.out.println("cloning time: " + time +" us");			
 		time=-System.nanoTime();
 	
-		convolveFloat1D(xstack, kernx, Ox); // x
+		convolveFloat1D(xstack, kernx, Ox); // X
 		convolveFloat1D(xstack, kerny, Oy); // Y
 		convolveFloat1D(xstack, kernz, Oz); // Z
 		
