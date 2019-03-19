@@ -92,10 +92,10 @@ public class Gaussian_Jet_ implements ExtendedPlugInFilter, DialogListener,IFilt
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "GAUSSIAN";
+	private final  String FILTER_KEY = "GAUSSIAN Jet";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Gaussian Derivatives";
+	private final String FILTER_NAME = "Gaussian Jet";
 
 	private final int TYPE=1;
 	

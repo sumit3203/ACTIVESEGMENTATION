@@ -288,7 +288,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 
 	private Map<String, List<Roi>> loadRois(String filename, Map<String, List<String>> roiMapper) {
 		Map<String, List<Roi>> roiMap = new HashMap<String, List<Roi>>();
-		List<Roi> classRoiList = openZip(featurePath + "/" + filename);
+		List<Roi> classRoiList = openZip(featurePath + filename);
 		for (String imageKey : roiMapper.keySet()) {
 			roiMap.put(imageKey, getRois(classRoiList, roiMapper.get(imageKey)));
 		}

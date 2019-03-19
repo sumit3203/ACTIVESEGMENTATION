@@ -179,7 +179,7 @@ public class ProjectManagerImp implements IProjectManager {
 	@Override
 	public ProjectInfo getMetaInfo() {
 
-		return this.projectInfo;
+		return projectInfo;
 	}
 
 	@Override
