@@ -187,4 +187,5 @@ public interface IFeatureManagerNew {
 	public String getProjectType();
 
 	public ImagePlus getClassifiedImage();
+	public ImagePlus stackedClassifiedImage();
 }

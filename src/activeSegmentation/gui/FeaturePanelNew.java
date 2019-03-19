@@ -8,6 +8,7 @@ import ij.gui.ImageWindow;
 import ij.gui.Overlay;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
+import ij.io.FileSaver;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 
@@ -102,6 +103,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	ActionEvent COMPUTE_BUTTON_PRESSED;
 	ActionEvent SAVE_BUTTON_PRESSED;
 	ActionEvent TOGGLE_BUTTON_PRESSED;
+	ActionEvent DOWNLOAD_BUTTON_PRESSED;
 	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
 
 	private ImagePlus displayImage;
@@ -116,7 +118,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	private JFrame frame;
 
 	public FeaturePanelNew(IFeatureManagerNew featureManager) {		
-		super(featureManager.getCurrentImage(),new CustomCanvas(featureManager.getCurrentImage()));
+		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
 		this.jCheckBoxList= new ArrayList<JCheckBox>();
@@ -125,8 +127,8 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.allexampleList = new HashMap<String, JList>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
 		tempClassifiedImage = new ImagePlus();		
-		setOverlay();
-		loadImage(displayImage);
+		
+	
 		this.hide();
 		showPanel();
 	}
@@ -158,6 +160,10 @@ public class FeaturePanelNew extends ImageWindow  {
 		imagePanel.setLayout(new BorderLayout());
 		classPanel= new JPanel();
 		roiPanel= new JPanel();
+		ic=new CustomCanvas(featureManager.getCurrentImage());
+		 ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+			loadImage(displayImage);
+			setOverlay();
 		imagePanel.setBackground(Color.GRAY);		
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
@@ -172,7 +178,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		panel.add(classScrolPanel);
 		JPanel features= new JPanel();
 		features.setBounds(605,120,350,100);
-		features.setBorder(BorderFactory.createTitledBorder("COMPUTING"));
+		features.setBorder(BorderFactory.createTitledBorder("LEARNING"));
 		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
 		imageNum= new JTextField();
 		imageNum.setColumns(5);
@@ -195,6 +201,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		addButton(new JButton(), "COMPUTE",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "TOGGLE",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "DOWNLOAD",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
 		features.add(computePanel);
 		frame.add(features);
 		JPanel dataJPanel = new JPanel();
@@ -236,7 +243,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		scrollPane.setBounds(605,300,350,250);
 		panel.add(scrollPane);
 		frame.add(panel);
-		//frame.pack();
+		frame.pack();
 		frame.setSize(1000,600);
 		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
@@ -277,6 +284,7 @@ public class FeaturePanelNew extends ImageWindow  {
 					getExamples(key,learningType.getSelectedItem().toString());
 			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			roiOverlayList.get(key).setRoi(rois);
+			//System.out.println("roi draw"+ key);
 		}
 
 		getImagePlus().updateAndDraw();
@@ -464,6 +472,12 @@ public class FeaturePanelNew extends ImageWindow  {
 			toggleOverlay();
 		}
 
+		if(event==DOWNLOAD_BUTTON_PRESSED){
+			
+			ImagePlus image=featureManager.stackedClassifiedImage();
+			FileSaver saver= new FileSaver(image);
+			saver.saveAsTiff();
+		}
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
 			Color c;
@@ -621,7 +635,7 @@ public class FeaturePanelNew extends ImageWindow  {
 					String item =theList.getSelectedValue().toString();
 					String[] arr= item.split(" ");
 					//System.out.println("Class Id"+ arr[0].trim());
-					int sliceNum=Integer.parseInt(arr[2].trim());
+					//int sliceNum=Integer.parseInt(arr[2].trim());
 					showSelected( arr[0].trim(),index);
 
 				}
@@ -632,7 +646,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				String type= learningType.getSelectedItem().toString();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
-					System.out.println("ITEM : "+ item);
+					//System.out.println("ITEM : "+ item);
 					String[] arr= item.split(" ");
 					//int classId= featureManager.getclassKey(arr[0].trim())-1;
 					featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
@@ -650,9 +664,13 @@ public class FeaturePanelNew extends ImageWindow  {
 	 */
 	private void showSelected(String classKey,int index ){
 		updateGui();
+		
+		
 		displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
-		final Roi newRoi = featureManager.getRoi(classKey, index,type);			
+		//System.out.println(classKey+"--"+index+"---"+type);
+		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
+		//System.out.println(newRoi);
 		newRoi.setImage(displayImage);
 		displayImage.setRoi(newRoi);
 		displayImage.updateAndDraw();
@@ -718,11 +736,11 @@ public class FeaturePanelNew extends ImageWindow  {
 		}
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new ImageJ();
 		IProjectManager projectManager= new ProjectManagerImp();
 		projectManager.loadProject("C:\\Users\\sanje\\Documents\\hello\\hello.json");
 		new FeaturePanelNew(new FeatureManagerNew(projectManager));
-	}
+	}*/
 
 }

@@ -20,6 +20,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,7 +182,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRoi(imageKey, index);
 		} else {
-			return classes.get(key).getTestingRoi(imageKey, index);
+			return classes.get(key).getTrainingRoi(imageKey, index);
 		}
 	}
 
@@ -301,6 +302,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			for (Roi roi : classRoiList) {				
 				if (roi.getName().equalsIgnoreCase(name)) {
 					roiList.add(roi);
+					
 				}
 			}
 		}
@@ -493,7 +495,31 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 		return pred;
 	}
+	public ImagePlus stackedClassifiedImage() {
+		File[] files=finder(featurePath);
+		ImageStack imageStack=null;
+		
+		for(int i=0 ; i<files.length;i++) {
+			System.out.println(files[i].getName());
+			ImagePlus image = new ImagePlus(featurePath+files[i].getName());
+			if(i==0) {
+				imageStack= new ImageStack(image.getWidth(), image.getHeight());
+				imageStack.addSlice(image.getProcessor());
+			}
+			imageStack.addSlice(image.getProcessor());
+		}
+		return new ImagePlus("Segmented Image", imageStack);
+	}
 	
+	 public File[] finder( String dirName){
+	        File dir = new File(dirName);
+
+	        return dir.listFiles(new FilenameFilter() { 
+	                 public boolean accept(File dir, String filename)
+	                      {return filename.toLowerCase().endsWith(".tif"); }
+	        } );
+
+	    }
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
 		//System.out.println(roi.getName());
@@ -637,6 +663,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		if (this.sliceNum < totalSlices) {
 			this.sliceNum += 1;
 		}
+		//System.out.println("next slice"+sliceNum);
 		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
 	}
 
