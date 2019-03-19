@@ -73,9 +73,14 @@ public class PixelInstanceCreator implements IFeature {
 		loadImages(this.projectString);
 		this.classLabels=new ArrayList<String>();
 		featurePath=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
-		//System.out.println(featurePath);
+		updateFeatures();
+	}
+
+	private void updateFeatures() {
+		//System.out.println("pixel creator"+featurePath);
 		File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
 		this.numberOfFeatures=featureImages.length;
+		//System.out.println(this.numberOfFeatures);
 		labels=new String[numberOfFeatures];
 		for(int i=0; i< featureImages.length; i++){
 			//System.out.println(featureImages[i].getName());
@@ -84,7 +89,6 @@ public class PixelInstanceCreator implements IFeature {
 			labels[i]=featureName[0];
 		}
 	}
-
 	private int loadImages(String directory){
 		this.images.clear();
 		File folder = new File(directory);
@@ -104,7 +108,8 @@ public class PixelInstanceCreator implements IFeature {
 	@Override
 	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
 		// TODO Auto-generated method stub
-		//IJ.debugMode=true;
+		IJ.debugMode=true;
+		updateFeatures();
 		ArrayList<Attribute> attributes = createFeatureHeader();
 		attributes.add(new Attribute(Common.CLASS, getCLassLabels(classInfos)));
 		// create initial set of instances
@@ -115,6 +120,8 @@ public class PixelInstanceCreator implements IFeature {
 		for(String image: images){
 			//IJ.log(image);
 			ImageStack featureStack=loadFeatureStack(image);
+			//System.out.println(featureStack.size());
+			//IJ.log(featureStack.size());
 			int index=0;
 			for(ClassInfo classInfo : classInfos){
 				if(classInfo.getTrainingRois(image)!=null) {
@@ -129,7 +136,7 @@ public class PixelInstanceCreator implements IFeature {
 
 		}
 		IJ.log(trainingData.toSummaryString());
-		System.out.println(trainingData);
+		//System.out.println(trainingData);
 	}
 
 
