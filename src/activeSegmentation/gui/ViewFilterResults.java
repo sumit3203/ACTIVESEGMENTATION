@@ -7,6 +7,7 @@ import ij.gui.ImageWindow;
 import ij.gui.Roi;
 
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
@@ -53,7 +54,9 @@ public class ViewFilterResults extends ImageWindow  {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
 	private IProjectManager projectManager;
+	private IFeatureManagerNew featureManager;
 	private ProjectInfo projectInfo;
 	private String filterString;
 	private Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
@@ -72,6 +75,7 @@ public class ViewFilterResults extends ImageWindow  {
 
 	ActionEvent SLICE_PREVIOUS_BUTTON_PRESSED;
 	private Map<String, JList> exampleList;
+	private Map<String, JList> allexampleList;
 	JPanel imagePanel,roiPanel;
 	JTextField imageNum;
 	JTextField sliceField;
@@ -82,14 +86,17 @@ public class ViewFilterResults extends ImageWindow  {
 	int sliceNum,featureNum,totalSlices,totalFeatures;
 	JFrame frame;
 	private JComboBox<LearningType> learningType;
-
-	public ViewFilterResults(IProjectManager projectManager,ImagePlus image) {
-		super(image);
+	private ImagePlus displayImage;
+	public ViewFilterResults(IProjectManager projectManager,IFeatureManagerNew featureManager) {
+		//super(image);
+		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;
+		this.featureManager=featureManager;
 		this.featuresList=new ArrayList<String>();
 		this.images=new ArrayList<>();
 		this.exampleList = new HashMap<String, JList>();
-		roiOverlayList = new HashMap<String, RoiListOverlay>();
+		this.allexampleList = new HashMap<String, JList>();
+		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
 		this.projectInfo=this.projectManager.getMetaInfo();
 		//this.images=loadImages(projectString);
 		this.filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
@@ -157,20 +164,25 @@ public class ViewFilterResults extends ImageWindow  {
 		panel.setFont(FONT);
 		panel.setBackground(Color.GRAY);
 		imagePanel = new JPanel();	
+		imagePanel.setLayout(new BorderLayout());
 		imagePanel.setBackground(Color.GRAY);
+		ic=new CustomCanvas(featureManager.getCurrentImage());
+		//ic.setBounds(10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);
+		//ic.setMaximumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+		//ic.setSize(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);
+	     ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		if(totalFeatures>0){
 			featureNum=1;
 			loadImage(sliceNum, featureNum);
+			
 		}
-		imagePanel.add(ic);
-		imagePanel.setBounds( 10, 10, 560, 560 );
+		
+		//imagePanel.add(ic);
+		imagePanel.add(ic,BorderLayout.CENTER);
+		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );
+		//imagePanel.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+		
 		panel.add(imagePanel);
-		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
-		roiPanel.setPreferredSize(new Dimension(200, 400));
-		JScrollPane scrollPane = new JScrollPane(roiPanel);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
-		scrollPane.setBounds(605,300,200,250);
-		panel.add(scrollPane);
 
 		JPanel slicePanel= new JPanel();
 		slicePanel.setBounds(605,20,350,80);
@@ -239,29 +251,41 @@ public class ViewFilterResults extends ImageWindow  {
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
 		panel.add(dataJPanel);
+		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
+		//roiPanel.setPreferredSize(new Dimension(200, 400));
+		roiPanel.setPreferredSize(new Dimension(350, 175*featureManager.getNumOfClasses()));
+		JScrollPane scrollPane = new JScrollPane(roiPanel);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
+		scrollPane.setBounds(605,300,350,250);
+		panel.add(scrollPane);
 		frame.add(panel);
 		frame.pack();
 		frame.setSize(1000,600);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-       // refreshPanel();
+        refreshPanel();
+        updateGui();
 	}
 
-	/*private void refreshPanel() {
+	private void refreshPanel() {
 		roiPanel.removeAll();
 		for(String key: featureManager.getClassKeys()){
+			//System.out.println();
 			String label=featureManager.getClassLabel(key);
 			Color color= featureManager.getClassColor(key);
 			addSidePanel(color,key,label);
 		}		
-	}*/
+	}
 
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
 		JList current=Util.model();
+
 		current.setForeground(color);
 		exampleList.put(key,current);
-
+		JList all=Util.model();
+		all.setForeground(color);
+		allexampleList.put(key,all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
@@ -269,21 +293,28 @@ public class ViewFilterResults extends ImageWindow  {
 		JPanel buttonPanel= new JPanel();
 		buttonPanel.setName(key);
 		ActionEvent addbuttonAction= new ActionEvent(buttonPanel, 1,"AddButton");
-
 		JButton addButton= new JButton();
 		addButton.setName(key);
+		JButton upload= new JButton();
+		upload.setName(key);
+		JButton download= new JButton();
+		download.setName(key);
 		addButton(addButton, label, null, 605,280,350,250, buttonPanel, addbuttonAction, null);
-		roiPanel.add(buttonPanel);
+		
 		panel.add(Util.addScrollPanel(exampleList.get(key),null));
+		panel.add(Util.addScrollPanel(allexampleList.get(key),null));
 		roiPanel.add(panel );
 		exampleList.get(key).addMouseListener(mouseListener);
+		allexampleList.get(key).addMouseListener(mouseListener);
 	}
 
 	private void loadImage(int sliceNum, int featureNum){
 
-		ImagePlus image= new ImagePlus(filterString+images.get(sliceNum-1)+"/"+featuresList.get(featureNum-1));
-		setImage(image);
-		updateImage(image);
+		this.displayImage= new ImagePlus(filterString+images.get(sliceNum-1)+"/"+featuresList.get(featureNum-1));
+	   
+		setImage(this.displayImage);
+		updateImage(this.displayImage);
+		
 	}
 
 	public void doAction( final ActionEvent event )
@@ -295,14 +326,28 @@ public class ViewFilterResults extends ImageWindow  {
 			featureNum=featureNum-1;
 			imageNum.setText(Integer.toString(featureNum));
 			loadImage(sliceNum, featureNum);
-
+			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}	*/
+			
+			updateGui();
 
 		}
 		if(event==NEXT_BUTTON_PRESSED && featureNum<totalFeatures ){
 			//	System.out.println("IN NEXT BUTTOn");
 			featureNum=featureNum+1;
 			imageNum.setText(Integer.toString(featureNum));
+		
+			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}*/
 			loadImage(sliceNum, featureNum);
+			//imagePanel.add(ic);
+			updateGui();
 		}
 
 		if(event==SLICE_PREVIOUS_BUTTON_PRESSED && sliceNum>1){
@@ -313,6 +358,13 @@ public class ViewFilterResults extends ImageWindow  {
 			sliceField.setText(Integer.toString(sliceNum));
 			total.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
+			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}*/
+			//imagePanel.add(ic);
+			updateGui();
 		}
 		if(event==SLICE_NEXT_BUTTON_PRESSED && sliceNum< totalSlices){
 			featureNum=1;
@@ -322,6 +374,13 @@ public class ViewFilterResults extends ImageWindow  {
 			sliceField.setText(Integer.toString(sliceNum));
 			total.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
+			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
+				int x_centre = ic.getWidth()/2+ic.getX();
+				int y_centre = ic.getHeight()/2+ic.getY();
+				ic.zoomIn(x_centre,y_centre);
+			}*/
+			//imagePanel.add(ic);
+			updateGui();
 
 		}
 
@@ -334,15 +393,29 @@ public class ViewFilterResults extends ImageWindow  {
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList theList = ( JList) mouseEvent.getSource();
-			if (mouseEvent.getClickCount() == 2) {
+			if (mouseEvent.getClickCount() == 1) {
 				int index = theList.getSelectedIndex();
+
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
-					//String filter=(String)frameList.getSelectedValue();
-					//filterManager.enableFilter(filter);
+					String[] arr= item.split(" ");
+					//System.out.println("Class Id"+ arr[0].trim());
+					int sliceNum=Integer.parseInt(arr[2].trim());
+					showSelected( arr[0].trim(),index);
 
+				}
+			}
 
-
+			if (mouseEvent.getClickCount() == 2) {
+				int index = theList.getSelectedIndex();
+				String type= learningType.getSelectedItem().toString();
+				if (index >= 0) {
+					String item =theList.getSelectedValue().toString();
+					//System.out.println("ITEM : "+ item);
+					String[] arr= item.split(" ");
+					//int classId= featureManager.getclassKey(arr[0].trim())-1;
+					featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
+					updateGui();
 				}
 			}
 		}
@@ -377,15 +450,17 @@ public class ViewFilterResults extends ImageWindow  {
 
 		return button;
 	}
+
 	/**
 	 * Draw the painted traces on the display image
 	 */
-/*	private void drawExamples(){
+	private void drawExamples(){
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
 					getExamples(key,learningType.getSelectedItem().toString());
-			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
-			roiOverlayList.get(key).setRoi(rois);
+			this.roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
+			this.roiOverlayList.get(key).setRoi(rois);
+			//System.out.println("roi draw"+ key);
 		}
 
 		getImagePlus().updateAndDraw();
@@ -400,6 +475,22 @@ public class ViewFilterResults extends ImageWindow  {
 		}
 	}
 
+	/**
+	 * Select a list and deselect the others
+	 * @param e item event (originated by a list)
+	 * @param i list index
+	 */
+	private void showSelected(String classKey,int index ){
+		updateGui();
+		displayImage.setColor(Color.YELLOW);
+		String type= learningType.getSelectedItem().toString();
+		//System.out.println(classKey+"--"+index+"---"+type);
+		final Roi newRoi = featureManager.getRoi(classKey, index,type);		
+		//System.out.println(newRoi);
+		newRoi.setImage(displayImage);
+		displayImage.setRoi(newRoi);
+		displayImage.updateAndDraw();
+	} 
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		for(String key:featureManager.getClassKeys()){
@@ -413,8 +504,8 @@ public class ViewFilterResults extends ImageWindow  {
 			exampleList.get(key).setListData(listModel);
 			exampleList.get(key).setForeground(featureManager.getClassColor(key));
 		}
-	}	
-	public static void main(String[] args) {
+	}		
+	/*public static void main(String[] args) {
 		new ImageJ();
 
 		//projectInfo.setProjectName("testproject");

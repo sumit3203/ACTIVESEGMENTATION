@@ -34,9 +34,11 @@ public class Gui
 	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent(this, 1, "Filter");
 	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent(this, 2, "Learning");
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
+	final ActionEvent FILTERVIS_BUTTON_PRESSED = new ActionEvent(this, 4, "FilterVis");
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
+	private ViewFilterResults viewFilterResults;
 	private static IFeatureManagerNew featureManager;
 	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
@@ -60,6 +62,14 @@ public class Gui
 			}	
 			SwingUtilities.invokeLater(this.filterPanel);
 		}
+		
+		if(event==this.FILTERVIS_BUTTON_PRESSED){
+		      // filterManager.getFinalImage().show();
+			
+				new ViewFilterResults(this.projectManager,featureManager);
+				
+				
+			}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
 			if (this.featurePanel == null) {
@@ -88,7 +98,7 @@ public class Gui
 		this.mainFrame.getContentPane().setBackground(Color.GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
 
-		this.mainFrame.setSize(550, 400);
+		this.mainFrame.setSize(550, 550);
 
 		this.controlPanel = new JPanel();
 		this.controlPanel.setLayout(null);
@@ -99,9 +109,10 @@ public class Gui
 		label.setForeground(Color.ORANGE);
 		this.controlPanel.add(label);
 		this.controlPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("FEATURE EXTRACTION", null, 275, 150, 200, 50, this.FEATURE_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("LEARNING", null, 25, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("EVALUATION", null, 275, 250, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("FILTER VISUALIZATION", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("FEATURE EXTRACTION", null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("LEARNING", null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
 
 		this.controlPanel.setLocation(0, 0);
 		this.mainFrame.add(this.controlPanel);

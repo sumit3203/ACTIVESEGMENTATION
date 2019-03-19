@@ -85,7 +85,7 @@ public class FilterPanel implements Runnable {
 	final ActionEvent DEFAULT_BUTTON_PRESSED = new ActionEvent( this, 5, "Default" );
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent VIEW_BUTTON_PRESSED = new ActionEvent( this, 6, "View" );
+	//final ActionEvent VIEW_BUTTON_PRESSED = new ActionEvent( this, 6, "View" );
 	
 	final JFrame frame = new JFrame("FILTER");
 
@@ -122,7 +122,7 @@ public class FilterPanel implements Runnable {
 		addButton( new JButton(),"COMPUTE",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
 		addButton(new JButton(), "DEFAULT",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
 		addButton(new JButton(), "SAVE",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
-		addButton(new JButton(), "VIEW",null , 460, 420, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
+		//addButton(new JButton(), "VIEW",null , 460, 420, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
 
 
 		frame.add(pane);
@@ -135,7 +135,7 @@ public class FilterPanel implements Runnable {
 	
 	private void loadFilters(){
 		Set<String> filters= filterManager.getFilters();  
-		System.out.println(filters.size());
+		//System.out.println(filters.size());
 		int filterSize=1;
 		for(String filter: filters){
 			if(filterManager.isFilterEnabled(filter)){
@@ -212,7 +212,7 @@ public class FilterPanel implements Runnable {
 		}
 		if(event == PREVIOUS_BUTTON_PRESSED ){
 
-			System.out.println("BUTTON PRESSED");
+			//System.out.println("BUTTON PRESSED");
 			pane.setSelectedIndex(pane.getSelectedIndex()-1);
 		}
 		if(event==NEXT_BUTTON_PRESSED){
@@ -228,7 +228,7 @@ public class FilterPanel implements Runnable {
 		}
 		if(event==SAVE_BUTTON_PRESSED){
 
-			System.out.println("");
+			//System.out.println("");
 			String key= pane.getTitleAt( pane.getSelectedIndex());
 			int i=0;
 			Map<String,String> settingsMap= new HashMap<String, String>();
@@ -245,18 +245,18 @@ public class FilterPanel implements Runnable {
 		if(event==DEFAULT_BUTTON_PRESSED){
 
 			String key= pane.getTitleAt( pane.getSelectedIndex());
-			System.out.println(key);
+			//System.out.println(key);
 			filterManager.setDefault(key);
 			updateTabbedGui(key);
 			
 
 		}
 
-		if(event==VIEW_BUTTON_PRESSED){
+	/*	if(event==VIEW_BUTTON_PRESSED){
 	      // filterManager.getFinalImage().show();
 			new ViewFilterResults(this.projectManager,createImageIcon("no-image.jpg"));
 			
-		}
+		}*/
 
 	}
 
