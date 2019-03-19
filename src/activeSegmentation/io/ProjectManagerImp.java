@@ -24,6 +24,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import activeSegmentation.IProjectManager;
 import activeSegmentation.Common;
@@ -153,8 +154,9 @@ public class ProjectManagerImp implements IProjectManager {
 
 	@Override
 	public void writeMetaInfo( ProjectInfo project) {
-		updateMetaInfo(projectInfo);
+		updateMetaInfo(project);
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 			projectInfo.setModifyDate(dateFormat.format(new Date()));
 			if(projectInfo.getCreatedDate()==null){
