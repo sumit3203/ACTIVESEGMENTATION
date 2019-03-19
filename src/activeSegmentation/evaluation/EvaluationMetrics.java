@@ -8,7 +8,7 @@ import weka.classifiers.Evaluation;
 
 public class EvaluationMetrics implements IEvaluation {
 	public static void main(String args[]) {
-		System.out.println(Evaluation.getAllEvaluationMetricNames().toString());
+		//System.out.println(Evaluation.getAllEvaluationMetricNames().toString());
 	}
 
 	@Override
