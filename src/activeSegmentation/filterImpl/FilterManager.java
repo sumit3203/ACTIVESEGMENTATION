@@ -216,9 +216,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 		}
 		if(featureList!=null) {
-			System.out.println(featureList.size());
+			//System.out.println(featureList.size());
 			IJ.log("Features computed"+featureList.size());
-			System.out.println(features.size());
+			//System.out.println(features.size());
 			projectInfo.setFeatures(featureList);
 			projectInfo.setFeatureNames(features);
 			/*	for(Pair<String,Double[]> featureL: featureList.values()) {
@@ -294,7 +294,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public boolean setDefault(String key) {
 		// TODO Auto-generated method stub
-		System.out.println("IN SET DEFAULT");
+		//System.out.println("IN SET DEFAULT");
 		if(filterMap.get(key).reset())
 			return true;
 
@@ -317,7 +317,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public void saveFiltersMetaData(){	
 		projectInfo= projectManager.getMetaInfo();
-		System.out.println("meta Info"+projectInfo.toString());
+		//System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<Map<String,String>>();
 		for(String key: getFilters()){
 			Map<String,String> filters = new HashMap<String,String>();
