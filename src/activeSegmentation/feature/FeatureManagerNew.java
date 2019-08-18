@@ -536,9 +536,10 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				}
 		}
 		if (nRois == 0)
-			//System.out.println("ERROR OCCURED");
+			System.out.println("ERROR OCCURED");
 			
 		return roiList;
+		
 	}
 
 	private String getUniqueName(String name, Hashtable rois) {
