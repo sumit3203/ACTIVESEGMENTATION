@@ -5,9 +5,13 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import activeSegmentation.Common;
 import activeSegmentation.IDataSet;
@@ -78,7 +82,10 @@ public class PixelInstanceCreator implements IFeature {
 
 	private void updateFeatures() {
 		//System.out.println("pixel creator"+featurePath);
-		File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
+		//File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
+
+		File[] featureImages=sortImages(new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles());
+
 		this.numberOfFeatures=featureImages.length;
 		//System.out.println(this.numberOfFeatures);
 		labels=new String[numberOfFeatures];
@@ -92,7 +99,8 @@ public class PixelInstanceCreator implements IFeature {
 	private int loadImages(String directory){
 		this.images.clear();
 		File folder = new File(directory);
-		File[] images = folder.listFiles();
+		File[] images = sortImages(folder.listFiles());
+
 		for (File file : images) {
 			if (file.isFile()) {
 				this.images.add(file.getName());
@@ -108,14 +116,15 @@ public class PixelInstanceCreator implements IFeature {
 	@Override
 	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
 		// TODO Auto-generated method stub
-		IJ.debugMode=true;
+		//IJ.debugMode=false;
 		updateFeatures();
 		ArrayList<Attribute> attributes = createFeatureHeader();
 		attributes.add(new Attribute(Common.CLASS, getCLassLabels(classInfos)));
 		// create initial set of instances
 		trainingData =  new Instances(Common.INSTANCE_NAME, attributes, 1 );
 		// Set the index of the class attribute
-		trainingData.setClassIndex(numberOfFeatures);		
+		trainingData.setClassIndex(numberOfFeatures);	
+
 		// Read all lists of examples
 		for(String image: images){
 			//IJ.log(image);
@@ -155,7 +164,8 @@ public class PixelInstanceCreator implements IFeature {
 		//System.out.println(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf(".")));
 		IJ.log(featurePath);
 		IJ.log(localPath);
-		File[] images=new File(featurePath+localPath).listFiles();
+		File[] images=sortImages(new File(featurePath+localPath).listFiles());
+
 		ImagePlus firstImage=IJ.openImage(featurePath+localPath+"/"+images[0].getName());
 		ImageStack featureStack = new ImageStack(firstImage.getWidth(), firstImage.getHeight());
 		for(File file : images){
@@ -171,6 +181,37 @@ public class PixelInstanceCreator implements IFeature {
 		return featureStack;
 	}
 
+	private File[] sortImages(File[] images) {
+		final Pattern p = Pattern.compile("\\d+");
+		Arrays.sort(images, new  Comparator<File>(){
+			@Override public int compare(File o1, File o2) {
+				Matcher m = p.matcher(o1.getName());
+				Integer number1 = null;
+				if (!m.find()) {
+					return o1.getName().compareTo(o2.getName());
+				}
+				else {
+					Integer number2 = null;
+					number1 = Integer.parseInt(m.group());
+					m = p.matcher(o2.getName());
+					if (!m.find()) {
+						return o1.getName().compareTo(o2.getName());
+					}
+					else {
+						number2 = Integer.parseInt(m.group());
+						int comparison = number1.compareTo(number2);
+						if (comparison != 0) {
+							return comparison;
+						}
+						else {
+							return o1.getName().compareTo(o2.getName());
+						}
+					}
+				}
+			}}
+				);
+		return images;
+	}
 	/**
 	 * Add training samples from a rectangular roi
 	 * 
