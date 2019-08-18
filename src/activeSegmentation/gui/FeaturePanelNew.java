@@ -45,6 +45,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -84,7 +85,7 @@ public class FeaturePanelNew extends ImageWindow  {
 
 	/** array of roi list overlays to paint the transparent rois of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
-	
+
 	/** Used only during classification setting*/
 	private Map<String,Integer> predictionResultClassification;
 
@@ -127,8 +128,8 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.allexampleList = new HashMap<String, JList>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
 		tempClassifiedImage = new ImagePlus();		
-		
-	
+
+
 		this.hide();
 		showPanel();
 	}
@@ -161,9 +162,9 @@ public class FeaturePanelNew extends ImageWindow  {
 		classPanel= new JPanel();
 		roiPanel= new JPanel();
 		ic=new CustomCanvas(featureManager.getCurrentImage());
-		 ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
-			loadImage(displayImage);
-			setOverlay();
+		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+		loadImage(displayImage);
+		setOverlay();
 		imagePanel.setBackground(Color.GRAY);		
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
@@ -223,8 +224,8 @@ public class FeaturePanelNew extends ImageWindow  {
 				else {
 					updateGui();
 				}
-				
-				
+
+
 				// here we need to add for classification
 			}
 		});
@@ -374,16 +375,23 @@ public class FeaturePanelNew extends ImageWindow  {
 			updateGui();
 		}
 		if(event==DELETE_BUTTON_PRESSED){          
-			if(featureManager.getNumOfClasses()>2){
+
+			if(featureManager.getNumOfClasses()-jCheckBoxList.size()<2) {
+             JOptionPane.showMessageDialog(null, "There should be minimum two classes");
+			}
+			else {
+
 				for (JCheckBox checkBox : jCheckBoxList) {
+
 					if (checkBox.isSelected()) {
 						featureManager.deleteClass(checkBox.getName());
 					}
 				}
+				addClassPanel();
+				validateFrame();
+				updateGui();
 			}	
-			addClassPanel();
-			validateFrame();
-			updateGui();
+
 		}
 
 		if(event==SAVE_BUTTON_PRESSED){
@@ -411,7 +419,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				}				
 				updateResultOverlay(classifiedImage);
 			}
-			
+
 			// force limit size of image window
 			if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();
@@ -433,7 +441,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				}
 				updateResultOverlay(classifiedImage);
 			}
-			
+
 			// force limit size of image window
 			if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();
@@ -450,21 +458,21 @@ public class FeaturePanelNew extends ImageWindow  {
 				// removing previous markings and reset things
 				predictionResultClassification = null;
 				displayImage.setOverlay(null);
-				
+
 				// compute new predictions
 				featureManager.compute();				
 				predictionResultClassification = featureManager.getClassificationResultMap();
-				
+
 				// we do not need to get any image in classification setting, only predictions are needed
 				classifiedImage = null;
 			}
-			
+
 			//segmentation setting
 			else {
 				classifiedImage=featureManager.compute();
 			}
 			IJ.log("compute");
-			
+
 			toggleOverlay();
 		}
 		if(event==TOGGLE_BUTTON_PRESSED){
@@ -473,7 +481,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		}
 
 		if(event==DOWNLOAD_BUTTON_PRESSED){
-			
+
 			ImagePlus image=featureManager.stackedClassifiedImage();
 			FileSaver saver= new FileSaver(image);
 			saver.saveAsTiff();
@@ -526,7 +534,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				displayImage.updateAndDraw();
 			}
 		}
-		
+
 		// classification setting, no classified image
 		else {			
 			showColorOverlay = !showColorOverlay;
@@ -534,14 +542,14 @@ public class FeaturePanelNew extends ImageWindow  {
 			if(showColorOverlay) {
 				updateResultOverlay(classifiedImage);
 			}
-			
+
 			// user wants to see original rois, no results
 			else {
-				
+
 				// remove result overlay
 				displayImage.setOverlay(null);
 				displayImage.updateAndDraw();
-				
+
 				//just show examples drawn by user
 				updateGui();
 			}
@@ -558,12 +566,12 @@ public class FeaturePanelNew extends ImageWindow  {
 			resultOverlay.setImage(overlay);
 			displayImage.updateAndDraw();
 		}
-		
+
 		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
 			// remove previous overlay
 			displayImage.setOverlay(null);
 			displayImage.updateAndDraw();
-			
+
 			//get current slice
 			int currentSlice = featureManager.getCurrentSlice();			
 			Font font = new Font("Arial", Font.PLAIN, 38);           
@@ -589,7 +597,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			displayImage.updateAndDraw();				
 		}
 	}
-	
+
 	public void setLut(List<Color> colors ){
 		int i=0;
 		for(Color color: colors){
@@ -664,8 +672,8 @@ public class FeaturePanelNew extends ImageWindow  {
 	 */
 	private void showSelected(String classKey,int index ){
 		updateGui();
-		
-		
+
+
 		displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
 		//System.out.println(classKey+"--"+index+"---"+type);
@@ -724,7 +732,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			featureManager.saveExamples(name, key,type);
 		}
 	}
-	
+
 	private void uploadExamples(String key) {
 		String type=learningType.getSelectedItem().toString();
 		JFileChooser fileChooser = new JFileChooser();
@@ -735,7 +743,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type);
 		}
 	}
-	
+
 	/*public static void main(String[] args) {
 		new ImageJ();
 		IProjectManager projectManager= new ProjectManagerImp();
