@@ -22,10 +22,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -33,6 +38,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -120,7 +127,36 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		this.images.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
+		final Pattern p = Pattern.compile("\\d+");
+		Arrays.sort(images, new  Comparator<File>(){
+		    @Override public int compare(File o1, File o2) {
+		    	   Matcher m = p.matcher(o1.getName());
+		           Integer number1 = null;
+		           if (!m.find()) {
+		               return o1.getName().compareTo(o2.getName());
+		           }
+		           else {
+		               Integer number2 = null;
+		               number1 = Integer.parseInt(m.group());
+		               m = p.matcher(o2.getName());
+		               if (!m.find()) {
+		            	   return o1.getName().compareTo(o2.getName());
+		               }
+		               else {
+		                   number2 = Integer.parseInt(m.group());
+		                   int comparison = number1.compareTo(number2);
+		                   if (comparison != 0) {
+		                       return comparison;
+		                   }
+		                   else {
+		                	   return o1.getName().compareTo(o2.getName());
+		                   }
+		               }
+		           }
+		    }}
+		);
 		for (File file : images) {
+			//System.out.println(file.getName());
 			if (file.isFile()) {
 				this.images.add(file.getName());
 			}
@@ -186,6 +222,43 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 	}
 
+	private void sortMap() {
+
+		 List<Map.Entry<String, ClassInfo> > list = 
+	               new LinkedList<Map.Entry<String, ClassInfo> >(classes.entrySet()); 
+	  
+		final Pattern p = Pattern.compile("\\d+");
+		Collections.sort(list, new  Comparator<Map.Entry<String, ClassInfo>>(){
+		    @Override public int compare(Map.Entry<String, ClassInfo> o1,  
+                    Map.Entry<String, ClassInfo> o2) {
+		    	   Matcher m = p.matcher(o1.getValue().getLabel());
+		           Integer number1 = null;
+		           if (!m.find()) {
+		               return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
+		           }
+		           else {
+		               Integer number2 = null;
+		               number1 = Integer.parseInt(m.group());
+		               m = p.matcher(o2.getValue().getLabel());
+		               if (!m.find()) {
+		            	   return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
+		               }
+		               else {
+		                   number2 = Integer.parseInt(m.group());
+		                   int comparison = number1.compareTo(number2);
+		                   if (comparison != 0) {
+		                       return comparison;
+		                   }
+		                   else {
+		                	   return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
+		                   }
+		               }
+		           }
+		    }}
+		);
+		
+		//System.out.println(Arrays.toString(list));
+	}
 	@Override
 	public Set<String> getClassKeys() {
 
@@ -251,6 +324,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
+			sortMap();
 		}
 	}
 
@@ -462,7 +536,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				}
 		}
 		if (nRois == 0)
-			System.out.println("ERROR OCCURED");
+			//System.out.println("ERROR OCCURED");
 			
 		return roiList;
 	}
@@ -485,16 +559,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		return name2;
 	}
 	
-	private int getDummyPrediction(){
-		int pred = 0;
-		if(Math.random() < 0.5) {
-			pred = 0;
-		}
-		else {
-			pred = 1;
-		}
-		return pred;
-	}
+	
 	public ImagePlus stackedClassifiedImage() {
 		File[] files=finder(featurePath);
 		ImageStack imageStack=null;
