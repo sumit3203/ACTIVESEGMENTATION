@@ -11,6 +11,7 @@ import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
+import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.*;
@@ -374,7 +375,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "ZKFilter";
+	private final  String FILTER_KEY = "CURVATOR";
 
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "CURVATOR";
@@ -429,7 +430,10 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, int r, ImageStack imageStack) {
 		// TODO Auto-generated method stub
 		if (!isFloat) 
-			ip=ip.toFloat(0, null);
+			ip=ip.convertToFloat();
+		if(ip instanceof ColorProcessor) {
+			ip=ip.convertToFloat();
+		}
 
 		//System.out.println("IN REEAL CODE");
 		float[] kernx= sp.gauss1D();
