@@ -14,6 +14,8 @@ import weka.core.Instance;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -165,14 +167,57 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public void addExample(String key, Roi roi, String type) {
+	public boolean addExample(String key, Roi roi, String type) {
+		
+		   if(!isAlreadyContains(key, roi, type)) {
+			String imageKey = this.images.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				classes.get(key).addTestingRois(imageKey, roi);
+			} else {
+				classes.get(key).addTrainingRois(imageKey, roi);
+			}
+			roiman.addRoi(roi);
+			return true;
+		   }
+			return false;
+		
+	}
+	
+	public boolean isAlreadyContains(String key, Roi roi,String type) {
 		String imageKey = this.images.get(sliceNum - 1);
-		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-			classes.get(key).addTestingRois(imageKey, roi);
-		} else {
-			classes.get(key).addTrainingRois(imageKey, roi);
+		for(String classKey: classes.keySet()) {
+			
+				if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+					List<Roi> roiList=classes.get(classKey).getTestingRois(imageKey);
+					if(roiList !=null && intersect(roiList, roi)) {
+						return true;
+					}
+				} else {
+					List<Roi> roiList =classes.get(classKey).getTrainingRois(imageKey);				
+					if(roiList !=null && intersect(roiList, roi)) {
+						//System.out.println("in");
+						return true;
+					}
+				}
+			
+			
 		}
-		roiman.addRoi(roi);
+		return false;
+	}
+	public boolean intersect(List<Roi> roiList, Roi roi) {
+		//Polygon p = roi.getPolygon();
+		Point[] points=roi.getContainedPoints();
+		//System.out.println(roiList.size());
+		for(Roi roitemp: roiList) {
+			for(Point point :points) {
+				//System.out.println(point);
+				if(roitemp.contains(point.x, point.y)) {
+					//System.out.println("in overlap");
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
