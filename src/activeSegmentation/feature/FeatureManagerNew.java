@@ -167,9 +167,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public boolean addExample(String key, Roi roi, String type) {
+	public boolean addExample(String key, Roi roi, String type, int sliceNum) {
 		
-		   if(!isAlreadyContains(key, roi, type)) {
+		   if(!isAlreadyContains(key, roi, type, sliceNum)) {
 			String imageKey = this.images.get(sliceNum - 1);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 				classes.get(key).addTestingRois(imageKey, roi);
@@ -183,7 +183,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		
 	}
 	
-	public boolean isAlreadyContains(String key, Roi roi,String type) {
+	public boolean isAlreadyContains(String key, Roi roi,String type, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		for(String classKey: classes.keySet()) {
 			
@@ -221,10 +221,10 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public void addExampleList(String classNum, List<Roi> roiList, String type) {
+	public void addExampleList(String classNum, List<Roi> roiList, String type, int sliceNum) {
 		for (Roi roi : roiList) {
 			if (processibleRoi(roi)) {
-				addExample(classNum, roi, type);
+				addExample(classNum, roi, type, sliceNum);
 			}
 		}
 	}
@@ -247,7 +247,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public List<Roi> getExamples(String key, String type) {
+	public List<Roi> getExamples(String key, String type, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRois(imageKey);
@@ -316,7 +316,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public int getRoiListSize(String key, String learningType) {
+	public int getRoiListSize(String key, String learningType, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRoiSize(imageKey);
@@ -494,9 +494,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public boolean saveExamples(String filename, String classKey, String type) {
+	public boolean saveExamples(String filename, String classKey, String type, int sliceNum) {
 		//System.out.println(classKey + type);
-		List<Roi> rois = getExamples(classKey, type);
+		List<Roi> rois = getExamples(classKey, type, sliceNum);
 		//System.out.println(rois.size());
 		return saveRois(filename, rois);
 	}
@@ -528,9 +528,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	@Override
-	public void uploadExamples(String fileName, String classKey, String type) {
+	public void uploadExamples(String fileName, String classKey, String type, int sliceNum) {
 
-		addExampleList(classKey, openZip(fileName), type);
+		addExampleList(classKey, openZip(fileName), type, sliceNum);
 
 	}
 

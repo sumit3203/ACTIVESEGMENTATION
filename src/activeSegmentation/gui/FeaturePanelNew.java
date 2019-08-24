@@ -199,7 +199,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		features.add(total);
 		JPanel computePanel = new JPanel();
 		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "COMPUTE",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "TRAIN",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "TOGGLE",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "DOWNLOAD",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
@@ -282,7 +282,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	private void drawExamples(){
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getExamples(key,learningType.getSelectedItem().toString());
+					getExamples(key,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
 			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
@@ -501,8 +501,14 @@ public class FeaturePanelNew extends ImageWindow  {
 			if (null == r)
 				return;
 			displayImage.killRoi();
-			featureManager.addExample(key,r,learningType.getSelectedItem().toString());			
-			updateGui();
+			
+			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice())) {
+				updateGui();
+			}
+			else {
+			    JOptionPane.showMessageDialog(null, "Other class already contain roi");	
+			}
+			
 
 		}
 		if(event.getActionCommand()== "UploadButton"){	
@@ -579,7 +585,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			ArrayList<Roi> rois;
 			for(String classKey:featureManager.getClassKeys()) {
 				//returns rois of current image slice of given class, current slice is updated internally
-				rois = (ArrayList<Roi>) featureManager.getExamples(classKey,learningType.getSelectedItem().toString());
+				rois = (ArrayList<Roi>) featureManager.getExamples(classKey,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
 				if(rois!=null) {					
 					for (Roi roi:rois) {
 						int pred = predictionResultClassification.get(roi.getName());
@@ -624,7 +630,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			exampleList.get(key).removeAll();
 			Vector<String> listModel = new Vector<String>();
 
-			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString()); j++){	
+			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()); j++){	
 				listModel.addElement(key+ " "+ j + " " +
 						featureManager.getCurrentSlice()+" "+type.getLearningType());
 			}
@@ -729,7 +735,7 @@ public class FeaturePanelNew extends ImageWindow  {
 				name = name + ".zip";
 			}
 
-			featureManager.saveExamples(name, key,type);
+			featureManager.saveExamples(name, key,type, featureManager.getCurrentSlice());
 		}
 	}
 
@@ -740,7 +746,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		int rVal = fileChooser.showOpenDialog(null);
 		if (rVal == JFileChooser.APPROVE_OPTION) {
-			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type);
+			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type, featureManager.getCurrentSlice());
 		}
 	}
 
