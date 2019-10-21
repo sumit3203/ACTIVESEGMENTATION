@@ -50,7 +50,7 @@ public class ZernikeMoment {
 	}
 
 	public Complex extractZernikeMoment(ImageProcessor ip){
-		System.out.println("Start Zernike moment extraction process");
+		//System.out.println("Start Zernike moment extraction process");
 		calculateRadius(ip);
 		
 		ArrayList<Double> real = null; 

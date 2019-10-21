@@ -1,6 +1,5 @@
 package activeSegmentation.gui;
 
-import ij.io.OpenDialog;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,135 +18,108 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jfree.chart.ChartPanel;
+
 import activeSegmentation.Common;
 import activeSegmentation.IProjectManager;
+import ijaux.scale.Pair;
 import activeSegmentation.IEvaluation;
 
 public class EvaluationPanel  implements Runnable {
 
-	private IProjectManager dataManager;
 
-	private IEvaluation evaluation;
-	public static final Font FONT = new Font( "Arial", Font.PLAIN, 10 );
+	  private IProjectManager projectManager;
+	  private IEvaluation evaluation;
+	  public static final Font FONT = new Font("Arial", 0, 10);
+	  final ActionEvent REFRESH_BUTTON_PRESSED = new ActionEvent(this, 2, "Compute");
+	  final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 3, "Load");
+	  final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 4, "Save");
+	  private EvaluationCurve evaluationCurve=new  EvaluationCurve();
+	  public EvaluationPanel(IProjectManager dataManager, IEvaluation evaluation)
+	  {
+	    this.projectManager = dataManager;
+	    this.evaluation = evaluation;
+	  }
+	  
+	  public void doAction(ActionEvent event) {}
+	  
+	  public void run()
+	  {
+	    JFrame frame = new JFrame("EVALUATION");
+	    frame.setDefaultCloseOperation(1);
+	    
+	    JPanel controlsBox = new JPanel();
+	    
+	    JPanel curvesJPanel = new JPanel();
+	    curvesJPanel.setBorder(BorderFactory.createTitledBorder("PLOTS"));
+	    curvesJPanel.setBounds(10,10,780,300);
+	    double[] tpsN = { 0.0D, 0.0D, 0.5D, 0.5D, 1.0D };
+		double[] fps = { 0.0D, 0.5D, 0.5D, 1.0D, 1.0D };
+		double[] tpsN1 = { 0.0D, 0.0D, 0.7D, 0.5D, 1.0D };
+		double[] fps1 = { 0.0D, 0.5D, 0.5D, 1.0D, 1.0D };
+		List<Pair<double[], double[]>> data = new ArrayList<>();
 
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 2, "Compute" );
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent( this, 3, "Load" );
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent( this, 4, "Save" );
-
-	public EvaluationPanel(IProjectManager dataManager, IEvaluation evaluation) {
-		this.dataManager= dataManager;
-		this.evaluation= evaluation;
-	}
-
-	public void doAction( final ActionEvent event )
-	{
-		if(event==COMPUTE_BUTTON_PRESSED){
-
-		}
-		if(event==SAVE_BUTTON_PRESSED){
-
-			//get selected pixels
-
-
-
-
-		}
-
-		if(event==LOAD_BUTTON_PRESSED){
-
-
-			OpenDialog od = new OpenDialog("Choose data file", OpenDialog.getLastDirectory(), "data.arff");
-			if (od.getFileName()!=null){
-
-				//dataManager.loadTrainingData(od.getFileName());	
-			}
-		}
-
-
-
-	}
-
-
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		final JFrame frame = new JFrame("EVALUATION");
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-
-		JPanel controlsBox=new JPanel(new GridBagLayout());
-
-		JPanel curvesJPanel=new JPanel(new GridBagLayout());
-		curvesJPanel.setBorder(BorderFactory.createTitledBorder("PLOTS"));
-
-		JPanel resultJPanel=new JPanel(new GridBagLayout());
-		resultJPanel.setBorder(BorderFactory.createTitledBorder("RESULTS"));
-
-		JPanel resetJPanel = new JPanel(new GridBagLayout());
-
-
-		addButton( "COMPUTE",null ,resetJPanel,
-				COMPUTE_BUTTON_PRESSED,new Dimension(100, 25),Util.getGbc(0, 0, 1, false, false));
-		addButton( "LOAD",null ,resetJPanel,
-				LOAD_BUTTON_PRESSED,new Dimension(100, 25),Util.getGbc(1, 0, 1, false, false) );
-		addButton( "SAVE",null ,resetJPanel,
-				SAVE_BUTTON_PRESSED,new Dimension(100, 25),Util.getGbc(2, 0, 1, false, false) );
-
-
-		controlsBox.add(resultJPanel, Util.getGbc(0, 0, 1, false, true));
-		controlsBox.add(addMetrics(), Util.getGbc(1, 0, 1, false, true));
-		controlsBox.add(curvesJPanel, Util.getGbc(0, 1, 1, false, true));
-		controlsBox.add(resetJPanel, Util.getGbc(0, 2, 1, false, true));
-
-
-		frame.add(controlsBox);
-		frame.setSize(800, 600);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);	
-	}
-
-
-	private JPanel addMetrics(){
-		JPanel controlJPanel=new JPanel(new GridBagLayout());
-		controlJPanel.setBorder(BorderFactory.createTitledBorder("METRICS"));
-		List<JCheckBox> jCheckBoxList= new ArrayList<JCheckBox>();
-		int j=0,k=0;
-		for(String metrics: evaluation.getMetrics()){
-			JCheckBox  checkBox = new JCheckBox(metrics);
-			jCheckBoxList.add(checkBox);
-			controlJPanel.add(checkBox, Util.getGbc(k, j, 1, false, false));
-			k++;
-			if( k==4){
-				k=0;
-				j++;
-			}
-		}
-		return controlJPanel;
-	}
-
-	private JButton addButton( final String label, final Icon icon,JComponent panel, 
-			final ActionEvent action, Dimension dimension,GridBagConstraints labelsConstraints ){
-		final JButton button = new JButton();
-		panel.add( button, labelsConstraints);
-		button.setText( label );
-		button.setIcon( icon );
-		button.setFont( Common.FONT );
-		button.setPreferredSize(dimension);
-		button.addActionListener( new ActionListener()
-		{
-			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
-				doAction(action);
-			}
-		} );
-
-		return button;
-	}
-
-
-
+		Pair<double[], double[]> rocIter1 = new Pair<double[], double[]>(tpsN, fps);
+		Pair<double[], double[]> rocIter2 = new Pair<double[], double[]>(tpsN1, fps1);
+		data.add(rocIter1);
+		data.add(rocIter2);
+		ChartPanel rocPanel=evaluationCurve.createChart("ROC Curve", "False Positive Rate", "True Positive Rate", data);
+	    curvesJPanel.add(rocPanel);
+	    ChartPanel prPanel=evaluationCurve.createChart("PR Curve", "Precision", "Recall", data);
+	    curvesJPanel.add(prPanel);
+	    JPanel resultJPanel = new JPanel();
+	    resultJPanel.setBorder(BorderFactory.createTitledBorder("RESULTS"));
+	    resultJPanel.setBounds(10,330,100,80);
+	    
+	    
+	   // controlsBox.add(addMetrics(), Util.getGbc(1, 0, 1, false, true));
+	    controlsBox.add(curvesJPanel);
+	  //  controlsBox.add(resultJPanel);
+	   // controlsBox.add(resetJPanel, Util.getGbc(0, 2, 1, false, true));
+	    
+	    frame.add(controlsBox);
+	    frame.setSize(800, 600);
+	    frame.setLocationRelativeTo(null);
+	    //frame.setResizable(false);
+	    frame.setVisible(true);
+	  }
+	  
+	  private JPanel addMetrics()
+	  {
+	    JPanel controlJPanel = new JPanel(new GridBagLayout());
+	    controlJPanel.setBorder(BorderFactory.createTitledBorder("METRICS"));
+	    List<JCheckBox> jCheckBoxList = new ArrayList();
+	    int j = 0;int k = 0;
+	    for (String metrics : this.evaluation.getMetrics())
+	    {
+	      JCheckBox checkBox = new JCheckBox(metrics);
+	      jCheckBoxList.add(checkBox);
+	      controlJPanel.add(checkBox, Util.getGbc(k, j, 1, false, false));
+	      k++;
+	      if (k == 4)
+	      {
+	        k = 0;
+	        j++;
+	      }
+	    }
+	    return controlJPanel;
+	  }
+	  
+	  private JButton addButton(String label, Icon icon, JComponent panel, final ActionEvent action, Dimension dimension, GridBagConstraints labelsConstraints)
+	  {
+	    JButton button = new JButton();
+	    panel.add(button, labelsConstraints);
+	    button.setText(label);
+	    button.setIcon(icon);
+	    button.setFont(Common.FONT);
+	    button.setPreferredSize(dimension);
+	    button.addActionListener(new ActionListener()
+	    {
+	      public void actionPerformed(ActionEvent e)
+	      {
+	        EvaluationPanel.this.doAction(action);
+	      }
+	    });
+	    return button;
+	  }
 }

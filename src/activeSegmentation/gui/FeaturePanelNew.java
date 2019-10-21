@@ -105,6 +105,7 @@ public class FeaturePanelNew extends ImageWindow  {
 	ActionEvent SAVE_BUTTON_PRESSED;
 	ActionEvent TOGGLE_BUTTON_PRESSED;
 	ActionEvent DOWNLOAD_BUTTON_PRESSED;
+	ActionEvent GROUND_BUTTON_PRESSED;
 	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
 
 	private ImagePlus displayImage;
@@ -150,6 +151,8 @@ public class FeaturePanelNew extends ImageWindow  {
 		COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 5, "TRAIN" );
 		SAVE_BUTTON_PRESSED = new ActionEvent( this, 6, "SAVEDATA" );
 		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
+		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
+		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JList frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
@@ -202,7 +205,8 @@ public class FeaturePanelNew extends ImageWindow  {
 		addButton(new JButton(), "TRAIN",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "TOGGLE",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "DOWNLOAD",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
+		
 		features.add(computePanel);
 		frame.add(features);
 		JPanel dataJPanel = new JPanel();
@@ -229,13 +233,14 @@ public class FeaturePanelNew extends ImageWindow  {
 				// here we need to add for classification
 			}
 		});
-		dataJPanel.setBounds(720,240,100,40);
+		dataJPanel.setBounds(720,240,100,60);
 		learningType.setSelectedIndex(0);
 		learningType.setFont( FONT );
 		learningType.setBackground(new Color(192, 192, 192));
 		learningType.setForeground(Color.WHITE);
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
+		//addButton(new JButton(), "GROUND TRUTH",null, 720,100,350,80,dataJPanel, GROUND_BUTTON_PRESSED,null);
 		panel.add(dataJPanel);
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
 		//roiPanel.setPreferredSize(new Dimension(350, 400));
@@ -376,7 +381,16 @@ public class FeaturePanelNew extends ImageWindow  {
 		}
 		if(event==DELETE_BUTTON_PRESSED){          
 
-			if(featureManager.getNumOfClasses()-jCheckBoxList.size()<2) {
+			System.out.println(featureManager.getNumOfClasses());
+			System.out.println(jCheckBoxList.size());
+			int totalDel=0;
+			for (JCheckBox checkBox : jCheckBoxList) {
+
+				if (checkBox.isSelected()) {
+					totalDel++;
+				}
+			}
+			if(featureManager.getNumOfClasses()-totalDel<2) {
              JOptionPane.showMessageDialog(null, "There should be minimum two classes");
 			}
 			else {
@@ -396,15 +410,19 @@ public class FeaturePanelNew extends ImageWindow  {
 
 		if(event==SAVE_BUTTON_PRESSED){
 			featureManager.saveFeatureMetadata();
+			JOptionPane.showMessageDialog(null, "Successfully saved region of interests");
 		}
 		if(event==SAVECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {
-				if (checkBox.isSelected()) {
+				
 					//System.out.println(checkBox.getText());
 					String key=checkBox.getName();
 					featureManager.setClassLabel(key,jTextList.get(key).getText() );
-				}
+				
 			}
+			addClassPanel();
+			validateFrame();
+			updateGui();
 		}
 		if(event == PREVIOUS_BUTTON_PRESSED){			
 			ImagePlus image=featureManager.getPreviousImage();
@@ -480,12 +498,29 @@ public class FeaturePanelNew extends ImageWindow  {
 			toggleOverlay();
 		}
 
+		/*if(event==GROUND_BUTTON_PRESSED){
+			JFileChooser fileChooser = new JFileChooser();
+
+			// For Directory
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			int rVal = fileChooser.showOpenDialog(null);
+			if (rVal == JFileChooser.APPROVE_OPTION) {
+			 String file=fileChooser.getSelectedFile().toString();
+			 System.out.println(file);
+			 ImagePlus image=IJ.openImage(file);
+			 System.out.println(image.getHeight());
+			}
+		}*/
 		if(event==DOWNLOAD_BUTTON_PRESSED){
 
 			ImagePlus image=featureManager.stackedClassifiedImage();
-			FileSaver saver= new FileSaver(image);
-			saver.saveAsTiff();
+			image.show();
+			//FileSaver saver= new FileSaver(image);
+			//saver.saveAsTiff();
 		}
+		
+		
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
 			Color c;
@@ -494,6 +529,7 @@ public class FeaturePanelNew extends ImageWindow  {
 
 			((Component)event.getSource()).setBackground(c);
 			featureManager.updateColor(key, c);
+			updateGui();
 		}
 		if(event.getActionCommand()== "AddButton"){	
 			String key=((Component)event.getSource()).getName();
@@ -710,6 +746,7 @@ public class FeaturePanelNew extends ImageWindow  {
 			@Override
 			public void actionPerformed( final ActionEvent e )
 			{
+				//System.out.println(e.toString());
 				doAction(action);
 			}
 		});

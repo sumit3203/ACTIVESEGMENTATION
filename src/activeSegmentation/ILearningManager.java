@@ -43,6 +43,7 @@ public interface ILearningManager {
 	 */
 	public void setClassifier(Object classifier);
 
+	public Object getClassifier();
 	/**
 	 * This method will train the classifier 
 	 * 

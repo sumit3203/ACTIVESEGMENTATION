@@ -43,7 +43,7 @@ public interface IFeatureManagerNew {
 	 * @param roi
 	 * @param nSlice
 	 */
-	public void addExample(String classKey, Roi roi, String type) ;
+	public boolean addExample(String classKey, Roi roi, String type, int sliceNum) ;
 
 	/**
 	 * This method is add list of example or marked ROI to class(classNum)
@@ -52,7 +52,7 @@ public interface IFeatureManagerNew {
 	 * @param roi
 	 * @param nSlice
 	 */
-	public void addExampleList(String classKey, List<Roi> roi, String type) ;
+	public void addExampleList(String classKey, List<Roi> roi, String type, int sliceNum) ;
 
 	/**
 	 * This method is to delete the particular example from feature manager
@@ -71,7 +71,7 @@ public interface IFeatureManagerNew {
 	 * @param nSlice
 	 * @return List<Roi>
 	 */
-	public List<Roi> getExamples(String classKey, String type);
+	public List<Roi> getExamples(String classKey, String type, int sliceNum);
 	
 	public List<Roi> getExamples(String key, String type,String image);
 
@@ -80,7 +80,7 @@ public interface IFeatureManagerNew {
 	 * This method will return names of all the classes for GUI
 	 * @return List<String>
 	 */
-	public Set<String> getClassKeys();
+	public  Set<String> getClassKeys();
 
 	
 
@@ -92,7 +92,7 @@ public interface IFeatureManagerNew {
 	
 	public Color getClassColor(String key);
 
-	public int getRoiListSize(String key,String learningType);
+	public int getRoiListSize(String key,String learningType, int sliceNum);
 
 
 	/**
@@ -163,7 +163,7 @@ public interface IFeatureManagerNew {
 	 * @param  filename
 	 * @return boolean
 	 */
-	public boolean saveExamples(String filename,String classKey,String type);
+	public boolean saveExamples(String filename,String classKey,String type, int sliceNum);
 
 	/**
 	 * This method is used to open the Zip files of ROI
@@ -171,7 +171,7 @@ public interface IFeatureManagerNew {
 	 * @param  filename
 	 * @return List<Roi>
 	 */
-	public void uploadExamples(String filename,String classKey,String type);
+	public void uploadExamples(String filename,String classKey,String type,int sliceNum);
 	public ImagePlus compute();
 
 	void updateColor(String key, Color value);

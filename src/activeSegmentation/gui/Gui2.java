@@ -8,10 +8,15 @@ import ij.io.OpenDialog;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,7 +33,7 @@ import activeSegmentation.feature.FeatureManagerNew;
 import activeSegmentation.learning.ClassifierManager;
 
 
-public class Gui
+public class Gui2
 {
 	private JFrame mainFrame;
 	private JPanel controlPanel;
@@ -42,16 +47,15 @@ public class Gui
 	private FeaturePanelNew featurePanel;
 	private ViewFilterResults viewFilterResults;
 	private static IFeatureManagerNew featureManager;
-	private ILearningManager learningManager;
 	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
-
-	public Gui(IProjectManager projectManager)
+	Panel all;
+	ILearningManager learningManager;
+	public Gui2(IProjectManager projectManager)
 	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
 		featureManager=new FeatureManagerNew(this.projectManager, this.learningManager);
-		
 		prepareGUI();
 	}
 
@@ -102,25 +106,65 @@ public class Gui
 		this.mainFrame = new JFrame("ACTIVE SEGMENTATION");
 		this.mainFrame.getContentPane().setBackground(Color.GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
-
+		 JPanel pipelineJPanel = new JPanel();
+		pipelineJPanel.setBorder(BorderFactory.createTitledBorder("Pipeline"));
+		GridBagLayout pipelineLayout = new GridBagLayout();
+		GridBagConstraints pipeineConstraints = new GridBagConstraints();
+		pipeineConstraints.anchor = GridBagConstraints.NORTHWEST;
+		pipeineConstraints.fill = GridBagConstraints.HORIZONTAL;
+		pipeineConstraints.gridwidth = 1;
+		pipeineConstraints.gridheight = 1;
+		pipeineConstraints.gridx = 0;
+		pipeineConstraints.gridy = 0;
+		pipeineConstraints.insets = new Insets(5, 5, 6, 6);
+		pipelineJPanel.setLayout(pipelineLayout);
+		
 		this.mainFrame.setSize(550, 550);
+		GridBagLayout layout = new GridBagLayout();
+		 this.all = new Panel();
+		GridBagConstraints allConstraints = new GridBagConstraints();
+		this.all.setLayout(layout);
+		//all.setBackground(Color.GRAY);
+		allConstraints.anchor = GridBagConstraints.NORTHWEST;
+		allConstraints.fill = GridBagConstraints.BOTH;
+		allConstraints.gridwidth = 1;
+		allConstraints.gridheight = 2;
+		allConstraints.gridx = 0;
+		allConstraints.gridy = 0;
+		allConstraints.weightx = 0;
+		allConstraints.weighty = 0;
 
-		this.controlPanel = new JPanel();
-		this.controlPanel.setLayout(null);
-		this.controlPanel.setBackground(Color.GRAY);
-		JLabel label = new JLabel("Active Segmentation");
-		label.setFont(new Font("Arial", 1, 32));
-		label.setBounds(100, 50, 450, 100);
-		label.setForeground(Color.ORANGE);
-		this.controlPanel.add(label);
-		this.controlPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.all.add(pipelineJPanel, allConstraints);
+
+		//this.controlPanel = new JPanel();
+		//this.controlPanel.setLayout(controlLayout);
+		//this.controlPanel.setBackground(Color.GRAY);
+		//JLabel label = new JLabel("Active Segmentation");
+		//label.setFont(new Font("Arial", 1, 32));
+		//label.setBounds(100, 50, 450, 100);
+		//label.setForeground(Color.ORANGE);
+		//this.controlPanel.add(label);
+	/*	this.controlPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("FILTER VISUALIZATION", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("FEATURE EXTRACTION", null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("LEARNING", null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		//this.controlPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
-
-		this.controlPanel.setLocation(0, 0);
-		this.mainFrame.add(this.controlPanel);
+		this.controlPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+    */
+		pipelineJPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED), pipeineConstraints);
+		pipeineConstraints.gridy++;
+		pipelineJPanel.add(addButton("FILTER VISUALIZATION", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED),pipeineConstraints);
+		pipeineConstraints.gridy++;
+		pipelineJPanel.add(addButton("FEATURE EXTRACTION", null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED),pipeineConstraints);
+		pipeineConstraints.gridy++;
+		pipelineJPanel.add(addButton("LEARNING", null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED),pipeineConstraints);
+		pipeineConstraints.gridy++;
+		pipelineJPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED),pipeineConstraints);
+		pipeineConstraints.gridy++;
+		
+		//this.controlPanel.setLocation(0, 0);
+		this.all.add(pipelineJPanel, allConstraints);
+		this.mainFrame.setContentPane(this.all);
+		this.mainFrame.pack();
 		this.mainFrame.setVisible(true);
 	}
 
@@ -141,13 +185,13 @@ public class Gui
 		button.setBorderPainted(false);
 		button.setFocusPainted(false);
 		button.setBackground(new Color(192, 192, 192));
-		button.setForeground(Color.WHITE);
-		button.setBounds(x, y, width, height);
+		//button.setForeground(Color.WHITE);
+		//button.setBounds(x, y, width, height);
 		button.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				Gui.this.doAction(action);
+				Gui2.this.doAction(action);
 			}
 		});
 		return button;

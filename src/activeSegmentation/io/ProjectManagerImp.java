@@ -60,7 +60,9 @@ public class ProjectManagerImp implements IProjectManager {
 				reader.close();
 				return new WekaDataSet(data);
 			}
-			catch(IOException e){IJ.showMessage("IOException");}
+			catch(IOException e){
+				e.printStackTrace();
+				IJ.showMessage("IOException");}
 		}
 		catch(FileNotFoundException e){IJ.showMessage("File not found!");}
 		return null;
@@ -141,6 +143,7 @@ public class ProjectManagerImp implements IProjectManager {
 				//System.out.println( projectInfo.getProjectName());
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
+				System.out.println(projectInfo.getGroundtruth());
 			
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
@@ -211,12 +214,22 @@ public class ProjectManagerImp implements IProjectManager {
 			IJ.log(Integer.toString(image.getStackSize()));
 			IJ.log(image.getTitle());
             createImages(image.getTitle(), image);
-		}else { // TRAINING IMAGE FOLDER
-			List<String> images=loadImages(trainingImage);
-			for(String image: images) {
-				ImagePlus currentImage=IJ.openImage(trainingImage+"/"+image);
-				createImages(image, currentImage);
+		}else { 
+			
+			if(trainingImage.endsWith(".tif")|| trainingImage.endsWith(".tiff") || trainingImage.endsWith(".jpg")) {
+				ImagePlus currentImage=IJ.openImage(trainingImage);
+				createImages(currentImage.getTitle(), currentImage);
+			
+			}else {
+				// TRAINING IMAGE FOLDER
+				List<String> images=loadImages(trainingImage);
+				for(String image: images) {
+					ImagePlus currentImage=IJ.openImage(trainingImage+"/"+image);
+					createImages(image, currentImage);
+				}
 			}
+			
+			
 		}
 
 		projectInfo.setProjectDirectory(projectDir);

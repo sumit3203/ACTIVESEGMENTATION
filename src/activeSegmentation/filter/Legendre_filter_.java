@@ -25,7 +25,7 @@ public class Legendre_filter_ implements IFilter {
 	public static boolean debug=IJ.debugMode;
 	public final static String DEGREE = "Degree";
 
-	private  int degree = Prefs.getInt(DEGREE, 3);
+	private  int degree = Prefs.getInt(DEGREE, 6);
 	private boolean isEnabled=true;
 
 	
@@ -51,7 +51,7 @@ public class Legendre_filter_ implements IFilter {
 	private Map<String, String> settings= new HashMap<>();
 
 
-	public void filter(ImageProcessor ip,String roi_name){
+	public Pair<String,double[]> filter(ImageProcessor ip,String roi_name){
 		ImagePlus imp = new ImagePlus("templegrende", ip);
 		ImageConverter ic= new ImageConverter(imp);
 	    ic.convertToGray8();
@@ -70,6 +70,7 @@ public class Legendre_filter_ implements IFilter {
         //roi moment has name of roi and all the features (all degree moment values) coming out of this filter 
         Pair<String,double[]> roi_moment = new Pair<>(roi_name,moment_values);
         moment_vector.add(roi_moment);
+        return roi_moment;
     }
 
 	/* Saves the current settings of the plugin for further use
@@ -124,6 +125,20 @@ public class Legendre_filter_ implements IFilter {
 
 	}
 
+	
+	public void generateFeatures() {
+		for(int i=0;i<=degree;i++){
+            for(int j=0;j<=degree;j++){
+				features.add(LM_FEATURE_KEY+"_"+i+"_"+j+"_Real");				
+            }
+       }
+	}
+	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
+		
+		
+      return filter(imageProcessor, roi.getName());
+
+	}
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;

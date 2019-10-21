@@ -16,6 +16,7 @@ import ijaux.scale.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import static java.lang.Math.*;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -252,15 +253,30 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 		FloatProcessor lap_t=new FloatProcessor(width, height); // tangential component
 		FloatProcessor lap_o=new FloatProcessor(width, height); // orthogonal component
+		
+		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
+		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
+		
+		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
+		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
 
 		for (int i=0; i<width*height; i++) {
 			double gx=gradx.getf(i);
 			double gy=grady.getf(i);
 
+			/*
+			 *  components of the Hessian
+			 */
 			double gxy=lap_xy.getf(i);
 
 			double gxx=lap_xx.getf(i);
 			double gyy=lap_yy.getf(i);
+			
+			final double trace=gxx+gyy;
+			final double det=gxx*gyy- gxy*gxy;
+			final double disc= sqrt(abs(trace*trace-4.0*det));
+			final double ee1=0.5*(trace+disc);
+			final double ee2=0.5*(trace-disc);
 
 			double lx=2.0f*gx*gy*gxy;
 
@@ -268,24 +284,43 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 			gy*=gy;		
 			double dt=gy*gxx+gx*gyy;
 			double dx=gx*gxx+gy*gyy;
-			//double amp=2.0*(gx+gy);			
-			double amp=(gx+gy);	
+		 		
+			double amp=(gx+gy)+ 1e-6;
+			
+			if (abs(amp) > 1e-4) { 	
+				float lt=(float)((dt-lx)/amp);
+				float ot=(float)((dx+lx)/amp);
+				
+				if (abs(lt) <1e-8) lt=0;
+				if (abs(ot) <1e-8) ot=0;	
+				
+				lap_t.setf(i, lt);
+				lap_o.setf(i, ot);
+			} 
+			
+			pamp.setf(i, (float) sqrt(amp));
+			
+			double phase1=sqrt(gy/amp);
+				//	phase1=asin(phase1);
+			phase.setf(i, (float) phase1);
 
-			float lt=(float)((dt-lx)/amp);
-			float ot=(float)((dx+lx)/amp);
-			lap_t.setf(i, lt);
-			lap_o.setf(i, ot);
-
+			eigen1.setf(i, (float) ee1);
+			eigen2.setf(i, (float) ee2);
+				
 		}
 
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
-			imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
+			//imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
+			//imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
 			imageStack.addSlice(FILTER_KEY+"XX_diff"+sigma, lap_xx);
 			imageStack.addSlice(FILTER_KEY+"YY_diff"+sigma, lap_yy);
 			imageStack.addSlice(FILTER_KEY+"XY_diff"+sigma, lap_xy);
 		}
 
+		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
+		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
+		imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
 		imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
 		lap_o.resetMinAndMax();
 		imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);

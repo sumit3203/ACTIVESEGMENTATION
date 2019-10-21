@@ -24,7 +24,7 @@ public class GLCM_filter_ implements IFilter {
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;
 	public static final int [] DIRECTIONS = {270,360,90,180};
-	public static final int [] DISTANCES = {1};
+	public static final int [] DISTANCES = {1,2,3};
 	public static final String ASM_FEATURE_KEY = "ASM";
 	public static final String CONTRAST_FEATURE_KEY = "contrast";
 	public static final String CORRELATION_FEATURE_KEY = "correlation";
@@ -52,7 +52,7 @@ public class GLCM_filter_ implements IFilter {
 	private Map<String, String> settings= new HashMap<>();
 
 
-	public void filter(ImageProcessor ip,String roi_name){
+	public  Pair<String,double[]> filter(ImageProcessor ip,String roi_name){
 		ImagePlus imp = new ImagePlus("tempglcm", ip);
 		ImageConverter ic= new ImageConverter(imp);
 	    ic.convertToGray8();
@@ -96,6 +96,7 @@ public class GLCM_filter_ implements IFilter {
         //roi moment has name of roi and all the features (all 7 feature descriptors) coming out of this filter 
         Pair<String,double[]> roi_moment = new Pair<>(roi_name,moment_values);
         feature_vector.add(roi_moment);
+        return roi_moment;
     }
 
 	/* Saves the current settings of the plugin for further use
@@ -156,6 +157,27 @@ public class GLCM_filter_ implements IFilter {
 			filter(imageProcessor,s);
 		}
 
+	}
+	
+	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
+		
+		
+		return filter(imageProcessor,  roi.getName());
+	}
+	public void generateFeatures() {
+
+		for (int angle: DIRECTIONS){
+			for(int distance:DISTANCES){
+				// 7 feature Descriptors
+				features.add(ASM_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(CONTRAST_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(CORRELATION_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(DISSIMILARITY_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(ENERGY_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(ENTROPY_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+				features.add(HOMOGENEITY_FEATURE_KEY+"_"+angle+"_"+distance+"_Real");
+			}
+		}
 	}
 
 	@Override

@@ -36,8 +36,9 @@ public class SMO extends weka.classifiers.functions.SMO {
     public SMO() {
 
         super();
+        setBuildCalibrationModels(true);
         
-        setBuildLogisticModels(true);
+        //setBuildLogisticModels(true);
 
         //To be linear kernel, equals to used in the related papers
         setC(1.0);

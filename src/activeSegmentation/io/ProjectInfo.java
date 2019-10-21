@@ -33,6 +33,9 @@ public class ProjectInfo
 	private List<Map<String, String>> filters = new ArrayList<Map<String, String>>();
 	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
 	private Map<String, String> learning = new HashMap<String, String>();
+	private String groundtruth;
+
+	
 
 	@JsonIgnore
 	private Map<String, Set<String>> featureNames = new HashMap<String, Set<String>>();
@@ -249,6 +252,13 @@ public class ProjectInfo
 		this.featureNames = featureNames;
 	}
 
+	public String getGroundtruth() {
+		return groundtruth;
+	}
+
+	public void setGroundtruth(String groundtruth) {
+		this.groundtruth = groundtruth;
+	}
 	
 }
 

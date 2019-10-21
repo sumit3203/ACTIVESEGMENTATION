@@ -23,12 +23,14 @@ import activeSegmentation.Common;
 import activeSegmentation.learning.SMO;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
+import weka.classifiers.trees.RandomForest;
 import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
+import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.SMO;
@@ -67,10 +69,11 @@ public class LearningPanel implements Runnable {
   JList<String> featureSelList;
   final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent(this, 1, "Compute");
   final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
-  
-  public LearningPanel(IProjectManager projectManager)
+  ILearningManager learningManager;
+  public LearningPanel(IProjectManager projectManager,ILearningManager learningManager )
   {
     this.projectManager = projectManager;
+    this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
     this.classifierList = Util.model();
   }
@@ -79,11 +82,11 @@ public class LearningPanel implements Runnable {
   {
     if (event == this.SAVE_BUTTON_PRESSED)
     {
-      System.out.println(this.featureSelList.getSelectedIndex());
+      //System.out.println(this.featureSelList.getSelectedIndex());
       this.projectInfo.setFeatureSelection((String)this.featureSelList.getSelectedValue());
       
       IClassifier classifier = new WekaClassifier(setClassifier());
-      this.projectInfo.setClassifier(classifier);
+      this.learningManager.setClassifier(classifier);
       this.projectManager.updateMetaInfo(this.projectInfo);
     }
   }
@@ -103,7 +106,7 @@ public class LearningPanel implements Runnable {
     
     PropertyPanel m_CEPanel = new PropertyPanel(this.m_ClassifierEditor);
     this.m_ClassifierEditor.setClassType(Classifier.class);
-    this.m_ClassifierEditor.setValue(new SMO());
+    this.m_ClassifierEditor.setValue(this.learningManager.getClassifier());
     Object c = this.m_ClassifierEditor.getValue();
     String originalOptions = "";
     this.originalClassifierName = c.getClass().getName();

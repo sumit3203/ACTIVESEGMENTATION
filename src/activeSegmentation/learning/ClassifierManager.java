@@ -1,5 +1,6 @@
 package activeSegmentation.learning;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,22 +9,26 @@ import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 import weka.classifiers.AbstractClassifier;
-import weka.classifiers.functions.SMO;
+import weka.classifiers.Classifier;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.trees.J48;
+import weka.classifiers.trees.REPTree;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import activeSegmentation.Common;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
-import activeSegmentation.IFeature;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.featureSelection.CFS;
 import activeSegmentation.featureSelection.PCA;
 import activeSegmentation.io.ProjectInfo;
+import bsh.This;
 
 public class ClassifierManager implements ILearningManager {
 
-	private IClassifier currentClassifier= new WekaClassifier(new SMO());
+	private IClassifier currentClassifier= new WekaClassifier(new J48());
 	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
 	private IProjectManager dataManager;
 	private ProjectInfo metaInfo;
@@ -42,18 +47,42 @@ public class ClassifierManager implements ILearningManager {
 		featureMap.put("PCA", new PCA());
 		this.dataManager= dataManager;
 		pool=  new ForkJoinPool();
+		//dataset= dataManager.readDataFromARFF("C:\\Users\\sumit\\Documents\\demo\\test-eigen\\Training\\learning\\training.arff");
 
 	}
 	
 
     @Override
 	public void trainClassifier(){
-
+    	metaInfo= dataManager.getMetaInfo();
+    	System.out.println("in training");
+    	File folder = new File(this.metaInfo.getProjectDirectory().get(Common.LEARNINGDIR));
+    	
+		System.out.println(this.metaInfo.getProjectDirectory().get(Common.LEARNINGDIR)+this.metaInfo.getGroundtruth());
 		try {
-			currentClassifier.buildClassifier(dataManager.getDataSet());
+			System.out.println("in training");
+		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
+			String filename=folder.getCanonicalPath()+"\\"+this.metaInfo.getGroundtruth();
+			if(this.metaInfo.getGroundtruth()!=null && !this.metaInfo.getGroundtruth().isEmpty())
+			{
+				System.out.println(filename);
+				dataset=dataManager.readDataFromARFF(filename);
+				System.out.println("in learning");
+			}
+			if(dataset!=null) {
+				dataset.getDataset().addAll(dataManager.getDataSet().getDataset());
+			}
+			else {
+				dataset=dataManager.getDataSet();
+			}
+			//System.out.println("writing file");
+			//dataManager.writeDataToARFF(dataset.getDataset(), "\\test-eigen\\Training\\learning\\training1.arff");
+
+			currentClassifier.buildClassifier(dataset);
+			//
 			//System.out.println("Training Results");
-			//System.out.println(currentClassifier.toString());
-			classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
+			System.out.println(currentClassifier.toString());
+			//classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
 		} catch (Exception e) {
 		
 			e.printStackTrace();
@@ -85,9 +114,10 @@ public class ClassifierManager implements ILearningManager {
 
 	@Override
 	public void setClassifier(Object classifier) {
-		if (classifier instanceof AbstractClassifier) {
-			currentClassifier = new WekaClassifier((AbstractClassifier)classifier);		 		
-		}
+		System.out.println(classifier.toString());
+			currentClassifier = (WekaClassifier)classifier;		 	
+			System.out.println(currentClassifier.toString());
+		
 	}
 
     @Override
@@ -122,6 +152,13 @@ public class ClassifierManager implements ILearningManager {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+
+
+	@Override
+	public Object getClassifier() {
+		// TODO Auto-generated method stub
+		return this.currentClassifier.getClassifier();
 	}
 
 }

@@ -33,6 +33,7 @@ public class CreatProject implements Runnable {
 	final ActionEvent OPEN_BUTTON_PRESSED = new ActionEvent( this, 2, "open" );
 	final ActionEvent BROWSE_BUTTON_PRESSED = new ActionEvent( this, 3, "browse" );
 	final ActionEvent TRAININGF_BUTTON_PRESSED = new ActionEvent( this, 4, "browse" );
+	final ActionEvent Tiff_BUTTON_PRESSED = new ActionEvent( this, 8, "tiff" );
 	final ActionEvent TESTINGF_BUTTON_PRESSED = new ActionEvent( this, 5, "browse" );
 	final ActionEvent FINISH_BUTTON_PRESSED = new ActionEvent( this, 6, "finish" );
 	final ActionEvent CANCEL_BUTTON_PRESSED = new ActionEvent( this, 7, "cancel" );
@@ -59,7 +60,7 @@ public class CreatProject implements Runnable {
 		
 		JFrame mainFrame = new JFrame();
 		mainFrame.getContentPane().setBackground( Color.GRAY );
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		mainFrame.setSize(500,500);
 		mainFrame.setLocationRelativeTo(null);
 		JPanel controlFrame= new JPanel();
@@ -98,6 +99,7 @@ public class CreatProject implements Runnable {
 			 String file=fileChooser.getSelectedFile().toString();
 			 projectManager.loadProject(file);
 			 new Gui(projectManager);
+			// new Gui2(projectManager);
 			}
 		}
 
@@ -113,6 +115,18 @@ public class CreatProject implements Runnable {
 			}
 		}
 		if(event== TRAININGF_BUTTON_PRESSED){
+			JFileChooser fileChooser = new JFileChooser();
+
+			// For Directory
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			int rVal = fileChooser.showOpenDialog(null);
+			if (rVal == JFileChooser.APPROVE_OPTION) {
+				trainingImageP.setText(fileChooser.getSelectedFile().toString());
+			}
+		}
+		
+		if(event== Tiff_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -217,7 +231,8 @@ public class CreatProject implements Runnable {
 		trainingImageP.setColumns(200);
 		trainingImageP.setBounds( 200, 260, 250, 30 );
 		controlFrame.add(trainingImageP);	
-		controlFrame.add(addButton("Browse",null, 460, 260, 100, 30, TRAININGF_BUTTON_PRESSED));
+		controlFrame.add(addButton("Folder",null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
+		controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
 		}
 		/*JLabel testImage= new JLabel("Plugin Dir :");
 		testImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));

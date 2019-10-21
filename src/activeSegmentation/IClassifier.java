@@ -75,6 +75,8 @@ public interface IClassifier {
      * @throws Exception The exception that will be launched.
      */
     public IClassifier makeCopy() throws Exception;
+    
+    public Object getClassifier();
 
 
 }

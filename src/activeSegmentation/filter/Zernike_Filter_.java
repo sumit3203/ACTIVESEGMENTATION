@@ -28,7 +28,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	final int flags=DOES_ALL+KEEP_PREVIEW+ NO_CHANGES;
 	public final static String DEG="Degree";
-	private int degree= Prefs.getInt(DEG, 4);
+	private int degree= Prefs.getInt(DEG, 6);
 
 	//private ArrayList<Pair<String,Pair<String[],Double[]>>> moment_vector = new ArrayList<>();
 	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<Pair<String,double[]>>();
@@ -118,13 +118,29 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		}
 
 	}
+	
+	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
+		
+		return filter(imageProcessor,  roi.getName());
+	}
 
+	public void generateFeatures() {
+		for(int i=0;i<=degree;i++){
+			for(int j=0;j<=i;j++){
+				if((i-j)%2==0){
+					features.add(ZM_FEATURE_KEY+"_"+i+"_"+j+"_Real");
+					features.add(ZM_FEATURE_KEY+"_"+i+"_"+j+"_Imag");
+				}
+			}
+		}
+		
+	}
 	/**
 	 * 
 	 * This method is helper function for both applyFilter and run method
 	 * @param ip input image
 	 */
-	private void filter(ImageProcessor ip,String roi_name){
+	private Pair<String,double[]>  filter(ImageProcessor ip,String roi_name){
 
 		Complex cp = new ZernikeMoment(degree).extractZernikeMoment(ip);
 		int counter = 0;
@@ -158,6 +174,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		Pair<String,double[]> roi_moment = new Pair<>(roi_name,moment_values);
 		
 		moment_vector.add(roi_moment);
+		return  roi_moment;
 		/*int index = position_id;
 		ip.snapshot();
 		ip.getDefaultColorModel();

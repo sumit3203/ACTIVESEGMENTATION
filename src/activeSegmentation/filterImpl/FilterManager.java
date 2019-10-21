@@ -140,6 +140,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					//IJ.debugMode=true;
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
 					if(thePlugIn.getFilterType()==projectType.getProjectType()){
+						System.out.println(thePlugIn.getKey());
 						filterMap.put(thePlugIn.getKey(), thePlugIn);
 					}
 
@@ -182,7 +183,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		List<String>images= loadImages(projectString);
         Map<String,Set<String>> features= new HashMap<String,Set<String>>();
 		for(IFilter filter: filterMap.values()){
-			System.out.println("filter applied"+filter.getName());
+			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
 				if(filter.getFilterType()==ProjectType.CLASSIFICATION.getProjectType()){
 					for(String image: images) {
@@ -207,6 +208,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				else{
 
 					for(String image: images) {
+						//IJ.log(image);
 						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 					}
 
@@ -215,7 +217,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			}
 
 		}
-		if(featureList!=null) {
+		if(featureList!=null && featureList.size()>0) {
 			//System.out.println(featureList.size());
 			IJ.log("Features computed"+featureList.size());
 			//System.out.println(features.size());
