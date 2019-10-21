@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -97,13 +98,14 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	private List<String> images;
 	private Map<String, IFeature> featureMap = new HashMap<String, IFeature>();
 	private static RoiManager roiman = new RoiManager();
-	private Map<String, ClassInfo> classes = new HashMap<String, ClassInfo>();
+	private Map<String, ClassInfo> classes = new TreeMap<String, ClassInfo>();
 	private List<Color> defaultColors;
 	ILearningManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
 
-	public FeatureManagerNew(IProjectManager projectManager) {
+	public FeatureManagerNew(IProjectManager projectManager, ILearningManager learningManager) {
 		this.projectManager = projectManager;
+		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
 		this.images = new ArrayList<String>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
@@ -120,7 +122,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			}
 		}
 		roiman.hide();
-		learningManager = new ClassifierManager(projectManager);
+	
 		featureMap.put("SEGMENTATION", new PixelInstanceCreator(projectInfo));
 		featureMap.put("CLASSIFICATION", new RoiInstanceCreator(projectInfo));
 	}
@@ -267,49 +269,14 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 	}
 
-	private void sortMap() {
-
-		 List<Map.Entry<String, ClassInfo> > list = 
-	               new LinkedList<Map.Entry<String, ClassInfo> >(classes.entrySet()); 
-	  
-		final Pattern p = Pattern.compile("\\d+");
-		Collections.sort(list, new  Comparator<Map.Entry<String, ClassInfo>>(){
-		    @Override public int compare(Map.Entry<String, ClassInfo> o1,  
-                    Map.Entry<String, ClassInfo> o2) {
-		    	   Matcher m = p.matcher(o1.getValue().getLabel());
-		           Integer number1 = null;
-		           if (!m.find()) {
-		               return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
-		           }
-		           else {
-		               Integer number2 = null;
-		               number1 = Integer.parseInt(m.group());
-		               m = p.matcher(o2.getValue().getLabel());
-		               if (!m.find()) {
-		            	   return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
-		               }
-		               else {
-		                   number2 = Integer.parseInt(m.group());
-		                   int comparison = number1.compareTo(number2);
-		                   if (comparison != 0) {
-		                       return comparison;
-		                   }
-		                   else {
-		                	   return o1.getValue().getLabel().compareTo(o2.getValue().getLabel());
-		                   }
-		               }
-		           }
-		    }}
-		);
-		
-		//System.out.println(Arrays.toString(list));
-	}
+	
 	@Override
 	public Set<String> getClassKeys() {
 
 		return classes.keySet();
 	}
 
+	
 	@Override
 	public String getClassLabel(String index) {
 		return classes.get(index).getLabel();
@@ -352,7 +319,11 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	@Override
 	public void setClassLabel(String key, String label) {
 
-		classes.get(key).setLabel(label);
+		//System.out.println(key);
+		//System.out.println(label);
+		ClassInfo info = classes.get(key);
+		info.setLabel(label);
+		classes.put(key, info);
 	}
 
 	@Override
@@ -369,7 +340,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
-			sortMap();
+			
 		}
 	}
 
@@ -611,7 +582,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		ImageStack imageStack=null;
 		
 		for(int i=0 ; i<files.length;i++) {
-			System.out.println(files[i].getName());
+			//System.out.println(files[i].getName());
 			ImagePlus image = new ImagePlus(featurePath+files[i].getName());
 			if(i==0) {
 				imageStack= new ImageStack(image.getWidth(), image.getHeight());
@@ -655,6 +626,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}		
 		// IJ.debugMode=true;
 		IJ.log("TRAINING STARTED");
+		System.out.println("TRAINING STARTED");
 		// extract features in weka format, returns IDataset object
 		extractFeatures(ProjectType.valueOf(projectInfo.getProjectType()).toString());
 		
@@ -662,6 +634,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		learningManager.trainClassifier();
 		
 		IJ.log("TRAINING DONE");
+		System.out.println("TRAINING DONE");
 		
 		for (String image : images) {
 			//System.out.println(image +" image");
