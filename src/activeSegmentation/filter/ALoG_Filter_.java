@@ -257,8 +257,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
 		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
 		
-		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
-		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
+//		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
+//		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
 
 		for (int i=0; i<width*height; i++) {
 			double gx=gradx.getf(i);
@@ -272,11 +272,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 			double gxx=lap_xx.getf(i);
 			double gyy=lap_yy.getf(i);
 			
-			final double trace=gxx+gyy;
-			final double det=gxx*gyy- gxy*gxy;
-			final double disc= sqrt(abs(trace*trace-4.0*det));
-			final double ee1=0.5*(trace+disc);
-			final double ee2=0.5*(trace-disc);
+		//	final double trace=gxx+gyy;
+		//	final double det=gxx*gyy- gxy*gxy;
+		//	final double disc= sqrt(abs(trace*trace-4.0*det));
+		//	final double ee1=0.5*(trace+disc);
+		//	final double ee2=0.5*(trace-disc);
 
 			double lx=2.0f*gx*gy*gxy;
 
@@ -304,8 +304,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 				//	phase1=asin(phase1);
 			phase.setf(i, (float) phase1);
 
-			eigen1.setf(i, (float) ee1);
-			eigen2.setf(i, (float) ee2);
+			//eigen1.setf(i, (float) ee1);
+			//eigen2.setf(i, (float) ee2);
 				
 		}
 
@@ -319,8 +319,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
 		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
-		imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
+		//imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
+		//imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
 		imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
 		lap_o.resetMinAndMax();
 		imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);
