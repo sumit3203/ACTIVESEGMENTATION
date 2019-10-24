@@ -28,13 +28,15 @@ import activeSegmentation.IEvaluation;
 public class EvaluationPanel  implements Runnable {
 
 
-	  private IProjectManager projectManager;
-	  private IEvaluation evaluation;
+	  private IProjectManager projectManager=null;
+	  private IEvaluation evaluation=null;
 	  public static final Font FONT = new Font("Arial", 0, 10);
 	  final ActionEvent REFRESH_BUTTON_PRESSED = new ActionEvent(this, 2, "Compute");
 	  final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 3, "Load");
 	  final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 4, "Save");
-	  private EvaluationCurve evaluationCurve=new  EvaluationCurve();
+	//  private EvaluationCurve evaluationCurve=new  EvaluationCurve();
+	  
+	  
 	  public EvaluationPanel(IProjectManager dataManager, IEvaluation evaluation)
 	  {
 	    this.projectManager = dataManager;
@@ -46,7 +48,7 @@ public class EvaluationPanel  implements Runnable {
 	  public void run()
 	  {
 	    JFrame frame = new JFrame("EVALUATION");
-	    frame.setDefaultCloseOperation(1);
+	    frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	    
 	    JPanel controlsBox = new JPanel();
 	    
@@ -63,10 +65,10 @@ public class EvaluationPanel  implements Runnable {
 		Pair<double[], double[]> rocIter2 = new Pair<double[], double[]>(tpsN1, fps1);
 		data.add(rocIter1);
 		data.add(rocIter2);
-		ChartPanel rocPanel=evaluationCurve.createChart("ROC Curve", "False Positive Rate", "True Positive Rate", data);
-	    curvesJPanel.add(rocPanel);
-	    ChartPanel prPanel=evaluationCurve.createChart("PR Curve", "Precision", "Recall", data);
-	    curvesJPanel.add(prPanel);
+	//	ChartPanel rocPanel=evaluationCurve.createChart("ROC Curve", "False Positive Rate", "True Positive Rate", data);
+	//    curvesJPanel.add(rocPanel);
+	  //  ChartPanel prPanel=evaluationCurve.createChart("PR Curve", "Precision", "Recall", data);
+	 //   curvesJPanel.add(prPanel);
 	    JPanel resultJPanel = new JPanel();
 	    resultJPanel.setBorder(BorderFactory.createTitledBorder("RESULTS"));
 	    resultJPanel.setBounds(10,330,100,80);
@@ -84,11 +86,12 @@ public class EvaluationPanel  implements Runnable {
 	    frame.setVisible(true);
 	  }
 	  
+	  /*
 	  private JPanel addMetrics()
 	  {
 	    JPanel controlJPanel = new JPanel(new GridBagLayout());
 	    controlJPanel.setBorder(BorderFactory.createTitledBorder("METRICS"));
-	    List<JCheckBox> jCheckBoxList = new ArrayList();
+	    List<JCheckBox> jCheckBoxList = new ArrayList<JCheckBox>();
 	    int j = 0;int k = 0;
 	    for (String metrics : this.evaluation.getMetrics())
 	    {
@@ -104,7 +107,8 @@ public class EvaluationPanel  implements Runnable {
 	    }
 	    return controlJPanel;
 	  }
-	  
+	  */
+	  /*
 	  private JButton addButton(String label, Icon icon, JComponent panel, final ActionEvent action, Dimension dimension, GridBagConstraints labelsConstraints)
 	  {
 	    JButton button = new JButton();
@@ -122,4 +126,5 @@ public class EvaluationPanel  implements Runnable {
 	    });
 	    return button;
 	  }
+	  */
 }
