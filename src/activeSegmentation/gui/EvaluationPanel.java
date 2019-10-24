@@ -34,7 +34,7 @@ public class EvaluationPanel  implements Runnable {
 	  final ActionEvent REFRESH_BUTTON_PRESSED = new ActionEvent(this, 2, "Compute");
 	  final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 3, "Load");
 	  final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 4, "Save");
-	//  private EvaluationCurve evaluationCurve=new  EvaluationCurve();
+	 private EvaluationCurve evaluationCurve=new  EvaluationCurve();
 	  
 	  
 	  public EvaluationPanel(IProjectManager dataManager, IEvaluation evaluation)
@@ -65,10 +65,10 @@ public class EvaluationPanel  implements Runnable {
 		Pair<double[], double[]> rocIter2 = new Pair<double[], double[]>(tpsN1, fps1);
 		data.add(rocIter1);
 		data.add(rocIter2);
-	//	ChartPanel rocPanel=evaluationCurve.createChart("ROC Curve", "False Positive Rate", "True Positive Rate", data);
-	//    curvesJPanel.add(rocPanel);
-	  //  ChartPanel prPanel=evaluationCurve.createChart("PR Curve", "Precision", "Recall", data);
-	 //   curvesJPanel.add(prPanel);
+		ChartPanel rocPanel=evaluationCurve.createChart("ROC Curve", "False Positive Rate", "True Positive Rate", data);
+	   curvesJPanel.add(rocPanel);
+	    ChartPanel prPanel=evaluationCurve.createChart("PR Curve", "Precision", "Recall", data);
+	   curvesJPanel.add(prPanel);
 	    JPanel resultJPanel = new JPanel();
 	    resultJPanel.setBorder(BorderFactory.createTitledBorder("RESULTS"));
 	    resultJPanel.setBounds(10,330,100,80);
