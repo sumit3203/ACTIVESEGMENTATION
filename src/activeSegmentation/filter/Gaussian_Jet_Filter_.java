@@ -29,15 +29,8 @@ import activeSegmentation.IFilter;
 import dsp.Conv;
 
 /**
- * @version   	23 Aug 2016
- *              3.0 20 Oct 2013
- * 				- change of philosophy
- * 				- migration to the GScaleSpace package
- * 				2.1 18 Nov 2012
- * 				- fixes in the scaling of the convolution kernels
- * 				2.0	17 Nov 2012
- * 				- semi-separable implementation
- * 				1.0	 8 Nov 2012
+ * @version   	 28 Feb 2019
+ * 					- gaussian jet
  *   
  * 
  * @author Dimiter Prodanov,IMEC , Sumit Kumar Vohra
@@ -61,7 +54,7 @@ import dsp.Conv;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter {
+public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter {
 
     @SuppressWarnings("unused")
 
@@ -99,10 +92,10 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "GAUSSIAN";
+	private final  String FILTER_KEY = "GAUSSIAN Jet";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Gaussian Derivatives";
+	private final String FILTER_NAME = "Gaussian Jet";
 
 	private final int TYPE=1;
 	
@@ -156,6 +149,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 
 	@Override
 	public void run(ImageProcessor ip) {
+		
 		int r = (sz-1)/2;
 
 		if (wnd<0)
@@ -164,7 +158,9 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			wnd=5;
 
 		GScaleSpace sp=new GScaleSpace(r, wnd);
-		ImageProcessor fpaux=filter(ip, sp, sep, scnorm,nn,mm);
+		
+		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack fpaux=filter(ip, sp,  scnorm,nn);
 		image=new ImagePlus("Convolved_"+nn+"_"+mm, fpaux);
 		//image.updateAndDraw();
 		image.show();	
@@ -185,9 +181,9 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			GScaleSpace sp=new GScaleSpace(sigma);
-			ImageProcessor fp=filter(ip.duplicate(), sp,sep, scnorm,nn,mm);
+			ImageStack fs=filter(ip.duplicate(), sp, scnorm,nn);
 			//IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+Common.TIFFORMAT );
-			imageStack.addSlice( FILTER_KEY+"_" + sigma, fp);		
+			imageStack.addSlice( FILTER_KEY+"_" + sigma, fs);		
 		}
 		initialseimageStack(imageStack);
 		return new Pair<Integer,ImageStack>(index, imageStack);
@@ -198,24 +194,25 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
-				ImageProcessor ip=filter(image,  sp,sep, scnorm,nn,mm);			
+				ImageStack is=filter(image,  sp, scnorm,nn);			
 				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
-				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, ip),imageName );
+				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, is),imageName );
 			}
 
 	}
 	
-	private FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean sep,final boolean scnorm, int n,
-			int m){
+	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, final boolean scnorm, int n){
 
 		ImageProcessor ipaux=ip.duplicate();
-
 		if (!isFloat && !isRGB) 
 			ipaux=ipaux.toFloat(0, null);
-
 		pass++;
 
-		//GScaleSpace sp=new GScaleSpace(sigma);
+		/*
+		 * define an array of derivatives
+		 * then convolve with each combination
+		 *  d_x(k) d_y(n-k), i<=j
+		 * */
 		double sigma=sp.getSigma();
 		float[] kernx=null;
 		if (n==0) {
@@ -227,46 +224,40 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			}
 		}
 		GScaleSpace.flip(kernx);	
-
-		float[] kerny= null;
-
-		if (m==0) {
-			kerny=sp.gauss1D();
-		} else {
-			kerny=sp.diffNGauss1D(m);
+ 
+		kernel=new float[n][];
+		kernel[0]=kernx;
+		for (int i=1;i<n; i++) {
 			if (scnorm) {
+				float[] kerny=sp.diffNGauss1D(i);
+				GScaleSpace.flip(kerny);
 				scnorm(kerny,sigma,n);
+				kernel[i]=kerny;
+			} else {
+				float[] kerny=sp.diffNGauss1D(i);
+				GScaleSpace.flip(kerny);
+				kernel[i]=kerny;
 			}
 		}
-		GScaleSpace.flip(kerny);
-
-		kernel=new float[3][];
-		kernel[0]=kernx;
-		kernel[1]=kerny;	 
-
-		float[] kernel_xy=GScaleSpace.joinXY(kernel, 0, 1);
-		kernel[2]=kernel_xy;
-
-		if (debug ) {
-			FloatProcessor fp3=new FloatProcessor(sp.getSize(),sp.getSize(), kernel_xy);
-			new ImagePlus("Gd_"+n +"_" +m,fp3).show();	 
-		}
+		
+		ImageStack is=new ImageStack(ip.getWidth(), ip.getHeight());
+		
 		long time=-System.nanoTime();	
-
-		FloatProcessor fpaux= (FloatProcessor) ipaux;
 		Conv cnv=new Conv();
-		if (sep) {
-			cnv.convolveSep(fpaux, kernx, kerny);			
-		} else {		 
-			cnv.convolveFloat(fpaux, kernel_xy, sp.getSize(), sp.getSize());
+		
+		for (int i=0; i <n; i++) { 
+			FloatProcessor fpaux= (FloatProcessor) ipaux.duplicate();
+			for (int j=0; j <n; j++) {
+				cnv.convolveSep(fpaux, kernel[i], kernel[n-i]);
+				is.addSlice("dx [" +i+"] dy["+j+"]", fpaux);
+			}
+
 		}
-
 		time+=System.nanoTime();
-		time/=1000.0f;
+		time/=1000.0f;		
 		System.out.println("elapsed time: " + time +" us");
-		fpaux.resetMinAndMax();
 
-		return fpaux;
+		return is;
 
 	}
 
@@ -301,7 +292,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	public int showDialog(ImagePlus imp, String command, PlugInFilterRunner pfr) {
 		this.pfr = pfr;
 		int r = (sz-1)/2;
-		GenericDialog gd=new GenericDialog("Gauss derivative " + version);
+		GenericDialog gd=new GenericDialog("Gauss. derivative " + version);
 		gd.addNumericField("span x sigma", wnd, 3);
 		gd.addNumericField("half width", r, 1);
 		gd.addNumericField("order in x", nn, 1);
@@ -398,17 +389,21 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		return FILTER_NAME;
 	}
 
- 
-	private Double gaussian(double x){
-		return Math.exp(-x*x/2.0) / (2.0*Math.sqrt(Math.PI));
+
+	/*
+	 * by convention we will plot the highest order derivative in 1D
+	 */
+	private Double gaussiand(double x){
+		final double x2=x*x;
+		return (x2-1)*Math.exp(-x2/2.0) / (2.0  *Math.sqrt(Math.PI));
 	}
- 
+
 	@Override
 	public Image getImage(){
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=gaussian(i);
+			Double y=gaussiand(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);

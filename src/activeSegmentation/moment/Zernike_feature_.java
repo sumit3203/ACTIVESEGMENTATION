@@ -11,14 +11,14 @@ import java.util.Set;
 
 import activeSegmentation.IFilter;
 import ij.ImagePlus;
-import ij.ImageStack;
+//import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
-import ij.plugin.filter.ExtendedPlugInFilter;
+//import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilter;
-import ij.plugin.filter.PlugInFilterRunner;
+//import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.datatype.ComplexArray;
