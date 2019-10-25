@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="test/FFTProcTest.java" kind="src" path="src"/>
+	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/Auto_Threshold.jar"/>
@@ -12,6 +12,7 @@
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/pixlib-1-0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/weka-dev-3.9.2.jar"/>

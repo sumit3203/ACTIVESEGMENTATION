@@ -149,13 +149,7 @@ public class Gaussian_Jet_ implements ExtendedPlugInFilter, DialogListener,IFilt
 
 	@Override
 	public void run(ImageProcessor ip) {
-		/*
-		try {
-			image.close();
-		} catch (Exception Ex){
-
-		}
-		 */
+		
 		int r = (sz-1)/2;
 
 		if (wnd<0)
@@ -169,8 +163,7 @@ public class Gaussian_Jet_ implements ExtendedPlugInFilter, DialogListener,IFilt
 		ImageStack fpaux=filter(ip, sp,  scnorm,nn);
 		image=new ImagePlus("Convolved_"+nn+"_"+mm, fpaux);
 		//image.updateAndDraw();
-		image.show();
-		//ImageJ ij=IJ.getInstance();		
+		image.show();	
 	}
 
 
@@ -217,7 +210,7 @@ public class Gaussian_Jet_ implements ExtendedPlugInFilter, DialogListener,IFilt
 
 		/*
 		 * define an array of derivatives
-		 * then covolve with each combination
+		 * then convolve with each combination
 		 *  d_x(k) d_y(n-k), i<=j
 		 * */
 		double sigma=sp.getSigma();
@@ -397,7 +390,9 @@ public class Gaussian_Jet_ implements ExtendedPlugInFilter, DialogListener,IFilt
 	}
 
 
-
+	/*
+	 * by convention we will plot the highest order derivative in 1D
+	 */
 	private Double gaussiand(double x){
 		final double x2=x*x;
 		return (x2-1)*Math.exp(-x2/2.0) / (2.0  *Math.sqrt(Math.PI));

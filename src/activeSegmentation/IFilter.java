@@ -11,6 +11,10 @@ import java.util.Set;
 
 public interface IFilter {
 	
+	// IFSEGM - segmentation: one to one NxN -> NxN
+	// IFCLASS - segmentation: many to one NxN -> 1
+	public static final int IFSEGM=1, IFCLASS=2;
+	
 	/**
 	 * Returns a new default settings map for the filter 
 	 * 

@@ -20,6 +20,10 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ij.process.TypeConverter;
 
+/*
+ *  What is the function of this? - please clarify
+ *  for the time being I will exclude it.
+ */
 
 
 public class RGB_Filter implements IFilter {
@@ -29,6 +33,8 @@ public class RGB_Filter implements IFilter {
 
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Basic";
+	
+	// segmentation
 	private final int TYPE=1;
 	private boolean isEnabled=true;
 	private Map< String, String > settings= new HashMap<String, String>();
@@ -36,11 +42,18 @@ public class RGB_Filter implements IFilter {
 
 	private  int sz= Prefs.getInt(LEN, 2);
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
+	
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		RGB_Filter filter= new RGB_Filter();
+		
+		IJ.run("Blobs (25K)");
+		ImagePlus currentImage=IJ.getImage();
+		// TODO Auto-generated method stub
+	
 		String filterPath="C:\\Users\\sumit\\Documents\\SEZEG\\preprocessed1\\";
-		ImagePlus currentImage=IJ.openImage("C:\\Users\\sumit\\Documents\\SEZEG\\preprocessed1\\testpanel-01.tif");
+	//	ImagePlus currentImage=IJ.openImage("C:\\Users\\sumit\\Documents\\SEZEG\\preprocessed1\\testpanel-01.tif");
 		filter.applyFilter(currentImage.getProcessor(), filterPath);
 
 	}
@@ -53,6 +66,7 @@ public class RGB_Filter implements IFilter {
 		float [] hImage= new float[image.getWidth()*image.getHeight()];
 		float [] sImage= new float[image.getWidth()*image.getHeight()];
 		float [] vImage= new float[image.getWidth()*image.getHeight()];
+		// 1D iteration will do fine here - to change
 		for(int y=0; y<image.getHeight();y++) {
 
 			for(int x=0; x<image.getWidth();x++) {

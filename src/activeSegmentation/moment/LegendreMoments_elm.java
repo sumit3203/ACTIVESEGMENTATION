@@ -1,4 +1,4 @@
-package activeSegmentation.filter;
+package activeSegmentation.moment;
 import ij.process.ImageProcessor;
 
 

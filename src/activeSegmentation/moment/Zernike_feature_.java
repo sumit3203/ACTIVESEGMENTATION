@@ -1,4 +1,4 @@
-package activeSegmentation.filter;
+package activeSegmentation.moment;
 
 import java.awt.AWTEvent;
 import java.awt.Image;
@@ -17,16 +17,18 @@ import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
 import ij.plugin.filter.ExtendedPlugInFilter;
+import ij.plugin.filter.PlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
+import ijaux.datatype.ComplexArray;
 import ijaux.moments.ZernikeMoment;
-import ijaux.moments.ZernikeMoment.Complex;
+//import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import ijaux.scale.Pair;
 
-public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
+public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
 
-	final int flags=DOES_ALL+KEEP_PREVIEW+ NO_CHANGES;
+	final int flags=DOES_ALL+ NO_CHANGES;
 	public final static String DEG="Degree";
 	private int degree= Prefs.getInt(DEG, 6);
 
@@ -41,14 +43,14 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private ImagePlus img;
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
 	
 	private boolean isEnabled=true;
 
-	private int nPasses=1;
+	//private int nPasses=1;
 	
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Zernike Moments";
@@ -59,7 +61,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	@Override
 	public void run(ImageProcessor ip) {
 		// TODO Auto-generated method stub
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		//imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		//img.show();
 	}
@@ -73,14 +75,12 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
-		// TODO Auto-generated method stub
 		settings.put(DEG, Integer.toString(4));
 		return this.settings;
 	}
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		// TODO Auto-generated method stub
 		degree = Integer.parseInt(settingsMap.get(DEG));
 		return true;
 	}
@@ -142,7 +142,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	private Pair<String,double[]>  filter(ImageProcessor ip,String roi_name){
 
-		Complex cp = new ZernikeMoment(degree).extractZernikeMoment(ip);
+		ComplexArray cp = new ZernikeMoment(degree).extractZernikeMoment(ip);
 		int counter = 0;
 		int k=0;
 		double[] moment_values = new double[features.size()];
@@ -159,9 +159,9 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 					order.first = order_index;
 					System.out.println("counter "+counter);*/
 					
-					moment_values[k] = cp.getReal()[counter];
+					moment_values[k] = cp.Re(counter);
 					k++;
-					moment_values[k] = cp.getImaginary()[counter];
+					moment_values[k] = cp.Im(counter);
 					counter++;
 					k++;
 					
@@ -203,8 +203,6 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return FILTER_NAME;
 	}
 
-
-
 	@Override
 	public Image getImage() {
 		return null;
@@ -235,6 +233,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return false;
 	}
 
+	/*
 	@Override
 	public void setNPasses(int nPasses) {
 		// TODO Auto-generated method stub
@@ -246,7 +245,7 @@ public class Zernike_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+*/
 	@Override
 	public int getFilterType() {
 		// TODO Auto-generated method stub

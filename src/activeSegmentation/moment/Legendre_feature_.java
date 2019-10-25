@@ -1,8 +1,7 @@
-package activeSegmentation.filter;
+package activeSegmentation.moment;
 
 
 import activeSegmentation.IFilter;
-import activeSegmentation.filter.LegendreMoments_elm;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -20,7 +19,7 @@ import java.util.List;
  */
 
 
-public class Legendre_filter_ implements IFilter {
+public class Legendre_feature_ implements IFilter {
 
 	public static boolean debug=IJ.debugMode;
 	public final static String DEGREE = "Degree";

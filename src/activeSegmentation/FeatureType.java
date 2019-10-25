@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ij.ImageStack;
-import ijaux.moments.ZernikeMoment.Complex;
+import ijaux.datatype.ComplexArray;
+//import ijaux.moments.ZernikeMoment.ComplexWrapper;
 
 /*
  * This Class used for storing Class level features and Pixel level features.
@@ -19,9 +20,10 @@ public class FeatureType {
 	
 	
 	
-	// Hold Zernike Polynomials Values which is getting after apply filter on each image.
-	private Complex zernikeMoments;
-
+	// Hold Zernike Polynomials Values which is getting after applying filter on each image.
+	//private ComplexWrapper zernikeMoments;
+	private ComplexArray zernikeMoments;
+	
 	public FeatureType(){
 		tempStack= new ArrayList<ImageStack>();
 	}
@@ -31,7 +33,7 @@ public class FeatureType {
 		this.tempStack.add(imageStack);
 	}	
 	
-	public void add(Complex zernikeMoments){
+	public void add(ComplexArray zernikeMoments){
 		this.zernikeMoments = zernikeMoments;
 	}
 	
@@ -65,7 +67,7 @@ public class FeatureType {
 		this.finalStack = finalStack;
 	}
 
-	public Complex getzernikeMoments(){
+	public ComplexArray getzernikeMoments(){
 		return zernikeMoments;
 	}
 }

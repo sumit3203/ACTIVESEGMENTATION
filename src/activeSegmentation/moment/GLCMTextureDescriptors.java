@@ -1,4 +1,4 @@
-package activeSegmentation.filter;
+package activeSegmentation.moment;
 
 
 import java.awt.Rectangle;

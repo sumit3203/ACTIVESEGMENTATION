@@ -1,8 +1,7 @@
-package activeSegmentation.filter;
+package activeSegmentation.moment;
 
 
 import activeSegmentation.IFilter;
-import activeSegmentation.filter.GLCMTextureDescriptors;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
@@ -18,8 +17,12 @@ import java.util.List;
 /**
  */
 
+/*
+ *  convention 1->1  / filter
+ *  		   N->1  / feature
+ */
 
-public class GLCM_filter_ implements IFilter {
+public class GLCM_feature_ implements IFilter {
 
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;
@@ -187,7 +190,6 @@ public class GLCM_filter_ implements IFilter {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 

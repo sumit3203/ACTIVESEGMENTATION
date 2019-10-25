@@ -6,6 +6,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
+import ijaux.datatype.ComplexArray;
 
 public class ZernikeMoment {
 	int degree;
@@ -49,7 +50,7 @@ public class ZernikeMoment {
         radius = Math.sqrt(2 * max * max);
 	}
 
-	public Complex extractZernikeMoment(ImageProcessor ip){
+	public ComplexArray  extractZernikeMoment(ImageProcessor ip){
 		//System.out.println("Start Zernike moment extraction process");
 		calculateRadius(ip);
 		
@@ -58,7 +59,10 @@ public class ZernikeMoment {
     	if(rv==null)
     		rv = new RadialValue[ip.getHeight()*ip.getWidth()];
     
+    	// TODO change into PixLib form
     	Zps[] zps=new Zps[ip.getHeight()*ip.getWidth()];
+    	//final int sz=ip.getHeight()*ip.getWidth();
+    	//ComplexArray zps=ComplexArray.create(sz);
     	int index=0;
         for(int i=0;i<ip.getHeight();i++){
         	for(int j=0;j<ip.getWidth();j++){
@@ -113,11 +117,15 @@ public class ZernikeMoment {
         	System.out.println("Real Value:-" +real_result[i]+" Imaginary Value:- "+ imag_result[i]);
         }*/
         
-		return new Complex(real_result, imag_result);
+		return new ComplexArray(real_result, imag_result, false);
 	}
+	
+	
 	public static void main(String[] args){
-		String path="/home/mg/Downloads/tifs/image.tif";
-    	ImagePlus imp=IJ.openImage(path);
+		//String path="/home/mg/Downloads/tifs/image.tif";
+		IJ.run("Blobs (25K)");
+    	//ImagePlus imp=IJ.openImage(path);
+		ImagePlus imp=IJ.getImage();
     	ImageConverter ic=new ImageConverter(imp);
     	ic.convertToGray8();
     	
@@ -128,7 +136,9 @@ public class ZernikeMoment {
     	long bb=System.currentTimeMillis();
     	System.out.println(bb-aa);
 	}
-	public static class Complex {
+	
+	// TODO change into complex from PixLib
+	private class ComplexWrapper {
         /** real part. */
         private double[] m_real;
 
@@ -140,7 +150,7 @@ public class ZernikeMoment {
          * 
          * @param real the real part
          */
-        public Complex(final double[] real) {
+        public ComplexWrapper(final double[] real) {
             m_real = real;
             m_imaginary = null;
         }
@@ -151,7 +161,7 @@ public class ZernikeMoment {
          * @param real the real part
          * @param imaginary the imaginary part
          */
-        public Complex(final double[] real, final double[] imaginary) {
+        public ComplexWrapper(final double[] real, final double[] imaginary) {
             m_real = real;
             m_imaginary = imaginary;
         }

@@ -1,7 +1,8 @@
 package activeSegmentation.feature;
 
 import ij.ImageStack;
-import ijaux.moments.ZernikeMoment.Complex;
+import ijaux.datatype.ComplexArray;
+//import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import weka.core.DenseInstance;
 
 /**
@@ -81,7 +82,38 @@ public class InstanceUtil {
 	 * @return corresponding instance
 	 * @throws Exception
 	 */
-	public DenseInstance createInstance(Complex rv, int classValue) throws Exception{
+	public DenseInstance createInstance(ComplexArray rv, int classValue) throws Exception{
+		int size=0;
+		
+		for(int i=0;i<rv.length();i++){
+			size++;
+			if(rv.Im(i)!=0.0)
+				size++;
+		}
+		double[] final_result = new double[size+1];
+
+		int t=0;
+		for(int i=0;i<rv.length();i++){
+			final_result[t++] = rv.Re(i);
+			if(rv.Im()[i]!=0){
+				final_result[t++] = rv.Im(i);
+			}
+			
+		}
+		
+		//System.out.println("Zernike Values Checking:");
+		for(int i=0;i<final_result.length;i++){
+			System.out.println(final_result[i]);
+		}
+		
+		
+		// Assign class
+		final_result[final_result.length-1] = (double) classValue;
+		return new DenseInstance(1.0,final_result);
+		
+	}
+	/*
+	public DenseInstance createInstance(ComplexWrapper rv, int classValue) throws Exception{
 		int size=0;
 		for(int i=0;i<rv.getReal().length;i++){
 			size++;
@@ -109,6 +141,6 @@ public class InstanceUtil {
 		final_result[final_result.length-1] = (double) classValue;
 		return new DenseInstance(1.0,final_result);
 		
-	}
+	}*/
 
 }
