@@ -1,4 +1,4 @@
-package activeSegmentation.unitTest;
+package test;
 
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;

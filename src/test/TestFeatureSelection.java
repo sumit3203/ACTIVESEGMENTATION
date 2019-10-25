@@ -1,4 +1,4 @@
-package activeSegmentation.unitTest;
+package test;
 
 import java.util.Arrays;
 

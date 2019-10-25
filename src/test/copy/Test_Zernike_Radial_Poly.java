@@ -1,4 +1,4 @@
-package activeSegmentation.unitTest.copy;
+package test.copy;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
