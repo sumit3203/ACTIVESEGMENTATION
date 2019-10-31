@@ -14,6 +14,10 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.*;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.exp;
+import static java.lang.Math.sqrt;
+
 import java.awt.*;
 import java.io.File;
 import java.util.*;
@@ -391,11 +395,10 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 
 	/*
-	 * by convention we will plot the highest order derivative in 1D
+	 * by convention we will plot the lowest order derivative in 1D
 	 */
-	private Double gaussiand(double x){
-		final double x2=x*x;
-		return (x2-1)*Math.exp(-x2/2.0) / (2.0  *Math.sqrt(Math.PI));
+	private double gdKernel(double x){
+		return -x*exp(-x*x/2.0) / (2.0*sqrt(PI));
 	}
 
 	@Override
@@ -403,7 +406,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=gaussiand(i);
+			Double y=gdKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);

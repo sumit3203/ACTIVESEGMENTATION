@@ -27,9 +27,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 import activeSegmentation.Common;
 import activeSegmentation.IFilter;
 import dsp.Conv;
+import static java.lang.Math.*;
+
 
 /**
- * @version 	1.6    23 Aug 2016
+ * @version 	1.2.1 31 Oct 2019
+ * 				 - kernel plot change
+ * 				1.6    23 Aug 2016
  *              1.5		date 23 Sept 2013
  *				- isotropic correction
  * 				1.0		date 23 Jul 2013 
@@ -389,10 +393,10 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 
 
-
-	private Double bog(double x){
-
-		return (Math.pow(x, 4)-8*(x*x)+8)* Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
+	 
+	private double bogKernel(double x){
+		final double x2=x*x;
+		return (x2*x2-8*(x2)+8)* exp(-0.5*x2) / (2.0*sqrt(PI));
 	}
 	
 	
@@ -401,7 +405,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=bog(i);
+			Double y=bogKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);

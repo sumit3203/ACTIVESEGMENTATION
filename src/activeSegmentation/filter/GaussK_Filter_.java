@@ -579,16 +579,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 
-
-
-
 	@Override
 	public Image getImage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

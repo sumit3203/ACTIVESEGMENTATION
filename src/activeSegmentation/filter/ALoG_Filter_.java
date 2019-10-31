@@ -1,16 +1,10 @@
 package activeSegmentation.filter;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.Prefs;
-import ij.gui.GenericDialog;
-import ij.gui.Roi;
-import ij.gui.DialogListener;
-import ij.measure.Calibration;
-import ij.plugin.filter.ExtendedPlugInFilter;
-import ij.plugin.filter.PlugInFilterRunner;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
+
+import ij.*;
+import ij.gui.*;
+import ij.measure.*;
+import ij.plugin.filter.*;
+import ij.process.*;
 import ijaux.scale.*;
 
 import java.awt.*;
@@ -18,17 +12,19 @@ import java.util.*;
 import java.util.List;
 import static java.lang.Math.*;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.*;
+import org.jfree.chart.plot.*;
+import org.jfree.data.xy.*;
 
 import activeSegmentation.IFilter;
 import dsp.Conv;
 
+import static java.lang.Math.*;
+
 /**
- * @version 	1.2 23 Aug 2016
+ * @version 	1.2.1 31 Oct 2019
+ * 				 - kernel plot change
+ * 				1.2 23 Aug 2016
  *              1.1 27 Jun 2015
  * 				1.0  6 Oct 2014 
  * 				
@@ -456,9 +452,9 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	}
 
 	
-	private Double log(double x){
-
-		return (x*x-2)* Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
+	private double logKernel(double x){
+		final double x2=x*x;
+		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
 	}
 
 
@@ -467,7 +463,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=log(i);
+			Double y=logKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);

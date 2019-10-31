@@ -455,65 +455,35 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	}
 
 	
-	private Double log(double x){
-
-		return (x*x-2)* Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
-	}
-
+	 
 
 	@Override
 	public Image getImage(){
-
-		final XYSeries series = new XYSeries("Data");
-		for(double i=-10;i<=10;i=i+0.5){
-			Double y=log(i);
-			series.add(i, y);
-		}
-		final XYSeriesCollection data = new XYSeriesCollection(series);
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"",
-				"", 
-				"", 
-				data,
-				PlotOrientation.VERTICAL,
-				false,
-				false,
-				false
-				);
-
-		return chart.createBufferedImage(200, 200);
+		return null;
 	}
-
-
-
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
 	@Override
 	public int getFilterType() {
-		// TODO Auto-generated method stub
 		return this.TYPE;
 	}
 
 	@Override
 	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

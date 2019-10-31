@@ -11,7 +11,6 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
-import ijaux.scale.Pair;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -26,13 +25,15 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import activeSegmentation.Common;
-import activeSegmentation.FeatureType;
 import activeSegmentation.IFilter;
 import dsp.Conv;
 
+import static java.lang.Math.*;
+
 /**
- * @version 	1.2 23 Aug 2016
+ * @version 	1.2.1 31 Oct 2019
+ * 				 - kernel plot change
+ * 				1.2 23 Aug 2016
  *              1.1	14 Oct 2013
  * 				- moved contratAdjust -> Conv
  * 				- changed brightness adjustment factor to sigma^2		
@@ -150,7 +151,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	}
 
-	public FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean seperable,final boolean snorm){
+	public FloatProcessor filter(ImageProcessor ip, GScaleSpace sp, final boolean seperable,final boolean snorm){
 		float[][] kernel=null;
 		ip.snapshot();
 
@@ -330,13 +331,10 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		return this.FILTER_NAME;
 	}
 
-
-
-
-
-	private Double log(double x){
-
-		return (x*x-2)* Math.exp(-Math.pow(x, 2)/2) / (2  *Math.sqrt(3.14));
+ 
+	private double logKernel(double x){
+		final double x2=x*x;
+		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
 	}
 
 
@@ -345,7 +343,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=log(i);
+			Double y=logKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);
@@ -365,40 +363,27 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
-
-
 	@Override
 	public int getFilterType() {
-		// TODO Auto-generated method stub
 		return this.TYPE;
 	}
 
-
-
 	@Override
 	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 }

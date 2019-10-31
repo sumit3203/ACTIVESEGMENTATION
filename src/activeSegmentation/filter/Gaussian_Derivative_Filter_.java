@@ -28,8 +28,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 import activeSegmentation.IFilter;
 import dsp.Conv;
 
+import static java.lang.Math.*;
+
 /**
- * @version   	23 Aug 2016
+ * @version   	3.1 31 Oct 2019
+ * 				 - kernel plot change
+ * 				23 Aug 2016
+ * 
  *              3.0 20 Oct 2013
  * 				- change of philosophy
  * 				- migration to the GScaleSpace package
@@ -399,8 +404,8 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	}
 
  
-	private Double gaussian(double x){
-		return Math.exp(-x*x/2.0) / (2.0*Math.sqrt(Math.PI));
+	private double gdKernel(double x){
+		return -x*exp(-x*x/2.0) / (2.0*sqrt(PI));
 	}
  
 	@Override
@@ -408,7 +413,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=gaussian(i);
+			Double y=gdKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);
