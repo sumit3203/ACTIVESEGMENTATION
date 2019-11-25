@@ -60,12 +60,15 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter {
 	private final static String KSZ = "KSZ", GEV="GEV1";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
 	private ImagePlus imp=null;
-	private boolean isEnabled;
+	private boolean isEnabled=true;
 
 	private final static String version = "1.1";
 	private static double sigma=Prefs.getInt(KSZ,3);
 	private static boolean even=Prefs.getBoolean(GEV,false);
 	private static boolean showkernel=true;
+	private String LEN="G_len",MAX_LEN="G_MAX";
+	private  int sz= Prefs.getInt(LEN, 1);
+	private  int max_sz= Prefs.getInt(MAX_LEN, 9);
  
 	/* NEW VARIABLES*/
 
@@ -193,20 +196,46 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter {
 	@Override
 	public Map<String, String> getDefaultSettings() {
 		// TODO Auto-generated method stub
-		return null;
+		settings.put(LEN, Integer.toString(sz));
+		settings.put(MAX_LEN, Integer.toString(max_sz));
+		return settings;
 	}
 
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		// TODO Auto-generated method stub
-		return false;
+		sz=Integer.parseInt(settingsMap.get(LEN));
+		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+		return true;
 	}
 
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
 		// TODO Auto-generated method stub
+		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
+			ImageProcessor fp=filter(image, sigma);
+			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
+		}
+	}
+	
+	public FloatProcessor filter(ImageProcessor ip, double sigma) {
+		
+		int width=ip.getWidth();
+		int height=ip.getHeight();
+		int[] frame=framesize(new int[]{width,height},true);
+		int kw=frame[2];
+		int kh=frame[3];
+		FFTKernelGauss fgauss=new FFTKernelGauss (kw,kh,  sigma, true);
+		FFTConvolver proc = new FFTConvolver(ip, fgauss, true);
+		IComplexFArray kern=fgauss.getKernelComplexF();
+		
+		
+		FloatProcessor output=proc.convolve();
+		
+		return output;
 		
 	}
 
@@ -285,7 +314,9 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter {
 	@Override
 	public boolean reset() {
 		// TODO Auto-generated method stub
-		return false;
+		sz= Prefs.getInt(LEN, 2);
+		max_sz= Prefs.getInt(MAX_LEN, 8);
+		return true;
 	}
 	
 
