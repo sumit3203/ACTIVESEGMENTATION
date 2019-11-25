@@ -202,13 +202,13 @@ public class GScaleSpace {
 		int sz=2*r+1;
 		
 		double sigma2=((double)sz)/(2*swidth);
-		sigma2 = r/swidth;
-		//sigma2*=sigma2;
+		//sigma2 = r/swidth;
+		sigma2*=sigma2;
 		
 	 	
 		float[] kernel=new float[sz];
 
-		final double PIs=1/Math.sqrt(2*PI*sigma2);
+		final double PIs=1/sqrt(2*PI*sigma2);
 		if (debug)  
 			System.out.print(" \n");
 		 
@@ -230,13 +230,13 @@ public class GScaleSpace {
 	/**
 	 * @param r
 	 * @return
-	 */
+	 *
 	public static double[] gauss1Dd(int r) {
 		int sz=2*r+1;
 		
 		double sigma2=((double)sz)/(2*swidth);
-		sigma2 = r/swidth;
-		//sigma2*=sigma2;
+		//sigma2 = r/swidth;
+		sigma2*=sigma2;
 	 	
 		double[] kernel=new double[sz];
 
@@ -259,7 +259,7 @@ public class GScaleSpace {
 		
 		return kernel;
 	}
-
+	 */
 	/**
 	 * @return
 	 */
