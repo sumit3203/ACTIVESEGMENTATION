@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.IFilter;
 import fftscale.*;
+import fftscale.filter.FFTKernelGauss;
 import fftscale.filter.FFTKernelLoG;
 
 import static fftscale.FFTConvolver.*;
@@ -70,9 +71,11 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 	private static double order=Prefs.getDouble(ORD,1.0);
 	private static boolean showkernel=true;
 	private static boolean even=Prefs.getBoolean(GEV,false);
-	
-	
-	
+	private String LEN="G_len",MAX_LEN="G_MAX";
+	private  int sz= Prefs.getInt(LEN, 1);
+	private  int max_sz= Prefs.getInt(MAX_LEN, 9);
+
+
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
@@ -86,11 +89,11 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 
 	private ImageStack imageStack;
 	private boolean isEnabled=true;
-	
+
 	void showAbout() {
 		IJ.showMessage("FFT LoG " + version, "The plugin applies a Gaussian kernel to the image");
 	}
-	
+
 	@Override
 	public int setup(String arg, ImagePlus imp) {
 		if (imp==null) return DONE;
@@ -100,16 +103,16 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 			showAbout();
 			return DONE;
 		}
- 
+
 		int ret = showDialog() ? flags : DONE;
-		
+
 		return ret;
 	}
-	
-	
+
+
 	@Override
 	public void run(ImageProcessor ip) {
-	  		 
+
 		final int[] frame=FFTConvolver.framesize(ip,true);
 		int kw=frame[2];
 		int kh=frame[3];
@@ -135,7 +138,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 		return imp;
 	}
 
-	
+
 	public boolean showDialog() {
 		GenericDialog gd=new GenericDialog("FFT LoG Kernel " + version);
 		gd.addNumericField("sigma", sigma, 1);
@@ -143,30 +146,30 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 		final String what=even?"even":"odd";
 		String[] items=new String[] {"even", "odd"};
 		gd.addChoice("even", items,  what);
-		
+
 		gd.addCheckbox("show kernel", false);
 		gd.showDialog();
-		
+
 		if (gd.wasCanceled()) return false;
-		
+
 		sigma = gd.getNextNumber(); 	
 		order = gd.getNextNumber();
 		even = (gd.getNextChoiceIndex()==0);
 		showkernel=gd.getNextBoolean();
-		
+
 		return true;
 	}
-	
+
 	public static void savePreferences(Properties prefs) {
 		prefs.put(KSZ, Double.toString(sigma));
 		prefs.put(ORD, Double.toString(order));
 	}
-	
+
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
 	 */
 	public static void main(String[] args) {
-		
+
 		/*
 		try {
 			File f = new File(args[0]);
@@ -189,14 +192,16 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 		int[] frame=framesize(new int[]{width,height},true);
 		int kw=frame[2];
 		int kh=frame[3];
-		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 1, sigma, true);
+		System.out.println(kw);
+		System.out.println(kh);
+		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 0, sigma, true);
 		FFTConvolver proc = new FFTConvolver(ip, fgauss);
 		IComplexFArray kern=fgauss.getKernelComplexF();
 		ComplexFProcessor ckern=new ComplexFProcessor(kw,kh, kern);
 
 		FloatProcessor output=proc.convolve();
-	 
-	
+
+
 		new ImagePlus("convovled",output).show();
 		new ImagePlus("kernel",ckern.stackviz()).show();
 	}
@@ -204,22 +209,45 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 	@Override
 	public Map<String, String> getDefaultSettings() {
 		// TODO Auto-generated method stub
-		return null;
+		settings.put(LEN, Integer.toString(sz));
+		settings.put(MAX_LEN, Integer.toString(max_sz));
+		return settings;
 	}
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		// TODO Auto-generated method stub
-		return false;
+		sz=Integer.parseInt(settingsMap.get(LEN));
+		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+		return true;
 	}
-	
+
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
 		// TODO Auto-generated method stub
-		
+		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
+			ImageProcessor fp=filter(image, sigma);
+			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
+		}
 	}
 
+	public FloatProcessor filter(ImageProcessor ip, double sigma) {
+
+		int width=ip.getWidth();
+		int height=ip.getHeight();
+		int[] frame=framesize(new int[]{width,height},true);
+		int kw=frame[2];
+		int kh=frame[3];
+		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 0, sigma, true);
+		FFTConvolver proc = new FFTConvolver(ip, fgauss);
+
+		FloatProcessor output=proc.convolve();
+		return output;
+
+	}
+	
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
@@ -273,7 +301,9 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 	@Override
 	public boolean reset() {
 		// TODO Auto-generated method stub
-		return false;
+		sz= Prefs.getInt(LEN, 2);
+		max_sz= Prefs.getInt(MAX_LEN, 8);
+		return true;
 	}
 
 
@@ -291,6 +321,6 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 	public Set<String> getFeatureNames() {
 		return null;
 	}
-	
+
 
 }
