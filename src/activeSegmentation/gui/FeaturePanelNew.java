@@ -52,11 +52,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import activeSegmentation.IFeatureManagerNew;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
-import activeSegmentation.feature.FeatureManagerNew;
-import activeSegmentation.io.ProjectManagerImp;
+//import activeSegmentation.feature.FeatureManagerNew;
+//import activeSegmentation.io.ProjectManagerImp;
 
 public class FeaturePanelNew extends ImageWindow  {
 
@@ -80,8 +80,8 @@ public class FeaturePanelNew extends ImageWindow  {
 	byte[] green = new byte[ 256 ];
 	byte[] blue = new byte[ 256 ];
 
-	private Map<String, JList> exampleList;
-	private Map<String, JList> allexampleList;
+	private Map<String, JList<String>> exampleList;
+	private Map<String, JList<String>> allexampleList;
 
 	/** array of roi list overlays to paint the transparent rois of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
@@ -125,13 +125,14 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.displayImage= featureManager.getCurrentImage();
 		this.jCheckBoxList= new ArrayList<JCheckBox>();
 		this.jTextList= new HashMap<String,JTextArea>();
-		this.exampleList = new HashMap<String, JList>();
-		this.allexampleList = new HashMap<String, JList>();
+		this.exampleList = new HashMap<String, JList<String>>();
+		this.allexampleList = new HashMap<String, JList<String>>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
 		tempClassifiedImage = new ImagePlus();		
 
 
-		this.hide();
+		//this.hide();
+		this.setVisible(false);
 		showPanel();
 	}
 
@@ -139,9 +140,8 @@ public class FeaturePanelNew extends ImageWindow  {
 
 
 
-
 	public void showPanel() {
-		frame = new JFrame("FEATURE PANEL");	        
+		frame = new JFrame("Features");	        
 		frame.setResizable(false);
 		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
@@ -154,7 +154,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
 		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		JList frameList= Util.model();
+		JList<String> frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -204,7 +204,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
 		addButton(new JButton(), "TRAIN",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "TOGGLE",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "OVERLAY",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
 		
 		features.add(computePanel);
@@ -297,11 +297,11 @@ public class FeaturePanelNew extends ImageWindow  {
 	}
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
-		JList current=Util.model();
+		JList<String> current=Util.model();
 
 		current.setForeground(color);
 		exampleList.put(key,current);
-		JList all=Util.model();
+		JList<String> all=Util.model();
 		all.setForeground(color);
 		allexampleList.put(key,all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();
@@ -410,7 +410,7 @@ public class FeaturePanelNew extends ImageWindow  {
 
 		if(event==SAVE_BUTTON_PRESSED){
 			featureManager.saveFeatureMetadata();
-			JOptionPane.showMessageDialog(null, "Successfully saved region of interests");
+			JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		}
 		if(event==SAVECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {
@@ -677,7 +677,7 @@ public class FeaturePanelNew extends ImageWindow  {
 
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
-			JList theList = ( JList) mouseEvent.getSource();
+			JList<?>  theList = ( JList<?>) mouseEvent.getSource();
 			if (mouseEvent.getClickCount() == 1) {
 				int index = theList.getSelectedIndex();
 

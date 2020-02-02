@@ -70,23 +70,30 @@ public class ViewFilterResults extends ImageWindow  {
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	ActionEvent SLICE_NEXT_BUTTON_PRESSED;
+	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	ActionEvent PREVIOUS_BUTTON_PRESSED ;
 
 	ActionEvent SLICE_PREVIOUS_BUTTON_PRESSED;
-	private Map<String, JList> exampleList;
-	private Map<String, JList> allexampleList;
+	
+	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	ActionEvent VIEW_BUTTON_PRESSED ;
+	
+	private Map<String, JList<String>> exampleList;
+	private Map<String, JList<String>> allexampleList;
 	JPanel imagePanel,roiPanel;
 	JTextField imageNum;
 	JTextField sliceField;
 	JLabel totalSlice;
 	JLabel total;
+	JLabel imageName=new JLabel();
 	List<String> featuresList;
 	List<String> images;
 	int sliceNum,featureNum,totalSlices,totalFeatures;
 	JFrame frame;
 	private JComboBox<LearningType> learningType;
 	private ImagePlus displayImage;
+	
 	public ViewFilterResults(IProjectManager projectManager,IFeatureManagerNew featureManager) {
 		//super(image);
 		super(featureManager.getCurrentImage());
@@ -94,18 +101,19 @@ public class ViewFilterResults extends ImageWindow  {
 		this.featureManager=featureManager;
 		this.featuresList=new ArrayList<String>();
 		this.images=new ArrayList<>();
-		this.exampleList = new HashMap<String, JList>();
-		this.allexampleList = new HashMap<String, JList>();
+		this.exampleList = new HashMap<String, JList<String>>();
+		this.allexampleList = new HashMap<String, JList<String>>();
 		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
 		this.projectInfo=this.projectManager.getMetaInfo();
 		//this.images=loadImages(projectString);
 		this.filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
-		this.hide();
+		//this.hide();
+		this.setVisible(false);
 		showPanel();
 	}
 
 
-
+ /*
 	private static ImagePlus  createImageIcon(String path) {
 		java.net.URL imgURL = ViewFilterResults.class.getResource(path);
 		if (imgURL != null) {
@@ -115,7 +123,7 @@ public class ViewFilterResults extends ImageWindow  {
 			return null;
 		}
 	}   
-
+*/
 	private int loadImages(String directory){
 		featuresList.clear();
 		File folder = new File(directory);
@@ -144,12 +152,15 @@ public class ViewFilterResults extends ImageWindow  {
 
 	public void showPanel() {
 
-		frame = new JFrame("VISUALIZATION");
-		this.roiPanel=new JPanel();
-		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
-		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
-		SLICE_NEXT_BUTTON_PRESSED = new ActionEvent( this, 3, "Next" );
-		SLICE_PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 4, "Previous" );
+		frame = new JFrame("Feature Visualization");
+		roiPanel=new JPanel();
+		
+		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "NEXT_F" );
+		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "PREVIOUS_F" );
+		SLICE_NEXT_BUTTON_PRESSED = new ActionEvent( this, 3, "NEXT_S" );
+		SLICE_PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 4, "PREVIOUS_S" );
+		VIEW_BUTTON_PRESSED= new ActionEvent( this, 5, "VIEW" );
+		
 		this.totalSlices=loadSlices(filterString);
 		if(totalSlices>0){
 			this.sliceNum=1;
@@ -157,12 +168,15 @@ public class ViewFilterResults extends ImageWindow  {
 		}
 
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		JList frameList= Util.model();
+		JList<String> frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setFont(FONT);
 		panel.setBackground(Color.GRAY);
+		
+		
 		imagePanel = new JPanel();	
 		imagePanel.setLayout(new BorderLayout());
 		imagePanel.setBackground(Color.GRAY);
@@ -181,24 +195,29 @@ public class ViewFilterResults extends ImageWindow  {
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );
 		//imagePanel.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
-		
 		panel.add(imagePanel);
 
+		final int pannel_offset=610;
+		final int component_width = 350;
+		
+		// Navigation
 		JPanel slicePanel= new JPanel();
-		slicePanel.setBounds(605,20,350,80);
+		
+		slicePanel.setBounds(pannel_offset,20,component_width,80);
 		slicePanel.setBorder(BorderFactory.createTitledBorder("SLICES"));
-		addButton(new JButton(), "PREVIOUS",null , 610, 70, 120, 20,slicePanel,SLICE_PREVIOUS_BUTTON_PRESSED,null );
+		
+		addButton(new JButton(), "PREVIOUS",null , pannel_offset+5, 70, 120, 20,slicePanel,SLICE_PREVIOUS_BUTTON_PRESSED,null );
 		sliceField= new JTextField();
 		sliceField.setColumns(5);
-		sliceField.setBounds( 630, 70, 10, 20 );
+		sliceField.setBounds( pannel_offset+20, 70, 10, 20 );
 		JLabel sliceLine= new JLabel("/");
 		sliceLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		sliceLine.setForeground(Color.BLACK);
-		sliceLine.setBounds( 670, 70, 10, 20 );
+		sliceLine.setBounds( pannel_offset+60, 70, 10, 20 );
 		totalSlice= new JLabel("--");
 		totalSlice.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		totalSlice.setForeground(Color.BLACK);
-		totalSlice.setBounds( 730, 600, 80, 30);
+		totalSlice.setBounds( pannel_offset+120, 600, 80, 30);
 		if(sliceNum>0){
 			sliceField.setText("1");
 			totalSlice.setText(Integer.toString(totalSlices));
@@ -206,19 +225,22 @@ public class ViewFilterResults extends ImageWindow  {
 		slicePanel.add(sliceField);
 		slicePanel.add(sliceLine);
 		slicePanel.add(totalSlice);
-		addButton(new JButton(), "NEXT",null , 800, 50, 80, 20,slicePanel,SLICE_NEXT_BUTTON_PRESSED,null );
+		addButton(new JButton(), "NEXT",null , pannel_offset+200, 50, 80, 20,slicePanel,SLICE_NEXT_BUTTON_PRESSED,null );
 		panel.add(slicePanel);
+		
+		
+		
 		JPanel features= new JPanel();
-		features.setBounds(605,120,350,80);
+		features.setBounds(pannel_offset, 120, component_width, 80);
 		features.setBorder(BorderFactory.createTitledBorder("FEATURES"));
-		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
+		addButton(new JButton(), "PREVIOUS",null , pannel_offset+5, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
 		imageNum= new JTextField();
 		imageNum.setColumns(5);
-		imageNum.setBounds( 630, 130, 10, 20 );
-		JLabel dasedLine= new JLabel("/");
-		dasedLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
-		dasedLine.setForeground(Color.BLACK);
-		dasedLine.setBounds(  670, 130, 10, 20 );
+		imageNum.setBounds( pannel_offset+20, 130, 10, 20 );
+		JLabel dashedLine= new JLabel("/");
+		dashedLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
+		dashedLine.setForeground(Color.BLACK);
+		dashedLine.setBounds(  pannel_offset+60, 130, 10, 20 );
 		total= new JLabel("Total");
 		total.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		total.setForeground(Color.BLACK);
@@ -226,13 +248,15 @@ public class ViewFilterResults extends ImageWindow  {
 		if(this.totalFeatures>0){
 			imageNum.setText("1");
 			total.setText(Integer.toString(totalFeatures));
-
-		}
+	
 		features.add(imageNum);
-		features.add(dasedLine);
-		features.add(total);
-		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
+		features.add(dashedLine);
+		features.add(total);	
+		
+		
+		addButton(new JButton(), "NEXT",null , pannel_offset+190, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
 		frame.add(features);
+		
 		JPanel dataJPanel = new JPanel();
 		learningType = new JComboBox<LearningType>(LearningType.values());
 		learningType.setVisible(true);
@@ -243,20 +267,34 @@ public class ViewFilterResults extends ImageWindow  {
 				//updateGui();	
 			}
 		});
-		dataJPanel.setBounds(720,240,100,40);
+		dataJPanel.setBounds(pannel_offset, 200, component_width,80);
+		
+	///	addButton(new JButton(), "View",null , pannel_offset+5, 70, 120, 20,dataJPanel,SLICE_PREVIOUS_BUTTON_PRESSED,null );
+
+		
 		learningType.setSelectedIndex(0);
 		learningType.setFont( FONT );
 		learningType.setBackground(new Color(192, 192, 192));
 		learningType.setForeground(Color.WHITE);
 		dataJPanel.add(learningType);
+		
+		imageName.setBounds(pannel_offset, 240, component_width, 20 );
+		imageName.setText("     ");
+		dataJPanel.add(imageName);
+		
+		addButton(new JButton(), "View",null , pannel_offset+190, 250, 80, 20,features,VIEW_BUTTON_PRESSED,null );
+
+		
 		dataJPanel.setBackground(Color.GRAY);
 		panel.add(dataJPanel);
-		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
+		
+		
+		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
 		//roiPanel.setPreferredSize(new Dimension(200, 400));
-		roiPanel.setPreferredSize(new Dimension(350, 175*featureManager.getNumOfClasses()));
+		roiPanel.setPreferredSize(new Dimension(component_width, 175*featureManager.getNumOfClasses()));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
-		scrollPane.setBounds(605,300,350,250);
+		scrollPane.setBounds(pannel_offset,350,component_width,250);
 		panel.add(scrollPane);
 		frame.add(panel);
 		frame.pack();
@@ -264,7 +302,7 @@ public class ViewFilterResults extends ImageWindow  {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
         refreshPanel();
-        updateGui();
+        updateGui();}
 	}
 
 	private void refreshPanel() {
@@ -279,11 +317,11 @@ public class ViewFilterResults extends ImageWindow  {
 
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
-		JList current=Util.model();
+		JList<String> current=Util.model();
 
 		current.setForeground(color);
 		exampleList.put(key,current);
-		JList all=Util.model();
+		JList<String> all=Util.model();
 		all.setForeground(color);
 		allexampleList.put(key,all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();
@@ -314,7 +352,13 @@ public class ViewFilterResults extends ImageWindow  {
 	   
 		setImage(this.displayImage);
 		updateImage(this.displayImage);
-		
+		try {
+			imageName.setText(displayImage.getShortTitle() );
+			imageName.validate();
+			System.out.println(displayImage.getShortTitle());
+		} catch (RuntimeException ex){
+			ex.printStackTrace();
+		}
 	}
 
 	public void doAction( final ActionEvent event )
@@ -383,7 +427,9 @@ public class ViewFilterResults extends ImageWindow  {
 			updateGui();
 
 		}
-
+		if (event==this.VIEW_BUTTON_PRESSED) {
+			displayImage.show();
+		}
 
 	}
 
@@ -400,7 +446,7 @@ public class ViewFilterResults extends ImageWindow  {
 					String item =theList.getSelectedValue().toString();
 					String[] arr= item.split(" ");
 					//System.out.println("Class Id"+ arr[0].trim());
-					int sliceNum=Integer.parseInt(arr[2].trim());
+					//int sliceNum=Integer.parseInt(arr[2].trim());
 					showSelected( arr[0].trim(),index);
 
 				}

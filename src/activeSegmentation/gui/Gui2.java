@@ -2,10 +2,6 @@ package activeSegmentation.gui;
 
 
 
-import ij.IJ;
-import ij.ImagePlus;
-import ij.io.OpenDialog;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -36,7 +32,7 @@ import activeSegmentation.learning.ClassifierManager;
 public class Gui2
 {
 	private JFrame mainFrame;
-	private JPanel controlPanel;
+	//private JPanel controlPanel;
 	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent(this, 0, "Feature");
 	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent(this, 1, "Filter");
 	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent(this, 2, "Learning");
@@ -45,39 +41,35 @@ public class Gui2
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
-	private ViewFilterResults viewFilterResults;
-	private static IFeatureManagerNew featureManager;
+	//private ViewFilterResults viewFilterResults;
+	private  IFeatureManagerNew featureManager;
 	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
-	Panel all;
-	ILearningManager learningManager;
-	public Gui2(IProjectManager projectManager)
-	{
+	protected Panel all;
+	protected ILearningManager learningManager;
+	
+	public Gui2(IProjectManager projectManager)	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
 		featureManager=new FeatureManagerNew(this.projectManager, this.learningManager);
 		prepareGUI();
 	}
 
-	public void doAction(ActionEvent event)
-	{
+	public void doAction(ActionEvent event)	{
 		//System.out.println("IN DO ACTION");
 		//System.out.println(event.toString());
-		if ((event == this.FILTER_BUTTON_PRESSED)) {
+		if ((event == FILTER_BUTTON_PRESSED)) {
 			if(this.filterPanel == null) {
 				// for time being feature manager is passed , will think
 				// of better design later
-				this.filterPanel = new FilterPanel(this.projectManager,featureManager);
+				this.filterPanel = new FilterPanel(projectManager,featureManager);
 			}	
-			SwingUtilities.invokeLater(this.filterPanel);
+			SwingUtilities.invokeLater(filterPanel);
 		}
 		
-		if(event==this.FILTERVIS_BUTTON_PRESSED){
-		      // filterManager.getFinalImage().show();
-			
-				new ViewFilterResults(this.projectManager,featureManager);
-				
-				
+		if(event==FILTERVIS_BUTTON_PRESSED){
+		      // filterManager.getFinalImage().show();		
+				new ViewFilterResults(projectManager,featureManager);				
 			}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
@@ -86,23 +78,20 @@ public class Gui2
 			}	
 		}
 			
-		if (event == this.LEARNING_BUTTON_PRESSED)
-		{
+		if (event == this.LEARNING_BUTTON_PRESSED)	{
 			if (this.learningPanel == null) {
 				this.learningPanel = new LearningPanel(this.projectManager, this.learningManager);
 			}
 			SwingUtilities.invokeLater(this.learningPanel);
 		}
-		if (event == this.EVALUATION_BUTTON_PRESSED)
-		{
+		if (event == this.EVALUATION_BUTTON_PRESSED){
 			IEvaluation evaluation = new EvaluationMetrics();
 			EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
 			SwingUtilities.invokeLater(evaluationPanel);
 		}
 	}
 
-	private void prepareGUI()
-	{
+	private void prepareGUI()	{
 		this.mainFrame = new JFrame("ACTIVE SEGMENTATION");
 		this.mainFrame.getContentPane().setBackground(Color.GRAY);
 		this.mainFrame.setLocationRelativeTo(null);

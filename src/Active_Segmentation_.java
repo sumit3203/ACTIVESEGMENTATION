@@ -4,6 +4,8 @@
 
 
 
+import java.io.File;
+
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.IProjectManager;
@@ -12,6 +14,7 @@ import activeSegmentation.io.ProjectManagerImp;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
+import ijaux.scale.GScaleSpace;
 
 public class Active_Segmentation_ implements PlugIn {
 
@@ -38,6 +41,7 @@ public class Active_Segmentation_ implements PlugIn {
 		IProjectManager dataManager= new ProjectManagerImp();
 		CreatProject creatProject= new CreatProject(dataManager);
 		SwingUtilities.invokeLater(creatProject);
+		
 
 	}
 
@@ -45,8 +49,22 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 	public static void main(String[] args) {
+		try {
+			File f=new File(args[0]);
+			if (f.exists() && f.isDirectory() ) {
+				System.setProperty("plugins.dir", args[0]);
+	 		} else {
+				throw new IllegalArgumentException();
+			}
+		}
+		catch (Exception ex) {
+			IJ.log("plugins.dir misspecified\n");
+			ex.printStackTrace();
+		}
+		
 		new ImageJ();
-		new Active_Segmentation_().run("");
+		Active_Segmentation_ as=new Active_Segmentation_();
+		as.run("");
 	}
 
 }

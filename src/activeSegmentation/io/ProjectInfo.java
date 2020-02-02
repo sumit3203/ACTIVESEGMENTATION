@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProjectInfo
-{
+public class ProjectInfo{
+	
 	private String projectName;
 	private String projectType;
 	private String projectDescription;
@@ -47,183 +47,147 @@ public class ProjectInfo
 	private Integer featureLength;
 	private String featureSelection;
 
-	public String getComment()
-	{
+	public String getComment()	{
 		return this.comment;
 	}
 
-	public void setComment(String comment)
-	{
+	public void setComment(String comment)	{
 		this.comment = comment;
 	}
 
-	public String getCreatedDate()
-	{
+	public String getCreatedDate()	{
 		return this.createdDate;
 	}
 
-	public void setCreatedDate(String createdDate)
-	{
+	public void setCreatedDate(String createdDate)	{
 		this.createdDate = createdDate;
 	}
 
-	public String getModifyDate()
-	{
+	public String getModifyDate()	{
 		return this.modifyDate;
 	}
 
-	public void setModifyDate(String modifyDate)
-	{
+	public void setModifyDate(String modifyDate)	{
 		this.modifyDate = modifyDate;
 	}
 
-	public List<Map<String, String>> getFilters()
-	{
+	public List<Map<String, String>> getFilters()	{
 		return this.filters;
 	}
 
-	public void setFilters(List<Map<String, String>> filters)
-	{
+	public void setFilters(List<Map<String, String>> filters)	{
 		this.filters = filters;
 	}
 
-	public List<FeatureInfo> getFeatureList()
-	{
+	public List<FeatureInfo> getFeatureList()	{
 		return this.featureList;
 	}
 
-	public void setFeatureList(List<FeatureInfo> featureList)
-	{
+	public void setFeatureList(List<FeatureInfo> featureList)	{
 		this.featureList = featureList;
 	}
 
-	public Map<String, String> getLearning()
-	{
+	public Map<String, String> getLearning()	{
 		return this.learning;
 	}
 
-	public void setLearning(Map<String, String> learning)
-	{
+	public void setLearning(Map<String, String> learning)	{
 		this.learning = learning;
 	}
 
-	public void addFeature(FeatureInfo featureInfo)
-	{
+	public void addFeature(FeatureInfo featureInfo)	{
 		this.featureList.add(featureInfo);
 	}
 
-	public void resetFeatureInfo()
-	{
+	public void resetFeatureInfo()	{
 		this.featureList.clear();
 	}
 
-	public String getProjectName()
-	{
+	public String getProjectName()	{
 		return this.projectName;
 	}
 
-	public void setProjectName(String projectName)
-	{
+	public void setProjectName(String projectName)	{
 		this.projectName = projectName;
 	}
 
-	public String getProjectDescription()
-	{
+	public String getProjectDescription()	{
 		return this.projectDescription;
 	}
 
-	public void setProjectDescription(String projectDescription)
-	{
+	public void setProjectDescription(String projectDescription)	{
 		this.projectDescription = projectDescription;
 	}
 
-	public String getProjectType()
-	{
+	public String getProjectType()	{
 		return this.projectType;
 	}
 
-	public void setProjectType(String projectType)
-	{
+	public void setProjectType(String projectType)	{
 		this.projectType = projectType;
 	}
 
-	public String getTrainingStack()
-	{
+	public String getTrainingStack()	{
 		return this.trainingStack;
 	}
 
-	public String getProjectPath()
-	{
+	public String getProjectPath()	{
 		return this.projectPath;
 	}
 
-	public void setProjectPath(String projectPath)
-	{
+	public void setProjectPath(String projectPath) 	{
 		this.projectPath = projectPath;
 	}
 
-	public String getPluginPath()
-	{
+	public String getPluginPath() {
 		return this.pluginPath;
 	}
 
-	public Map<String, String> getProjectDirectory()
-	{
+	public Map<String, String> getProjectDirectory() 	{
 		return this.projectDirectory;
 	}
 
-	public void setProjectDirectory(Map<String, String> projectDirectory)
-	{
+	public void setProjectDirectory(Map<String, String> projectDirectory){
 		this.projectDirectory = projectDirectory;
 	}
 
-	public void setPluginPath(String pluginPath)
-	{
+	public void setPluginPath(String pluginPath){
 		this.pluginPath = pluginPath;
 	}
 
-	public void setTrainingStack(String trainingStack)
-	{
+	public void setTrainingStack(String trainingStack)	{
 		this.trainingStack = trainingStack;
 	}
 
-	public String getTestingStack()
-	{
+	public String getTestingStack()	{
 		return this.testingStack;
 	}
 
-	public String getFeatureSelection()
-	{
+	public String getFeatureSelection()	{
 		return this.featureSelection;
 	}
 
-	public void setFeatureSelection(String featureSelection)
-	{
+	public void setFeatureSelection(String featureSelection)	{
 		this.featureSelection = featureSelection;
 	}
 
-	public void setTestingStack(String testingStack)
-	{
+	public void setTestingStack(String testingStack)	{
 		this.testingStack = testingStack;
 	}
 
-	public int getClasses()
-	{
+	public int getClasses()	{
 		return this.classes;
 	}
 
-	public void setClasses(int classes)
-	{
+	public void setClasses(int classes)	{
 		this.classes = classes;
 	}
 
-	public IClassifier getClassifier()
-	{
+	public IClassifier getClassifier()	{
 		return this.classifier;
 	}
 
-	public void setClassifier(IClassifier classifier)
-	{
+	public void setClassifier(IClassifier classifier)	{
 		this.classifier = classifier;
 	}
 	

@@ -23,9 +23,6 @@ import ij.WindowManager;
 
 public class CreatProject implements Runnable {
 
-
-
-
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent CREATE_BUTTON_PRESSED = new ActionEvent( this, 1, "create" );
@@ -47,13 +44,19 @@ public class CreatProject implements Runnable {
 	JComboBox<ProjectType> projectList;
 	private JFrame createProject;
 	private IProjectManager projectManager;
+	
+	
 	public CreatProject(IProjectManager projectManager) {
 		this.projectManager=projectManager;
 		projectList= new JComboBox<ProjectType>(ProjectType.values());
 	}
+	
+	
 	/** main GUI panel (containing the buttons panel on the left,
 	 *  the image in the center and the annotations panel on the right */
 	Panel all = new Panel();
+	
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -82,6 +85,7 @@ public class CreatProject implements Runnable {
 		mainFrame.add(controlFrame);
 		mainFrame.setVisible(true);  
 	}
+	
 	private void doAction( final ActionEvent event )
 	{ 
 		if(event ==CREATE_BUTTON_PRESSED ){
@@ -114,6 +118,7 @@ public class CreatProject implements Runnable {
 				projectFField.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
+		
 		if(event== TRAININGF_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
@@ -137,6 +142,7 @@ public class CreatProject implements Runnable {
 				trainingImageP.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
+		
 		if(event== TESTINGF_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
@@ -148,14 +154,16 @@ public class CreatProject implements Runnable {
 				//pluginsDir.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
+		
 		if(event== CANCEL_BUTTON_PRESSED){
 
 			if(createProject!=null){
-				//System.out.println("IN");
+				System.out.println("Cancel");
 				createProject.setVisible(false);
 				createProject.dispose();
 			}
 		}
+		
 		if(event== FINISH_BUTTON_PRESSED){
 			String projectName=projectNField.getText();
 			String projectDirectory=projectFField.getText();
@@ -167,9 +175,9 @@ public class CreatProject implements Runnable {
 			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
 					trainingImage);	
 			if("DONE".equalsIgnoreCase(message)) {
-			createProject.setVisible(false);
-			createProject.dispose();
-			new Gui(projectManager);
+				createProject.setVisible(false);
+				createProject.dispose();
+				new Gui(projectManager);
 			}
 			else {
 				errorText.setText(message);
@@ -180,6 +188,7 @@ public class CreatProject implements Runnable {
 	private JFrame createProject(){
 		
 		JFrame mainFrame = new JFrame("Create Project");
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		mainFrame.setSize(600,500);
 		mainFrame.setLocationRelativeTo(null);
@@ -223,17 +232,19 @@ public class CreatProject implements Runnable {
 		projectFField.setBounds( 200, 220, 250, 30 );
 		controlFrame.add(projectFField);	
 		controlFrame.add(addButton("Browse",null, 460, 220, 100, 30, BROWSE_BUTTON_PRESSED));
+		
 		if(null == WindowManager.getCurrentImage()) {
-		JLabel trainingImage= new JLabel("Training Image *:");
-		trainingImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
-		trainingImage.setBounds( 50, 260, 200, 30 );
-		controlFrame.add(trainingImage);		
-		trainingImageP.setColumns(200);
-		trainingImageP.setBounds( 200, 260, 250, 30 );
-		controlFrame.add(trainingImageP);	
-		controlFrame.add(addButton("Folder",null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
-		controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
+			JLabel trainingImage= new JLabel("Training Image *:");
+			trainingImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+			trainingImage.setBounds( 50, 260, 200, 30 );
+			controlFrame.add(trainingImage);		
+			trainingImageP.setColumns(200);
+			trainingImageP.setBounds( 200, 260, 250, 30 );
+			controlFrame.add(trainingImageP);	
+			controlFrame.add(addButton("Folder",null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
+			controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
 		}
+		
 		/*JLabel testImage= new JLabel("Plugin Dir :");
 		testImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
 		testImage.setBounds( 50, 300, 200, 30 );

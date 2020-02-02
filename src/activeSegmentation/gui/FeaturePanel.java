@@ -97,13 +97,14 @@ public class FeaturePanel extends StackWindow
 	byte[] blue = new byte[ 256 ];
 
 	IFeatureManager featureManager;
-	private List<JList> exampleList;
+	private List<JList<String>> exampleList;
 	private List<JList> allexampleList;
 	private List<JList> imageTypeList;
 	private List<JList> allimageTypeList;
 	private List<JList> imagetestingTypeList;
 	private List<JList> allimagetestingTypeList;
 	private List<Color> colors ;
+	
 	/** flag to display the overlay image */
 	private boolean showColorOverlay=false;
 	int originalJ=0;
@@ -152,8 +153,8 @@ public class FeaturePanel extends StackWindow
 		super(image, new CustomCanvas(image));	
 		final CustomCanvas canvas = (CustomCanvas) getCanvas();
 		this.displayImage= image;
-		this.setTitle("Active Segmentation");
-		this.exampleList = new ArrayList<JList>();
+		this.setTitle("Active Segmentation (II)");
+		this.exampleList = new ArrayList<JList<String>>();
 		this.allexampleList = new ArrayList<JList>();
 		this.imageTypeList = new ArrayList<JList>();
 		this.allimageTypeList = new ArrayList<JList>();
@@ -255,10 +256,10 @@ public class FeaturePanel extends StackWindow
 	}
 
 	private void addSidePanel(int i){
-		JList current=Util.model();
+		JList<String> current=Util.model();
 		current.setForeground(colors.get(i));
 		exampleList.add(current);
-		JList all=Util.model();
+		JList<String> all=Util.model();
 		all.setForeground(colors.get(i));
 		allexampleList.add(all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();

@@ -62,7 +62,7 @@ public class FilterPanel implements Runnable {
 	private IFilterManager filterManager;
 	private IProjectManager projectManager;
 	private JTabbedPane pane;
-	private JList filterList;
+	private JList<String> filterList;
 	private Map<String,List<JTextField>> textMap;
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	
@@ -87,7 +87,7 @@ public class FilterPanel implements Runnable {
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	//final ActionEvent VIEW_BUTTON_PRESSED = new ActionEvent( this, 6, "View" );
 	
-	final JFrame frame = new JFrame("FILTER");
+	final JFrame frame = new JFrame("Filters");
 
 	public FilterPanel(IProjectManager projectManager,IFeatureManagerNew  featureManager) {
 		this.projectManager= projectManager;
@@ -119,9 +119,9 @@ public class FilterPanel implements Runnable {
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
 		updateFiterList();
-		addButton( new JButton(),"COMPUTE",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
-		addButton(new JButton(), "DEFAULT",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "SAVE",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
+		addButton( new JButton(),"Compute",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Default",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Save",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
 		//addButton(new JButton(), "VIEW",null , 460, 420, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
 
 
@@ -259,7 +259,7 @@ public class FilterPanel implements Runnable {
 		}*/
 
 	}
-
+/*
 	private  ImagePlus  createImageIcon(String path) {
 		java.net.URL imgURL = Gui.class.getResource(path);
 		if (imgURL != null) {
@@ -268,6 +268,7 @@ public class FilterPanel implements Runnable {
 			return null;
 		}
 	}
+	*/
 	private void updateTabbedGui(String key){
 		int i=0;
 		Map<String,String> settingsMap=filterManager.getFilterSetting(key);
@@ -280,9 +281,8 @@ public class FilterPanel implements Runnable {
 	}
 
 	private void updateFiterList() {
-		// TODO Auto-generated method stub
 		Set<String> filters= filterManager.getFilters();  
-		Vector listModel = new Vector();
+		Vector<String> listModel = new Vector<String>();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){
 
@@ -301,7 +301,7 @@ public class FilterPanel implements Runnable {
 				int index = theList.getSelectedIndex();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
-					String filter=(String)filterList.getSelectedValue();
+					String filter=filterList.getSelectedValue();
 					filterManager.enableFilter(filter);
 					pane.removeAll();
 					loadFilters();

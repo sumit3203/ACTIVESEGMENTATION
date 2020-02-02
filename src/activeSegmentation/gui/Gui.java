@@ -40,14 +40,13 @@ public class Gui
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanelNew featurePanel;
-	private ViewFilterResults viewFilterResults;
+	//private ViewFilterResults viewFilterResults;
 	private static IFeatureManagerNew featureManager;
 	private ILearningManager learningManager;
 	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
 
-	public Gui(IProjectManager projectManager)
-	{
+	public Gui(IProjectManager projectManager)	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
 		featureManager=new FeatureManagerNew(this.projectManager, this.learningManager);
@@ -97,9 +96,8 @@ public class Gui
 		}
 	}
 
-	private void prepareGUI()
-	{
-		this.mainFrame = new JFrame("ACTIVE SEGMENTATION");
+	private void prepareGUI()	{
+		this.mainFrame = new JFrame("Active Segmentation");
 		this.mainFrame.getContentPane().setBackground(Color.GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
 
@@ -113,10 +111,10 @@ public class Gui
 		label.setBounds(100, 50, 450, 100);
 		label.setForeground(Color.ORANGE);
 		this.controlPanel.add(label);
-		this.controlPanel.add(addButton("FILTERS", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("FILTER VISUALIZATION", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("FEATURE EXTRACTION", null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("LEARNING", null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Select Filters", null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Filter Visualization", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Feature Exctraction", null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Model Learning", null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
 		//this.controlPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
 
 		this.controlPanel.setLocation(0, 0);
@@ -124,6 +122,7 @@ public class Gui
 		this.mainFrame.setVisible(true);
 	}
 
+	/*
 	private ImageIcon createImageIcon(String path, String description)
 	{
 		URL imgURL = CreatProject.class.getResource(path);
@@ -133,7 +132,7 @@ public class Gui
 		//System.err.println("Couldn't find file: " + path);
 		return null;
 	}
-
+*/
 	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
 	{
 		JButton button = new JButton(label, icon);
@@ -143,10 +142,8 @@ public class Gui
 		button.setBackground(new Color(192, 192, 192));
 		button.setForeground(Color.WHITE);
 		button.setBounds(x, y, width, height);
-		button.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		button.addActionListener(new ActionListener()		{
+			public void actionPerformed(ActionEvent e)			{
 				Gui.this.doAction(action);
 			}
 		});

@@ -83,19 +83,22 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
-		System.out.println(ProjectType.valueOf(this.projectInfo.getProjectType()));
+		System.out.println("PT: " +ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
 		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
 		try {
-			System.out.println(this.projectInfo.getPluginPath());
-			loadFilters(this.projectInfo.getPluginPath());
+			String path=projectInfo.getPluginPath();
+			System.out.println(path);
+			if (path!=null)
+				loadFilters(path);
+			IJ.log("Filters Loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		IJ.log("Filters Loaded");
+		IJ.log("Filters NOT Loaded. Check path");
+		
 		this.featureManager= featureManager;
 	}
 
@@ -103,7 +106,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
-		System.out.println("home"+home);
+		System.out.println("home: "+home);
 		File f=new File(home);
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
@@ -111,8 +114,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 			//System.out.println(plugin);
 			//System.out.println(installJarPlugins(home+"/"+plugin));
-			if(plugin.endsWith(Common.JAR))
-			{ 
+			if(plugin.endsWith(Common.JAR))	{ 
 				classes.addAll(installJarPlugins(home,plugin));
 				//addFile(home+"/"+plugin);
 				String cp=System.getProperty("java.class.path");
@@ -122,8 +124,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				File g = new File(home,plugin);
 				if (g.isFile())
 					addJar(g);
-			}
-			else if (plugin.endsWith(Common.DOTCLASS)){
+			} else if (plugin.endsWith(Common.DOTCLASS)){
 				classes.add(plugin);
 			}
 			//break;
