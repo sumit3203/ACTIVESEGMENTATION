@@ -98,16 +98,18 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	ActionEvent PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
-	ActionEvent ADDCLASS_BUTTON_PRESSED ;
-	ActionEvent SAVECLASS_BUTTON_PRESSED ;
-	ActionEvent DELETE_BUTTON_PRESSED;
-	ActionEvent COMPUTE_BUTTON_PRESSED;
-	ActionEvent SAVE_BUTTON_PRESSED;
-	ActionEvent TOGGLE_BUTTON_PRESSED;
-	ActionEvent DOWNLOAD_BUTTON_PRESSED;
-	ActionEvent GROUND_BUTTON_PRESSED;
-	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
+	ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
+	ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
+	ActionEvent SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
+	ActionEvent DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
+	ActionEvent COMPUTE_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
+	ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
+	ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
+	ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
+	ActionEvent GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
+	//ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
+	
+	 
 	
 	//ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
 
@@ -144,20 +146,20 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 
 	public void showPanel() {
-		frame = new JFrame("Features");	     
+		frame = new JFrame("Marking");	     
 		
 		frame.setResizable(false);
 		
 		//NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
-		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
-		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
-		SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
-		DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
-		COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 5, "TRAIN" );
-		SAVE_BUTTON_PRESSED = new ActionEvent( this, 6, "SAVEDATA" );
-		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
-		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
+//		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
+//		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
+//		SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
+//		DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
+//		COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 5, "TRAIN" );
+//		SAVE_BUTTON_PRESSED = new ActionEvent( this, 6, "SAVEDATA" );
+//		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
+//		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
+//		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
 		//RESET_BUTTON_PRESSED  = new ActionEvent(this, 10, "Reset");
 		
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
