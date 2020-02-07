@@ -2,7 +2,7 @@ package activeSegmentation.learning;
 
 import java.util.concurrent.RecursiveAction;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import weka.core.Instances;
@@ -33,7 +33,7 @@ public class ApplyTask extends RecursiveAction{
 	@Override
 	protected void compute() {
 		// TODO Auto-generated method stub
-		if (mLength < Common.WORKLOAD) {
+		if (mLength < ASCommon.WORKLOAD) {
 			classifyPixels();
 			return;
 		}

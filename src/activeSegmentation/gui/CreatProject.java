@@ -15,13 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import activeSegmentation.IProjectManager;
-import activeSegmentation.ProjectType;
-import ij.IJ;
+import activeSegmentation.*;
+
+
 import ij.WindowManager;
 
 
-public class CreatProject implements Runnable {
+public class CreatProject implements Runnable, ASCommon {
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
@@ -64,7 +64,7 @@ public class CreatProject implements Runnable {
 		JFrame mainFrame = new JFrame();
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		//mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		mainFrame.setSize(500,500);
+		mainFrame.setSize(frameWidth,frameHight);
 		mainFrame.setLocationRelativeTo(null);
 		JPanel controlFrame= new JPanel();
 		controlFrame.setLayout(null);
@@ -184,6 +184,7 @@ public class CreatProject implements Runnable {
 			}
 		}
 	}
+	
 
 	private JFrame createProject(){
 		

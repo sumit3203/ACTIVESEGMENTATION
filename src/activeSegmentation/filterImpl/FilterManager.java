@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 
 
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.FeatureType;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
@@ -114,7 +114,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 			//System.out.println(plugin);
 			//System.out.println(installJarPlugins(home+"/"+plugin));
-			if(plugin.endsWith(Common.JAR))	{ 
+			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(home,plugin));
 				//addFile(home+"/"+plugin);
 				String cp=System.getProperty("java.class.path");
@@ -124,7 +124,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				File g = new File(home,plugin);
 				if (g.isFile())
 					addJar(g);
-			} else if (plugin.endsWith(Common.DOTCLASS)){
+			} else if (plugin.endsWith(ASCommon.DOTCLASS)){
 				classes.add(plugin);
 			}
 			//break;
@@ -134,7 +134,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			//System.out.println(plugin);
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 			for(Class<?> cs:classesList){
-				if(cs.getSimpleName().equals(Common.IFILTER)){
+				if(cs.getSimpleName().equals(ASCommon.IFILTER)){
 					//System.out.println(cs.getSimpleName());
 					//IJ.log(plugin);
 					//IJ.debugMode=true;
@@ -176,8 +176,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 	public void applyFilters(){
 
-		String projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
+		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
+		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
 		//List<Pair<String,Pair<String[],Double[]>>> featureList= new ArrayList<Pair<String,Pair<String[],Double[]>>>();
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
@@ -266,9 +266,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		List<String> classNames = new ArrayList<String>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(home+plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-			if (!entry.isDirectory() && entry.getName().endsWith(Common.DOTCLASS)) {
+			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
 				String className = entry.getName().replace('/', '.'); // including ".class"
-				classNames.add(className.substring(0, className.length() - Common.DOTCLASS.length()));
+				classNames.add(className.substring(0, className.length() - ASCommon.DOTCLASS.length()));
 			}
 		}
 
@@ -324,7 +324,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		for(String key: getFilters()){
 			Map<String,String> filters = new HashMap<String,String>();
 			Map<String,String> filtersetting =getFilterSetting(key);
-			filters.put(Common.FILTER, key);
+			filters.put(ASCommon.FILTER, key);
 			for(String setting: filtersetting.keySet()){
 				filters.put(setting, filtersetting.get(setting));		
 			}
@@ -346,7 +346,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		projectInfo= projectManager.getMetaInfo();
 		List<Map<String,String>> filterObj= projectInfo.getFilters();
 		for(Map<String, String> filter: filterObj){
-			String filterName=filter.get(Common.FILTER);
+			String filterName=filter.get(ASCommon.FILTER);
 			updateFilterSetting(filterName, filter);
 			if(filter.get("enabled").equalsIgnoreCase("true")){
 				filterMap.get(filterName).setEnabled(true);

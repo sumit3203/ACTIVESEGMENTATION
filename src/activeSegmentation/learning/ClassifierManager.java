@@ -15,7 +15,7 @@ import weka.classifiers.trees.J48;
 import weka.classifiers.trees.REPTree;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
@@ -33,7 +33,7 @@ public class ClassifierManager implements ILearningManager {
 	private IProjectManager dataManager;
 	private ProjectInfo metaInfo;
 	private List<String> learningList;
-	private String selectedType=Common.PASSIVELEARNING;
+	private String selectedType=ASCommon.PASSIVELEARNING;
 	private IDataSet dataset;
 	private ForkJoinPool pool; 
 	private Map<String,IFeatureSelection> featureMap;
@@ -41,8 +41,8 @@ public class ClassifierManager implements ILearningManager {
 	public ClassifierManager(IProjectManager dataManager){
 		learningList= new ArrayList<String>();
 		featureMap=new HashMap<String,IFeatureSelection>();
-		learningList.add(Common.ACTIVELEARNING);
-		learningList.add(Common.PASSIVELEARNING);
+		learningList.add(ASCommon.ACTIVELEARNING);
+		learningList.add(ASCommon.PASSIVELEARNING);
 		featureMap.put("CFS", new CFS());
 		featureMap.put("PCA", new PCA());
 		this.dataManager= dataManager;
@@ -56,9 +56,9 @@ public class ClassifierManager implements ILearningManager {
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
     	System.out.println("in training");
-    	File folder = new File(this.metaInfo.getProjectDirectory().get(Common.LEARNINGDIR));
+    	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.LEARNINGDIR));
     	
-		System.out.println(this.metaInfo.getProjectDirectory().get(Common.LEARNINGDIR)+this.metaInfo.getGroundtruth());
+		System.out.println(this.metaInfo.getProjectDirectory().get(ASCommon.LEARNINGDIR)+this.metaInfo.getGroundtruth());
 		try {
 			System.out.println("in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
@@ -94,11 +94,11 @@ public class ClassifierManager implements ILearningManager {
 		metaInfo= dataManager.getMetaInfo();
 		Map<String,String> learningMap = new HashMap<String, String>();
 		if(dataset!=null){
-			learningMap.put(Common.ARFF, Common.ARFFFILENAME);
-			dataManager.writeDataToARFF(dataset.getDataset(), Common.ARFFFILENAME);		
+			learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
+			dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);		
 		}
 		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
-		learningMap.put(Common.LEARNINGTYPE, selectedType);
+		learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
 		metaInfo.setLearning(learningMap);
 		dataManager.writeMetaInfo(metaInfo);		
 	}
@@ -107,8 +107,8 @@ public class ClassifierManager implements ILearningManager {
 	public void loadLearningMetaData() {
 		// TODO Auto-generated method stub
 		if(metaInfo.getLearning()!=null){
-			dataset= dataManager.readDataFromARFF(metaInfo.getLearning().get(Common.ARFF));
-			selectedType=metaInfo.getLearning().get(Common.LEARNINGTYPE);
+			dataset= dataManager.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
+			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
 		}
 	}
 

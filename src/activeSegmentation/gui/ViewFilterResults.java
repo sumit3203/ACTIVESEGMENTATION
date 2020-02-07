@@ -39,7 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
@@ -106,7 +106,7 @@ public class ViewFilterResults extends ImageWindow  {
 		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
 		this.projectInfo=this.projectManager.getMetaInfo();
 		//this.images=loadImages(projectString);
-		this.filterString=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
+		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
 		//this.hide();
 		this.setVisible(false);
 		showPanel();

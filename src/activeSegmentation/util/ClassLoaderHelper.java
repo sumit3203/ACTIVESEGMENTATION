@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
 import activeSegmentation.filterImpl.FilterManager;
 
@@ -36,11 +36,11 @@ public class ClassLoaderHelper {
 		for(String plugin: plugins){
 			System.out.println(plugin);
 			System.out.println(installJarPlugins(home+plugin));
-			if(plugin.endsWith(Common.JAR))
+			if(plugin.endsWith(ASCommon.JAR))
 			{ 
 				classes.addAll(installJarPlugins(home+plugin));
 			}
-			else if (plugin.endsWith(Common.DOTCLASS)){
+			else if (plugin.endsWith(ASCommon.DOTCLASS)){
 				classes.add(plugin);
 			}
 			break;
@@ -50,7 +50,7 @@ public class ClassLoaderHelper {
 			System.out.println(plugin);
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 			for(Class<?> cs:classesList){
-				if(cs.getSimpleName().equals(Common.IFILTER)){
+				if(cs.getSimpleName().equals(ASCommon.IFILTER)){
 					System.out.println(cs.getSimpleName());
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
 					//filterMap.put(thePlugIn.getKey(), thePlugIn);
@@ -66,9 +66,9 @@ public class ClassLoaderHelper {
 		List<String> classNames = new ArrayList<String>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(home));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-			if (!entry.isDirectory() && entry.getName().endsWith(Common.DOTCLASS)) {
+			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
 				String className = entry.getName().replace('/', '.'); // including ".class"
-				classNames.add(className.substring(0, className.length() - Common.DOTCLASS.length()));
+				classNames.add(className.substring(0, className.length() - ASCommon.DOTCLASS.length()));
 			}
 		}
 

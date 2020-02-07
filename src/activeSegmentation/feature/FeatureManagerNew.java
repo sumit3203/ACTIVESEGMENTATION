@@ -47,7 +47,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
@@ -108,9 +108,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
 		this.images = new ArrayList<String>();
-		this.projectString = this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
+		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		//System.out.println(this.projectString);
-		this.featurePath = this.projectInfo.getProjectDirectory().get(Common.FEATURESDIR);
+		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.FEATURESDIR);
 		this.totalSlices = loadImages(this.projectString);
 		this.defaultColors = Util.setDefaultColors();
 		if (this.totalSlices > 0) {
@@ -427,7 +427,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				classRois.addAll(classInfo.getTestingRois(imageKey));
 			}
 
-			String fileName = Common.ROISET + classInfo.getKey() + Common.FORMAT;
+			String fileName = ASCommon.ROISET + classInfo.getKey() + ASCommon.FORMAT;
 			if (classRois != null & classRois.size() > 0) {				
 				saveRois(featurePath + "/" + fileName, classRois);
 				featureInfo.setZipFile(fileName);

@@ -2,15 +2,11 @@ package activeSegmentation.gui;
 
 
 
-import ij.IJ;
-import ij.ImagePlus;
-import ij.io.OpenDialog;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import activeSegmentation.ASCommon;
 import activeSegmentation.IEvaluation;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.ILearningManager;
@@ -28,23 +25,27 @@ import activeSegmentation.feature.FeatureManagerNew;
 import activeSegmentation.learning.ClassifierManager;
 
 
-public class Gui
-{
+public class Gui implements ASCommon {
+	
 	private JFrame mainFrame;
 	private JPanel controlPanel;
+	private LearningPanel learningPanel;
+	private FilterPanel filterPanel;
+	private FeaturePanelNew featurePanel;
+	//private ViewFilterResults viewFilterResults;
+	
 	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent(this, 0, "Feature");
 	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent(this, 1, "Filter");
 	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent(this, 2, "Learning");
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
 	final ActionEvent FILTERVIS_BUTTON_PRESSED = new ActionEvent(this, 4, "FilterVis");
-	private LearningPanel learningPanel;
-	private FilterPanel filterPanel;
-	private FeaturePanelNew featurePanel;
-	//private ViewFilterResults viewFilterResults;
-	private static IFeatureManagerNew featureManager;
+
+	
+	private IFeatureManagerNew featureManager;
 	private ILearningManager learningManager;
-	public static final Font FONT = new Font("Arial", 1, 13);
 	private IProjectManager projectManager;
+	
+
 
 	public Gui(IProjectManager projectManager)	{
 		this.projectManager = projectManager;
@@ -54,8 +55,7 @@ public class Gui
 		prepareGUI();
 	}
 
-	public void doAction(ActionEvent event)
-	{
+	public void doAction(ActionEvent event) 	{
 		//System.out.println("IN DO ACTION");
 		//System.out.println(event.toString());
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
@@ -68,11 +68,9 @@ public class Gui
 		}
 		
 		if(event==this.FILTERVIS_BUTTON_PRESSED){
-		      // filterManager.getFinalImage().show();
-			
+		      // filterManager.getFinalImage().show();		
 				new ViewFilterResults(this.projectManager,featureManager);
-				
-				
+
 			}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
@@ -81,27 +79,27 @@ public class Gui
 			}	
 		}
 			
-		if (event == this.LEARNING_BUTTON_PRESSED)
-		{
+		if (event == this.LEARNING_BUTTON_PRESSED)	{
 			if (this.learningPanel == null) {
 				this.learningPanel = new LearningPanel(this.projectManager, this.learningManager);
 			}
 			SwingUtilities.invokeLater(this.learningPanel);
 		}
-		if (event == this.EVALUATION_BUTTON_PRESSED)
-		{
+		if (event == this.EVALUATION_BUTTON_PRESSED) {
 			IEvaluation evaluation = new EvaluationMetrics();
 			EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
 			SwingUtilities.invokeLater(evaluationPanel);
 		}
 	}
+	
+	
 
 	private void prepareGUI()	{
 		this.mainFrame = new JFrame("Active Segmentation");
-		this.mainFrame.getContentPane().setBackground(Color.GRAY);
+		this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
 
-		this.mainFrame.setSize(550, 550);
+		this.mainFrame.setSize(frameWidth, frameHight);
 
 		this.controlPanel = new JPanel();
 		this.controlPanel.setLayout(null);
@@ -136,7 +134,7 @@ public class Gui
 	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
 	{
 		JButton button = new JButton(label, icon);
-		button.setFont(FONT);
+		button.setFont(labelFONT);
 		button.setBorderPainted(false);
 		button.setFocusPainted(false);
 		button.setBackground(new Color(192, 192, 192));

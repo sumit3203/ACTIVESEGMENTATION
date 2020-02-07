@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
 import activeSegmentation.IFilterManager;
@@ -65,7 +65,7 @@ public class RoiInstanceCreator implements IFeature {
 	public RoiInstanceCreator(ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		this.classLabels=new ArrayList<String>();
-		this.projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
+		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		this.images=new ArrayList<String>();
 		loadImages(this.projectString);
 	}
@@ -118,9 +118,9 @@ public class RoiInstanceCreator implements IFeature {
 			
 		}
 
-		attributes.add(new Attribute(Common.CLASS, getCLassLabels(classInfos)));
+		attributes.add(new Attribute(ASCommon.CLASS, getCLassLabels(classInfos)));
 		// create initial set of instances
-		trainingData =  new Instances(Common.INSTANCE_NAME, attributes, 1 );
+		trainingData =  new Instances(ASCommon.INSTANCE_NAME, attributes, 1 );
 		// Set the index of the class attribute
 		trainingData.setClassIndex(numberOfFeatures);	
 		

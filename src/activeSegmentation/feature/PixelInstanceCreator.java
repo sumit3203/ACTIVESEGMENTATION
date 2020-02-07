@@ -13,7 +13,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
 import activeSegmentation.io.ClassInfo;
@@ -72,11 +72,11 @@ public class PixelInstanceCreator implements IFeature {
 	private String projectString;
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
-		this.projectString=this.projectInfo.getProjectDirectory().get(Common.IMAGESDIR);
+		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		this.images=new ArrayList<String>();
 		loadImages(this.projectString);
 		this.classLabels=new ArrayList<String>();
-		featurePath=this.projectInfo.getProjectDirectory().get(Common.FILTERSDIR);
+		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
 		updateFeatures();
 	}
 
@@ -119,9 +119,9 @@ public class PixelInstanceCreator implements IFeature {
 		//IJ.debugMode=false;
 		updateFeatures();
 		ArrayList<Attribute> attributes = createFeatureHeader();
-		attributes.add(new Attribute(Common.CLASS, getCLassLabels(classInfos)));
+		attributes.add(new Attribute(ASCommon.CLASS, getCLassLabels(classInfos)));
 		// create initial set of instances
-		trainingData =  new Instances(Common.INSTANCE_NAME, attributes, 1 );
+		trainingData =  new Instances(ASCommon.INSTANCE_NAME, attributes, 1 );
 		// Set the index of the class attribute
 		trainingData.setClassIndex(numberOfFeatures);	
 
@@ -286,10 +286,10 @@ public class PixelInstanceCreator implements IFeature {
 
 		Instances testingData;
 		ArrayList<Attribute> attributes = createFeatureHeader();
-		attributes.add(new Attribute(Common.CLASS, classLabels));
+		attributes.add(new Attribute(ASCommon.CLASS, classLabels));
 		//System.out.println(attributes.toString());
 		// create initial set of instances
-		testingData =  new Instances(Common.INSTANCE_NAME, attributes, 1 );
+		testingData =  new Instances(ASCommon.INSTANCE_NAME, attributes, 1 );
 		// Set the index of the class attribute
 		testingData.setClassIndex(numberOfFeatures);
 

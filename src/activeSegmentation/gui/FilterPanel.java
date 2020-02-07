@@ -50,21 +50,21 @@ import javax.swing.JTextField;
 
 import javax.swing.SwingUtilities;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.filterImpl.FilterManager;
 
-public class FilterPanel implements Runnable {
+public class FilterPanel implements Runnable, ASCommon {
 
 	private IFilterManager filterManager;
 	private IProjectManager projectManager;
 	private JTabbedPane pane;
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> textMap;
-	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
+	//public static final Font labelFONT = new Font( "Arial", Font.BOLD, 13 );
 	
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -104,12 +104,12 @@ public class FilterPanel implements Runnable {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		pane.setFont(Common.FONT);
+		pane.setFont(ASCommon.FONT);
 		//pane.setBackground(Color.GRAY);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		panel.setFont(Common.FONT);
+		panel.setFont(ASCommon.FONT);
         panel.setBackground(Color.GRAY);
         loadFilters();
 		pane.setSize(600, 400);
@@ -172,13 +172,13 @@ public class FilterPanel implements Runnable {
 		for (String key: settingsMap.keySet()){
 
 			JLabel label= new JLabel(key);
-			label.setFont(Common.FONT);
+			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
 			label.setBounds( 330, y, 70, 25 );
 			p.add(label);
 
 			JTextField textArea= new JTextField(settingsMap.get(key));
-			textArea.setFont(Common.FONT);
+			textArea.setFont(ASCommon.FONT);
 			textArea.setBounds(400, y, 70, 25 );
 			p.add(textArea);   
 			jtextList.add(textArea);
@@ -188,7 +188,7 @@ public class FilterPanel implements Runnable {
 		textMap.put(filter, jtextList);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filter);
-			addButton( button,Common.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
+			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
 		
 
 		return p;
@@ -321,7 +321,7 @@ public class FilterPanel implements Runnable {
 		panel.add( button );
 		button.setText( label );
 		button.setIcon( icon );
-		button.setFont( FONT );
+		button.setFont( labelFONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
 		button.setBackground(new Color(192, 192, 192));

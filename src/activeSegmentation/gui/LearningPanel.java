@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.learning.SMO;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;

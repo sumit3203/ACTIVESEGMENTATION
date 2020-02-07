@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import activeSegmentation.IProjectManager;
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 
 import activeSegmentation.learning.WekaDataSet;
@@ -244,8 +244,8 @@ public class ProjectManagerImp implements IProjectManager {
 		if(currentImage.getStackSize()>0) {
 			createStackImage(currentImage,format,folder);
 		}else {
-			createDirectory(projectDir.get(Common.FILTERSDIR)+folder);
-			IJ.saveAs(currentImage,format,projectDir.get(Common.IMAGESDIR)+folder);
+			createDirectory(projectDir.get(ASCommon.FILTERSDIR)+folder);
+			IJ.saveAs(currentImage,format,projectDir.get(ASCommon.IMAGESDIR)+folder);
 
 		}
 
@@ -260,8 +260,8 @@ public class ProjectManagerImp implements IProjectManager {
 			String title= folder+i;
 			IJ.log(folder);
 			IJ.log(title);
-			createDirectory(projectDir.get(Common.FILTERSDIR)+title);
-			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(Common.IMAGESDIR)+title);
+			createDirectory(projectDir.get(ASCommon.FILTERSDIR)+title);
+			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.IMAGESDIR)+title);
 		}
 		IJ.log("createStackdone");
 	}
@@ -303,22 +303,22 @@ public class ProjectManagerImp implements IProjectManager {
 			projectString=projectDirectory+"/"+"Training";
 		}
 		
-		projectDir.put(Common.PROJECTDIR, projectString);
-		projectDir.put(Common.FILTERSDIR, projectString+"/filters/");
-		projectDir.put(Common.FEATURESDIR, projectString+"/features/");
-		projectDir.put(Common.LEARNINGDIR, projectString+"/learning/");
-		projectDir.put(Common.EVALUATIONDIR,projectString+"/evaluation/");
-		projectDir.put(Common.IMAGESDIR,projectString+"/images/");
+		projectDir.put(ASCommon.PROJECTDIR, projectString);
+		projectDir.put(ASCommon.FILTERSDIR, projectString+"/filters/");
+		projectDir.put(ASCommon.FEATURESDIR, projectString+"/features/");
+		projectDir.put(ASCommon.LEARNINGDIR, projectString+"/learning/");
+		projectDir.put(ASCommon.EVALUATIONDIR,projectString+"/evaluation/");
+		projectDir.put(ASCommon.IMAGESDIR,projectString+"/images/");
 	}
 	private void createProjectSpace(String projectDirectory, String projectName) {
 
 		setProjectDir(projectDirectory, projectName);
-		createDirectory(projectDir.get(Common.PROJECTDIR));
-		createDirectory(projectDir.get(Common.FILTERSDIR));
-		createDirectory(projectDir.get(Common.FEATURESDIR));
-		createDirectory(projectDir.get(Common.LEARNINGDIR));
-		createDirectory(projectDir.get(Common.EVALUATIONDIR));
-		createDirectory(projectDir.get(Common.IMAGESDIR));
+		createDirectory(projectDir.get(ASCommon.PROJECTDIR));
+		createDirectory(projectDir.get(ASCommon.FILTERSDIR));
+		createDirectory(projectDir.get(ASCommon.FEATURESDIR));
+		createDirectory(projectDir.get(ASCommon.LEARNINGDIR));
+		createDirectory(projectDir.get(ASCommon.EVALUATIONDIR));
+		createDirectory(projectDir.get(ASCommon.IMAGESDIR));
 		IJ.log("DONE");
 	}
 

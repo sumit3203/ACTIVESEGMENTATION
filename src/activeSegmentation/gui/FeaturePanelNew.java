@@ -51,6 +51,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
@@ -58,7 +59,7 @@ import activeSegmentation.ProjectType;
 //import activeSegmentation.feature.FeatureManagerNew;
 //import activeSegmentation.io.ProjectManagerImp;
 
-public class FeaturePanelNew extends ImageWindow  {
+public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	/**
 	 * 
@@ -92,12 +93,12 @@ public class FeaturePanelNew extends ImageWindow  {
 	final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
 	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
 	private static final Icon downloadIcon = new ImageIcon(FeaturePanelNew.class.getResource("download.png"));
-	public static final Font FONT = new Font( "Arial", Font.BOLD, 10 );
+
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	ActionEvent NEXT_BUTTON_PRESSED;
+	ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	ActionEvent PREVIOUS_BUTTON_PRESSED ;
+	ActionEvent PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
 	ActionEvent ADDCLASS_BUTTON_PRESSED ;
 	ActionEvent SAVECLASS_BUTTON_PRESSED ;
 	ActionEvent DELETE_BUTTON_PRESSED;
@@ -107,10 +108,12 @@ public class FeaturePanelNew extends ImageWindow  {
 	ActionEvent DOWNLOAD_BUTTON_PRESSED;
 	ActionEvent GROUND_BUTTON_PRESSED;
 	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
+	
+	ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
-	private ImagePlus tempClassifiedImage;
+	//private ImagePlus tempClassifiedImage;
 	private JPanel imagePanel,classPanel,roiPanel;
 	private JTextField imageNum;
 	private JLabel total;
@@ -128,7 +131,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		this.exampleList = new HashMap<String, JList<String>>();
 		this.allexampleList = new HashMap<String, JList<String>>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
-		tempClassifiedImage = new ImagePlus();		
+		//tempClassifiedImage = new ImagePlus();		
 
 
 		//this.hide();
@@ -143,7 +146,8 @@ public class FeaturePanelNew extends ImageWindow  {
 	public void showPanel() {
 		frame = new JFrame("Features");	        
 		frame.setResizable(false);
-		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
+		
+		//NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
 		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
 		SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
@@ -153,12 +157,15 @@ public class FeaturePanelNew extends ImageWindow  {
 		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
 		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
+		RESET_BUTTON_PRESSED  = new ActionEvent(this, 10, "Reset");
+		
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
 		JList<String> frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		panel.setFont(FONT);
+		panel.setFont(panelFONT);
 		panel.setBackground(Color.GRAY);
 		imagePanel = new JPanel();	
 		imagePanel.setLayout(new BorderLayout());
@@ -235,7 +242,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		});
 		dataJPanel.setBounds(720,240,100,60);
 		learningType.setSelectedIndex(0);
-		learningType.setFont( FONT );
+		learningType.setFont( panelFONT );
 		learningType.setBackground(new Color(192, 192, 192));
 		learningType.setForeground(Color.WHITE);
 		dataJPanel.add(learningType);
@@ -732,7 +739,7 @@ public class FeaturePanelNew extends ImageWindow  {
 		panel.add(button);
 		button.setText( label );
 		button.setIcon( icon );
-		button.setFont( FONT );
+		button.setFont( panelFONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
 		button.setBackground(new Color(192, 192, 192));

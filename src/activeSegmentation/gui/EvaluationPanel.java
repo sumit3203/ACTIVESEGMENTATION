@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
 
-import activeSegmentation.Common;
+import activeSegmentation.ASCommon;
 import activeSegmentation.IProjectManager;
 import ijaux.scale.Pair;
 import activeSegmentation.IEvaluation;

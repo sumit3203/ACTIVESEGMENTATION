@@ -148,8 +148,7 @@ public class FeaturePanel extends StackWindow
 
 	String feature_extraction_type = "Segmentation";
 	
-	public FeaturePanel(IFeatureManager featureManager,ImagePlus image)
-	{
+	public FeaturePanel(IFeatureManager featureManager,ImagePlus image)	{
 		super(image, new CustomCanvas(image));	
 		final CustomCanvas canvas = (CustomCanvas) getCanvas();
 		this.displayImage= image;
