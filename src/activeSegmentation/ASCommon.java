@@ -99,6 +99,8 @@ public interface ASCommon {
 	public static int  largeframeWidth=1000;
 	public static int  largeframeHight=600;
 	
+	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
+	
 	/*
 	 * Fonts
 	 */

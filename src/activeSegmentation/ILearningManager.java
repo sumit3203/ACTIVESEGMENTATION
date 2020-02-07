@@ -1,7 +1,6 @@
 package activeSegmentation;
 
 
-import java.util.List;
 import java.util.Set;
 
 import weka.core.Instance;

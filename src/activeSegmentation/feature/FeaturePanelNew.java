@@ -70,7 +70,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
+	
 	private IFeatureManagerNew featureManager;
 	/** opacity (in %) of the result overlay image */
 	int overlayOpacity = 33;
@@ -664,11 +664,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		}
 		overlayLUT = new LUT(red, green, blue);
 	}
+	
 	private void updateGui(){
 		try{
 			drawExamples();
 			updateExampleLists();
 			//updateallExampleLists();
+			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+			ic.repaint();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
