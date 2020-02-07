@@ -23,6 +23,7 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.evaluation.EvaluationPanel;
 import activeSegmentation.feature.FeatureManagerNew;
+import activeSegmentation.filterImpl.FilterPanel;
 import activeSegmentation.learning.ClassifierManager;
 
 
@@ -121,17 +122,7 @@ public class Gui implements ASCommon {
 		this.mainFrame.setVisible(true);
 	}
 
-	/*
-	private ImageIcon createImageIcon(String path, String description)
-	{
-		URL imgURL = CreatProject.class.getResource(path);
-		if (imgURL != null) {
-			return new ImageIcon(imgURL, description);
-		}
-		//System.err.println("Couldn't find file: " + path);
-		return null;
-	}
-*/
+
 	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
 	{
 		JButton button = new JButton(label, icon);

@@ -97,6 +97,9 @@ public interface ASCommon {
 	public static int  frameWidth=550;
 	public static int  frameHight=450;
 	
+	public static int  largeframeWidth=1000;
+	public static int  largeframeHight=800;
+	
 	public static final Font labelFONT = new Font("Arial", Font.BOLD, 13);
 	public static final Font panelFONT = new Font( "Arial", Font.BOLD, 10 );
 	

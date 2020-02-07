@@ -145,7 +145,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	public void showPanel() {
 		frame = new JFrame("Features");	     
-		frame.setSize(1000,800);
+		
 		frame.setResizable(false);
 		
 		//NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -258,7 +258,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		panel.add(scrollPane);
 		frame.add(panel);
 		frame.pack();
-		
+		frame.setSize(largeframeWidth,largeframeHight);
 		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
