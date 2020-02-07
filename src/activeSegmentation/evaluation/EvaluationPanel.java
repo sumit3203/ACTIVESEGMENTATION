@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package activeSegmentation.evaluation;
 
 
 import java.awt.Dimension;

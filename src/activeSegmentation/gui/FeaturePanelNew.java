@@ -109,7 +109,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	ActionEvent GROUND_BUTTON_PRESSED;
 	ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
 	
-	ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
+	//ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
@@ -144,7 +144,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 
 	public void showPanel() {
-		frame = new JFrame("Features");	        
+		frame = new JFrame("Features");	     
+		frame.setSize(1000,800);
 		frame.setResizable(false);
 		
 		//NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -157,7 +158,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
 		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
-		RESET_BUTTON_PRESSED  = new ActionEvent(this, 10, "Reset");
+		//RESET_BUTTON_PRESSED  = new ActionEvent(this, 10, "Reset");
 		
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -257,7 +258,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		panel.add(scrollPane);
 		frame.add(panel);
 		frame.pack();
-		frame.setSize(1000,600);
+		
 		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);

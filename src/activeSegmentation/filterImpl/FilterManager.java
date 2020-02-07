@@ -27,13 +27,13 @@ import java.util.zip.ZipInputStream;
 
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.FeatureType;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
+import activeSegmentation.feature.FeatureContainer;
 import activeSegmentation.io.ProjectInfo;
 import ij.IJ;
 import ij.ImagePlus;

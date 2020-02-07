@@ -21,6 +21,7 @@ import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
+import activeSegmentation.evaluation.EvaluationPanel;
 import activeSegmentation.feature.FeatureManagerNew;
 import activeSegmentation.learning.ClassifierManager;
 

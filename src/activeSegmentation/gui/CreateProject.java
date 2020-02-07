@@ -21,7 +21,7 @@ import activeSegmentation.*;
 import ij.WindowManager;
 
 
-public class CreatProject implements Runnable, ASCommon {
+public class CreateProject implements Runnable, ASCommon {
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
@@ -46,7 +46,7 @@ public class CreatProject implements Runnable, ASCommon {
 	private IProjectManager projectManager;
 	
 	
-	public CreatProject(IProjectManager projectManager) {
+	public CreateProject(IProjectManager projectManager) {
 		this.projectManager=projectManager;
 		projectList= new JComboBox<ProjectType>(ProjectType.values());
 	}
@@ -293,7 +293,7 @@ public class CreatProject implements Runnable, ASCommon {
 
 
 	private ImageIcon createImageIcon(String path, String description) {
-		java.net.URL imgURL = CreatProject.class.getResource(path);
+		java.net.URL imgURL = CreateProject.class.getResource(path);
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
 		} else {            
