@@ -21,6 +21,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import activeSegmentation.feature.FeaturePanelNew;
+
 /**
  * Extension of ImageCanvas to allow multiple overlays
  * 

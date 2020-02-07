@@ -48,8 +48,7 @@ public interface ASCommon {
 	public static int DEFAULT_CLASSES=2;
 	// To name the segmentation result
 	public static final String FILTERRESULT="Classification result";
-	// General font of plugin
-	public static final Font FONT = new Font( "Arial", Font.PLAIN, 10 );
+	
 	// This is used for Json storage
 	public static final String ENABLED="Enabled";
 	public static final String DISABLED="Disabled";
@@ -100,7 +99,12 @@ public interface ASCommon {
 	public static int  largeframeWidth=1000;
 	public static int  largeframeHight=800;
 	
+	/*
+	 * Fonts
+	 */
 	public static final Font labelFONT = new Font("Arial", Font.BOLD, 13);
 	public static final Font panelFONT = new Font( "Arial", Font.BOLD, 10 );
+	// General font of plugin
+	public static final Font FONT = new Font( "Arial", Font.PLAIN, 10 );
 	
 }

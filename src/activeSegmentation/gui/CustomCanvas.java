@@ -21,7 +21,7 @@ public class CustomCanvas extends OverlayedImageCanvas
 	 */
 	private static final long serialVersionUID = 1L;
 
-	CustomCanvas(ImagePlus imp)
+	public CustomCanvas(ImagePlus imp)
 	{
 		super(imp);
 		Dimension dim = new Dimension(Math.min(512, imp.getWidth()), Math.min(512, imp.getHeight()));
