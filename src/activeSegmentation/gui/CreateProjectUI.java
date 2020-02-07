@@ -64,7 +64,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 		JFrame mainFrame = new JFrame();
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		//mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		mainFrame.setSize(frameWidth,frameHight);
+		mainFrame.setSize(frameWidth,frameHeight);
 		mainFrame.setLocationRelativeTo(null);
 		JPanel controlFrame= new JPanel();
 		controlFrame.setLayout(null);

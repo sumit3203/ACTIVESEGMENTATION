@@ -102,7 +102,7 @@ public class Gui implements ASCommon {
 		this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
 
-		this.mainFrame.setSize(frameWidth, frameHight);
+		this.mainFrame.setSize(frameWidth, frameHeight);
 
 		this.controlPanel = new JPanel();
 		this.controlPanel.setLayout(null);

@@ -94,10 +94,10 @@ public interface ASCommon {
 	 *  GUI constants
 	 */
 	public static int  frameWidth=550;
-	public static int  frameHight=450;
+	public static int  frameHeight=450;
 	
 	public static int  largeframeWidth=1000;
-	public static int  largeframeHight=800;
+	public static int  largeframeHight=600;
 	
 	/*
 	 * Fonts

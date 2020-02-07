@@ -96,9 +96,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private Map<String,Integer> predictionResultClassification;
 
 	final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
+	
+	/*
+	 *  the files should be in the resources/feature folder
+	 */
+	
 	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
 	private static final Icon downloadIcon = new ImageIcon(FeaturePanelNew.class.getResource("download.png"));
-
+	 
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -154,18 +159,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		frame = new JFrame("Marking");	     
 		
 		frame.setResizable(false);
-		
-		//NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
-//		PREVIOUS_BUTTON_PRESSED= new ActionEvent( this, 1, "Previous" );
-//		ADDCLASS_BUTTON_PRESSED= new ActionEvent( this, 2, "AddClass" );
-//		SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
-//		DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
-//		COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 5, "TRAIN" );
-//		SAVE_BUTTON_PRESSED = new ActionEvent( this, 6, "SAVEDATA" );
-//		TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
-//		DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-//		GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
-		//RESET_BUTTON_PRESSED  = new ActionEvent(this, 10, "Reset");
+	
 		
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -175,6 +169,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		panel.setLayout(null);
 		panel.setFont(panelFONT);
 		panel.setBackground(Color.GRAY);
+		
+		/*
+		 * image panel
+		 */
+		
 		imagePanel = new JPanel();	
 		imagePanel.setLayout(new BorderLayout());
 		classPanel= new JPanel();

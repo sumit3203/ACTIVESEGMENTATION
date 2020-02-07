@@ -57,7 +57,7 @@ import weka.core.Utils;
 import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
-public class LearningPanel implements Runnable {
+public class LearningPanel implements Runnable, ASCommon {
   private JList classifierList;
   private GenericObjectEditor m_ClassifierEditor = new GenericObjectEditor();
   String originalOptions;
@@ -65,7 +65,7 @@ public class LearningPanel implements Runnable {
   private IProjectManager projectManager;
   private ProjectInfo projectInfo;
   final JFrame frame = new JFrame("LEARNING");
-  public static final Font FONT = new Font("Arial", 1, 13);
+ // public static final Font FONT = new Font("Arial", 1, 13);
   JList<String> featureSelList;
   final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent(this, 1, "Compute");
   final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
@@ -179,7 +179,7 @@ public class LearningPanel implements Runnable {
   private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
   {
     JButton button = new JButton(label, icon);
-    button.setFont(FONT);
+    button.setFont(labelFONT);
     button.setBorderPainted(false);
     button.setFocusPainted(false);
     button.setBackground(new Color(192, 192, 192));

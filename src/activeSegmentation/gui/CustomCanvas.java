@@ -21,8 +21,7 @@ public class CustomCanvas extends OverlayedImageCanvas
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CustomCanvas(ImagePlus imp)
-	{
+	public CustomCanvas(ImagePlus imp)	{
 		super(imp);
 		Dimension dim = new Dimension(Math.min(512, imp.getWidth()), Math.min(512, imp.getHeight()));
 		setMinimumSize(dim);
@@ -34,8 +33,9 @@ public class CustomCanvas extends OverlayedImageCanvas
 			}
 		});
 	}
+	
 	//@Override
-	public void setDrawingSize(int w, int h) {}
+	//public void setDrawingSize(int w, int h) {}
 
 	public void setDstDimensions(int width, int height) {
 		super.dstWidth = width;
