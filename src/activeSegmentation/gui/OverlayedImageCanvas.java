@@ -21,12 +21,14 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import activeSegmentation.feature.FeaturePanelNew;
+import static activeSegmentation.ASCommon.*;
 
 /**
  * Extension of ImageCanvas to allow multiple overlays
  * 
  * @author Ignacio Arganda-Carreras and Johannes Schindelin
+ * 
+ * fix: Dimiter Prodanov
  *
  */
 public class OverlayedImageCanvas extends ImageCanvas {
@@ -45,6 +47,8 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	public OverlayedImageCanvas(ImagePlus image) {
 		super(image);
 		overlays = new ArrayList<Overlay>();
+	//	dstWidth=IMAGE_CANVAS_DIMENSION;
+	//	dstHeight=IMAGE_CANVAS_DIMENSION;
 	}
 
 	public void addOverlay(Overlay overlay) {
@@ -62,37 +66,50 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	
 	public void removeOverlay(Overlay overlay) {
 		overlays.remove(overlay);
+
 	}
-	
+
     /** Returns the size to which the window can be enlarged, or null if it can't be enlarged.
      *  <code>newWidth, newHeight</code> is the size needed for showing the full image
-     *  at the magnification needed */
+     *  at the magnification needed 
+     *  
+     */
     protected Dimension canEnlarge(int newWidth, int newHeight) {
-        if (IJ.altKeyDown())
-            return null;
+       // if (IJ.altKeyDown())
+      //      return null;
         ImageWindow win = imp.getWindow();
         if (win==null) return null;
         Rectangle r1 = win.getBounds();
+        
+        if (r1.width<IMAGE_CANVAS_DIMENSION/2 || r1.height < IMAGE_CANVAS_DIMENSION/2) {
+        	System.out.println("OverlayedImageCanvas: reset");
+        	updateImage( imp);
+        	return null;
+        }
+        
         Insets insets = win.getInsets();
-        Point loc = getLocation();
-        if (loc.x>insets.left+5 || loc.y>insets.top+5) {
+
             r1.width = newWidth+insets.left+insets.right+ImageWindow.HGAP*2;
             r1.height = newHeight+insets.top+insets.bottom+ImageWindow.VGAP*2+win.getSliderHeight();
-        } else {
-            r1.width = r1.width - dstWidth + newWidth;
-            r1.height = r1.height - dstHeight + newHeight;
-        }
+
         Rectangle max = getMaxWindow(r1.x, r1.y);
         boolean fitsHorizontally = r1.x+r1.width<max.x+max.width;
         boolean fitsVertically = r1.y+r1.height<max.y+max.height;
         
+        System.out.println("OverlayedImageCanvas: resizing");
+    	System.out.println("newWidth: "+ newWidth+" newHeight: "+newHeight); 
+ 
         // HACK : Limit size of window width, to avoid conflict with other UI elements, independent of image size
-        if(newWidth>FeaturePanelNew.IMAGE_CANVAS_DIMENSION || newHeight > FeaturePanelNew.IMAGE_CANVAS_DIMENSION) {
-        	System.out.println("HACK");
-        	newWidth = FeaturePanelNew.IMAGE_CANVAS_DIMENSION;
-        	newHeight = FeaturePanelNew.IMAGE_CANVAS_DIMENSION;
+ 
+        if (newWidth>IMAGE_CANVAS_DIMENSION || newHeight > IMAGE_CANVAS_DIMENSION) {
+        	System.out.println("OverlayedImageCanvas: reset");
+        	updateImage( imp);
+        	return null;
         }
 
+   
+ 
+     
         if (fitsHorizontally && fitsVertically) {        	
             return new Dimension(newWidth, newHeight);
         }
@@ -106,7 +123,25 @@ public class OverlayedImageCanvas extends ImageCanvas {
             return null;
         }
     }
-    
+ 
+ 
+   protected void updateImage(final ImagePlus imp) {
+		this.imp = imp;
+		int width = imp.getWidth();
+		int height = imp.getHeight();
+		double ar=width/ (double) height;
+		if (width>height) {
+			imageWidth = IMAGE_CANVAS_DIMENSION;
+			imageHeight = (int) (imageWidth/ar);
+		} else {
+			imageHeight = IMAGE_CANVAS_DIMENSION;
+			imageWidth = (int) (imageHeight*ar);
+		}
+		srcRect = new Rectangle(0, 0, imageWidth, imageHeight);
+		setSize(imageWidth, imageHeight);
+		magnification = 1.0;
+	}
+   
     // helper function, has only local variables
     Rectangle getMaxWindow(int xloc, int yloc) {
         Rectangle bounds = GUI.getMaxWindowBounds();
@@ -115,13 +150,20 @@ public class OverlayedImageCanvas extends ImageCanvas {
             if (bounds2!=null) return bounds2;
         }
         Dimension ijSize = ij!=null?ij.getSize():new Dimension(0,0);
-        if (bounds.height>600) {
+        if (bounds.height>IMAGE_CANVAS_DIMENSION) {
             bounds.y += ijSize.height;
             bounds.height -= ijSize.height;
         }
         return bounds;
     }
+
     
+    /*
+    Rectangle getMaxWindow(int xloc, int yloc) {
+    	 Rectangle bounds = new Rectangle(xloc, yloc, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION  );
+		return bounds;
+    }
+    */
     // helper function, has only local variables
     private Rectangle getSecondaryMonitorBounds(int xloc, int yloc) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
