@@ -80,13 +80,13 @@ public class OverlayedImageCanvas extends ImageCanvas {
         ImageWindow win = imp.getWindow();
         if (win==null) return null;
         Rectangle r1 = win.getBounds();
-        
+        /*
         if (r1.width<IMAGE_CANVAS_DIMENSION/2 || r1.height < IMAGE_CANVAS_DIMENSION/2) {
         	System.out.println("OverlayedImageCanvas: reset");
         	updateImage( imp);
         	return null;
         }
-        
+        */
         Insets insets = win.getInsets();
 
             r1.width = newWidth+insets.left+insets.right+ImageWindow.HGAP*2;
@@ -103,13 +103,10 @@ public class OverlayedImageCanvas extends ImageCanvas {
  
         if (newWidth>IMAGE_CANVAS_DIMENSION || newHeight > IMAGE_CANVAS_DIMENSION) {
         	System.out.println("OverlayedImageCanvas: reset");
-        	updateImage( imp);
+        	resetImage( imp);
         	return null;
         }
-
-   
- 
-     
+    
         if (fitsHorizontally && fitsVertically) {        	
             return new Dimension(newWidth, newHeight);
         }
@@ -125,7 +122,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
     }
  
  
-   protected void updateImage(final ImagePlus imp) {
+   protected void resetImage(final ImagePlus imp) {
 		this.imp = imp;
 		int width = imp.getWidth();
 		int height = imp.getHeight();
@@ -158,12 +155,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
     }
 
     
-    /*
-    Rectangle getMaxWindow(int xloc, int yloc) {
-    	 Rectangle bounds = new Rectangle(xloc, yloc, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION  );
-		return bounds;
-    }
-    */
+
     // helper function, has only local variables
     private Rectangle getSecondaryMonitorBounds(int xloc, int yloc) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
