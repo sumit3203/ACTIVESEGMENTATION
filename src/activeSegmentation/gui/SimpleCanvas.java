@@ -10,28 +10,28 @@ import java.awt.event.KeyEvent;
 
 
 /**
- * Custom canvas to deal with zooming an panning
+ * Based on  Custom canvas by
  * @author Ignacio Arganda-Carreras and Johannes Schindelin
  */
 
-public class CustomCanvas extends OverlayedImageCanvas
-{
+public class SimpleCanvas extends OverlayedImageCanvas {
 	/**
 	 * default serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CustomCanvas(ImagePlus imp)	{
+	public SimpleCanvas(ImagePlus imp)	{
 		super(imp);
 		Dimension dim = new Dimension(Math.min(512, imp.getWidth()), Math.min(512, imp.getHeight()));
 		setMinimumSize(dim);
 		setSize(dim.width, dim.height);
 		setDstDimensions(dim.width, dim.height);
+		/*
 		addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
 				repaint();
 			}
-		});
+		});*/
 	}
 	
 	//@Override

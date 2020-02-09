@@ -180,7 +180,7 @@ public class ViewFilterResults extends ImageWindow  {
 		imagePanel = new JPanel();	
 		imagePanel.setLayout(new BorderLayout());
 		imagePanel.setBackground(Color.GRAY);
-		ic=new CustomCanvas(featureManager.getCurrentImage());
+		ic=new SimpleCanvas(featureManager.getCurrentImage());
 		//ic.setBounds(10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);
 		//ic.setMaximumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		//ic.setSize(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);

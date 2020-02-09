@@ -72,34 +72,37 @@ public class OverlayedImageCanvas extends ImageCanvas {
      *  at the magnification needed 
      *  
      */
+
+
+
     protected Dimension canEnlarge(int newWidth, int newHeight) {
        // if (IJ.altKeyDown())
       //      return null;
+    	//unzoom();
         ImageWindow win = imp.getWindow();
         if (win==null) return null;
         Rectangle r1 = win.getBounds();
-        /*
-        if (r1.width<IMAGE_CANVAS_DIMENSION/2 || r1.height < IMAGE_CANVAS_DIMENSION/2) {
-        	System.out.println("OverlayedImageCanvas: reset");
-        	updateImage( imp);
-        	return null;
-        }
-        */
+ 
         Insets insets = win.getInsets();
 
-            r1.width = newWidth+insets.left+insets.right+ImageWindow.HGAP*2;
-            r1.height = newHeight+insets.top+insets.bottom+ImageWindow.VGAP*2+win.getSliderHeight();
+        r1.width = newWidth+insets.left+insets.right+ImageWindow.HGAP*2;
+        r1.height = newHeight+insets.top+insets.bottom+ImageWindow.VGAP*2+win.getSliderHeight();
 
         Rectangle max = getMaxWindow(r1.x, r1.y);
         boolean fitsHorizontally = r1.x+r1.width<max.x+max.width;
         boolean fitsVertically = r1.y+r1.height<max.y+max.height;
         
-        System.out.println("OverlayedImageCanvas: resizing");
-    	System.out.println("newWidth: "+ newWidth+" newHeight: "+newHeight); 
+        //System.out.println("OverlayedImageCanvas: resizing");
+    	//System.out.println("newWidth: "+ newWidth+" newHeight: "+newHeight); 
  
-        // HACK : Limit size of window width, to avoid conflict with other UI elements, independent of image size
- 
+     
         if (newWidth>IMAGE_CANVAS_DIMENSION || newHeight > IMAGE_CANVAS_DIMENSION) {
+        	System.out.println("OverlayedImageCanvas: reset");
+        	resetImage( imp);
+        	return null;
+        }
+        
+        if (win.getWidth()<IMAGE_CANVAS_DIMENSION/4 || win.getHeight() < IMAGE_CANVAS_DIMENSION/4) {
         	System.out.println("OverlayedImageCanvas: reset");
         	resetImage( imp);
         	return null;
@@ -118,7 +121,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
             return null;
         }
     }
- 
+
  
    protected void resetImage(final ImagePlus imp) {
 		this.imp = imp;

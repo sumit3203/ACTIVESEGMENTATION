@@ -2,13 +2,11 @@ package activeSegmentation.feature;
 
 
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageWindow;
 import ij.gui.Overlay;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
-import ij.io.FileSaver;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 
@@ -32,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -58,7 +55,7 @@ import activeSegmentation.LearningType;
 import static  activeSegmentation.ProjectType.*;
 //import activeSegmentation.feature.FeatureManagerNew;
 //import activeSegmentation.io.ProjectManagerImp;
-import activeSegmentation.gui.CustomCanvas;
+import activeSegmentation.gui.SimpleCanvas;
 import activeSegmentation.gui.ImageOverlay;
 import activeSegmentation.gui.OverlayedImageCanvas;
 import activeSegmentation.gui.RoiListOverlay;
@@ -178,7 +175,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		
 		imagePanel.setLayout(new BorderLayout());
 		
-			ic=new CustomCanvas(featureManager.getCurrentImage());
+			ic=new SimpleCanvas(featureManager.getCurrentImage());
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
 		setOverlay();
@@ -852,11 +849,6 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		}
 	}
 
-	/*public static void main(String[] args) {
-		new ImageJ();
-		IProjectManager projectManager= new ProjectManagerImp();
-		projectManager.loadProject("C:\\Users\\sanje\\Documents\\hello\\hello.json");
-		new FeaturePanelNew(new FeatureManagerNew(projectManager));
-	}*/
+
 
 }
