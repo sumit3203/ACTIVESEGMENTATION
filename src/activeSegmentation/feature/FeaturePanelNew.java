@@ -55,7 +55,7 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
-import activeSegmentation.ProjectType;
+import static  activeSegmentation.ProjectType.*;
 //import activeSegmentation.feature.FeatureManagerNew;
 //import activeSegmentation.io.ProjectManagerImp;
 import activeSegmentation.gui.CustomCanvas;
@@ -100,10 +100,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	/*
 	 *  the files should be in the resources/feature folder
 	 */
-	
 	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
 	private static final Icon downloadIcon = new ImageIcon(FeaturePanelNew.class.getResource("download.png"));
-	 
+ 
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -116,7 +115,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
 	ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-	ActionEvent GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
+	ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
+	//ActionEvent GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
 	//ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
 	
 	 
@@ -176,9 +176,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		
 		imagePanel = new JPanel();	
 		imagePanel.setLayout(new BorderLayout());
-		classPanel= new JPanel();
-		roiPanel= new JPanel();
-		ic=new CustomCanvas(featureManager.getCurrentImage());
+		
+			ic=new CustomCanvas(featureManager.getCurrentImage());
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
 		setOverlay();
@@ -186,6 +185,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
 		panel.add(imagePanel);
+		
+		/*
+		 * class panel
+		 */
+		
+		classPanel= new JPanel();
+		roiPanel= new JPanel();
+	
 		classPanel.setBounds(605,20,350,100);
 		classPanel.setPreferredSize(new Dimension(350, 100));
 		classPanel.setBorder(BorderFactory.createTitledBorder("CLASSES"));
@@ -194,6 +201,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		classScrolPanel.setBounds(605,20,350,80);
 		addClassPanel();
 		panel.add(classScrolPanel);
+		
+		
+		/*
+		 * features
+		 */
 		JPanel features= new JPanel();
 		features.setBounds(605,120,350,100);
 		features.setBorder(BorderFactory.createTitledBorder("LEARNING"));
@@ -214,12 +226,17 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		features.add(imageNum);
 		features.add(dasedLine);
 		features.add(total);
+		
+		/*
+		 * compute
+		 */
+		
 		JPanel computePanel = new JPanel();
 		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
 		addButton(new JButton(), "TRAIN",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "OVERLAY",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, DOWNLOAD_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, MASKS_BUTTON_PRESSED,null);
 		
 		features.add(computePanel);
 		frame.add(features);
@@ -230,7 +247,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
 					if(showColorOverlay) {
 						updateGui();
 						updateResultOverlay(null);
@@ -247,6 +264,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 				// here we need to add for classification
 			}
 		});
+		
 		dataJPanel.setBounds(720,240,100,60);
 		learningType.setSelectedIndex(0);
 		learningType.setFont( panelFONT );
@@ -443,7 +461,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
 					classifiedImage = null;
 				}
 				else {
@@ -465,7 +483,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
 					classifiedImage = null;
 				}
 				else {
@@ -484,7 +502,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			updateGui();
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
-			if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+			if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
 				// it means new round of training, so set result setting to false
 				showColorOverlay = false;
 				// removing previous markings and reset things
@@ -580,7 +598,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 */
 	void toggleOverlay()
 	{
-		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.SEGMENTATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(SEGMENTATION)) {
 			showColorOverlay = !showColorOverlay;			
 			if (showColorOverlay && (null != classifiedImage)){
 				updateResultOverlay(classifiedImage);
@@ -614,7 +632,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	public void updateResultOverlay(ImagePlus classifiedImage)
 	{
-		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.SEGMENTATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(SEGMENTATION)) {
 			ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
 			overlay = overlay.convertToByte(false);
 			setLut(featureManager.getColors());
@@ -623,7 +641,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			displayImage.updateAndDraw();
 		}
 
-		if(ProjectType.valueOf(featureManager.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
 			// remove previous overlay
 			displayImage.setOverlay(null);
 			displayImage.updateAndDraw();

@@ -37,8 +37,8 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	private static final long serialVersionUID = -9005735333215207618L;
 	protected Collection<Overlay> overlays;
 
-	private int backBufferWidth;
-	private int backBufferHeight;
+	private int backBufferWidth=-1;
+	private int backBufferHeight=-1;
 
 	private Graphics backBufferGraphics;
 	private Image backBufferImage;
@@ -47,8 +47,6 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	public OverlayedImageCanvas(ImagePlus image) {
 		super(image);
 		overlays = new ArrayList<Overlay>();
-	//	dstWidth=IMAGE_CANVAS_DIMENSION;
-	//	dstHeight=IMAGE_CANVAS_DIMENSION;
 	}
 
 	public void addOverlay(Overlay overlay) {
