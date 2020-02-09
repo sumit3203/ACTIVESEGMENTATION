@@ -76,15 +76,17 @@ public class ImageOverlay implements Overlay{
 	 * 
 	 * @param composite composite mode
 	 */
-	public void setComposite (Composite composite)
-	{this.composite = composite;}
+	public void setComposite (Composite composite){
+		this.composite = composite;
+	}
 	
 	/**
 	 * Set image processor to be painted in the overlay
 	 * 
 	 * @param imp input image
 	 */
-	public void setImage ( ImageProcessor imp)
-	{this.imp = imp;}
+	public void setImage ( ImageProcessor imp){
+		this.imp = imp;
+	}
 
 }

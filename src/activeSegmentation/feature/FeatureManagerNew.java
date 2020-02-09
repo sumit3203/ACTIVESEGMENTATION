@@ -7,6 +7,7 @@ import ij.gui.Roi;
 import ij.gui.TextRoi;
 import ij.io.RoiDecoder;
 import ij.io.RoiEncoder;
+import ij.plugin.filter.RankFilters;
 import ij.plugin.frame.RoiManager;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
@@ -121,7 +122,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				addClass();
 			}
 		}
-		roiman.hide();
+	//	roiman.hide();
 	
 		featureMap.put("SEGMENTATION", new PixelInstanceCreator(projectInfo));
 		featureMap.put("CLASSIFICATION", new RoiInstanceCreator(projectInfo));
@@ -185,6 +186,9 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		
 	}
 	
+	/*
+	 * improve
+	 */
 	public boolean isAlreadyContains(String key, Roi roi,String type, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		for(String classKey: classes.keySet()) {
@@ -206,6 +210,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		}
 		return false;
 	}
+	
 	public boolean intersect(List<Roi> roiList, Roi roi) {
 		//Polygon p = roi.getPolygon();
 		Point[] points=roi.getContainedPoints();
@@ -506,7 +511,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	}
 
 	private List<Roi> openZip(String fileName) {
-		Hashtable rois = new Hashtable();
+		Hashtable<String, Roi> rois = new Hashtable<String, Roi>();
 		ZipInputStream in = null;
 		List<Roi> roiList = new ArrayList<Roi>();
 		ByteArrayOutputStream out = null;
@@ -558,7 +563,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		
 	}
 
-	private String getUniqueName(String name, Hashtable rois) {
+	private String getUniqueName(String name, Hashtable<?,?> rois) {
 		String name2 = name;
 		int n = 1;
 		Roi roi2 = (Roi) rois.get(name2);
@@ -601,7 +606,8 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 	                      {return filename.toLowerCase().endsWith(".tif"); }
 	        } );
 
-	    }
+	 }
+	 
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
 		//System.out.println(roi.getName());
@@ -667,27 +673,24 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				}
 										
 			//	System.out.println("the size of list of roi is in FM "+predictionResultClassification.size());								
-			}
-			
-			//segmentation setting
-			else {
-				
-				
-				//get the current image
+			} else {//segmentation setting
+		 		//get the current image
 				ImagePlus currentImage = getCurrentImage();
-				
-				//segmented image instance
-				ImagePlus classifiedImage;
-				
-				//classificationResult would have no of terms as number of pixels in particular image, 
+		 		//classificationResult would have no of terms as number of pixels in particular image, 
 				//expects createAllinstance would provide instances of all pixels of the particular image
+				
+				String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
+				System.out.println("mask key "+key);
 				double[] classificationResult = learningManager
-						.applyClassifier(featureMap.get(ProjectType.valueOf(projectInfo.getProjectType()).toString()).createAllInstance(image));
+						.applyClassifier(featureMap.get(key).createAllInstance(image));
 				
 				//now classificationResult has predictions of all pixels of one particular image
 				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
 						currentImage.getHeight(), classificationResult);
-				classifiedImage = new ImagePlus(image, classifiedSliceProcessor);
+				classifiedSliceProcessor.filter(ImageProcessor.MEDIAN_FILTER);
+				classifiedSliceProcessor.filter(ImageProcessor.MEDIAN_FILTER);
+				//segmented image instance
+				ImagePlus classifiedImage = new ImagePlus(image, classifiedSliceProcessor);
 				classifiedImage.setCalibration(currentImage.getCalibration());
 				IJ.save(classifiedImage, featurePath + image);
 			}
@@ -728,10 +731,12 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
 	}
 
+	/*
 	private ImagePlus getImage(String image) {
 		return new ImagePlus(projectString + image);
 	}
-
+	 */
+	
 	@Override
 	public int getCurrentSlice() {
 		return this.sliceNum;

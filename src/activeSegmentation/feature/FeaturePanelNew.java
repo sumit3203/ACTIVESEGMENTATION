@@ -116,10 +116,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
 	ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
-	//ActionEvent GROUND_BUTTON_PRESSED = new ActionEvent( this, 9, "GROUND" );
-	//ItemEvent LEARNINGTYPE_BUTTON_PRESSED;
-	
-	 
+		 
 	
 	//ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
 
@@ -159,22 +156,26 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		frame = new JFrame("Marking");	     
 		
 		frame.setResizable(false);
-	
-		
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+ 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
 		JList<String> frameList= Util.model();
 		frameList.setForeground(Color.BLACK);
+		
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setFont(panelFONT);
 		panel.setBackground(Color.GRAY);
 		
+		imagePanel = new JPanel();	
+		roiPanel= new JPanel();
+		classPanel= new JPanel();
+		
 		/*
 		 * image panel
 		 */
 		
-		imagePanel = new JPanel();	
+		
 		imagePanel.setLayout(new BorderLayout());
 		
 			ic=new CustomCanvas(featureManager.getCurrentImage());
@@ -189,13 +190,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		/*
 		 * class panel
 		 */
-		
-		classPanel= new JPanel();
-		roiPanel= new JPanel();
-	
+	 	
 		classPanel.setBounds(605,20,350,100);
 		classPanel.setPreferredSize(new Dimension(350, 100));
-		classPanel.setBorder(BorderFactory.createTitledBorder("CLASSES"));
+		classPanel.setBorder(BorderFactory.createTitledBorder("Classes"));
+		
 		JScrollPane classScrolPanel = new JScrollPane(classPanel);
 		classScrolPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		classScrolPanel.setBounds(605,20,350,80);
@@ -208,8 +207,10 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 */
 		JPanel features= new JPanel();
 		features.setBounds(605,120,350,100);
-		features.setBorder(BorderFactory.createTitledBorder("LEARNING"));
+		features.setBorder(BorderFactory.createTitledBorder("Learning"));
+		
 		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
+		
 		imageNum= new JTextField();
 		imageNum.setColumns(5);
 		imageNum.setBounds( 630, 130, 10, 20 );
@@ -228,18 +229,23 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		features.add(total);
 		
 		/*
-		 * compute
+		 * compute panel
 		 */
 		
 		JPanel computePanel = new JPanel();
-		addButton(new JButton(), "NEXT",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "TRAIN",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "SAVE",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "OVERLAY",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Next",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Train",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Save",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Overlay",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, MASKS_BUTTON_PRESSED,null);
 		
 		features.add(computePanel);
 		frame.add(features);
+		
+		/*
+		 *  Data panel
+		 */
+		
 		JPanel dataJPanel = new JPanel();
 		learningType = new JComboBox<LearningType>(LearningType.values());
 		learningType.setVisible(true);
@@ -268,19 +274,30 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		dataJPanel.setBounds(720,240,100,60);
 		learningType.setSelectedIndex(0);
 		learningType.setFont( panelFONT );
-		learningType.setBackground(new Color(192, 192, 192));
+		learningType.setBackground(Color.GRAY);
 		learningType.setForeground(Color.WHITE);
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
 		//addButton(new JButton(), "GROUND TRUTH",null, 720,100,350,80,dataJPanel, GROUND_BUTTON_PRESSED,null);
 		panel.add(dataJPanel);
-		roiPanel.setBorder(BorderFactory.createTitledBorder("Region Of Interests"));
+		
+		/*
+		 * ROI panel
+		 */
+		
+		
+		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
 		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
 		scrollPane.setBounds(605,300,350,250);
 		panel.add(scrollPane);
 		frame.add(panel);
+		
+		/*
+		 *  frame code
+		 */
+		
 		frame.pack();
 		frame.setSize(largeframeWidth,largeframeHight);
 		//frame.setSize(getMaximumSize());		
@@ -381,7 +398,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	}
 
 	private void addAction(JButton button ,final  ActionEvent action){
-		button.addActionListener( new ActionListener()
+		 button.addActionListener( new ActionListener()
 		{
 			@Override
 			public void actionPerformed( final ActionEvent e )
@@ -389,7 +406,12 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 				doAction(action);
 			}
 		} );
-
+	 
+		/*
+		button.addActionListener(  (
+				(e) -> doAction(action)
+			) );
+		 */
 	}
 	private void loadImage(ImagePlus image){
 		this.displayImage=image;
@@ -552,6 +574,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			//saver.saveAsTiff();
 		}
 		
+		if(event==MASKS_BUTTON_PRESSED){
+			System.out.println("masks ");
+			if (classifiedImage==null) {
+				classifiedImage=featureManager.compute();
+			}
+			classifiedImage.show();
+			 
+		}
 		
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
@@ -596,7 +626,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	/**
 	 * Toggle between overlay and original image with markings
 	 */
-	void toggleOverlay()
+	private void toggleOverlay()
 	{
 		if(valueOf(featureManager.getProjectType()).equals(SEGMENTATION)) {
 			showColorOverlay = !showColorOverlay;			

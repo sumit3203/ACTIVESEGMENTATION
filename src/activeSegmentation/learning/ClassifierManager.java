@@ -60,14 +60,14 @@ public class ClassifierManager implements ILearningManager {
     	
 		System.out.println(this.metaInfo.getProjectDirectory().get(ASCommon.LEARNINGDIR)+this.metaInfo.getGroundtruth());
 		try {
-			System.out.println("in training");
+			System.out.println("ClassifierManager: in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
 			String filename=folder.getCanonicalPath()+"\\"+this.metaInfo.getGroundtruth();
 			if(this.metaInfo.getGroundtruth()!=null && !this.metaInfo.getGroundtruth().isEmpty())
 			{
 				System.out.println(filename);
 				dataset=dataManager.readDataFromARFF(filename);
-				System.out.println("in learning");
+				System.out.println("ClassifierManager: in learning");
 			}
 			if(dataset!=null) {
 				dataset.getDataset().addAll(dataManager.getDataSet().getDataset());
@@ -105,7 +105,6 @@ public class ClassifierManager implements ILearningManager {
 
 	@Override
 	public void loadLearningMetaData() {
-		// TODO Auto-generated method stub
 		if(metaInfo.getLearning()!=null){
 			dataset= dataManager.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
 			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
@@ -144,7 +143,6 @@ public class ClassifierManager implements ILearningManager {
 
 	@Override
 	public double predict(Instance instance) {
-		// TODO Auto-generated method stub
 		try {
 			return currentClassifier.classifyInstance(instance);
 		} catch (Exception e) {
@@ -157,7 +155,6 @@ public class ClassifierManager implements ILearningManager {
 
 	@Override
 	public Object getClassifier() {
-		// TODO Auto-generated method stub
 		return this.currentClassifier.getClassifier();
 	}
 
