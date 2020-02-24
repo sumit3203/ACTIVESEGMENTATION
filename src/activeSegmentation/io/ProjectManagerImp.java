@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import activeSegmentation.IProjectManager;
 import activeSegmentation.ASCommon;
@@ -144,7 +145,9 @@ public class ProjectManagerImp implements IProjectManager {
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				System.out.println(projectInfo.getGroundtruth());
-			
+				
+			} catch (UnrecognizedPropertyException e) {
+				e.printStackTrace();
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
