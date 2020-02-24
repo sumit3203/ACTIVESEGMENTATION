@@ -137,7 +137,7 @@ public class ProjectManagerImp implements IProjectManager {
 				File projectFile=new File(fileName);
 				//System.out.println(projectFile.getParent());
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
-				projectInfo.setPluginPath(activeSegDir);
+				//projectInfo.setPluginPath(activeSegDir);
 				//metaInfo.setPath(path);
 				//System.out.println("done");
 				//System.out.println( projectInfo.getProjectName());
