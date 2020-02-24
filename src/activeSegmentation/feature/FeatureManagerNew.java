@@ -687,8 +687,7 @@ public class FeatureManagerNew implements IFeatureManagerNew {
 				//now classificationResult has predictions of all pixels of one particular image
 				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
 						currentImage.getHeight(), classificationResult);
-				classifiedSliceProcessor.filter(ImageProcessor.MEDIAN_FILTER);
-				classifiedSliceProcessor.filter(ImageProcessor.MEDIAN_FILTER);
+				
 				//segmented image instance
 				ImagePlus classifiedImage = new ImagePlus(image, classifiedSliceProcessor);
 				classifiedImage.setCalibration(currentImage.getCalibration());

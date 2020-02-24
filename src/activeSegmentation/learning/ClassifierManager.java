@@ -24,11 +24,11 @@ import activeSegmentation.ILearningManager;
 import activeSegmentation.featureSelection.CFS;
 import activeSegmentation.featureSelection.PCA;
 import activeSegmentation.io.ProjectInfo;
-import bsh.This;
+
 
 public class ClassifierManager implements ILearningManager {
 
-	private IClassifier currentClassifier= new WekaClassifier(new J48());
+	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
 	private IProjectManager dataManager;
 	private ProjectInfo metaInfo;
@@ -113,7 +113,7 @@ public class ClassifierManager implements ILearningManager {
 
 	@Override
 	public void setClassifier(Object classifier) {
-		System.out.println(classifier.toString());
+		//System.out.println(classifier.toString());
 			currentClassifier = (WekaClassifier)classifier;		 	
 			System.out.println(currentClassifier.toString());
 		

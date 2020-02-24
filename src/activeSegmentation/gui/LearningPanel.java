@@ -60,7 +60,7 @@ import weka.gui.PropertyPanel;
 public class LearningPanel implements Runnable, ASCommon {
   private JList classifierList;
   private GenericObjectEditor m_ClassifierEditor = new GenericObjectEditor();
-  String originalOptions;
+  private String originalOptions;
   String originalClassifierName;
   private IProjectManager projectManager;
   private ProjectInfo projectInfo;
@@ -85,9 +85,16 @@ public class LearningPanel implements Runnable, ASCommon {
       //System.out.println(this.featureSelList.getSelectedIndex());
       this.projectInfo.setFeatureSelection((String)this.featureSelList.getSelectedValue());
       
-      IClassifier classifier = new WekaClassifier(setClassifier());
-      this.learningManager.setClassifier(classifier);
-      this.projectManager.updateMetaInfo(this.projectInfo);
+     // System.out.println("in set classifiler");
+      AbstractClassifier testClassifier=setClassifier();
+    
+      if(testClassifier!=null) {
+    	  IClassifier classifier = new WekaClassifier(testClassifier);
+          
+          this.learningManager.setClassifier(classifier);
+          this.projectManager.updateMetaInfo(this.projectInfo);
+      }
+     
     }
   }
   
@@ -108,7 +115,7 @@ public class LearningPanel implements Runnable, ASCommon {
     this.m_ClassifierEditor.setClassType(Classifier.class);
     this.m_ClassifierEditor.setValue(this.learningManager.getClassifier());
     Object c = this.m_ClassifierEditor.getValue();
-    String originalOptions = "";
+    originalOptions = "";
     this.originalClassifierName = c.getClass().getName();
     if ((c instanceof OptionHandler)) {
       originalOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
@@ -157,6 +164,7 @@ public class LearningPanel implements Runnable, ASCommon {
     Object c = this.m_ClassifierEditor.getValue();
     String options = "";
     String[] optionsArray = ((OptionHandler)c).getOptions();
+    System.out.println(originalOptions);
     if ((c instanceof OptionHandler)) {
       options = Utils.joinOptions(optionsArray);
     }
