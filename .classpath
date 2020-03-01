@@ -17,6 +17,6 @@
 	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/fftscale-1-0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/weka-dev-3.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

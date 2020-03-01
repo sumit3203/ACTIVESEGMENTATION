@@ -52,7 +52,6 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IFeature;
 import activeSegmentation.LearningType;
