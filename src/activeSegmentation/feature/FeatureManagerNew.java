@@ -57,11 +57,11 @@ import activeSegmentation.IFeature;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
 import activeSegmentation.classif.RoiInstanceCreator;
-import activeSegmentation.gui.Util;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ClassInfo;
 import activeSegmentation.prj.FeatureInfo;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.util.Util;
 
 /**
  * 

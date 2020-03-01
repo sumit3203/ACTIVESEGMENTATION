@@ -46,6 +46,7 @@ import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManagerNew;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.util.Util;
 
 public class ViewFilterResults extends ImageWindow  {
 

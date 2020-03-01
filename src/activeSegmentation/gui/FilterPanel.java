@@ -55,6 +55,7 @@ import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.filter.FilterManager;
+import activeSegmentation.util.Util;
 
 public class FilterPanel implements Runnable, ASCommon {
 

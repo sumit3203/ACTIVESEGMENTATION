@@ -19,6 +19,7 @@ import activeSegmentation.IFeature;
 import activeSegmentation.learning.WekaDataSet;
 import activeSegmentation.prj.ClassInfo;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.util.InstanceUtil;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;

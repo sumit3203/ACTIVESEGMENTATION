@@ -52,6 +52,8 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
+import activeSegmentation.util.Util;
+
 import static  activeSegmentation.ProjectType.*;
 
 public class FeaturePanelNew extends ImageWindow implements ASCommon  {
