@@ -21,8 +21,6 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.ILearningManager;
-import activeSegmentation.featureSelection.CFS;
-import activeSegmentation.featureSelection.PCA;
 import activeSegmentation.io.ProjectInfo;
 
 
