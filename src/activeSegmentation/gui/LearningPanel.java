@@ -32,9 +32,10 @@ import weka.gui.PropertyPanel;
 import activeSegmentation.IClassifier;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
-import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.SMO;
 import activeSegmentation.learning.WekaClassifier;
+import activeSegmentation.prj.ProjectInfo;
+
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Color;

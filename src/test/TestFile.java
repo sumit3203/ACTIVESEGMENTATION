@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import activeSegmentation.io.FeatureInfo;
-import activeSegmentation.io.ProjectInfo;
+import activeSegmentation.prj.FeatureInfo;
+import activeSegmentation.prj.ProjectInfo;
 
 public class TestFile {
 

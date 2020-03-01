@@ -1,4 +1,4 @@
-package activeSegmentation.io;
+package activeSegmentation.prj;
 
 import ij.gui.Roi;
 
