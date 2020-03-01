@@ -207,7 +207,9 @@ public class ProjectManagerImp implements IProjectManager {
 		projectInfo.setProjectName(projectName);
 		projectInfo.setProjectType(projectType);
 		projectInfo.setProjectDescription(projectDescription);
-		projectInfo.setPluginPath(activeSegDir);
+		List<String> jars= new ArrayList<>();
+		jars.add(activeSegDir);
+		projectInfo.setPluginPath(jars);
 		//DEFAULT 2 classes
 		projectInfo.setClasses(2);
 		createProjectSpace(projectDirectory,projectName);
@@ -289,10 +291,10 @@ public class ProjectManagerImp implements IProjectManager {
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//";
+			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\";	
+			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
 
 		//System.out.println(System.getProperty("plugins.dir"));
