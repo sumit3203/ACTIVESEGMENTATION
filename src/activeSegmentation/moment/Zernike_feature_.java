@@ -22,7 +22,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.datatype.ComplexArray;
-import ijaux.moments.ZernikeMoment;
+import ijaux.moments.zernike.ZernikeMoment;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import ijaux.scale.Pair;
 

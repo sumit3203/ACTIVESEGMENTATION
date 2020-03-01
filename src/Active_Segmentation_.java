@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 
 import activeSegmentation.IProjectManager;
 import activeSegmentation.gui.CreateProjectUI;
-import activeSegmentation.io.ProjectManagerImp;
+import activeSegmentation.prj.ProjectManagerImp;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;

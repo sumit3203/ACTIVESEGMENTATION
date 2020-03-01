@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package activeSegmentation.util;
 
 import java.awt.Color;
 import java.awt.Component;

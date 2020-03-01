@@ -2,7 +2,7 @@ package activeSegmentation;
 
 
 
-import activeSegmentation.io.ProjectInfo;
+import activeSegmentation.prj.ProjectInfo;
 import weka.core.Instances;
 
 /**

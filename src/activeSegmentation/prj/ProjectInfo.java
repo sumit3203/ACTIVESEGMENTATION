@@ -1,4 +1,4 @@
-package activeSegmentation.io;
+package activeSegmentation.prj;
 
 import java.util.ArrayList;
 import java.util.HashMap;

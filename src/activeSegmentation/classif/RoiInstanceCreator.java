@@ -1,4 +1,4 @@
-package activeSegmentation.feature;
+package activeSegmentation.classif;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
 import activeSegmentation.IFilterManager;
-import activeSegmentation.io.ClassInfo;
-import activeSegmentation.io.ProjectInfo;
 import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.prj.ClassInfo;
+import activeSegmentation.prj.ProjectInfo;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.util.ArrayUtil;

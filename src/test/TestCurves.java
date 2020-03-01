@@ -1,12 +1,12 @@
-package activeSegmentation.evaluation;
+package test;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
 import activeSegmentation.IProjectManager;
-import activeSegmentation.io.ProjectManagerImp;
 import activeSegmentation.learning.SMO;
+import activeSegmentation.prj.ProjectManagerImp;
 import weka.core.Instance;
 import weka.core.Instances;
 

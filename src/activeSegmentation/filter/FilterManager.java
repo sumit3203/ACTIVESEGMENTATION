@@ -1,4 +1,4 @@
-package activeSegmentation.filterImpl;
+package activeSegmentation.filter;
 
 
 import java.awt.Image;
@@ -34,7 +34,7 @@ import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureContainer;
-import activeSegmentation.io.ProjectInfo;
+import activeSegmentation.prj.ProjectInfo;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;

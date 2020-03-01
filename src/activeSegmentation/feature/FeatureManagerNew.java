@@ -52,16 +52,16 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IFeature;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
-import activeSegmentation.gui.Util;
-import activeSegmentation.io.ClassInfo;
-import activeSegmentation.io.FeatureInfo;
-import activeSegmentation.io.ProjectInfo;
+import activeSegmentation.classif.RoiInstanceCreator;
 import activeSegmentation.learning.ClassifierManager;
+import activeSegmentation.prj.ClassInfo;
+import activeSegmentation.prj.FeatureInfo;
+import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.util.Util;
 
 /**
  * 

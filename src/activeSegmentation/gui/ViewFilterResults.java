@@ -40,13 +40,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManagerNew;
-import activeSegmentation.io.ProjectInfo;
-import activeSegmentation.io.ProjectManagerImp;
+import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.util.Util;
 
 public class ViewFilterResults extends ImageWindow  {
 

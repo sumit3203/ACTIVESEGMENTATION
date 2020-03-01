@@ -1,4 +1,4 @@
-package activeSegmentation.filterImpl;
+package activeSegmentation.gui;
 
 
 
@@ -51,11 +51,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFeatureManagerNew;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
-import activeSegmentation.gui.Util;
+import activeSegmentation.filter.FilterManager;
+import activeSegmentation.util.Util;
 
 public class FilterPanel implements Runnable, ASCommon {
 

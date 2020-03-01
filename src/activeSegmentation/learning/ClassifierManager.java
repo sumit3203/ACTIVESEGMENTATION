@@ -18,12 +18,10 @@ import weka.core.Instance;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IProjectManager;
+import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.ILearningManager;
-import activeSegmentation.featureSelection.CFS;
-import activeSegmentation.featureSelection.PCA;
-import activeSegmentation.io.ProjectInfo;
 
 
 public class ClassifierManager implements ILearningManager {
