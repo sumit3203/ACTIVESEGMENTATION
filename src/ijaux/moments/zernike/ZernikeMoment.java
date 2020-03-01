@@ -1,4 +1,4 @@
-package ijaux.moments;
+package ijaux.moments.zernike;
 
 import java.util.ArrayList;
 

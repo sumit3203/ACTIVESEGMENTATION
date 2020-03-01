@@ -1,4 +1,4 @@
-package ijaux.moments;
+package ijaux.moments.zernike;
 
 public class RadialValue {
 	double[][] Rmn;
