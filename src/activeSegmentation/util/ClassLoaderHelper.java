@@ -12,7 +12,7 @@ import java.util.zip.ZipInputStream;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
-import activeSegmentation.filterImpl.FilterManager;
+import activeSegmentation.filter.FilterManager;
 
 public class ClassLoaderHelper {
 

@@ -1,4 +1,4 @@
-package activeSegmentation.filterImpl;
+package activeSegmentation.filter;
 
 
 
