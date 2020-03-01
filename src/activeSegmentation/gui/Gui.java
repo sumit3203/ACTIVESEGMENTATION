@@ -23,8 +23,6 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.evaluation.EvaluationPanel;
 import activeSegmentation.feature.FeatureManagerNew;
-import activeSegmentation.feature.FeaturePanelNew;
-import activeSegmentation.filter.FilterPanel;
 import activeSegmentation.learning.ClassifierManager;
 
 

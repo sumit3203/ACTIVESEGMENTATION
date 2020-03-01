@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package test;
 
 import java.awt.Dimension;
 import java.util.ArrayList;

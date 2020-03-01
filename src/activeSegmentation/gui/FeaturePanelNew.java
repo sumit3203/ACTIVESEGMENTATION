@@ -1,4 +1,4 @@
-package activeSegmentation.feature;
+package activeSegmentation.gui;
 
 
 import ij.IJ;
@@ -53,13 +53,6 @@ import activeSegmentation.IFeatureManagerNew;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import static  activeSegmentation.ProjectType.*;
-//import activeSegmentation.feature.FeatureManagerNew;
-//import activeSegmentation.io.ProjectManagerImp;
-import activeSegmentation.gui.SimpleCanvas;
-import activeSegmentation.gui.ImageOverlay;
-import activeSegmentation.gui.OverlayedImageCanvas;
-import activeSegmentation.gui.RoiListOverlay;
-import activeSegmentation.gui.Util;
 
 public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
