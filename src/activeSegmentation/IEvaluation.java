@@ -10,9 +10,11 @@ import java.util.List;
  *
  *
  * @contents
- * Interface for evaluation, It is genric interace for evaluating our 
+ * Interface for evaluation, It is generic interface for evaluating our 
  * classification model, This interface is still under development
  * New updates will be soon
+ *
+ * not used much right now
  * 
  * 
  * @license This library is free software; you can redistribute it and/or

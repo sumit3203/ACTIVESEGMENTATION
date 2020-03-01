@@ -18,6 +18,8 @@ import weka.core.Instance;
  * Interface for feature type like segmentation, classification or
  * objection Detection. This is also in development stage
  * 
+ * to be replaced eventually by an abstract class
+ * 
  * 
  * @license This library is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU Lesser General Public

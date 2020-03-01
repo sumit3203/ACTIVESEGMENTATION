@@ -15,6 +15,8 @@ import weka.core.Instances;
  * It is generic interface for dataset , User can include weka, Meka dataset 
  * using this interface 
  * 
+ * general use: classification + segmentation 
+ * 
  * 
  * @license This library is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU Lesser General Public
