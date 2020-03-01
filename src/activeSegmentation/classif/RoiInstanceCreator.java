@@ -1,4 +1,4 @@
-package activeSegmentation.feature;
+package activeSegmentation.classif;
 
 import java.io.File;
 import java.util.ArrayList;

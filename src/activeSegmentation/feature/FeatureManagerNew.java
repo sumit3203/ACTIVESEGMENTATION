@@ -56,6 +56,7 @@ import activeSegmentation.ILearningManager;
 import activeSegmentation.IFeature;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
+import activeSegmentation.classif.RoiInstanceCreator;
 import activeSegmentation.gui.Util;
 import activeSegmentation.io.ClassInfo;
 import activeSegmentation.io.FeatureInfo;
