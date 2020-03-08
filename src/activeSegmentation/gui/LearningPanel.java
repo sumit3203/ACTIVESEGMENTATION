@@ -4,64 +4,36 @@ package activeSegmentation.gui;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.learning.ClassifierManager;
-import activeSegmentation.learning.SMO;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.RandomForest;
 import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
-//import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
-import activeSegmentation.learning.SMO;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.util.Util;
 
-import java.awt.Checkbox;
-import java.awt.CheckboxGroup;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.PrintStream;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
+
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
-import weka.core.OptionHandler;
-import weka.core.Utils;
-import weka.gui.GenericObjectEditor;
-import weka.gui.PropertyPanel;
+
 
 public class LearningPanel implements Runnable, ASCommon {
-  private JList classifierList;
+  private JList<String> classifierList;
   private GenericObjectEditor m_ClassifierEditor = new GenericObjectEditor();
   private String originalOptions;
   String originalClassifierName;
@@ -127,8 +99,8 @@ public class LearningPanel implements Runnable, ASCommon {
     JPanel featureSelection = new JPanel();
     featureSelection.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
     featureSelection.setBounds(370, 20, 200, 80);
-    DefaultListModel<String> model = new DefaultListModel();
-    this.featureSelList = new JList(model);
+    DefaultListModel<String> model = new DefaultListModel<String>();
+    this.featureSelList = new JList<String>(model);
     model.addElement("NONE");
     model.addElement("Principle Component Analysis");
     model.addElement("Correlation Based Selection");
