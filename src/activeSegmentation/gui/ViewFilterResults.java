@@ -43,7 +43,7 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
-import activeSegmentation.feature.FeatureManagerNew;
+import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManagerImp;
 import activeSegmentation.util.Util;

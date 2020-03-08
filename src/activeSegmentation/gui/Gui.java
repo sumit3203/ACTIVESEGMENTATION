@@ -22,7 +22,7 @@ import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.evaluation.EvaluationPanel;
-import activeSegmentation.feature.FeatureManagerNew;
+import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 
 
@@ -51,7 +51,7 @@ public class Gui implements ASCommon {
 	public Gui(IProjectManager projectManager)	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
-		featureManager=new FeatureManagerNew(this.projectManager, this.learningManager);
+		featureManager=new FeatureManager(this.projectManager, this.learningManager);
 		
 		prepareGUI();
 	}
