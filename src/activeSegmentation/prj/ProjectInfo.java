@@ -25,7 +25,7 @@ public class ProjectInfo{
 	private String modifyDate;
 	private int classes;
 	private String projectPath;
-	private String pluginPath;
+	private List<String> pluginPath;
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<String,String>();
 	private String trainingStack;
@@ -139,10 +139,7 @@ public class ProjectInfo{
 		this.projectPath = projectPath;
 	}
 
-	public String getPluginPath() {
-		return this.pluginPath;
-	}
-
+	
 	public Map<String, String> getProjectDirectory() 	{
 		return this.projectDirectory;
 	}
@@ -151,9 +148,7 @@ public class ProjectInfo{
 		this.projectDirectory = projectDirectory;
 	}
 
-	public void setPluginPath(String pluginPath){
-		this.pluginPath = pluginPath;
-	}
+	
 
 	public void setTrainingStack(String trainingStack)	{
 		this.trainingStack = trainingStack;
@@ -222,6 +217,14 @@ public class ProjectInfo{
 
 	public void setGroundtruth(String groundtruth) {
 		this.groundtruth = groundtruth;
+	}
+
+	public List<String> getPluginPath() {
+		return pluginPath;
+	}
+
+	public void setPluginPath(List<String> pluginPath) {
+		this.pluginPath = pluginPath;
 	}
 	
 }

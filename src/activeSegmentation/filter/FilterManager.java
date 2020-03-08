@@ -87,10 +87,10 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		IJ.log("Loading Filters");
 		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
 		try {
-			String path=projectInfo.getPluginPath();
-			System.out.println(path);
-			if (path!=null)
-				loadFilters(path);
+			List<String> jars=projectInfo.getPluginPath();
+			System.out.println(jars);
+			if (jars!=null)
+				loadFilters(jars);
 			IJ.log("Filters Loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
@@ -103,12 +103,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
-	public  void loadFilters(String home) throws InstantiationException, IllegalAccessException, 
+	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
-		System.out.println("home: "+home);
-		File f=new File(home);
-		String[] plugins = f.list();
+		//System.out.println("home: "+home);
+		//File f=new File(home);
+		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
 		String cp=System.getProperty("java.class.path");
 		
@@ -117,12 +117,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			//System.out.println(plugin);
 			//System.out.println(installJarPlugins(home+"/"+plugin));
 			if(plugin.endsWith(ASCommon.JAR))	{ 
-				classes.addAll(installJarPlugins(home,plugin));
+				classes.addAll(installJarPlugins(plugin));
 				//addFile(home+"/"+plugin);
-				cp+=";"+ home + plugin;
-			
+				cp+=";" + plugin;
+				System.setProperty("java.class.path", cp);
 				System.out.println("classpath:  "+cp);
-				File g = new File(home,plugin);
+				File g = new File(plugin);
 				if (g.isFile())
 					addJar(g);
 			}
@@ -264,9 +264,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 
-	private  List<String> installJarPlugins(String home,String plugin) throws IOException {
+	private  List<String> installJarPlugins(String plugin) throws IOException {
 		List<String> classNames = new ArrayList<String>();
-		ZipInputStream zip = new ZipInputStream(new FileInputStream(home+plugin));
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
 				String className = entry.getName().replace('/', '.'); // including ".class"

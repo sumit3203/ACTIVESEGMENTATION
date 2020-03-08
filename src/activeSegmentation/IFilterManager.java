@@ -2,6 +2,7 @@ package activeSegmentation;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public interface IFilterManager {
 	 * @param diretory of filter
 	 *
 	 */
-	public  void loadFilters(String home)throws InstantiationException, IllegalAccessException, 
+	public  void loadFilters(List<String> home)throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException;
 	
 	/**
