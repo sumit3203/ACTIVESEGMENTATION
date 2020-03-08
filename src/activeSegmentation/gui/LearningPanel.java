@@ -31,7 +31,7 @@ import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
-import activeSegmentation.ILearningManager;
+//import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.learning.SMO;
 import activeSegmentation.learning.WekaClassifier;
