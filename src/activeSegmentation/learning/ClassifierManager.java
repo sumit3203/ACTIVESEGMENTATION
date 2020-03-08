@@ -21,10 +21,10 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-import activeSegmentation.ILearningManager;
+//import activeSegmentation.LearningManager;
 
-
-public class ClassifierManager implements ILearningManager {
+///public class ClassifierManager implements ILearningManager {
+public class ClassifierManager  {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
@@ -50,7 +50,7 @@ public class ClassifierManager implements ILearningManager {
 	}
 	
 
-    @Override
+   // @Override
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
     	System.out.println("in training");
@@ -87,7 +87,7 @@ public class ClassifierManager implements ILearningManager {
 		}
 	}
 
-	@Override
+	//@Override
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
 		Map<String,String> learningMap = new HashMap<String, String>();
@@ -101,7 +101,7 @@ public class ClassifierManager implements ILearningManager {
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
-	@Override
+	//@Override
 	public void loadLearningMetaData() {
 		if(metaInfo.getLearning()!=null){
 			dataset= dataManager.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
@@ -109,7 +109,7 @@ public class ClassifierManager implements ILearningManager {
 		}
 	}
 
-	@Override
+	//@Override
 	public void setClassifier(Object classifier) {
 		//System.out.println(classifier.toString());
 			currentClassifier = (WekaClassifier)classifier;		 	
@@ -117,7 +117,7 @@ public class ClassifierManager implements ILearningManager {
 		
 	}
 
-    @Override
+   // @Override
 	public double[] applyClassifier(IDataSet dataSet){
 		//System.out.println("Testing Results");
 		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
@@ -132,14 +132,14 @@ public class ClassifierManager implements ILearningManager {
 	}
 
 
-	@Override
+//	@Override
 	public Set<String> getFeatureSelList() {
 		
 		return featureMap.keySet();
 	}
 
 
-	@Override
+//	@Override
 	public double predict(Instance instance) {
 		try {
 			return currentClassifier.classifyInstance(instance);
@@ -151,7 +151,7 @@ public class ClassifierManager implements ILearningManager {
 	}
 
 
-	@Override
+//	@Override
 	public Object getClassifier() {
 		return this.currentClassifier.getClassifier();
 	}

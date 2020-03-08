@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.learning.SMO;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
@@ -71,19 +72,17 @@ public class LearningPanel implements Runnable, ASCommon {
   JList<String> featureSelList;
   final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent(this, 1, "Compute");
   final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
-  ILearningManager learningManager;
-  public LearningPanel(IProjectManager projectManager,ILearningManager learningManager )
-  {
+  ClassifierManager learningManager;
+  
+  public LearningPanel(IProjectManager projectManager,ClassifierManager learningManager )  {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
     this.classifierList = Util.model();
   }
   
-  public void doAction(ActionEvent event)
-  {
-    if (event == this.SAVE_BUTTON_PRESSED)
-    {
+  public void doAction(ActionEvent event)  {
+    if (event == this.SAVE_BUTTON_PRESSED)     {
       //System.out.println(this.featureSelList.getSelectedIndex());
       this.projectInfo.setFeatureSelection((String)this.featureSelList.getSelectedValue());
       
@@ -100,8 +99,7 @@ public class LearningPanel implements Runnable, ASCommon {
     }
   }
   
-  public void run()
-  {
+  public void run()  {
     this.frame.setDefaultCloseOperation(1);
     this.frame.getContentPane().setBackground(Color.GRAY);
     this.frame.setLocationRelativeTo(null);

@@ -100,10 +100,10 @@ public class FeatureManager  {
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<String, ClassInfo>();
 	private List<Color> defaultColors;
-	ILearningManager learningManager;
+	ClassifierManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
 
-	public FeatureManager(IProjectManager projectManager, ILearningManager learningManager) {
+	public FeatureManager(IProjectManager projectManager, ClassifierManager learningManager) {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();

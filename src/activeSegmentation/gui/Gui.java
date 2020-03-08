@@ -42,7 +42,7 @@ public class Gui implements ASCommon {
 
 	
 	private FeatureManager featureManager;
-	private ILearningManager learningManager;
+	private ClassifierManager learningManager;
 	private IProjectManager projectManager;
 	
 
