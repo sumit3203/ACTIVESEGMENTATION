@@ -15,6 +15,7 @@ import weka.core.Instance;
  * @contents
  * Manager for learning. 
  * 
+ * to be changed into an abstract class
  * 
  * @license This library is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU Lesser General Public

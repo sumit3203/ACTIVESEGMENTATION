@@ -17,6 +17,8 @@ import java.util.Set;
  * Interface for Filter manager, It is responsible of doing all the Saving, loading
  * the filter
  * 
+ * to be changed into abstract class
+ * 
  * 
  * @license This library is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU Lesser General Public
