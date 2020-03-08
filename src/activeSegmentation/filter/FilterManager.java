@@ -110,6 +110,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		File f=new File(home);
 		String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
+		String cp=System.getProperty("java.class.path");
+		
 		for(String plugin: plugins){
 			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 			//System.out.println(plugin);
@@ -117,18 +119,18 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(home,plugin));
 				//addFile(home+"/"+plugin);
-				String cp=System.getProperty("java.class.path");
 				cp+=";"+ home + plugin;
-				System.setProperty("java.class.path", cp);
+			
 				System.out.println("classpath:  "+cp);
 				File g = new File(home,plugin);
 				if (g.isFile())
 					addJar(g);
-			} else if (plugin.endsWith(ASCommon.DOTCLASS)){
-				classes.add(plugin);
 			}
-			//break;
+//			else if (plugin.endsWith(ASCommon.DOTCLASS)){
+//				classes.add(plugin);
+//			}
 		}
+		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 		for(String plugin: classes){
 			//System.out.println(plugin);
