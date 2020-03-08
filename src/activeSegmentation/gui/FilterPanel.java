@@ -54,12 +54,13 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
+import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filter.FilterManager;
 import activeSegmentation.util.Util;
 
 public class FilterPanel implements Runnable, ASCommon {
 
-	private IFilterManager filterManager;
+	private FilterManager filterManager;
 	private IProjectManager projectManager;
 	private JTabbedPane pane;
 	private JList<String> filterList;
@@ -89,7 +90,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	
 	final JFrame frame = new JFrame("Filters");
 
-	public FilterPanel(IProjectManager projectManager,IFeatureManager  featureManager) {
+	public FilterPanel(IProjectManager projectManager, FeatureManager  featureManager) {
 		this.projectManager= projectManager;
 		
 		this.filterManager =new FilterManager(projectManager, featureManager);		

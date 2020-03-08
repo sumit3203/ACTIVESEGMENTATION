@@ -34,6 +34,7 @@ import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureContainer;
+import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
 import ij.IJ;
 import ij.ImagePlus;
@@ -76,9 +77,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private ProjectType projectType;
 
-	private IFeatureManager  featureManager;
+	private FeatureManager  featureManager;
 
-	public FilterManager(IProjectManager projectManager,IFeatureManager  featureManager){
+	public FilterManager(IProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();

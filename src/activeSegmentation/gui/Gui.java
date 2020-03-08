@@ -42,7 +42,7 @@ public class Gui implements ASCommon {
 	final ActionEvent FILTERVIS_BUTTON_PRESSED = new ActionEvent(this, 4, "FilterVis");
 
 	
-	private IFeatureManager featureManager;
+	private FeatureManager featureManager;
 	private ILearningManager learningManager;
 	private IProjectManager projectManager;
 	
