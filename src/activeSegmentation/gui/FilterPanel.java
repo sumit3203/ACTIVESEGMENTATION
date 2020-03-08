@@ -51,7 +51,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.filter.FilterManager;
@@ -89,7 +89,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	
 	final JFrame frame = new JFrame("Filters");
 
-	public FilterPanel(IProjectManager projectManager,IFeatureManagerNew  featureManager) {
+	public FilterPanel(IProjectManager projectManager,IFeatureManager  featureManager) {
 		this.projectManager= projectManager;
 		
 		this.filterManager =new FilterManager(projectManager, featureManager);		

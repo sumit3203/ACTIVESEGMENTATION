@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IEvaluation;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
@@ -42,7 +42,7 @@ public class Gui implements ASCommon {
 	final ActionEvent FILTERVIS_BUTTON_PRESSED = new ActionEvent(this, 4, "FilterVis");
 
 	
-	private IFeatureManagerNew featureManager;
+	private IFeatureManager featureManager;
 	private ILearningManager learningManager;
 	private IProjectManager projectManager;
 	

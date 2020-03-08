@@ -49,7 +49,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
 import activeSegmentation.ILearningManager;
@@ -89,7 +89,7 @@ import activeSegmentation.util.Util;
  *          Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  *          USA
  */
-public class FeatureManagerNew implements IFeatureManagerNew {
+public class FeatureManagerNew implements IFeatureManager {
 
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;

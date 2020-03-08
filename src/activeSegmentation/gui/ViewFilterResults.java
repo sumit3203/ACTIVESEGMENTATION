@@ -40,7 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManagerNew;
@@ -56,7 +56,7 @@ public class ViewFilterResults extends ImageWindow  {
 	private static final long serialVersionUID = 1L;
 	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
 	private IProjectManager projectManager;
-	private IFeatureManagerNew featureManager;
+	private IFeatureManager featureManager;
 	private ProjectInfo projectInfo;
 	private String filterString;
 	private Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
@@ -94,7 +94,7 @@ public class ViewFilterResults extends ImageWindow  {
 	private JComboBox<LearningType> learningType;
 	private ImagePlus displayImage;
 	
-	public ViewFilterResults(IProjectManager projectManager,IFeatureManagerNew featureManager) {
+	public ViewFilterResults(IProjectManager projectManager,IFeatureManager featureManager) {
 		//super(image);
 		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;

@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream;
 
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
@@ -76,9 +76,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private ProjectType projectType;
 
-	private IFeatureManagerNew  featureManager;
+	private IFeatureManager  featureManager;
 
-	public FilterManager(IProjectManager projectManager,IFeatureManagerNew  featureManager){
+	public FilterManager(IProjectManager projectManager,IFeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();

@@ -49,7 +49,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManagerNew;
+import activeSegmentation.IFeatureManager;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.util.Util;
@@ -63,7 +63,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private IFeatureManagerNew featureManager;
+	private IFeatureManager featureManager;
 	/** opacity (in %) of the result overlay image */
 	int overlayOpacity = 33;
 	/** alpha composite for the result overlay image */
@@ -123,7 +123,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private JComboBox<LearningType> learningType;
 	private JFrame frame;
 
-	public FeaturePanelNew(IFeatureManagerNew featureManager) {		
+	public FeaturePanelNew(IFeatureManager featureManager) {		
 		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
