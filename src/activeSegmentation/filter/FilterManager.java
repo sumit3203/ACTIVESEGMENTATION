@@ -20,14 +20,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
-
-
-
-
-
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;

@@ -40,7 +40,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;

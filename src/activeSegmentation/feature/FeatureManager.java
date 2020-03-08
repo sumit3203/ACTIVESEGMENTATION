@@ -49,7 +49,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
 import activeSegmentation.ILearningManager;

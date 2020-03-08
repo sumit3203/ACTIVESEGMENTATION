@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IEvaluation;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.ILearningManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;

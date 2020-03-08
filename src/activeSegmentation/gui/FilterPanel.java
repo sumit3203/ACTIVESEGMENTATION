@@ -17,18 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 import java.util.Set;
 import java.util.Vector;
 
@@ -51,7 +40,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFeatureManager;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.feature.FeatureManager;
