@@ -56,15 +56,17 @@ public class RoiInstanceCreator implements IFeature {
 	private Instances trainingData;
 	private String featureName="classLevel";
 	private ProjectInfo projectInfo;
-	private List<String> classLabels;
+	//private List<String> classLabels;
 	private Map<String, double[]> instanceMap= new HashMap<String, double[]>();
 	int classindex = 0;
 	private int numberOfFeatures;
 	private String projectString;
 	private List<String> images;
+	
+	
 	public RoiInstanceCreator(ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
-		this.classLabels=new ArrayList<String>();
+		//this.classLabels=new ArrayList<String>();
 		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		this.images=new ArrayList<String>();
 		loadImages(this.projectString);
@@ -107,8 +109,7 @@ public class RoiInstanceCreator implements IFeature {
 				if(!instanceMap.containsKey(feature.first)) {
 					//System.out.println(Arrays.toString(feature.second));
 					instanceMap.put(feature.first, feature.second);
-				}
-				else {
+				} else {
 					double[] temp=instanceMap.get(feature.first);
 					double[] current=feature.second;
 					double[] newFeature=combine(temp, current);
@@ -158,30 +159,30 @@ public class RoiInstanceCreator implements IFeature {
 		for(ClassInfo classInfo:classInfos) {
 			labels.add(classInfo.getLabel());
 		}
-		this.classLabels=labels;
+		//this.classLabels=labels;
 		return labels;
 	}
 	@Override
 	public String getFeatureName() {
-		// TODO Auto-generated method stub
 		return featureName;
 	}
-
-
-
+ 
 	@Override
 	public IDataSet getDataSet() {
-		// TODO Auto-generated method stub
 		return new WekaDataSet(trainingData);
 	}
 
 	@Override
 	public void setDataset(IDataSet trainingData) {
-		// TODO Auto-generated method stub
 		this.trainingData= trainingData.getDataset();
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see activeSegmentation.IFeature#createAllInstance(java.lang.String)
+	 * TODO implement
+	 */
 	@Override
 	public IDataSet createAllInstance(String image) {
 		// TODO Auto-generated method stub

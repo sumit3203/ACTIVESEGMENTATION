@@ -245,7 +245,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 					if(showColorOverlay) {
 						updateGui();
 						updateResultOverlay(null);
@@ -475,7 +475,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 					classifiedImage = null;
 				}
 				else {
@@ -497,7 +497,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 					classifiedImage = null;
 				}
 				else {
@@ -516,7 +516,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			updateGui();
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
-			if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
+			if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 				// it means new round of training, so set result setting to false
 				showColorOverlay = false;
 				// removing previous markings and reset things
@@ -620,7 +620,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 */
 	private void toggleOverlay()
 	{
-		if(valueOf(featureManager.getProjectType()).equals(SEGMENTATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(SEGM)) {
 			showColorOverlay = !showColorOverlay;			
 			if (showColorOverlay && (null != classifiedImage)){
 				updateResultOverlay(classifiedImage);
@@ -654,7 +654,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	public void updateResultOverlay(ImagePlus classifiedImage)
 	{
-		if(valueOf(featureManager.getProjectType()).equals(SEGMENTATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(SEGM)) {
 			ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
 			overlay = overlay.convertToByte(false);
 			setLut(featureManager.getColors());
@@ -663,7 +663,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			displayImage.updateAndDraw();
 		}
 
-		if(valueOf(featureManager.getProjectType()).equals(CLASSIFICATION)) {
+		if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 			// remove previous overlay
 			displayImage.setOverlay(null);
 			displayImage.updateAndDraw();

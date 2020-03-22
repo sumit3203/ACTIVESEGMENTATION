@@ -13,53 +13,29 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import weka.core.Instance;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.sql.Array;
-import java.util.ArrayList;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.Vector;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import activeSegmentation.ASCommon;
-import activeSegmentation.IProjectManager;
-import activeSegmentation.IDataSet;
-//import activeSegmentation.ILearningManager;
-import activeSegmentation.IFeature;
-import activeSegmentation.LearningType;
-import activeSegmentation.ProjectType;
+import activeSegmentation.*;
 import activeSegmentation.classif.RoiInstanceCreator;
 import activeSegmentation.learning.ClassifierManager;
-import activeSegmentation.prj.ClassInfo;
-import activeSegmentation.prj.FeatureInfo;
-import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.*;
 import activeSegmentation.util.Util;
 
 /**
@@ -226,7 +202,6 @@ public class FeatureManager  {
 		return false;
 	}
 
-	//@Override
 	public void addExampleList(String classNum, List<Roi> roiList, String type, int sliceNum) {
 		for (Roi roi : roiList) {
 			if (processibleRoi(roi)) {
@@ -241,7 +216,6 @@ public class FeatureManager  {
 		return ret;
 	}
 
-	//@Override
 	public void deleteExample(String key, int index, String type) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
@@ -252,7 +226,6 @@ public class FeatureManager  {
 
 	}
 
-	//@Override
 	public List<Roi> getExamples(String key, String type, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
@@ -263,7 +236,6 @@ public class FeatureManager  {
 
 	}
 
-	//@Override
 	public Roi getRoi(String key, int index, String type) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
@@ -274,19 +246,15 @@ public class FeatureManager  {
 	}
 
 	
-	//@Override
 	public Set<String> getClassKeys() {
-
 		return classes.keySet();
 	}
 
 	
-	//@Override
 	public String getClassLabel(String index) {
 		return classes.get(index).getLabel();
 	}
 
-	//@Override
 	public int getRoiListSize(String key, String learningType, int sliceNum) {
 		String imageKey = this.images.get(sliceNum - 1);
 		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
@@ -296,11 +264,9 @@ public class FeatureManager  {
 		}
 	}
 	
-	
-	//@Override
 	public List<Roi> getExamples(String key, String type, String imageKey) {
 		//System.out.println(key +"----"+type+"----"+imageKey);
-		if(LearningType.valueOf(type).equals(LearningType.BOTH)){
+		if(LearningType.valueOf(type).equals(LearningType.TRAINING_TESTING)){
 			List<Roi> roiList=new ArrayList<Roi>();
 			if( classes.get(key).getTestingRois(imageKey)!=null) {
 				roiList.addAll(classes.get(key).getTestingRois(imageKey));
@@ -319,23 +285,18 @@ public class FeatureManager  {
 		}
 	}
 
-
-	//@Override
 	public void setClassLabel(String key, String label) {
 
-		//System.out.println(key);
-		//System.out.println(label);
 		ClassInfo info = classes.get(key);
 		info.setLabel(label);
 		classes.put(key, info);
 	}
 
-	//@Override
 	public int getNumOfClasses() {
 		return classes.size();
 	}
 
-	//@Override
+
 	public void addClass() {
 		String key = UUID.randomUUID().toString();
 		if (!classes.containsKey(key)) {
@@ -361,7 +322,6 @@ public class FeatureManager  {
 
 	}
 
-	//@Override
 	public void deleteClass(String key) {
 		classes.remove(key);
 	}
@@ -404,7 +364,6 @@ public class FeatureManager  {
 		return roiList;
 	}
 
-	//@Override
 	public void saveFeatureMetadata() {
 		projectInfo = projectManager.getMetaInfo();
 		projectInfo.resetFeatureInfo();
@@ -442,7 +401,6 @@ public class FeatureManager  {
 		projectManager.writeMetaInfo(projectInfo);
 	}
 
-	//@Override
 	public IDataSet extractFeatures(String featureType) {
        // System.out.println(featureType);
 		featureMap.get(featureType).createTrainingInstance(classes.values());
@@ -451,24 +409,15 @@ public class FeatureManager  {
 		return dataset;
 	}
 
-	//@Override
 	public Set<String> getFeatures() {
-
 		return null;
 	}
 
-	//@Override
-	public void addFeatures(IFeature feature) {
-
-	}
-
-	//@Override
+	
 	public List<IDataSet> extractAll(String featureType) {
-
 		return null;
 	}
 
-	//@Override
 	public boolean saveExamples(String filename, String classKey, String type, int sliceNum) {
 		//System.out.println(classKey + type);
 		List<Roi> rois = getExamples(classKey, type, sliceNum);
@@ -502,9 +451,7 @@ public class FeatureManager  {
 		return true;
 	}
 
-	//@Override
 	public void uploadExamples(String fileName, String classKey, String type, int sliceNum) {
-
 		addExampleList(classKey, openZip(fileName), type, sliceNum);
 
 	}
@@ -623,10 +570,9 @@ public class FeatureManager  {
 		return predictionResultClassification;
 	}
 
-	//@Override
 	public ImagePlus compute() {
 		
-		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {
 			predictionResultClassification = new HashMap<>();
 		}		
 		// IJ.debugMode=true;
@@ -645,7 +591,7 @@ public class FeatureManager  {
 			//System.out.println(image +" image");
 																	
 			//classification setting
-			if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIFICATION)) {															
+			if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {															
 							
 				//list of rois to make classified image instance				
 				List<Roi> training_roi_list;
@@ -695,7 +641,7 @@ public class FeatureManager  {
 												
 		}
 		
-		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIFICATION)) {
+		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {
 			return null;
 		}
 		return getClassifiedImage();
@@ -705,23 +651,18 @@ public class FeatureManager  {
 		return this.projectInfo.getProjectType();
 	}
 
-	//@Override
 	public Color getClassColor(String key) {
 		return classes.get(key).getColor();
 	}
 
-	//@Override
 	public void updateColor(String key, Color color) {
 		classes.get(key).setColor(color);
 	}
 
-	//@Override
 	public int getTotalSlice() {
-
 		return this.images.size();
 	}
 
-	//@Override
 	public ImagePlus getCurrentImage() {
 		if (sliceNum == 0) {
 			return createImageIcon("no-image.jpg");
@@ -729,23 +670,15 @@ public class FeatureManager  {
 		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
 	}
 
-	/*
-	private ImagePlus getImage(String image) {
-		return new ImagePlus(projectString + image);
-	}
-	 */
-	
-	//@Override
+
 	public int getCurrentSlice() {
 		return this.sliceNum;
 	}
 
-	//@Override
 	public ImagePlus getClassifiedImage() {
 		return new ImagePlus(featurePath + this.images.get(sliceNum - 1));
 	}
 
-	//@Override
 	public ImagePlus getNextImage() {
 		if (this.sliceNum < totalSlices) {
 			this.sliceNum += 1;
@@ -754,7 +687,6 @@ public class FeatureManager  {
 		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
 	}
 
-	//@Override
 	public ImagePlus getPreviousImage() {
 		if (this.sliceNum > 1) {
 			this.sliceNum -= 1;
@@ -771,7 +703,6 @@ public class FeatureManager  {
 		}
 	}
 
-	//@Override
 	public List<Color> getColors() {
 		List<Color> colors = new ArrayList<>();
 		for (ClassInfo classInfo : classes.values()) {

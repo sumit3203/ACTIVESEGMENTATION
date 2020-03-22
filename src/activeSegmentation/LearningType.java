@@ -4,7 +4,7 @@ public enum LearningType {
 
 	TRAINING (1),  
 	TESTING(2),
-    BOTH(3);
+    TRAINING_TESTING(3);
 	
 	private final int learningType;
 

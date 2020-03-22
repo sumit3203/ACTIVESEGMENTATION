@@ -2,9 +2,9 @@ package activeSegmentation;
 
 public enum ProjectType {
 
-	SEGMENTATION(1),  
-	CLASSIFICATION(2), 
-	BOTH   (3) ;
+	SEGM(1),  
+	CLASSIF(2), 
+	SEGM_CLASSIF(3) ;
 
 
 	private final int projectType;

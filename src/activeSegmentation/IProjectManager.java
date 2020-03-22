@@ -74,6 +74,10 @@ public interface IProjectManager {
 	 */
 	public ProjectInfo getMetaInfo();
 	
+	/**
+	 * updates the Matadata
+	 * @param projectInfo
+	 */
 	public void updateMetaInfo(ProjectInfo projectInfo);
 	
 	/**

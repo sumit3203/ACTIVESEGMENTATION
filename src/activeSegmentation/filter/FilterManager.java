@@ -181,10 +181,10 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
-				if(filter.getFilterType()==ProjectType.CLASSIFICATION.getProjectType()){
+				if(filter.getFilterType()==ProjectType.CLASSIF.getProjectType()){
 					for(String image: images) {
 						for(String key: featureManager.getClassKeys()) {
-							List<Roi> rois=featureManager.getExamples(key, LearningType.BOTH.name(), image);
+							List<Roi> rois=featureManager.getExamples(key, LearningType.TRAINING_TESTING.name(), image);
 							if(rois!=null && !rois.isEmpty()) {
 								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
 										filterString+image.substring(0, image.lastIndexOf(".")),

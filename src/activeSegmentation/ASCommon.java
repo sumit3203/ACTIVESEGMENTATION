@@ -49,7 +49,7 @@ public interface ASCommon {
 	// To name the segmentation result
 	public static final String FILTERRESULT="Classification result";
 	
-	// This is used for Json storage
+	// This is used for JSON storage
 	public static final String ENABLED="Enabled";
 	public static final String DISABLED="Disabled";
 	public static final String FILTERS="Filters";
@@ -105,8 +105,8 @@ public interface ASCommon {
 	 * Fonts
 	 */
 	public static final Font labelFONT = new Font("Arial", Font.BOLD, 13);
-	public static final Font panelFONT = new Font( "Arial", Font.BOLD, 10 );
+	public static final Font panelFONT = new Font("Arial", Font.BOLD, 10);
 	// General font of plugin
-	public static final Font FONT = new Font( "Arial", Font.PLAIN, 10 );
+	public static final Font FONT = new Font("Arial", Font.PLAIN, 10);
 	
 }
