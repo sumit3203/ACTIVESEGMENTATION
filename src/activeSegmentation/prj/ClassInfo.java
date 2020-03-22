@@ -15,6 +15,7 @@ public class ClassInfo {
 	String key;
 	String label;
 	Color color;
+	
 	Map<String,List<Roi>> trainingRois;	
 	Map<String,List<Roi>> testingRois;
 
@@ -28,15 +29,19 @@ public class ClassInfo {
 		this.trainingRois = trainingRois;
 		this.testingRois = testingRois;
 	}
+	
 	public String getKey() {
 		return key;
 	}
+	
 	public void setKey(String key) {
 		this.key = key;
 	}
+	
 	public String getLabel() {
 		return label;
 	}
+	
 	public void setLabel(String label) {
 		this.label = label;
 	}
@@ -44,6 +49,7 @@ public class ClassInfo {
 	public Color getColor() {
 		return color;
 	}
+	
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -56,10 +62,10 @@ public class ClassInfo {
 		this.testingRois = testingRois;
 	}	
 
-	
 	public  Set<String> getTrainingRoiSlices(){
 		return this.trainingRois.keySet();
 	}
+	
 	public  Set<String> getTestingRoiSlices(){
 		return this.testingRois.keySet();
 	}
@@ -75,7 +81,6 @@ public class ClassInfo {
 		}
 	}
 
-	
 	public void addTestingRois(String key, Roi roi){
 		if(this.testingRois.containsKey(key)){
 			this.testingRois.get(key).add(roi);
