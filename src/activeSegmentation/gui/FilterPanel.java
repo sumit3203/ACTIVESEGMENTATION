@@ -36,9 +36,6 @@ import javax.swing.JTextField;
 
 
 
-
-import javax.swing.SwingUtilities;
-
 import activeSegmentation.ASCommon;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
@@ -49,7 +46,7 @@ import activeSegmentation.util.Util;
 public class FilterPanel implements Runnable, ASCommon {
 
 	private FilterManager filterManager;
-	private IProjectManager projectManager;
+	//private IProjectManager projectManager;
 	private JTabbedPane pane;
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> textMap;
@@ -79,7 +76,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	final JFrame frame = new JFrame("Filters");
 
 	public FilterPanel(IProjectManager projectManager, FeatureManager  featureManager) {
-		this.projectManager= projectManager;
+		//this.projectManager= projectManager;
 		
 		this.filterManager =new FilterManager(projectManager, featureManager);		
 		this.filterList =Util.model();
@@ -139,7 +136,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		
 	}
 
-	private JPanel createTab( Map<String , String> settingsMap, Image image, 
+	JPanel createTab( Map<String , String> settingsMap, Image image, 
 			int size, int maxFilters,String filter) {
 		JPanel p = new JPanel();
 		p.setLayout(null);
@@ -166,11 +163,11 @@ public class FilterPanel implements Runnable, ASCommon {
 			label.setBounds( 330, y, 70, 25 );
 			p.add(label);
 
-			JTextField textArea= new JTextField(settingsMap.get(key));
-			textArea.setFont(ASCommon.FONT);
-			textArea.setBounds(400, y, 70, 25 );
-			p.add(textArea);   
-			jtextList.add(textArea);
+			JTextField input= new JTextField(settingsMap.get(key));
+			input.setFont(ASCommon.FONT);
+			input.setBounds(400, y, 70, 25 );
+			p.add(input);   
+			jtextList.add(input);
 			y=y+50;
 		}
 
@@ -183,6 +180,49 @@ public class FilterPanel implements Runnable, ASCommon {
 		return p;
 	}
 
+	JPanel createTab( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
+			int size, int maxFilters,String filter) {
+		JPanel p = new JPanel();
+		p.setLayout(null);
+		//p.setBackground(Color.GRAY);
+		int  y=10;
+		if(size!=1)
+			addButton( new JButton(), "Previous", null, 10, 90, 95, 38,p,PREVIOUS_BUTTON_PRESSED , null);
+		if(size != maxFilters)
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38,p ,NEXT_BUTTON_PRESSED , null);
+		
+		if(image!=null){
+			Icon icon = new ImageIcon( image );
+			JLabel imagelabel= new JLabel(icon);
+			imagelabel.setBounds(100, 3,210,225);
+			p.add(imagelabel);
+		}
+
+		List<JTextField> jtextList= new ArrayList<JTextField>();
+		for (String key: settingsMap.keySet()){
+
+			JLabel label= new JLabel(fieldsMap.get(key));
+			label.setFont(ASCommon.FONT);
+			label.setForeground(Color.BLACK);
+			label.setBounds( 330, y, 70, 25 );
+			p.add(label);
+
+			JTextField input= new JTextField(settingsMap.get(key));
+			input.setFont(ASCommon.FONT);
+			input.setBounds(400, y, 70, 25 );
+			p.add(input);   
+			jtextList.add(input);
+			y=y+50;
+		}
+
+		textMap.put(filter, jtextList);
+		JButton button= new JButton();
+		ActionEvent event = new ActionEvent( button,1 , filter);
+			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
+		
+
+		return p;
+	}
 	public void doAction( final ActionEvent event )
 	{
 		//System.out.println("IN DO ACTION");

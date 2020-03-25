@@ -53,7 +53,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
+@AFilter(key="ALOG", value="Anisotropic Laplacian of Gaussian")
 public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
     @SuppressWarnings("unused")
 
@@ -91,7 +91,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	private final  String FILTER_KEY = "ALOG";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Anisotropic Laplace of Gaussian";
+	private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
 	
 	private final int TYPE=1;
 	
@@ -117,7 +117,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	final int Ox=0, Oy=1, Oz=2;
 
-	// It is used to check whether to calibirate or not
+	// It is used to check whether to calibrate or not
 	private boolean doCalib = false;
 	/*
 	 * This variable is to calibrate the Image Window

@@ -137,6 +137,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
 					if(thePlugIn.getFilterType()==projectType.getProjectType()){
 						System.out.println(thePlugIn.getKey());
+						//TODO read annotations if present
+						// populate the second map
 						filterMap.put(thePlugIn.getKey(), thePlugIn);
 					}
 
@@ -159,6 +161,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			}
 		}
 	}
+	
 	private List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<String>();
 		File folder = new File(directory);
@@ -170,8 +173,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 		return imageList;
 	}
+	
 	public void applyFilters(){
-
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
 		//List<Pair<String,Pair<String[],Double[]>>> featureList= new ArrayList<Pair<String,Pair<String[],Double[]>>>();
@@ -200,8 +203,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 						}
 					}
 					
-				}
-				else{
+				} else {
 
 					for(String image: images) {
 						//IJ.log(image);
@@ -249,12 +251,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		return filterMap.get(key).updateSettings(settingsMap);
 	}
 
+	/*
 	public int getNumOfFeatures(String featureName) {
-		/*	if(featureName.equals("classLevel"))
-			return filterMap.get("ZMC").getDegree();*/
 		return 0;
 	}
-
+*/
 
 
 
@@ -267,7 +268,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				classNames.add(className.substring(0, className.length() - ASCommon.DOTCLASS.length()));
 			}
 		}
-
+		zip.close();
 		return classNames;
 	}
 
@@ -291,8 +292,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public boolean setDefault(String key) {
-		// TODO Auto-generated method stub
-		//System.out.println("IN SET DEFAULT");
 		if(filterMap.get(key).reset())
 			return true;
 
@@ -302,7 +301,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public void enableFilter(String key) {
-		// TODO Auto-generated method stub
 		if(filterMap.get(key).isEnabled()){
 			filterMap.get(key).setEnabled(false);	
 		}
@@ -355,7 +353,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
-
 		return filterMap.get(key).getImage();
 	}
 

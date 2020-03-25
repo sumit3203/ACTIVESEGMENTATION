@@ -3,28 +3,30 @@ package test;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-public class testFilter {
+public class testFilterAnn {
 
 	@FilterField("fancy field")
 	public int afield=1;
-	
-	public testFilter() {
-		// TODO Auto-generated constructor stub
-	}
-	
+	 
 	 
 	public static void main (String[] args) {
-		Class<testFilter> c= testFilter.class;
+		Class<testFilterAnn> c= testFilterAnn.class;
 		 Annotation[] annotations;
-		 AnnotationIntrospector ai = new AnnotationIntrospector();
+		 //AnnotationIntrospector ai = new AnnotationIntrospector();
 		 
 		 // Find field annotations
-	        annotations = ai.findFieldAnnotation(c, "afield");
-	        System.out.println("Annotation on field  afield are:");
-	        AnnotationIntrospector.showAnnotations(annotations);
+	        try {
+				annotations = AnnotationIntrospector.getFieldAnnotations(c, "afield");
+				 System.out.println("Annotation on field  afield are:");
+				 AnnotationIntrospector.printAnnotations(annotations);
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	       
 	        
 	    		
-			Field [] fields = testFilter.class.getFields();
+			Field [] fields = testFilterAnn.class.getFields();
 			for (Field field:fields)   {
 				Annotation annotation = field.getAnnotation(FilterField.class);
 				// System.out.println("///");

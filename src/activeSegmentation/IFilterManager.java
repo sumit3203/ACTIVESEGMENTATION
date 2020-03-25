@@ -76,11 +76,8 @@ public interface IFilterManager {
 	 */
 	public boolean updateFilterSetting(String key, Map<String,String> settingsMap);
 	
-	public int getNumOfFeatures(String featureName) ;
-	
-	
-	
-	
+	//public int getNumOfFeatures(String featureName) ;
+	 	
 	/**
 	 * This method will return processed image by particular filter
 	 * @param  filter key

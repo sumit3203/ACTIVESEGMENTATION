@@ -11,6 +11,7 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
+import test.FilterField;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -68,6 +69,7 @@ import static java.lang.Math.*;
  */
 
 
+@AFilter(key="LOG", value="Laplacian of Gaussian")
 public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter {
 	@SuppressWarnings("unused")
 
@@ -80,12 +82,19 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	private int nPasses=1;
 
 	public static boolean debug=IJ.debugMode;
+	
 	public final static String SIGMA="LOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISSEP="G_SEP", SCNORM="G_SCNORM";
 
+	@AFilterField(key=LEN, value="step")
 	private  int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="maximal scale")
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
+	@AFilterField(key=ISSEP, value="separable")
 	public  boolean sep= Prefs.getBoolean(ISSEP, true);
 
+	@AFilterField(key=SCNORM, value="normalized")
 	public  boolean scnorm= Prefs.getBoolean(SCNORM, false);
 
 
@@ -109,7 +118,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	private final int TYPE=1;
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 
 	/**
@@ -291,7 +300,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
-
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(ISSEP, Boolean.toString(sep));
@@ -302,7 +310,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		sep= Prefs.getBoolean(ISSEP, true);
@@ -327,7 +334,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 
