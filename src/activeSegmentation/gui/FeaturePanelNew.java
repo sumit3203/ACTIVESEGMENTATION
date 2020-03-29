@@ -49,7 +49,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-//import activeSegmentation.IProjectManager;
+ 
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.util.Util;
@@ -81,7 +81,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private Map<String, JList<String>> exampleList;
 	private Map<String, JList<String>> allexampleList;
 
-	/** array of roi list overlays to paint the transparent rois of each class */
+	/** array of ROI list overlays to paint the transparent ROIs of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
 
 	/** Used only during classification setting*/
@@ -390,21 +390,15 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	}
 
 	private void addAction(JButton button ,final  ActionEvent action){
-		 button.addActionListener( new ActionListener()
-		{
+		 button.addActionListener( new ActionListener()	{
 			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
+			public void actionPerformed( final ActionEvent e )	{
 				doAction(action);
 			}
 		} );
 	 
-		/*
-		button.addActionListener(  (
-				(e) -> doAction(action)
-			) );
-		 */
 	}
+	
 	private void loadImage(ImagePlus image){
 		this.displayImage=image;
 		setImage(this.displayImage);
@@ -417,70 +411,63 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		frame.repaint();
 	}
 
-	public void doAction( final ActionEvent event )
-	{
+	public void doAction( final ActionEvent event ) {
 		if(event== ADDCLASS_BUTTON_PRESSED){
 			featureManager.addClass();
 			addClassPanel();
 			validateFrame();
 			updateGui();
-		}
+		} // end if
 		if(event==DELETE_BUTTON_PRESSED){          
 
 			System.out.println(featureManager.getNumOfClasses());
 			System.out.println(jCheckBoxList.size());
 			int totalDel=0;
-			for (JCheckBox checkBox : jCheckBoxList) {
-
-				if (checkBox.isSelected()) {
+			
+			for (JCheckBox checkBox : jCheckBoxList) 
+				if (checkBox.isSelected()) 
 					totalDel++;
-				}
-			}
-			if(featureManager.getNumOfClasses()-totalDel<2) {
+		
+			if(featureManager.getNumOfClasses()-totalDel<2) 
              JOptionPane.showMessageDialog(null, "There should be minimum two classes");
-			}
 			else {
-
-				for (JCheckBox checkBox : jCheckBoxList) {
-
-					if (checkBox.isSelected()) {
+				for (JCheckBox checkBox : jCheckBoxList) 
+					if (checkBox.isSelected()) 
 						featureManager.deleteClass(checkBox.getName());
-					}
-				}
 				addClassPanel();
 				validateFrame();
 				updateGui();
 			}	
 
-		}
+		} // end if
 
 		if(event==SAVE_BUTTON_PRESSED){
 			featureManager.saveFeatureMetadata();
 			JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
-		}
+		} //end if
+		
 		if(event==SAVECLASS_BUTTON_PRESSED){
-			for (JCheckBox checkBox : jCheckBoxList) {
-				
-					//System.out.println(checkBox.getText());
-					String key=checkBox.getName();
-					featureManager.setClassLabel(key,jTextList.get(key).getText() );
+			for (JCheckBox checkBox : jCheckBoxList) {				
+				//System.out.println(checkBox.getText());
+				String key=checkBox.getName();
+				featureManager.setClassLabel(key,jTextList.get(key).getText() );
 				
 			}
 			addClassPanel();
 			validateFrame();
 			updateGui();
-		}
+		} // end if
+		
 		if(event == PREVIOUS_BUTTON_PRESSED){			
 			ImagePlus image=featureManager.getPreviousImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
+			
 			if (showColorOverlay){
-				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) 
 					classifiedImage = null;
-				}
-				else {
-					classifiedImage=featureManager.getClassifiedImage();
-				}				
+				else 
+					classifiedImage=featureManager.getClassifiedImage();		
 				updateResultOverlay(classifiedImage);
 			}
 
@@ -491,18 +478,17 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 				ic.zoomIn(x_centre,y_centre);
 			}			
 			updateGui();
-		}
+		} // end if
+		
 		if(event==NEXT_BUTTON_PRESSED  ){			
 			ImagePlus image=featureManager.getNextImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
 			if (showColorOverlay){
-				if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
+				if(valueOf(featureManager.getProjectType()).equals(CLASSIF))
 					classifiedImage = null;
-				}
-				else {
+				else
 					classifiedImage=featureManager.getClassifiedImage();
-				}
 				updateResultOverlay(classifiedImage);
 			}
 
@@ -514,7 +500,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			}
 			//imagePanel.add(ic);
 			updateGui();
-		}
+		} // end if
+		
 		if(event==COMPUTE_BUTTON_PRESSED){
 			if(valueOf(featureManager.getProjectType()).equals(CLASSIF)) {
 				// it means new round of training, so set result setting to false
@@ -538,33 +525,19 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			IJ.log("compute");
 
 			toggleOverlay();
-		}
+		} //end if
+		
 		if(event==TOGGLE_BUTTON_PRESSED){
-
 			toggleOverlay();
-		}
-
-		/*if(event==GROUND_BUTTON_PRESSED){
-			JFileChooser fileChooser = new JFileChooser();
-
-			// For Directory
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			int rVal = fileChooser.showOpenDialog(null);
-			if (rVal == JFileChooser.APPROVE_OPTION) {
-			 String file=fileChooser.getSelectedFile().toString();
-			 System.out.println(file);
-			 ImagePlus image=IJ.openImage(file);
-			 System.out.println(image.getHeight());
-			}
-		}*/
+		} // end if
+		
 		if(event==DOWNLOAD_BUTTON_PRESSED){
 
 			ImagePlus image=featureManager.stackedClassifiedImage();
 			image.show();
 			//FileSaver saver= new FileSaver(image);
 			//saver.saveAsTiff();
-		}
+		} //end if
 		
 		if(event==MASKS_BUTTON_PRESSED){
 			System.out.println("masks ");
@@ -573,7 +546,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			}
 			classifiedImage.show();
 			 
-		}
+		} //end if
 		
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
@@ -584,7 +557,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			((Component)event.getSource()).setBackground(c);
 			featureManager.updateColor(key, c);
 			updateGui();
-		}
+		}// end if
+		
 		if(event.getActionCommand()== "AddButton"){	
 			String key=((Component)event.getSource()).getName();
 			final Roi r = displayImage.getRoi();
@@ -592,20 +566,20 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 				return;
 			displayImage.killRoi();
 			
-			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice())) {
+			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
 				updateGui();
-			}
-			else {
+			else 
 			    JOptionPane.showMessageDialog(null, "Other class already contain roi");	
-			}
+	
 			
-
-		}
+		} //end if
+		
 		if(event.getActionCommand()== "UploadButton"){	
 			String key=((Component)event.getSource()).getName();
 			uploadExamples(key);
 			updateGui();
-		}
+		}//end if
+		
 		if(event.getActionCommand()== "DownloadButton"){	
 			String key=((Component)event.getSource()).getName();
 			downloadRois(key);
