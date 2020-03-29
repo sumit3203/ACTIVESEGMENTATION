@@ -13,15 +13,14 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-public class Util {
+public class GuiUtil {
 
 	/**
 	 * Returns a gridbag constraint with the given parameters, standard
 	 * L&amp;F insets and a west anchor.
 	 */
 	public static GridBagConstraints getGbc(int x, int y, int width,
-			boolean vFill, boolean hFill)
-	{
+			boolean vFill, boolean hFill)	{
 		final GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(6, 6, 5, 5);
 		c.anchor = GridBagConstraints.WEST;

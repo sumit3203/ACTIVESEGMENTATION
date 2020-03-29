@@ -26,7 +26,7 @@ import activeSegmentation.IClassifier;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.ProjectInfo;
-import activeSegmentation.util.Util;
+import activeSegmentation.util.GuiUtil;
 
 
 import javax.swing.ImageIcon;
@@ -50,7 +50,7 @@ public class LearningPanel implements Runnable, ASCommon {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
-    this.classifierList = Util.model();
+    this.classifierList = GuiUtil.model();
   }
   
   public void doAction(ActionEvent event)  {

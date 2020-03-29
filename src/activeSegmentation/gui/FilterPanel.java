@@ -41,12 +41,12 @@ import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filter.FilterManager;
-import activeSegmentation.util.Util;
+import activeSegmentation.util.GuiUtil;
 
 public class FilterPanel implements Runnable, ASCommon {
 
 	private FilterManager filterManager;
-	//private IProjectManager projectManager;
+
 	private JTabbedPane pane;
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> filerMap;
@@ -76,10 +76,9 @@ public class FilterPanel implements Runnable, ASCommon {
 	final JFrame frame = new JFrame("Filters");
 
 	public FilterPanel(IProjectManager projectManager, FeatureManager  featureManager) {
-		//this.projectManager= projectManager;
 		
 		this.filterManager =new FilterManager(projectManager, featureManager);		
-		this.filterList =Util.model();
+		this.filterList =GuiUtil.model();
 		this.filterList.setForeground(Color.ORANGE);
 		filerMap= new HashMap<String, List<JTextField>>();
 	}
@@ -100,7 +99,7 @@ public class FilterPanel implements Runnable, ASCommon {
         loadFilters();
 		pane.setSize(600, 400);
 		filterList.addMouseListener(mouseListener);
-		JScrollPane scrollPane = Util.addScrollPanel(filterList,null);
+		JScrollPane scrollPane = GuiUtil.addScrollPanel(filterList,null);
 		scrollPane.setBounds(605,20,100,380);
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
@@ -174,10 +173,13 @@ public class FilterPanel implements Runnable, ASCommon {
 		filerMap.put(filterName, jtextList);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filterName);
-			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
+			addButton( button,ASCommon.ENABLED, null, 480, 220 , 90, 20,p ,event, Color.GREEN);
 	 		return p;
 	}
 
+	/*
+	 * annotation code will be handled here
+	 */
 	JPanel createTab( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
 			int size, int maxFilters,String filterName) {
 		JPanel p = new JPanel();
@@ -227,9 +229,6 @@ public class FilterPanel implements Runnable, ASCommon {
 	 * 
 	 */
 	public void doAction( final ActionEvent event )	{
-		//System.out.println("IN DO ACTION");
-		//System.out.println(event.toString());
-
 		Set<String> filters= filterManager.getFilters();  
 		for(String filter : filters){
 			if(event.getActionCommand()== filter){
@@ -318,11 +317,10 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
-			JList theList = ( JList) mouseEvent.getSource();
+			JList<?> theList = ( JList<?>) mouseEvent.getSource();
 			if (mouseEvent.getClickCount() == 2) {
 				int index = theList.getSelectedIndex();
 				if (index >= 0) {
-					//String item =theList.getSelectedValue().toString();
 					String filter=filterList.getSelectedValue();
 					filterManager.enableFilter(filter);
 					pane.removeAll();
@@ -338,8 +336,8 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
-			JComponent panel, final ActionEvent action,final Color color )
-	{
+			JComponent panel, final ActionEvent action,final Color color )	{
+		
 		panel.add( button );
 		button.setText( label );
 		button.setIcon( icon );
@@ -349,7 +347,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		button.setBackground(new Color(192, 192, 192));
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
-		//System.out.println("ADDED");
+	
 		button.addActionListener( new ActionListener()	{
 			@Override
 			public void actionPerformed( final ActionEvent e ){

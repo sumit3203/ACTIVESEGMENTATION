@@ -52,7 +52,7 @@ import activeSegmentation.ASCommon;
  
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
-import activeSegmentation.util.Util;
+import activeSegmentation.util.GuiUtil;
 
 import static  activeSegmentation.ProjectType.*;
 
@@ -145,7 +145,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		frame.setResizable(false);
  		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		JList<String> frameList= Util.model();
+		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);
 		
 		
@@ -324,11 +324,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	}
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
-		JList<String> current=Util.model();
+		JList<String> current=GuiUtil.model();
 
 		current.setForeground(color);
 		exampleList.put(key,current);
-		JList<String> all=Util.model();
+		JList<String> all=GuiUtil.model();
 		all.setForeground(color);
 		allexampleList.put(key,all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();
@@ -350,8 +350,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		addButton(upload, null, uploadIcon, 605,280,350,250, buttonPanel, uploadAction, null);
 		addButton(download, null, downloadIcon, 605,280,350,250, buttonPanel, downloadAction, null);
 		roiPanel.add(buttonPanel);
-		panel.add(Util.addScrollPanel(exampleList.get(key),null));
-		panel.add(Util.addScrollPanel(allexampleList.get(key),null));
+		panel.add(GuiUtil.addScrollPanel(exampleList.get(key),null));
+		panel.add(GuiUtil.addScrollPanel(allexampleList.get(key),null));
 		roiPanel.add(panel );
 		exampleList.get(key).addMouseListener(mouseListener);
 		allexampleList.get(key).addMouseListener(mouseListener);

@@ -36,7 +36,7 @@ import activeSegmentation.*;
 import activeSegmentation.classif.RoiInstanceCreator;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.*;
-import activeSegmentation.util.Util;
+import activeSegmentation.util.GuiUtil;
 
 /**
  * 
@@ -88,7 +88,7 @@ public class FeatureManager  {
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.FEATURESDIR);
 		this.totalSlices = loadImages(this.projectString);
-		this.defaultColors = Util.setDefaultColors();
+		this.defaultColors = GuiUtil.setDefaultColors();
 		if (this.totalSlices > 0) {
 			this.sliceNum = 1;
 		}
