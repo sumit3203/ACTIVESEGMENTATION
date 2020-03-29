@@ -1,5 +1,8 @@
 package activeSegmentation;
 
+/*
+ * Enumeration for different learning stages 
+ */
 public enum LearningType {
 
 	TRAINING (1),  

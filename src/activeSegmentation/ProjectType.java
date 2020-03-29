@@ -1,5 +1,8 @@
 package activeSegmentation;
 
+/*
+ * Enumeration for different project types
+ */
 public enum ProjectType {
 
 	SEGM(1),  

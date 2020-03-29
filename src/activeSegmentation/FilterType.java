@@ -1,5 +1,8 @@
 package activeSegmentation;
 
+/*
+ * Enumeration for different filter types
+ */
 public enum FilterType {
 
 	SEGM(1),  
