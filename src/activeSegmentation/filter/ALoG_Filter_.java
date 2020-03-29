@@ -496,12 +496,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public int getFilterType() {
-		// TODO Auto-generated method stub
-		return this.TYPE;
-	}
-
+	
 	@Override
 	public <T> T getFeatures() {
 		// TODO Auto-generated method stub

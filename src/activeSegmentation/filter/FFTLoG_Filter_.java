@@ -308,11 +308,6 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 
 
 	@Override
-	public int getFilterType() {
-		return this.TYPE;
-	}
-
-	@Override
 	public <T> T getFeatures() {
 		return null;
 	}

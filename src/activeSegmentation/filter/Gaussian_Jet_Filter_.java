@@ -434,10 +434,6 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public int getFilterType() {
-		return this.TYPE;
-	}
 
 	@Override
 	public <T> T getFeatures() {

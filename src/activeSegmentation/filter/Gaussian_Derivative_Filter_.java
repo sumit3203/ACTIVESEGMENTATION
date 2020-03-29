@@ -441,10 +441,6 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public int getFilterType() {
-		return this.TYPE;
-	}
 
 	@Override
 	public <T> T getFeatures() {

@@ -21,6 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.FilterType;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
@@ -132,7 +133,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					//IJ.log(plugin);
 					//IJ.debugMode=true;
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
-					if(thePlugIn.getFilterType()==projectType.getProjectType()){
+					if (projectType==ProjectType.SEGM && thePlugIn.getFilterType()==FilterType.SEGM ) {
+				//	if (thePlugIn.getFilterType()==projectType.getProjectType()){
 						System.out.println(thePlugIn.getKey());
 						//TODO read annotations if present
 						// populate the second map
@@ -173,14 +175,18 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	public void applyFilters(){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
-		//List<Pair<String,Pair<String[],Double[]>>> featureList= new ArrayList<Pair<String,Pair<String[],Double[]>>>();
+ 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
         Map<String,Set<String>> features= new HashMap<String,Set<String>>();
-		for(IFilter filter: filterMap.values()){
+		
+        for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
-				if(filter.getFilterType()==ProjectType.CLASSIF.getProjectType()){
+				// classification case
+				// if(filter.getFilterType()==ProjectType.CLASSIF.getProjectType()){
+				if (filter.getFilterType()==FilterType.CLASSIF
+						&& projectType==ProjectType.CLASSIF ){
 					for(String image: images) {
 						for(String key: featureManager.getClassKeys()) {
 							List<Roi> rois=featureManager.getExamples(key, LearningType.TRAINING_TESTING.name(), image);
@@ -200,7 +206,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					}
 					
 				} else {
-
 					for(String image: images) {
 						//IJ.log(image);
 						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
@@ -212,15 +217,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 		}
 		if(featureList!=null && featureList.size()>0) {
-			//System.out.println(featureList.size());
-			IJ.log("Features computed"+featureList.size());
-			//System.out.println(features.size());
+	 
+			IJ.log("Features computed "+featureList.size());
 			projectInfo.setFeatures(featureList);
 			projectInfo.setFeatureNames(features);
-			/*	for(Pair<String,Double[]> featureL: featureList.values()) {
-				System.out.println(featureL.first);
-				System.out.println(Arrays.toString(featureL.second));
-			}*/
+ 
 		}
 
 	}

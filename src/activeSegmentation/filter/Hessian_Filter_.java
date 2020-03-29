@@ -472,10 +472,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public int getFilterType() {
-		return this.TYPE;
-	}
 
 	@Override
 	public <T> T getFeatures() {

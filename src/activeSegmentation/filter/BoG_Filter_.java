@@ -454,11 +454,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
-	@Override
-	public int getFilterType() {
-		// TODO Auto-generated method stub
-		return this.TYPE;
-	}
+	 
 	@Override
 	public <T> T getFeatures() {
 		// TODO Auto-generated method stub

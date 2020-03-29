@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
 import activeSegmentation.filter.AFilterField;
 import ij.Prefs;
@@ -101,12 +102,7 @@ public class TestFilter implements IFilter {
 
 	}
 
-	@Override
-	public int getFilterType() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	 
 	@Override
 	public <T> T getFeatures() {
 		// TODO Auto-generated method stub
@@ -124,6 +120,11 @@ public class TestFilter implements IFilter {
 		//filter.getDefaultSettings();
 		filter.getAnotatedFileds();
 
+	}
+
+	@Override
+	public FilterType getFilterType() {
+		return FilterType.SEGM;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
 import ij.ImagePlus;
 //import ij.ImageStack;
@@ -247,9 +248,8 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
 	}
 */
 	@Override
-	public int getFilterType() {
-		// TODO Auto-generated method stub
-		return this.TYPE;
+	public FilterType getFilterType() {
+		return FilterType.CLASSIF;
 	}
 
 /*	@Override

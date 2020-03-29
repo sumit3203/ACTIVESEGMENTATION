@@ -291,10 +291,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter {
 	}
 
 
-	@Override
-	public int getFilterType() {
-		return TYPE;
-	}
+	
 
 
 	@Override

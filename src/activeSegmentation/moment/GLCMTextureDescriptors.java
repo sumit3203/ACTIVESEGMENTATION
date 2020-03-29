@@ -214,5 +214,7 @@ public class GLCMTextureDescriptors {
 		this.d = d;
 		this.phi = phi;
 	}
+	
+	
 
 }

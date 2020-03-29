@@ -1,6 +1,7 @@
 package activeSegmentation.moment;
 
 
+import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
 import ij.IJ;
 import ij.ImagePlus;
@@ -167,9 +168,8 @@ public class Legendre_feature_ implements IFilter {
 	}
 
 	@Override
-	public int getFilterType() {
-		// TODO Auto-generated method stub
-		return this.TYPE;
+	public FilterType getFilterType() {
+		return FilterType.CLASSIF;
 	}
 
 	@Override

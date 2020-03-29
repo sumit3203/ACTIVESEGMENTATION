@@ -43,7 +43,7 @@ public interface IFilter {
 	// IFSEGM - segmentation: one to one NxN -> NxN
 	// IFCLASS - segmentation: many to one NxN -> 1
 	// eventually move into enum
-	public static final int IFSEGM=1, IFCLASS=2;
+	//public static final int IFSEGM=1, IFCLASS=2;
 	
 	/**
 	 * Returns a new default settings map for the filter 
@@ -108,9 +108,11 @@ public interface IFilter {
 	public void setEnabled(boolean isEnabled);
 	
 	/**
-	 * change into enum
+	 * Filter type: segmentation or classification
 	 */
-	public int getFilterType();
+	default public FilterType getFilterType() {
+		return FilterType.SEGM;
+	}
 	
 	/**
 	 * used in for loops  -> typing on method level necessary
