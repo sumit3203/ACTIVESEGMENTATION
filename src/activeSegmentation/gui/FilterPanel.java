@@ -119,12 +119,12 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	
 	private void loadFilters(){
-		Set<String> filters= filterManager.getFilters();  
+		Set<String> filters= filterManager.getAllFilters();  
 		//System.out.println(filters.size());
 		int filterSize=1;
 		for(String filter: filters){
 			if(filterManager.isFilterEnabled(filter)){
-				pane.addTab(filter,null,createTab(filterManager.getFilterSetting(filter),
+				pane.addTab(filter,null,createTab(filterManager.getDefaultFilterSettings(filter),
 						filterManager.getFilterImage(filter), 
 						filterSize, filters.size(),filter));
 				pane.setForeground(Color.BLACK);
@@ -180,7 +180,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	/*
 	 * annotation code will be handled here
 	 */
-	JPanel createTab( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
+	JPanel createTabAnnotations( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
 			int size, int maxFilters,String filterName) {
 		JPanel p = new JPanel();
 		p.setLayout(null);
@@ -229,7 +229,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	 * 
 	 */
 	public void doAction( final ActionEvent event )	{
-		Set<String> filters= filterManager.getFilters();  
+		Set<String> filters= filterManager.getAllFilters();  
 		for(String filter : filters){
 			if(event.getActionCommand()== filter){
 
@@ -262,11 +262,11 @@ public class FilterPanel implements Runnable, ASCommon {
 			String key= pane.getTitleAt( pane.getSelectedIndex());
 			int i=0;
 			Map<String,String> settingsMap= new HashMap<String, String>();
-			for (String settingsKey: filterManager.getFilterSetting(key).keySet()){
+			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
 				settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
 				i++;
 			}
-			filterManager.updateFilterSetting(key, settingsMap);		
+			filterManager.updateFilterSettings(key, settingsMap);		
 			filterManager.saveFiltersMetaData();
 			IJ.log("FILTER SETTINGS SAVED");
 
@@ -292,7 +292,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	private void updateTabbedGui(String key){
 		int i=0;
-		Map<String,String> settingsMap=filterManager.getFilterSetting(key);
+		Map<String,String> settingsMap=filterManager.getDefaultFilterSettings(key);
 		for (String settingsKey: settingsMap.keySet() ){
 			
 			 filerMap.get(key).get(i).setText(settingsMap.get(settingsKey));
@@ -302,7 +302,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	}
 
 	private void updateFilterList() {
-		Set<String> filters= filterManager.getFilters();  
+		Set<String> filters= filterManager.getAllFilters();  
 		Vector<String> listModel = new Vector<String>();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){

@@ -58,7 +58,7 @@ public interface IFilterManager {
 	 * @return set of loaded or available filters
 	 *
 	 */
-	public Set<String> getFilters();
+	public Set<String> getAllFilters();
 	
 	/**
 	 * This method will give the setting of the particular filters 
@@ -66,7 +66,7 @@ public interface IFilterManager {
 	 * @param key of the filter
 	 *
 	 */
-	public Map<String,String> getFilterSetting(String key);
+	public Map<String,String> getDefaultFilterSettings(String key);
 	
 	/**
 	 * This method will update the setting of the particular filters 
@@ -74,7 +74,7 @@ public interface IFilterManager {
 	 * @param key of the filter
 	 *@param  updated setting map
 	 */
-	public boolean updateFilterSetting(String key, Map<String,String> settingsMap);
+	public boolean updateFilterSettings(String key, Map<String,String> settingsMap);
 	
 	//public int getNumOfFeatures(String featureName) ;
 	 	

@@ -74,12 +74,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	public FilterManager(IProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
+		
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
-		System.out.println("PT: " +ProjectType.valueOf(this.projectInfo.getProjectType()));
+		IJ.log("Project Type: " + ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
-		//System.out.println(projectManager.getMetaInfo().getTrainingStack());
+	 
 		try {
 			List<String> jars=projectInfo.getPluginPath();
 			System.out.println(jars);
@@ -88,10 +89,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			IJ.log("Filters Loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			IJ.log("Filters NOT Loaded. Check path");
 		}
-		IJ.log("Filters NOT Loaded. Check path");
 		
 		this.featureManager= featureManager;
 	}
@@ -107,22 +107,19 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		String cp=System.getProperty("java.class.path");
 		
 		for(String plugin: plugins){
-			//System.out.println(FilterManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-			//System.out.println(plugin);
-			//System.out.println(installJarPlugins(home+"/"+plugin));
+		
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(plugin));
-				//addFile(home+"/"+plugin);
+				
 				cp+=";" + plugin;
 				System.setProperty("java.class.path", cp);
-				System.out.println("classpath:  "+cp);
+				
 				File g = new File(plugin);
 				if (g.isFile())
 					addJar(g);
 			}
-//			else if (plugin.endsWith(ASCommon.DOTCLASS)){
-//				classes.add(plugin);
-//			}
+			System.out.println("classpath:  "+cp);
+
 		}
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
@@ -230,12 +227,16 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
-	public Set<String> getFilters(){
+	public Set<String> getAllFilters(){
 		return filterMap.keySet();
 	}
+	
+	
+	public IFilter getFilter(String key){
+		return filterMap.get(key);
+	}
 
-	public Map<String,String> getFilterSetting(String key){
-
+	public Map<String,String> getDefaultFilterSettings(String key){
 		return filterMap.get(key).getDefaultSettings();
 	}
 
@@ -246,7 +247,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
-	public boolean updateFilterSetting(String key, Map<String,String> settingsMap){
+	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
 
 		return filterMap.get(key).updateSettings(settingsMap);
 	}
@@ -315,9 +316,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		projectInfo= projectManager.getMetaInfo();
 		//System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<Map<String,String>>();
-		for(String key: getFilters()){
+		for(String key: getAllFilters()){
 			Map<String,String> filters = new HashMap<String,String>();
-			Map<String,String> filtersetting =getFilterSetting(key);
+			Map<String,String> filtersetting =getDefaultFilterSettings(key);
 			filters.put(ASCommon.FILTER, key);
 			for(String setting: filtersetting.keySet()){
 				filters.put(setting, filtersetting.get(setting));		
@@ -341,7 +342,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		List<Map<String,String>> filterObj= projectInfo.getFilters();
 		for(Map<String, String> filter: filterObj){
 			String filterName=filter.get(ASCommon.FILTER);
-			updateFilterSetting(filterName, filter);
+			updateFilterSettings(filterName, filter);
 			if(filter.get("enabled").equalsIgnoreCase("true")){
 				filterMap.get(filterName).setEnabled(true);
 			}else{
