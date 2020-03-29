@@ -90,27 +90,25 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
 	
 	/*
-	 *  the files should be in the resources/feature folder
+	 *  the files must be in the resources/feature folder
 	 */
 	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
 	private static final Icon downloadIcon = new ImageIcon(FeaturePanelNew.class.getResource("download.png"));
  
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
+	private ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
-	ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
-	ActionEvent SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
-	ActionEvent DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
-	ActionEvent COMPUTE_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
-	ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
-	ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
-	ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-	ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
-		 
-	
-	//ActionEvent RESET_BUTTON_PRESSED ;//= new ActionEvent(this, 4, "Reset");
+	private ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
+	private ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
+	private ActionEvent SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
+	private ActionEvent DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
+	private ActionEvent COMPUTE_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
+	private ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
+	private ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
+	private ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
+	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
+ 
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
@@ -123,6 +121,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private JComboBox<LearningType> learningType;
 	private JFrame frame;
 
+	/*
+	 * constructor 
+	 */
 	public FeaturePanelNew(FeatureManager featureManager) {		
 		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
@@ -133,15 +134,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		this.allexampleList = new HashMap<String, JList<String>>();
 		roiOverlayList = new HashMap<String, RoiListOverlay>();
 		//tempClassifiedImage = new ImagePlus();		
-
-
-		//this.hide();
 		this.setVisible(false);
 		showPanel();
 	}
-
-
-
 
 
 	public void showPanel() {
@@ -166,11 +161,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		/*
 		 * image panel
 		 */
-		
-		
 		imagePanel.setLayout(new BorderLayout());
 		
-			ic=new SimpleCanvas(featureManager.getCurrentImage());
+		ic=new SimpleCanvas(featureManager.getCurrentImage());
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
 		setOverlay();
@@ -249,14 +242,10 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 					if(showColorOverlay) {
 						updateGui();
 						updateResultOverlay(null);
-					}
-					else {
-						updateGui();
-					}					
-				}
-				else {
+					} else 
+						updateGui();			
+				} else 
 					updateGui();
-				}
 
 
 				// here we need to add for classification
@@ -270,14 +259,12 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		learningType.setForeground(Color.WHITE);
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
-		//addButton(new JButton(), "GROUND TRUTH",null, 720,100,350,80,dataJPanel, GROUND_BUTTON_PRESSED,null);
+		
 		panel.add(dataJPanel);
 		
 		/*
 		 * ROI panel
 		 */
-		
-		
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
 		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
@@ -289,7 +276,6 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		/*
 		 *  frame code
 		 */
-		
 		frame.pack();
 		frame.setSize(largeframeWidth,largeframeHight);
 		//frame.setSize(getMaximumSize());		
