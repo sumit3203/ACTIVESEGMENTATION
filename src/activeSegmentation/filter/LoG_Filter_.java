@@ -12,8 +12,11 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
 import test.FilterField;
+import test.testFilterAnn;
 
 import java.awt.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,19 +86,19 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	public static boolean debug=IJ.debugMode;
 	
-	public final static String SIGMA="LOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISSEP="G_SEP", SCNORM="G_SCNORM";
+	public final static String SIGMA="LOG_sigma", LEN="G_len", MAX_LEN="G_MAX1", ISSEP="G_SEP1", SCNORM="G_SCNORM1";
 
-	@AFilterField(key=LEN, value="step")
-	private  int sz= Prefs.getInt(LEN, 2);
-	
-	@AFilterField(key=MAX_LEN, value="maximal scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
-	
 	@AFilterField(key=ISSEP, value="separable")
-	public  boolean sep= Prefs.getBoolean(ISSEP, true);
+	public boolean sep= Prefs.getBoolean(ISSEP, true);
 
 	@AFilterField(key=SCNORM, value="normalized")
-	public  boolean scnorm= Prefs.getBoolean(SCNORM, false);
+	public boolean scnorm= Prefs.getBoolean(SCNORM, false);
+	
+	@AFilterField(key=LEN, value="size")
+	public int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max size")
+	public int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 
 	private ImagePlus image=null;	
@@ -118,7 +121,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	private final int TYPE=1;
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	//private ImageStack imageStack;
+
 
 
 	/**
@@ -298,13 +301,14 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	}
 
+	
+	
 	@Override
 	public Map<String, String> getDefaultSettings() {
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(ISSEP, Boolean.toString(sep));
 		settings.put(SCNORM, Boolean.toString(scnorm));
-
 		return this.settings;
 	}
 
@@ -390,6 +394,13 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	@Override
 	public Set<String> getFeatureNames() {
 		return null;
+	}
+	
+	public static void main (String[] args) {
+		LoG_Filter_ filter=new LoG_Filter_();
+		
+		filter.getAnotatedFileds();
+		
 	}
 
 }

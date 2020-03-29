@@ -4,6 +4,8 @@ package activeSegmentation.gui;
 
 import ij.IJ;
 import ij.ImagePlus;
+import test.FilterField;
+import test.testFilterAnn;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +41,7 @@ import javax.swing.JTextField;
 
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.feature.FeatureManager;
@@ -182,35 +187,52 @@ public class FilterPanel implements Runnable, ASCommon {
 	 */
 	JPanel createTabAnnotations( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
 			int size, int maxFilters,String filterName) {
-		JPanel p = new JPanel();
-		p.setLayout(null);
-		//p.setBackground(Color.GRAY);
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+
 		int  y=10;
 		if (size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, p, PREVIOUS_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, panel, PREVIOUS_BUTTON_PRESSED , null);
 		if (size != maxFilters)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38, p ,NEXT_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
 		
 		if (image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
 			imagelabel.setBounds(100, 3,210,225);
-			p.add(imagelabel);
+			panel.add(imagelabel);
 		}
 
 		List<JTextField> jtextList= new ArrayList<JTextField>();
+		IFilter filter=filterManager.getFilter(  filterName);
+		 System.out.println("all field annotations");
+ 		
+			Field [] fields = filter.getClass().getFields();
+	 			
+			for (Field field:fields)   {
+				Annotation annotation = field.getAnnotation(FilterField.class);
+				// System.out.println("///");
+				 System.out.println(annotation.toString());
+		        if(annotation instanceof FilterField){
+		        	FilterField customAnnotation = (FilterField) annotation;
+		           System.out.println("name: " + customAnnotation.value());
+		        }
+			}
+			
 		
 		for (String key: settingsMap.keySet()){
+			
+			
 			JLabel label= new JLabel(fieldsMap.get(key));
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
 			label.setBounds( 330, y, 70, 25 );
-			p.add(label);
+			panel.add(label);
 
 			JTextField input= new JTextField(settingsMap.get(key));
 			input.setFont(ASCommon.FONT);
 			input.setBounds(400, y, 70, 25 );
-			p.add(input);   
+			panel.add(input);   
 			jtextList.add(input);
 			y=y+50;
 		}
@@ -218,10 +240,10 @@ public class FilterPanel implements Runnable, ASCommon {
 		filerMap.put(filterName, jtextList);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filterName);
-			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
+			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,panel ,event, Color.GREEN);
 		
 
-		return p;
+		return panel;
 	}
 	
 	

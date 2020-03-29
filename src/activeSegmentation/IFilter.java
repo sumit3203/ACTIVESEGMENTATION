@@ -5,9 +5,14 @@ import ij.gui.Roi;
 import ij.process.ImageProcessor;
 
 import java.awt.Image;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import activeSegmentation.filter.AFilterField;
+import activeSegmentation.filter.LoG_Filter_;
 
 /**
  * * 
@@ -116,6 +121,24 @@ public interface IFilter {
 	 * names of features must be unique
 	 */
 	public Set<String> getFeatureNames();
+
+	Map< String, String > afields= new HashMap<String, String>();
+	
+	default Map<String, String> getAnotatedFileds(){		
+		Field [] fields = this.getClass().getFields();
+		//System.out.println("fields "+fields.length);
+		for (Field field:fields)   {
+			if (field.isAnnotationPresent(AFilterField.class)) {
+				AFilterField fielda =  field.getAnnotation(AFilterField.class);
+				//System.out.println(field.toString());
+		        System.out.println("key: " + fielda.key() +" value: " + fielda.value());
+		        afields.put(fielda.key(), fielda.value());
+			}
+		}
+		
+		return afields;
+	 
+	}
 
 	
 }

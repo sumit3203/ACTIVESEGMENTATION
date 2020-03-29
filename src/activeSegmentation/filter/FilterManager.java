@@ -150,7 +150,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private void addJar(File f) throws IOException {
 		if (f.getName().endsWith(".jar")) {
-
 			try {
 				addURL(f.toURI().toURL());
 			} catch (MalformedURLException e) {

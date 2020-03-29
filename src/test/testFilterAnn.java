@@ -3,16 +3,27 @@ package test;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import activeSegmentation.filter.AFilterField;
+import activeSegmentation.filter.LoG_Filter_;
+
 public class testFilterAnn {
 
-	@FilterField("fancy field")
+	@AFilterField(key="field", value="field annotation")
 	public int afield=1;
-	 
-	 
+	
+	@AFilterField(key="field2", value="field annotation")
+	public int afield2=2;
+	
+	@AFilterField(key="field3", value="field annotation")
+	public int afield3=3;
+	
+	@AFilterField(key="field4", value="field annotation")
+	public int afield4=3;
+	
 	public static void main (String[] args) {
 		Class<testFilterAnn> c= testFilterAnn.class;
 		 Annotation[] annotations;
-		 //AnnotationIntrospector ai = new AnnotationIntrospector();
+	 
 		 
 		 // Find field annotations
 	        try {
@@ -24,19 +35,21 @@ public class testFilterAnn {
 				e.printStackTrace();
 			}
 	       
-	        
-	    		
+	        System.out.println("All field annotations");
+	    	
 			Field [] fields = testFilterAnn.class.getFields();
+			//Field [] fields = testFilterAnn.getClass().getFields();
+			
+
+			System.out.println(fields.length);
+			
 			for (Field field:fields)   {
-				Annotation annotation = field.getAnnotation(FilterField.class);
-				// System.out.println("///");
-				 System.out.println(annotation.toString());
-		        if(annotation instanceof FilterField){
-		        	FilterField customAnnotation = (FilterField) annotation;
-		           System.out.println("name: " + customAnnotation.value());
-		        }
+				if (field.isAnnotationPresent(AFilterField.class)) {
+					AFilterField fielda =  field.getAnnotation(AFilterField.class);
+					System.out.println(field.toString());
+			        System.out.println("key: " + fielda.key() +" value: " + fielda.value());
+				}
 			}
-		 
 	        
 		 
 	}

@@ -1,7 +1,6 @@
 package activeSegmentation.filter;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
@@ -12,9 +11,9 @@ import ij.process.Blitter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
-import ijaux.scale.Pair;
 
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
 import dsp.Conv;
 import static java.lang.Math.*;
@@ -85,9 +83,14 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
 
+	@AFilterField(key=ISSEP, value="separable")
 	public static boolean sep= Prefs.getBoolean(ISSEP, false);
+	
+	@AFilterField(key=ISO, value="GISO")
 	private static boolean isiso= Prefs.getBoolean(ISO, true);
+	
 	private boolean isEnabled=true;
+	
 	private final int TYPE=1;
 
 	public boolean isFloat=false;
@@ -106,11 +109,13 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	private ImageStack imageStack;
-	
+	//private ImageStack imageStack;
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
+	
 	/**
 	 * 
 	 */
@@ -141,8 +146,12 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 
   
-
-
+	public static void main (String[] args) {
+		BoG_Filter_ filter=new BoG_Filter_();
+		
+		filter.getDefaultSettings();
+		
+	}
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
@@ -353,6 +362,17 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
    @Override
 	public Map<String, String> getDefaultSettings() {
 
+	   Field [] fields = BoG_Filter_.class.getFields();
+		System.out.println("fields "+fields.length);
+		
+		for (Field field:fields)   {
+			if (field.isAnnotationPresent(AFilterField.class)) {
+				AFilterField fielda =  field.getAnnotation(AFilterField.class);
+				//System.out.println(field.toString());
+		        System.out.println("key: " + fielda.key() +" value: " + fielda.value());
+			}
+		}
+		
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(ISSEP, Boolean.toString(sep));
