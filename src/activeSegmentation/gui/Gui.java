@@ -1,8 +1,5 @@
 package activeSegmentation.gui;
 
-
-
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -56,8 +53,6 @@ public class Gui implements ASCommon {
 	}
 
 	public void doAction(ActionEvent event) 	{
-		//System.out.println("IN DO ACTION");
-		//System.out.println(event.toString());
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
 			if(this.filterPanel == null) {
 				// for time being feature manager is passed , will think
@@ -121,8 +116,7 @@ public class Gui implements ASCommon {
 	}
 
 
-	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)
-	{
+	private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)	{
 		JButton button = new JButton(label, icon);
 		button.setFont(labelFONT);
 		button.setBorderPainted(false);

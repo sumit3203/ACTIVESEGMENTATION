@@ -44,7 +44,7 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
-import activeSegmentation.prj.ProjectManagerImp;
+
 import activeSegmentation.util.Util;
 
 public class ViewFilterResults extends ImageWindow  {
@@ -59,42 +59,44 @@ public class ViewFilterResults extends ImageWindow  {
 	private ProjectInfo projectInfo;
 	private String filterString;
 	private Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
-	/** array of roi list overlays to paint the transparent rois of each class */
+	
+	/** array of ROI list overlays to paint the transparent ROIs of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 10 );
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	ActionEvent NEXT_BUTTON_PRESSED;
+	private ActionEvent NEXT_BUTTON_PRESSED;
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
-	ActionEvent SLICE_NEXT_BUTTON_PRESSED;
+	private ActionEvent SLICE_NEXT_BUTTON_PRESSED;
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	ActionEvent PREVIOUS_BUTTON_PRESSED ;
+	private ActionEvent PREVIOUS_BUTTON_PRESSED ;
 
-	ActionEvent SLICE_PREVIOUS_BUTTON_PRESSED;
+	private ActionEvent SLICE_PREVIOUS_BUTTON_PRESSED;
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	ActionEvent VIEW_BUTTON_PRESSED ;
+	private ActionEvent VIEW_BUTTON_PRESSED ;
 	
 	private Map<String, JList<String>> exampleList;
 	private Map<String, JList<String>> allexampleList;
 	JPanel imagePanel,roiPanel;
-	JTextField imageNum;
+	JTextField imageNumField;
 	JTextField sliceField;
-	JLabel totalSlice;
-	JLabel total;
+	JLabel totalSliceLabel;
+	// TODO rename
+	JLabel totalLabel;
 	JLabel imageName=new JLabel();
 	List<String> featuresList;
 	List<String> images;
 	int sliceNum,featureNum,totalSlices,totalFeatures;
+	
 	JFrame frame;
 	private JComboBox<LearningType> learningType;
 	private ImagePlus displayImage;
 	
 	public ViewFilterResults(IProjectManager projectManager, FeatureManager featureManager) {
-		//super(image);
 		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;
 		this.featureManager=featureManager;
@@ -104,25 +106,11 @@ public class ViewFilterResults extends ImageWindow  {
 		this.allexampleList = new HashMap<String, JList<String>>();
 		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
 		this.projectInfo=this.projectManager.getMetaInfo();
-		//this.images=loadImages(projectString);
 		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
-		//this.hide();
 		this.setVisible(false);
 		showPanel();
 	}
 
-
- /*
-	private static ImagePlus  createImageIcon(String path) {
-		java.net.URL imgURL = ViewFilterResults.class.getResource(path);
-		if (imgURL != null) {
-			return new ImagePlus(imgURL.getPath());
-		} else {            
-			//System.err.println("Couldn't find file: " + path);
-			return null;
-		}
-	}   
-*/
 	private int loadImages(String directory){
 		featuresList.clear();
 		File folder = new File(directory);
@@ -180,20 +168,17 @@ public class ViewFilterResults extends ImageWindow  {
 		imagePanel.setLayout(new BorderLayout());
 		imagePanel.setBackground(Color.GRAY);
 		ic=new SimpleCanvas(featureManager.getCurrentImage());
-		//ic.setBounds(10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);
-		//ic.setMaximumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
-		//ic.setSize(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION);
-	     ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+
+	    ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		if(totalFeatures>0){
 			featureNum=1;
 			loadImage(sliceNum, featureNum);
 			
 		}
 		
-		//imagePanel.add(ic);
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );
-		//imagePanel.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+ 
 		panel.add(imagePanel);
 
 		final int pannel_offset=610;
@@ -213,17 +198,18 @@ public class ViewFilterResults extends ImageWindow  {
 		sliceLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		sliceLine.setForeground(Color.BLACK);
 		sliceLine.setBounds( pannel_offset+60, 70, 10, 20 );
-		totalSlice= new JLabel("--");
-		totalSlice.setFont(new Font( "Arial", Font.PLAIN, 15 ));
-		totalSlice.setForeground(Color.BLACK);
-		totalSlice.setBounds( pannel_offset+120, 600, 80, 30);
+		totalSliceLabel= new JLabel("--");
+		totalSliceLabel.setFont(new Font( "Arial", Font.PLAIN, 15 ));
+		totalSliceLabel.setForeground(Color.BLACK);
+		totalSliceLabel.setBounds( pannel_offset+120, 600, 80, 30);
+		
 		if(sliceNum>0){
 			sliceField.setText("1");
-			totalSlice.setText(Integer.toString(totalSlices));
+			totalSliceLabel.setText(Integer.toString(totalSlices));
 		}
 		slicePanel.add(sliceField);
 		slicePanel.add(sliceLine);
-		slicePanel.add(totalSlice);
+		slicePanel.add(totalSliceLabel);
 		addButton(new JButton(), "NEXT",null , pannel_offset+200, 50, 80, 20,slicePanel,SLICE_NEXT_BUTTON_PRESSED,null );
 		panel.add(slicePanel);
 		
@@ -233,24 +219,27 @@ public class ViewFilterResults extends ImageWindow  {
 		features.setBounds(pannel_offset, 120, component_width, 80);
 		features.setBorder(BorderFactory.createTitledBorder("FEATURES"));
 		addButton(new JButton(), "PREVIOUS",null , pannel_offset+5, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
-		imageNum= new JTextField();
-		imageNum.setColumns(5);
-		imageNum.setBounds( pannel_offset+20, 130, 10, 20 );
+		imageNumField= new JTextField();
+		imageNumField.setColumns(5);
+		imageNumField.setBounds( pannel_offset+20, 130, 10, 20 );
+		
 		JLabel dashedLine= new JLabel("/");
 		dashedLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
 		dashedLine.setForeground(Color.BLACK);
 		dashedLine.setBounds(  pannel_offset+60, 130, 10, 20 );
-		total= new JLabel("Total");
-		total.setFont(new Font( "Arial", Font.PLAIN, 15 ));
-		total.setForeground(Color.BLACK);
-		total.setBounds( 500, 600, 80, 30);		
+		
+		totalLabel= new JLabel("Total");
+		totalLabel.setFont(new Font( "Arial", Font.PLAIN, 15 ));
+		totalLabel.setForeground(Color.BLACK);
+		totalLabel.setBounds( 500, 600, 80, 30);	
+		
 		if(this.totalFeatures>0){
-			imageNum.setText("1");
-			total.setText(Integer.toString(totalFeatures));
+			imageNumField.setText("1");
+			totalLabel.setText(Integer.toString(totalFeatures));
 	
-		features.add(imageNum);
+		features.add(imageNumField);
 		features.add(dashedLine);
-		features.add(total);	
+		features.add(totalLabel);	
 		
 		
 		addButton(new JButton(), "NEXT",null , pannel_offset+190, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
@@ -259,6 +248,8 @@ public class ViewFilterResults extends ImageWindow  {
 		JPanel dataJPanel = new JPanel();
 		learningType = new JComboBox<LearningType>(LearningType.values());
 		learningType.setVisible(true);
+		
+		// do we need that?
 		learningType.addItemListener( new ItemListener() {
 
 			@Override
@@ -266,10 +257,8 @@ public class ViewFilterResults extends ImageWindow  {
 				//updateGui();	
 			}
 		});
-		dataJPanel.setBounds(pannel_offset, 200, component_width,80);
 		
-	///	addButton(new JButton(), "View",null , pannel_offset+5, 70, 120, 20,dataJPanel,SLICE_PREVIOUS_BUTTON_PRESSED,null );
-
+		dataJPanel.setBounds(pannel_offset, 200, component_width,80);
 		
 		learningType.setSelectedIndex(0);
 		learningType.setFont( FONT );
@@ -297,6 +286,7 @@ public class ViewFilterResults extends ImageWindow  {
 		panel.add(scrollPane);
 		frame.add(panel);
 		frame.pack();
+		
 		frame.setSize(1000,600);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
@@ -367,7 +357,7 @@ public class ViewFilterResults extends ImageWindow  {
 
 			//System.out.println("BUTTON PRESSED");
 			featureNum=featureNum-1;
-			imageNum.setText(Integer.toString(featureNum));
+			imageNumField.setText(Integer.toString(featureNum));
 			loadImage(sliceNum, featureNum);
 			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();
@@ -381,7 +371,7 @@ public class ViewFilterResults extends ImageWindow  {
 		if(event==NEXT_BUTTON_PRESSED && featureNum<totalFeatures ){
 			//	System.out.println("IN NEXT BUTTOn");
 			featureNum=featureNum+1;
-			imageNum.setText(Integer.toString(featureNum));
+			imageNumField.setText(Integer.toString(featureNum));
 		
 			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();
@@ -397,9 +387,9 @@ public class ViewFilterResults extends ImageWindow  {
 			featureNum=1;
 			sliceNum= sliceNum-1;
 			this.totalFeatures=loadImages(filterString+images.get(sliceNum-1)+"/");
-			imageNum.setText(Integer.toString(featureNum));
+			imageNumField.setText(Integer.toString(featureNum));
 			sliceField.setText(Integer.toString(sliceNum));
-			total.setText(Integer.toString(totalFeatures));
+			totalLabel.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
 			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();
@@ -413,9 +403,9 @@ public class ViewFilterResults extends ImageWindow  {
 			featureNum=1;
 			sliceNum= sliceNum+1;
 			this.totalFeatures=loadImages(filterString+images.get(sliceNum-1)+"/");
-			imageNum.setText(Integer.toString(featureNum));
+			imageNumField.setText(Integer.toString(featureNum));
 			sliceField.setText(Integer.toString(sliceNum));
-			total.setText(Integer.toString(totalFeatures));
+			totalLabel.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
 			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
 				int x_centre = ic.getWidth()/2+ic.getX();

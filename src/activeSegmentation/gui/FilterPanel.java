@@ -49,7 +49,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	//private IProjectManager projectManager;
 	private JTabbedPane pane;
 	private JList<String> filterList;
-	private Map<String,List<JTextField>> textMap;
+	private Map<String,List<JTextField>> filerMap;
 	//public static final Font labelFONT = new Font( "Arial", Font.BOLD, 13 );
 	
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
@@ -81,7 +81,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		this.filterManager =new FilterManager(projectManager, featureManager);		
 		this.filterList =Util.model();
 		this.filterList.setForeground(Color.ORANGE);
-		textMap= new HashMap<String, List<JTextField>>();
+		filerMap= new HashMap<String, List<JTextField>>();
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		scrollPane.setBounds(605,20,100,380);
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
-		updateFiterList();
+		updateFilterList();
 		addButton( new JButton(),"Compute",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
 		addButton(new JButton(), "Default",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
 		addButton(new JButton(), "Save",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
@@ -137,7 +137,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	}
 
 	JPanel createTab( Map<String , String> settingsMap, Image image, 
-			int size, int maxFilters,String filter) {
+			int size, int maxFilters,String filterName) {
 		JPanel p = new JPanel();
 		p.setLayout(null);
 		//p.setBackground(Color.GRAY);
@@ -155,8 +155,8 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 
 		List<JTextField> jtextList= new ArrayList<JTextField>();
+		
 		for (String key: settingsMap.keySet()){
-
 			JLabel label= new JLabel(key);
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
@@ -171,27 +171,25 @@ public class FilterPanel implements Runnable, ASCommon {
 			y=y+50;
 		}
 
-		textMap.put(filter, jtextList);
+		filerMap.put(filterName, jtextList);
 		JButton button= new JButton();
-		ActionEvent event = new ActionEvent( button,1 , filter);
+		ActionEvent event = new ActionEvent( button,1 , filterName);
 			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
-		
-
-		return p;
+	 		return p;
 	}
 
 	JPanel createTab( Map<String , String> settingsMap, Map<String , String> fieldsMap, Image image, 
-			int size, int maxFilters,String filter) {
+			int size, int maxFilters,String filterName) {
 		JPanel p = new JPanel();
 		p.setLayout(null);
 		//p.setBackground(Color.GRAY);
 		int  y=10;
-		if(size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 95, 38,p,PREVIOUS_BUTTON_PRESSED , null);
-		if(size != maxFilters)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38,p ,NEXT_BUTTON_PRESSED , null);
+		if (size!=1)
+			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, p, PREVIOUS_BUTTON_PRESSED , null);
+		if (size != maxFilters)
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38, p ,NEXT_BUTTON_PRESSED , null);
 		
-		if(image!=null){
+		if (image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
 			imagelabel.setBounds(100, 3,210,225);
@@ -199,8 +197,8 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 
 		List<JTextField> jtextList= new ArrayList<JTextField>();
+		
 		for (String key: settingsMap.keySet()){
-
 			JLabel label= new JLabel(fieldsMap.get(key));
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
@@ -215,16 +213,20 @@ public class FilterPanel implements Runnable, ASCommon {
 			y=y+50;
 		}
 
-		textMap.put(filter, jtextList);
+		filerMap.put(filterName, jtextList);
 		JButton button= new JButton();
-		ActionEvent event = new ActionEvent( button,1 , filter);
+		ActionEvent event = new ActionEvent( button,1 , filterName);
 			addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,p ,event, Color.GREEN);
 		
 
 		return p;
 	}
-	public void doAction( final ActionEvent event )
-	{
+	
+	
+	/*
+	 * 
+	 */
+	public void doAction( final ActionEvent event )	{
 		//System.out.println("IN DO ACTION");
 		//System.out.println(event.toString());
 
@@ -236,7 +238,7 @@ public class FilterPanel implements Runnable, ASCommon {
 				//System.out.println(filter);
 				pane.removeAll();
 				loadFilters();
-				updateFiterList();
+				updateFilterList();
 			}
 		}
 		if(event == PREVIOUS_BUTTON_PRESSED ){
@@ -262,7 +264,7 @@ public class FilterPanel implements Runnable, ASCommon {
 			int i=0;
 			Map<String,String> settingsMap= new HashMap<String, String>();
 			for (String settingsKey: filterManager.getFilterSetting(key).keySet()){
-				settingsMap.put(settingsKey, textMap.get(key).get(i).getText());	
+				settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
 				i++;
 			}
 			filterManager.updateFilterSetting(key, settingsMap);		
@@ -288,28 +290,19 @@ public class FilterPanel implements Runnable, ASCommon {
 		}*/
 
 	}
-/*
-	private  ImagePlus  createImageIcon(String path) {
-		java.net.URL imgURL = Gui.class.getResource(path);
-		if (imgURL != null) {
-			return new ImagePlus(imgURL.getPath());
-		} else {            
-			return null;
-		}
-	}
-	*/
+
 	private void updateTabbedGui(String key){
 		int i=0;
 		Map<String,String> settingsMap=filterManager.getFilterSetting(key);
 		for (String settingsKey: settingsMap.keySet() ){
 			
-			 textMap.get(key).get(i).setText(settingsMap.get(settingsKey));
+			 filerMap.get(key).get(i).setText(settingsMap.get(settingsKey));
 			 i++;
 		}
 
 	}
 
-	private void updateFiterList() {
+	private void updateFilterList() {
 		Set<String> filters= filterManager.getFilters();  
 		Vector<String> listModel = new Vector<String>();
 		for(String filter : filters){
@@ -329,12 +322,12 @@ public class FilterPanel implements Runnable, ASCommon {
 			if (mouseEvent.getClickCount() == 2) {
 				int index = theList.getSelectedIndex();
 				if (index >= 0) {
-					String item =theList.getSelectedValue().toString();
+					//String item =theList.getSelectedValue().toString();
 					String filter=filterList.getSelectedValue();
 					filterManager.enableFilter(filter);
 					pane.removeAll();
 					loadFilters();
-					updateFiterList();
+					updateFilterList();
 					
 				}
 			}
@@ -357,12 +350,9 @@ public class FilterPanel implements Runnable, ASCommon {
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
 		//System.out.println("ADDED");
-		button.addActionListener( new ActionListener()
-		{
+		button.addActionListener( new ActionListener()	{
 			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
-				//System.out.println("CLICKED");
+			public void actionPerformed( final ActionEvent e ){
 				doAction(action);
 			}
 		});
