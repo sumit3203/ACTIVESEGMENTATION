@@ -323,11 +323,15 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		sz=Integer.parseInt(settingsMap.get(LEN));
-		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		sep=Boolean.parseBoolean(settingsMap.get(ISSEP));
-		scnorm=Boolean.parseBoolean(settingsMap.get(SCNORM));
-
+		try {
+			sz=Integer.parseInt(settingsMap.get(LEN));
+			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+			sep=Boolean.parseBoolean(settingsMap.get(ISSEP));
+			scnorm=Boolean.parseBoolean(settingsMap.get(SCNORM));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 

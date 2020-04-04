@@ -351,8 +351,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		List<Map<String,String>> filterObj= projectInfo.getFilters();
 		for(Map<String, String> filter: filterObj){
 			String filterName=filter.get(ASCommon.FILTER);
-			updateFilterSettings(filterName, filter);
-			if(filter.get("enabled").equalsIgnoreCase("true")){
+			System.out.println(filterName);
+			try {
+				if (!updateFilterSettings(filterName, filter))
+					IJ.log("error reading settings " +filterName);
+			} catch (Exception e) {
+				IJ.log("error reading settings " +filterName);
+			}
+			if (filter.get("enabled").equalsIgnoreCase("true")){
 				filterMap.get(filterName).setEnabled(true);
 			}else{
 				filterMap.get(filterName).setEnabled(false);
