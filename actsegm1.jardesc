@@ -23,8 +23,8 @@
         <file path="/ACTIVE_SEGMENTATION/plugins.config"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.feature"/>
-        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.prj"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;ijaux.scale"/>
+        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.prj"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.gui"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.classif"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;dsp"/>

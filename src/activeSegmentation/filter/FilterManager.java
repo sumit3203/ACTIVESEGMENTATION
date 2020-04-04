@@ -79,14 +79,15 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		String pt=this.projectInfo.getProjectType();
-		IJ.log("Project Type: "+pt);
-		if (pt=="SEGMENTATION") 
+	
+		if (pt.equalsIgnoreCase("SEGMENTATION"))
 			projectType=ProjectType.SEGM;
 		else 
 			projectType=ProjectType.CLASSIF;
 		//IJ.log("Project Type: " + ProjectType.valueOf(this.projectInfo.getProjectType()));
+		System.out.println("Project Type: "+projectType +" pt "+ pt);
 		IJ.log("Loading Filters");
-	 
+		
 		try {
 			List<String> jars=projectInfo.getPluginPath();
 			System.out.println("plugin path: "+jars);
@@ -124,9 +125,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				if (g.isFile())
 					addJar(g);
 			}
-			System.out.println("classpath:  "+cp);
-
 		}
+		System.out.println("setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 		for(String plugin: classes){
@@ -150,8 +150,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			}
 
 		}
-
-		setFiltersMetaData();
+		System.out.println("filter list ");
+		System.out.println(filterMap);
+		if (filterMap.isEmpty()) 
+			throw new RuntimeException("filter list empty ");
+		else
+			setFiltersMetaData();
 
 	}
 
