@@ -55,7 +55,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	private JTabbedPane pane;
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> filerMap;
-	//public static final Font labelFONT = new Font( "Arial", Font.BOLD, 13 );
+
 	
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -67,16 +67,11 @@ public class FilterPanel implements Runnable, ASCommon {
 	final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 2, "Compute" );
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	//final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent( this, 3, "Load" );
-	
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent( this, 4, "Save" );
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent DEFAULT_BUTTON_PRESSED = new ActionEvent( this, 5, "Default" );
 	
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
-	//final ActionEvent VIEW_BUTTON_PRESSED = new ActionEvent( this, 6, "View" );
 	
 	final JFrame frame = new JFrame("Filters");
 
@@ -95,7 +90,6 @@ public class FilterPanel implements Runnable, ASCommon {
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		pane.setFont(ASCommon.FONT);
-		//pane.setBackground(Color.GRAY);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -112,8 +106,6 @@ public class FilterPanel implements Runnable, ASCommon {
 		addButton( new JButton(),"Compute",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
 		addButton(new JButton(), "Default",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
 		addButton(new JButton(), "Save",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
-		//addButton(new JButton(), "VIEW",null , 460, 420, 100, 50,panel,VIEW_BUTTON_PRESSED,null );
-
 
 		frame.add(pane);
 		frame.add(panel);
@@ -125,15 +117,23 @@ public class FilterPanel implements Runnable, ASCommon {
 	
 	private void loadFilters(){
 		Set<String> filters= filterManager.getAllFilters();  
-		//System.out.println(filters.size());
-		int filterSize=1;
+
+		int tabNum=1;
 		for(String filter: filters){
 			if(filterManager.isFilterEnabled(filter)){
-				pane.addTab(filter,null,createTab(filterManager.getDefaultFilterSettings(filter),
-						filterManager.getFilterImage(filter), 
-						filterSize, filters.size(),filter));
+				Map<String,String> settings =filterManager.getDefaultFilterSettings(filter);
+				Map<String,String> annotations = filterManager.getFieldAnnotations(filter);
+				if (annotations.isEmpty()) {
+				pane.addTab(filter,null,
+						createTab(settings,	filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
+						);
+				} else {
+					pane.addTab(filter,null,
+							createTabAnnotations(settings, annotations, filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
+							);
+				}
 				pane.setForeground(Color.BLACK);
-				filterSize++;
+				tabNum++;
 			}
 
 		}
@@ -204,20 +204,8 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 
 		List<JTextField> jtextList= new ArrayList<JTextField>();
-		IFilter filter=filterManager.getFilter(  filterName);
-		 System.out.println("all field annotations");
- 		
-			Field [] fields = filter.getClass().getFields();
-	 			
-			for (Field field:fields)   {
-				Annotation annotation = field.getAnnotation(FilterField.class);
-				// System.out.println("///");
-				 System.out.println(annotation.toString());
-		        if(annotation instanceof FilterField){
-		        	FilterField customAnnotation = (FilterField) annotation;
-		           System.out.println("name: " + customAnnotation.value());
-		        }
-			}
+	//	IFilter filter=filterManager.getFilter(  filterName);
+		
 			
 		
 		for (String key: settingsMap.keySet()){

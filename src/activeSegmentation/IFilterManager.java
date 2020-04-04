@@ -68,6 +68,7 @@ public interface IFilterManager {
 	 */
 	public Map<String,String> getDefaultFilterSettings(String key);
 	
+ 
 	/**
 	 * This method will update the setting of the particular filters 
 	 * given by key
@@ -76,7 +77,7 @@ public interface IFilterManager {
 	 */
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap);
 	
-	//public int getNumOfFeatures(String featureName) ;
+ 
 	 	
 	/**
 	 * This method will return processed image by particular filter
@@ -117,6 +118,8 @@ public interface IFilterManager {
 	 *   save filters Meta data using MetaInfo
 	 */
 	public void saveFiltersMetaData();
+
+	Map<String, String> getFieldAnnotations(String key);
 	
 
 }

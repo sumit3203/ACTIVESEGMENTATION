@@ -39,6 +39,9 @@ public class GuiUtil {
 		return c;
 	}
 
+	/*
+	 * TOOD: rename to more meaningful name
+	 */
 	public static  JList<String> model(){
 		DefaultListModel<String> traces = new DefaultListModel<String>();
 		traces.addElement(" ");

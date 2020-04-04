@@ -86,7 +86,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	public static boolean debug=IJ.debugMode;
 	
-	public final static String SIGMA="LOG_sigma", LEN="G_len", MAX_LEN="G_MAX1", ISSEP="G_SEP1", SCNORM="G_SCNORM1";
+	public final static String SIGMA="LOG_sigma", LEN="G_len", MAX_LEN="G_MAX", ISSEP="G_SEP", SCNORM="G_SCNORM";
 
 	@AFilterField(key=ISSEP, value="separable")
 	public boolean sep= Prefs.getBoolean(ISSEP, true);

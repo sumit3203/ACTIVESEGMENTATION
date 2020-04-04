@@ -64,7 +64,8 @@ import ijaux.scale.Pair;
  */
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
-	private Map<String,IFilter> filterMap= new HashMap<String, IFilter>();
+	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
+	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>  ();
 	//private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
@@ -140,18 +141,21 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
 					if (projectType==ProjectType.SEGM && thePlugIn.getFilterType()==FilterType.SEGM ) {
 				//	if (thePlugIn.getFilterType()==projectType.getProjectType()){
-						System.out.println(thePlugIn.getKey());
-						//TODO read annotations if present
-						// populate the second map
-						filterMap.put(thePlugIn.getKey(), thePlugIn);
+						String pkey=thePlugIn.getKey();
+						System.out.println(pkey);
+				 
+						Map<String, String> fmap=thePlugIn.getAnotatedFileds();
+						//System.out.println(fmap);
+						annotationMap.put(pkey, fmap);
+						filterMap.put(pkey, thePlugIn);
 					}
 
 				}
 			}
 
 		}
-		System.out.println("filter list ");
-		System.out.println(filterMap);
+		//System.out.println("filter list ");
+		//System.out.println(filterMap);
 		if (filterMap.isEmpty()) 
 			throw new RuntimeException("filter list empty ");
 		else
@@ -257,15 +261,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
-
 		return filterMap.get(key).updateSettings(settingsMap);
 	}
-
-	/*
-	public int getNumOfFeatures(String featureName) {
-		return 0;
-	}
-*/
 
 
 
@@ -281,23 +278,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		zip.close();
 		return classNames;
 	}
-
-
-
-	/*	public Instance createInstance(String featureName, int x, int y, int classIndex, int sliceNum) {
-		return filterUtil.createInstance(x, y, classIndex,
-				featurStackMap.get(sliceNum).getfinalStack(), colorFeatures, oldColorFormat);
-	}
-
-	public Instance createInstance(String featureName, int classIndex, int sliceNum){
-		try {
-			return filterUtil.createInstance(featurStackMap.get(sliceNum).getzernikeMoments(), classIndex);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}*/
 
 
 	@Override
@@ -370,6 +350,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public Image getFilterImage(String key) {
 		return filterMap.get(key).getImage();
+	}
+
+
+	@Override
+	public Map<String, String> getFieldAnnotations(String key) {
+		return annotationMap.get(key);
 	}
 
 
