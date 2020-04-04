@@ -65,8 +65,8 @@ import ijaux.scale.Pair;
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
-	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>  ();
-	//private Map<Integer,FeatureType> featurStackMap= new HashMap<Integer, FeatureType>();
+	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
+ 
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
 

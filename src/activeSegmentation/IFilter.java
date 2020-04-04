@@ -124,19 +124,17 @@ public interface IFilter {
 	 */
 	public Set<String> getFeatureNames();
 
-	Map< String, String > afields= new HashMap<String, String>();
 	
 	/*
 	 * returns annotations of the public(!) fields
 	 */
 	default Map<String, String> getAnotatedFileds(){		
+		Map< String, String > afields= new HashMap<String, String>();
 		Field [] fields = this.getClass().getFields();
-		//System.out.println("fields "+fields.length);
 		for (Field field:fields)   {
 			if (field.isAnnotationPresent(AFilterField.class)) {
 				AFilterField fielda =  field.getAnnotation(AFilterField.class);
-				//System.out.println(field.toString());
-		        System.out.println("key: " + fielda.key() +" value: " + fielda.value());
+		        //System.out.println("key: " + fielda.key() +" value: " + fielda.value());
 		        afields.put(fielda.key(), fielda.value());
 			}
 		}
