@@ -78,13 +78,18 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
-		projectType=ProjectType.valueOf(this.projectInfo.getProjectType());
-		IJ.log("Project Type: " + ProjectType.valueOf(this.projectInfo.getProjectType()));
+		String pt=this.projectInfo.getProjectType();
+		IJ.log("Project Type: "+pt);
+		if (pt=="SEGMENTATION") 
+			projectType=ProjectType.SEGM;
+		else 
+			projectType=ProjectType.CLASSIF;
+		//IJ.log("Project Type: " + ProjectType.valueOf(this.projectInfo.getProjectType()));
 		IJ.log("Loading Filters");
 	 
 		try {
 			List<String> jars=projectInfo.getPluginPath();
-			System.out.println(jars);
+			System.out.println("plugin path: "+jars);
 			if (jars!=null)
 				loadFilters(jars);
 			IJ.log("Filters Loaded");

@@ -16,7 +16,7 @@ import activeSegmentation.filter.LoG_Filter_;
 
 /**
  * * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra and Dimiter Prodanov, IMEC
  *
  *
  * @contents abstract filter description
@@ -126,6 +126,9 @@ public interface IFilter {
 
 	Map< String, String > afields= new HashMap<String, String>();
 	
+	/*
+	 * returns annotations of the public(!) fields
+	 */
 	default Map<String, String> getAnotatedFileds(){		
 		Field [] fields = this.getClass().getFields();
 		//System.out.println("fields "+fields.length);
