@@ -4,6 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/*
+ * Library for annotations
+ */
 public class AnnotationManager {
 
    
@@ -14,7 +17,6 @@ public class AnnotationManager {
     public static Annotation[] getMethodAnnotations(Class<?> clazz, String methodName) throws NoSuchMethodException {
         Annotation[] annotations = null;
         try {
-            //Class<?>[] params = null;
             Method method = clazz.getDeclaredMethod(methodName);
             if (method != null) {
                 annotations = method.getAnnotations();

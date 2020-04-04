@@ -76,22 +76,27 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	public final static String SIGMA="LOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISO="G_iso", ISSEP="G_SEP";
 
-	private static int sz= Prefs.getInt(LEN, 2);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	@AFilterField(key=LEN, value="initial scale")
+	public static int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
+	
 	public static boolean debug=IJ.debugMode;
 
 	@AFilterField(key=ISSEP, value="separable")
 	public static boolean sep= Prefs.getBoolean(ISSEP, false);
 	
-	@AFilterField(key=ISO, value="GISO")
-	private static boolean isiso= Prefs.getBoolean(ISO, true);
+	@AFilterField(key=ISO, value="isotropic")
+	public static boolean isiso= Prefs.getBoolean(ISO, true);
 	
 	private boolean isEnabled=true;
 	
-	private final int TYPE=1;
+	//private final int TYPE=1;
 
 	public boolean isFloat=false;
 	
@@ -109,12 +114,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	//private ImageStack imageStack;
-	/*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
-	*/
+	 
 	
 	/**
 	 * 
@@ -393,11 +393,10 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
-	sz= Prefs.getInt(LEN, 2);
-	max_sz= Prefs.getInt(MAX_LEN, 8);
-	sep= Prefs.getBoolean(ISSEP, true);
-	isiso=Prefs.getBoolean(ISO, true);
+		sz= Prefs.getInt(LEN, 2);
+		max_sz= Prefs.getInt(MAX_LEN, 8);
+		sep= Prefs.getBoolean(ISSEP, true);
+		isiso=Prefs.getBoolean(ISO, true);
 		return true;
 	}
 
@@ -408,7 +407,6 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 

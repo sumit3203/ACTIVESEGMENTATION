@@ -94,10 +94,10 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	@AFilterField(key=SCNORM, value="normalized")
 	public boolean scnorm= Prefs.getBoolean(SCNORM, false);
 	
-	@AFilterField(key=LEN, value="size")
+	@AFilterField(key=LEN, value="initial scale")
 	public int sz= Prefs.getInt(LEN, 2);
 	
-	@AFilterField(key=MAX_LEN, value="max size")
+	@AFilterField(key=MAX_LEN, value="max scale")
 	public int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 
@@ -118,11 +118,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Laplacian of Gaussian";
 
-	private final int TYPE=1;
 	private Map< String, String > settings= new HashMap<String, String>();
-
-
-
 
 	/**
 	 * 

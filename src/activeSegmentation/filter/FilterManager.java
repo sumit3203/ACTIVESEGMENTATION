@@ -115,16 +115,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		String cp=System.getProperty("java.class.path");
 		
 		for(String plugin: plugins){
-		
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(plugin));
-				
 				cp+=";" + plugin;
 				System.setProperty("java.class.path", cp);
-				
 				File g = new File(plugin);
-				if (g.isFile())
-					addJar(g);
+				if (g.isFile()) addJar(g);
 			}
 		}
 		System.out.println("setting classpath:  "+cp);

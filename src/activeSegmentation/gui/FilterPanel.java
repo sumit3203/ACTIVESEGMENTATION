@@ -28,6 +28,7 @@ import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -204,24 +205,35 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 
 		List<JTextField> jtextList= new ArrayList<JTextField>();
-	//	IFilter filter=filterManager.getFilter(  filterName);
-		
 			
-		
 		for (String key: settingsMap.keySet()){
-			
 			
 			JLabel label= new JLabel(fieldsMap.get(key));
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
 			label.setBounds( 330, y, 70, 25 );
 			panel.add(label);
-
-			JTextField input= new JTextField(settingsMap.get(key));
-			input.setFont(ASCommon.FONT);
-			input.setBounds(400, y, 70, 25 );
-			panel.add(input);   
-			jtextList.add(input);
+			String value=settingsMap.get(key);
+			System.out.println("in tab value "+ value);
+			//TODO change into combo boxes
+//			if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+//				String[] state= {"true", "false"};
+//				
+//				// create combobox 
+//				JComboBox<String> comboBox = new JComboBox<String>(state); 
+//				comboBox.setEditable(true);
+//			    comboBox.setSelectedItem(null);
+//
+//				panel.add(comboBox);   
+//		        // add ItemListener 
+//		        //combo.addItemListener(s); 
+//			} else {
+				JTextField input= new JTextField(settingsMap.get(key));
+				input.setFont(ASCommon.FONT);
+				input.setBounds(400, y, 70, 25 );
+				panel.add(input);   
+				jtextList.add(input);
+//			}
 			y=y+50;
 		}
 
