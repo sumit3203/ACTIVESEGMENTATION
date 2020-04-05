@@ -10,11 +10,11 @@ import activeSegmentation.IClassifier;
 import ijaux.scale.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+
+
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 public class ProjectInfo{
 	
 	private String projectName;
@@ -23,6 +23,7 @@ public class ProjectInfo{
 	private String comment = "Default Comment";
 	private String createdDate;
 	private String modifyDate;
+	private String version="0.0.0.1";
 	private int classes;
 	private String projectPath;
 	private List<String> pluginPath;
@@ -101,6 +102,14 @@ public class ProjectInfo{
 
 	public void resetFeatureInfo()	{
 		this.featureList.clear();
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getProjectName()	{
@@ -227,5 +236,6 @@ public class ProjectInfo{
 		this.pluginPath = pluginPath;
 	}
 	
+
 }
 

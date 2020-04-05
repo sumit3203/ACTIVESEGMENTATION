@@ -144,7 +144,7 @@ public class ProjectManagerImp implements IProjectManager {
 				//System.out.println( projectInfo.getProjectName());
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
-				System.out.println(projectInfo.getGroundtruth());
+				//System.out.println(projectInfo.toString());
 				
 			} catch (UnrecognizedPropertyException e) {
 				e.printStackTrace();
