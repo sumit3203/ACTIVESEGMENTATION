@@ -96,7 +96,6 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private boolean isEnabled=true;
 	
-	//private final int TYPE=1;
 
 	public boolean isFloat=false;
 	

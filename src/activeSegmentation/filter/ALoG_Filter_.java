@@ -409,12 +409,10 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	public static void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
 		// prefs.put(SIGMA, Float.toString(sigma));
-
 	}
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
-
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
@@ -424,7 +422,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		fulloutput= Prefs.getBoolean(FULL_OUTPUT, true);
@@ -447,7 +444,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 
@@ -482,11 +478,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	}
 
 
-
-
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
