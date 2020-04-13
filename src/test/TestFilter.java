@@ -78,11 +78,6 @@ public class TestFilter implements IFilter {
 		return null;
 	}
 
-	@Override
-	public Image getImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public boolean isEnabled() {

@@ -4,8 +4,8 @@ package activeSegmentation;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
 
-import java.awt.Image;
 import java.lang.reflect.Field;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +40,6 @@ import activeSegmentation.filter.LoG_Filter_;
  */
 public interface IFilter {
 	
-	// IFSEGM - segmentation: one to one NxN -> NxN
-	// IFCLASS - segmentation: many to one NxN -> 1
-	// eventually move into enum
-	//public static final int IFSEGM=1, IFCLASS=2;
 	
 	/**
 	 * Returns a new default settings map for the filter 
@@ -59,7 +55,6 @@ public interface IFilter {
 	 */
 	public boolean updateSettings(Map<String, String> settingsMap);
 
-	
 	
 	/**
 	 * Returns apply filter
@@ -84,12 +79,6 @@ public interface IFilter {
 
 	
 	/**
-	 *  returns the plot of the filter kernel
-	 * @return Image
-	 */
-	public Image getImage();
-	
-	/**
 	 * checks if the filter is used
 	 * @return Image
 	 */
@@ -97,6 +86,7 @@ public interface IFilter {
 	
 	/**
 	 * resets all setting of filters
+	 * @return boolean
 	 */
 	public boolean reset();
 	
@@ -107,14 +97,19 @@ public interface IFilter {
 	 */
 	public void setEnabled(boolean isEnabled);
 	
+	
+	/**
+	 * returns the type of filter as an {@link Enumeration}
+	 * @return FilterType
+	 */
 	default public FilterType getFilterType() {
 		return FilterType.SEGM;
 	}
 	
-
 	
-	/*
+	/**
 	 * returns annotations of the public(!) fields
+	 * @return Map<String, String>
 	 */
 	default Map<String, String> getAnotatedFileds(){		
 		Map< String, String > afields= new HashMap<String, String>();

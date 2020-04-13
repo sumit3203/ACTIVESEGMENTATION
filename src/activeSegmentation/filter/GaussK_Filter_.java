@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.List;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 import static java.lang.Math.*;
@@ -59,7 +60,7 @@ import static java.lang.Math.*;
  */
 
 
-public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
+public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
 

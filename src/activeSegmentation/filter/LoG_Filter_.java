@@ -1,7 +1,6 @@
 package activeSegmentation.filter;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.Prefs;
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
@@ -11,17 +10,13 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
-import test.FilterField;
-import test.testFilterAnn;
+
 
 import java.awt.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -30,8 +25,10 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
+import static activeSegmentation.FilterType.*;
 import static java.lang.Math.*;
 
 /**
@@ -72,8 +69,8 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="LOG", value="Laplacian of Gaussian")
-public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter {
+@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM)
+public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 
 	private PlugInFilterRunner pfr=null;

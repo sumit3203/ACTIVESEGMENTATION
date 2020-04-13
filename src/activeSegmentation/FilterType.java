@@ -2,6 +2,8 @@ package activeSegmentation;
 
 /*
  * Enumeration for different filter types
+ * 	SEGM - segmentation: one to one NxN -> NxN
+	CLASSIF - segmentation: many to one NxN -> 1
  */
 public enum FilterType {
 

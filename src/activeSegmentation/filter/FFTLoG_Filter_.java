@@ -13,6 +13,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import fftscale.*;
 import fftscale.filter.FFTKernelGauss;
 import fftscale.filter.FFTKernelLoG;
@@ -61,7 +62,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
+public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
 	private ImagePlus imp;

@@ -25,6 +25,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 /**
@@ -56,7 +57,7 @@ import dsp.Conv;
  */
 
 
-public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
+public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
 	private PlugInFilterRunner pfr=null;

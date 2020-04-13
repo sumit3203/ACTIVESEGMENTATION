@@ -17,10 +17,12 @@ import org.jfree.chart.plot.*;
 import org.jfree.data.xy.*;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 import static java.lang.Math.*;
 
+import static activeSegmentation.FilterType.*;
 /**
  * @version 	1.2.1 31 Oct 2019
  * 				 - kernel plot change
@@ -53,8 +55,8 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="ALOG", value="Anisotropic Laplacian of Gaussian")
-public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
+@AFilter(key="ALOG", value="Anisotropic Laplacian of Gaussian", type=SEGM)
+public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
 	private PlugInFilterRunner pfr=null;

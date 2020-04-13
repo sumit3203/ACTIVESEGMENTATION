@@ -204,11 +204,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, 
 		return FILTER_NAME;
 	}
 
-	@Override
-	public Image getImage() {
-		return null;
-	}
-
+	 
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub

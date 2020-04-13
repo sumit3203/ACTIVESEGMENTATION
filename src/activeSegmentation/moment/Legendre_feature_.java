@@ -151,10 +151,7 @@ public class Legendre_feature_ implements IFilter, IMoment {
 		return this.FILTER_NAME;
 	}
 
-	@Override
-	public Image getImage(){
-		return null;
-	}
+	 
 
 	@Override
 	public boolean isEnabled() {

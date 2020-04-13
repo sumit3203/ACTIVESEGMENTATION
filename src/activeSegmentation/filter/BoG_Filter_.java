@@ -24,6 +24,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import dsp.Conv;
 import static java.lang.Math.*;
 
@@ -63,7 +64,7 @@ import static java.lang.Math.*;
  */
 
  
-public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter {
+public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 	private PlugInFilterRunner pfr=null;
 

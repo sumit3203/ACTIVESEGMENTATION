@@ -25,6 +25,7 @@ import activeSegmentation.FilterType;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureContainer;
@@ -346,7 +347,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
-		return filterMap.get(key).getImage();
+		IFilter filter=filterMap.get(key);
+		try {
+			return ((IFilterViz) filter).getImage();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 
