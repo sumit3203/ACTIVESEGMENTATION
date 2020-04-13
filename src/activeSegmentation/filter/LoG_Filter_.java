@@ -32,7 +32,10 @@ import static activeSegmentation.FilterType.*;
 import static java.lang.Math.*;
 
 /**
- * @version 	1.2.1 31 Oct 2019
+ * @version 	1.3.0 13 April 2020
+ * 				- plotting mechanism moved to the interface
+ * 
+ * 				1.2.1 31 Oct 2019
  * 				 - kernel plot change
  * 				1.2 23 Aug 2016
  *              1.1	14 Oct 2013
@@ -131,10 +134,8 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	}
 
 
-
 	@Override
 	public void run(ImageProcessor ip) {
-
 		int r = sz;//(sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 		FloatProcessor fp=filter(ip,sp,sep,scnorm);
@@ -142,10 +143,9 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		image.updateAndDraw();
 	}
 
+	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-
-	
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);

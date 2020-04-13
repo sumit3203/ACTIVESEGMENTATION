@@ -50,7 +50,7 @@ public class GLCM_feature_ implements IFilter, IMoment {
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Texture Descriptors Filter";
 
-	private final int TYPE=2;
+	//private final int TYPE=2;
 	// 1 Means Segmentation
 	// 2 Means Classification
 

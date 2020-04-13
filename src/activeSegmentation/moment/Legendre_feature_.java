@@ -45,7 +45,7 @@ public class Legendre_feature_ implements IFilter, IMoment {
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Legendre Moment Filter";
 
-	private final int TYPE=2;
+	//private final int TYPE=2;
 	// 1 Means Segmentation
 	// 2 Means Classification
 
@@ -147,7 +147,6 @@ public class Legendre_feature_ implements IFilter, IMoment {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 
@@ -155,13 +154,11 @@ public class Legendre_feature_ implements IFilter, IMoment {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
@@ -172,13 +169,11 @@ public class Legendre_feature_ implements IFilter, IMoment {
 
 	@Override
 	public ArrayList<Pair<String,double[]>> getFeatures() {
-		// TODO Auto-generated method stub
 		return moment_vector;
 	}
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return this.features;
 	}
 

@@ -55,7 +55,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, 
 	
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Zernike Moments";
-	private final int TYPE=2;
+	//private final int TYPE=2;
 	
 	ZernikeMoment zm = null;
 	
@@ -184,8 +184,6 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, 
 		}
 		return new Pair<Integer,Complex>(index, zm.extractZernikeMoment(ip));*/
 
-
-
 	}
 
 	public int getDegree(){
@@ -194,32 +192,27 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, 
 	
 	@Override
 	public String getKey() {
-		// TODO Auto-generated method stub
 		return FILTER_KEY;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return FILTER_NAME;
 	}
 
 	 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
