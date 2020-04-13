@@ -357,9 +357,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	
 	public static void main (String[] args) {
 		LoG_Filter_ filter=new LoG_Filter_();
-		
 		filter.getAnotatedFileds();
-		
 	}
 
 
