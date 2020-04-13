@@ -583,11 +583,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return this.FILTER_NAME;
 	}
 
-	@Override
-	public Image getImage() {
-		return null;
-	}
-
 
 	@Override
 	public boolean isEnabled() {
@@ -599,21 +594,12 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		this.isEnabled= isEnabled;
 	}
 
-
-
 	@Override
 	public boolean reset() {
-
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		return true;
 	}
 
-
-	@Override
-	public double[][] kernelData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

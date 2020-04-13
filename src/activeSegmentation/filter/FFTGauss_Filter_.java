@@ -258,30 +258,6 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		return  exp(-x*x/2.0) / (2.0*sqrt(PI));
 	}
 	
-	/*
-	@Override
-	public Image getImage(){
-
-		final XYSeries series = new XYSeries("Data");
-		for(double i=-10;i<=10;i=i+0.5){
-			Double y=gauss(i);
-			series.add(i, y);
-		}
-		final XYSeriesCollection data = new XYSeriesCollection(series);
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"",
-				"", 
-				"", 
-				data,
-				PlotOrientation.VERTICAL,
-				false,
-				false,
-				false
-				);
-
-		return chart.createBufferedImage(200, 200);
-	}
-*/
 
 	@Override
 	public boolean isEnabled() {

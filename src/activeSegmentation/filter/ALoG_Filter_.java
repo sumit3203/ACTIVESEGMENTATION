@@ -457,30 +457,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 
 	@Override
-	public Image getImage(){
-
-		final XYSeries series = new XYSeries("Data");
-		for(double i=-10;i<=10;i=i+0.5){
-			double y=logKernel(i);
-			series.add(i, y);
-		}
-		final XYSeriesCollection data = new XYSeriesCollection(series);
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"",
-				"", 
-				"", 
-				data,
-				PlotOrientation.VERTICAL,
-				false,
-				false,
-				false
-				);
-
-		return chart.createBufferedImage(200, 200);
-	}
-
-
-	@Override
 	public boolean isEnabled() {
 		return isEnabled;
 	}
