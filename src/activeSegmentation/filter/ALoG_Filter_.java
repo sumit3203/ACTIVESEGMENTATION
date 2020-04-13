@@ -490,6 +490,17 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		this.isEnabled= isEnabled;
 	}
 
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=logKernel(data[0][i]);
+		}
+		return data;
+	}
+
 	
 	
 

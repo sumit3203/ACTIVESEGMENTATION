@@ -609,4 +609,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return true;
 	}
 
+
+	@Override
+	public double[][] kernelData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

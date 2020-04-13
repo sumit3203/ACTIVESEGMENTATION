@@ -10,7 +10,7 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
-
+import ijaux.scale.SUtils;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -344,30 +344,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
 	}
 
-
-	@Override
-	public Image getImage(){
-
-		final XYSeries series = new XYSeries("Data");
-		for(double i=-10;i<=10;i=i+0.5){
-			Double y=logKernel(i);
-			series.add(i, y);
-		}
-		final XYSeriesCollection data = new XYSeriesCollection(series);
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"",
-				"", 
-				"", 
-				data,
-				PlotOrientation.VERTICAL,
-				false,
-				false,
-				false
-				);
-
-		return chart.createBufferedImage(200, 200);
-	}
-
 	@Override
 	public boolean isEnabled() {
 		return isEnabled;
@@ -384,6 +360,19 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		
 		filter.getAnotatedFileds();
 		
+	}
+
+
+
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=logKernel(data[0][i]);
+		}
+		return data;
 	}
 
 }

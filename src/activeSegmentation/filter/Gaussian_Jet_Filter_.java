@@ -402,6 +402,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		return -x*exp(-x*x/2.0) / (2.0*sqrt(PI));
 	}
 
+	/*
 	@Override
 	public Image getImage(){
 
@@ -424,7 +425,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 		return chart.createBufferedImage(200, 200);
 	}
-
+*/
 	@Override
 	public boolean isEnabled() {
 		return isEnabled;
@@ -435,6 +436,16 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		this.isEnabled= isEnabled;
 	}
 
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=gdKernel(data[0][i]);
+		}
+		return data;
+	}
 
 
 	

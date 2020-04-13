@@ -28,6 +28,7 @@ import ij.gui.*;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 import ijaux.datatype.*;
+import ijaux.scale.SUtils;
 
 /**
  * @version 	1.0 24 Aug 2019
@@ -257,6 +258,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		return  exp(-x*x/2.0) / (2.0*sqrt(PI));
 	}
 	
+	/*
 	@Override
 	public Image getImage(){
 
@@ -279,7 +281,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 		return chart.createBufferedImage(200, 200);
 	}
-
+*/
 
 	@Override
 	public boolean isEnabled() {
@@ -297,6 +299,18 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		return true;
+	}
+
+
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=gauss(data[0][i]);
+		}
+		return data;
 	}
 	
 

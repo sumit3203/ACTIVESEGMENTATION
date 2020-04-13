@@ -428,7 +428,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		fulloutput= Prefs.getBoolean(FULL_OUTPUT, true);
@@ -451,17 +450,9 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.FILTER_NAME;
 	}
 
-	
-	 
-
-	@Override
-	public Image getImage(){
-		return null;
-	}
 
 	@Override
 	public boolean isEnabled() {
@@ -471,6 +462,22 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	@Override
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled= isEnabled;
+	}
+
+	private double logKernel(double x){
+		final double x2=x*x;
+		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
+	}
+	
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=logKernel(data[0][i]);
+		}
+		return data;
 	}
 
 

@@ -11,6 +11,7 @@ import ij.process.Blitter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.GScaleSpace;
+import ijaux.scale.SUtils;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -417,7 +418,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		return (x2*x2-8*(x2)+8)* exp(-0.5*x2) / (2.0*sqrt(PI));
 	}
 	
-	
+	/*
 	@Override
 	public Image getImage(){
 
@@ -440,7 +441,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		return chart.createBufferedImage(200, 200);
 	}
-
+*/
+	
 	@Override
 	public boolean isEnabled() {
 		return isEnabled;
@@ -450,6 +452,18 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled= isEnabled;
 	}
+
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=bogKernel(data[0][i]);
+		}
+		return data;
+	}
+
 	 
 
 

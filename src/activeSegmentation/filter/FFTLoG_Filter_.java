@@ -24,6 +24,7 @@ import ij.gui.*;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 import ijaux.datatype.*;
+import ijaux.scale.SUtils;
 
 import static java.lang.Math.*;
 
@@ -301,10 +302,20 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		return true;
+	}
+
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=logKernel(data[0][i]);
+		}
+		return data;
 	}
 
 
