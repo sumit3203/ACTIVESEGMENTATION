@@ -3,6 +3,7 @@ package activeSegmentation.moment;
 
 import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
+import activeSegmentation.IMoment;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
@@ -23,7 +24,7 @@ import java.util.List;
  *  		   N->1  / feature
  */
 
-public class GLCM_feature_ implements IFilter {
+public class GLCM_feature_ implements IFilter, IMoment {
 
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;

@@ -473,15 +473,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	}
 
 
-	@Override
-	public <T> T getFeatures() {
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		return null;
-	}
 
 
 }

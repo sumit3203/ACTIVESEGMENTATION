@@ -203,12 +203,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
 										filterString+image.substring(0, image.lastIndexOf(".")),
 										rois);
+								/*
 								if(filter.getFeatures()!=null) {
 									features.put(filter.getKey(),filter.getFeatureNames());
 									List<Pair<String,double[]>> featureL=filter.getFeatures();
 									featureList.put(filter.getKey(),featureL);
 								}
-
+								 */
 							}
 
 						}

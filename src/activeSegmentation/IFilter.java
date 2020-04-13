@@ -107,22 +107,10 @@ public interface IFilter {
 	 */
 	public void setEnabled(boolean isEnabled);
 	
-	/**
-	 * Filter type: segmentation or classification
-	 */
 	default public FilterType getFilterType() {
 		return FilterType.SEGM;
 	}
 	
-	/**
-	 * used in for loops  -> typing on method level necessary
-	 */
-	public <T> T getFeatures();
-	
-	/**
-	 * names of features must be unique
-	 */
-	public Set<String> getFeatureNames();
 
 	
 	/*

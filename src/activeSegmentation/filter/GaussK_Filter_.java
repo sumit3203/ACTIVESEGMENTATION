@@ -608,18 +608,4 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return true;
 	}
 
-
-
-	@Override
-	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

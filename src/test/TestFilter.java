@@ -102,18 +102,7 @@ public class TestFilter implements IFilter {
 
 	}
 
-	 
-	@Override
-	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	public static void main(String[] args) {
 		TestFilter filter = new TestFilter();

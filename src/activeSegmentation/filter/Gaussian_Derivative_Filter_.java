@@ -442,16 +442,4 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	}
 
 
-	@Override
-	public <T> T getFeatures() {
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		return null;
-	}
-
-	
-
 }

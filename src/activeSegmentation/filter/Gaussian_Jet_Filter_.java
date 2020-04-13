@@ -435,15 +435,6 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	}
 
 
-	@Override
-	public <T> T getFeatures() {
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		return null;
-	}
 
 	
 

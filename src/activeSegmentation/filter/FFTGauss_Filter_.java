@@ -291,26 +291,8 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter {
 	}
 
 
-	
-
-
-	@Override
-	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 	@Override
 	public boolean reset() {
-		// TODO Auto-generated method stub
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		return true;

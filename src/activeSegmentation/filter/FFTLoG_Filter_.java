@@ -307,15 +307,5 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter {
 	}
 
 
-	@Override
-	public <T> T getFeatures() {
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		return null;
-	}
-
 
 }

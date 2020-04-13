@@ -11,6 +11,7 @@ import java.util.Set;
 
 import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
+import activeSegmentation.IMoment;
 import ij.ImagePlus;
 //import ij.ImageStack;
 import ij.Prefs;
@@ -27,13 +28,12 @@ import ijaux.moments.zernike.ZernikeMoment;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import ijaux.scale.Pair;
 
-public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
+public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, IMoment {
 
 	final int flags=DOES_ALL+ NO_CHANGES;
 	public final static String DEG="Degree";
 	private int degree= Prefs.getInt(DEG, 6);
-
-	//private ArrayList<Pair<String,Pair<String[],Double[]>>> moment_vector = new ArrayList<>();
+ 
 	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<Pair<String,double[]>>();
 	private Set<String> features=new HashSet<String>();
 
@@ -41,7 +41,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
 	private final  String FILTER_KEY = "ZMC";
 	private final static String ZM_FEATURE_KEY = "ZM";
 	
-	private ImagePlus img;
+	//private ImagePlus img;
 	
 	/** It is the result stack*/
 	//private ImageStack imageStack;
@@ -70,7 +70,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
 	@Override
 	public int setup(String arg0, ImagePlus arg1) {
 		// TODO Auto-generated method stub
-		this.img=arg1;
+		//this.img=arg1;
 		return flags;
 	}
 
@@ -234,29 +234,12 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter {
 		return false;
 	}
 
-	/*
-	@Override
-	public void setNPasses(int nPasses) {
-		// TODO Auto-generated method stub
-		this.nPasses = nPasses;
-	}
-
-	@Override
-	public int showDialog(ImagePlus arg0, String arg1, PlugInFilterRunner arg2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-*/
+ 
 	@Override
 	public FilterType getFilterType() {
 		return FilterType.CLASSIF;
 	}
-
-/*	@Override
-	public ArrayList<Pair<String,Pair<String[],Double[]>>> getFeatures() {
-		// TODO Auto-generated method stub
-		return moment_vector;
-	}*/
+ 
 
 	@Override
 	public ArrayList<Pair<String,double[]>> getFeatures() {

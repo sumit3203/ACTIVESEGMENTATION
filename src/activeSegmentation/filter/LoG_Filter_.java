@@ -381,16 +381,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 		this.isEnabled= isEnabled;
 	}
 
-
-	@Override
-	public <T> T getFeatures() {
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		return null;
-	}
 	
 	public static void main (String[] args) {
 		LoG_Filter_ filter=new LoG_Filter_();

@@ -459,7 +459,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 		final XYSeries series = new XYSeries("Data");
 		for(double i=-10;i<=10;i=i+0.5){
-			Double y=logKernel(i);
+			double y=logKernel(i);
 			series.add(i, y);
 		}
 		final XYSeriesCollection data = new XYSeriesCollection(series);
@@ -485,22 +485,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
 	
-	@Override
-	public <T> T getFeatures() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 
 }
