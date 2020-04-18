@@ -63,7 +63,7 @@ public interface IFeature {
 	 * @param classLabels
 	 * @param classes
 	 */
-	public IDataSet createAllInstance(String image);
+	public IDataSet createAllInstances(String image);
 	
 	/**
 	 * Create Instances of Testing DataSet at Class level

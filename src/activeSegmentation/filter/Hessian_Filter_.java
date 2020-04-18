@@ -16,6 +16,8 @@ import ijaux.scale.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 import org.jfree.chart.ChartFactory;
@@ -24,6 +26,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -56,7 +59,7 @@ import dsp.Conv;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
+@AFilter(key="HESSIAN", value="Hessian components", type=SEGM)
 public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
@@ -91,14 +94,12 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "ALOG";
+	private final  String FILTER_KEY = "HESSIAN";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Anisotropic Laplace of Gaussian";
+	private final String FILTER_NAME = "Hessian components";
 	
-	private final int TYPE=1;
-	
-	
+  	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
 	

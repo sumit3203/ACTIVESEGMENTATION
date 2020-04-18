@@ -265,7 +265,7 @@ public class PixelInstanceCreator implements IFeature {
 
 
 	@Override
-	public IDataSet createAllInstance(String image)
+	public IDataSet createAllInstances(String image)
 	{
 		// Read all lists of examples
 		ImageStack stack=loadFeatureStack(image);

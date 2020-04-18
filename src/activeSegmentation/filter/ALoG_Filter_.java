@@ -93,7 +93,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
 	
-	private final int TYPE=1;
 	
 	
 	/** It stores the settings of the Filter. */
