@@ -3,6 +3,7 @@ package activeSegmentation;
 
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
+import ijaux.datatype.Pair;
 
 import java.lang.reflect.Field;
 import java.util.Enumeration;
@@ -67,14 +68,20 @@ public interface IFilter extends IAnnotated {
 	 *  // to be changed for UID use
 	 * @return String
 	 */
-	public default String getKey() {return "NOKEY";};
+	public default String getKey() {
+		Pair<String,String> p=getKeyVal();
+		return p.first;
+	}
 	
 	/**
 	 * Returns the name of the filter
 	 * 
 	 * @return String
 	 */
-	public default String getName() {return "NONAME";};
+	public default String getName() {
+		Pair<String,String> p=getKeyVal();
+		return p.second;
+	}
 
 	
 	/**

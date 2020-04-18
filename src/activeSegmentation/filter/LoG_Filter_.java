@@ -9,6 +9,7 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import ijaux.datatype.Pair;
 import ijaux.scale.GScaleSpace;
 import ijaux.scale.SUtils;
 
@@ -71,7 +72,7 @@ import static java.lang.Math.*;
 
 
 @AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM)
-public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
+public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 
 	private PlugInFilterRunner pfr=null;
@@ -104,20 +105,20 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	private boolean hasRoi=false;
 	private Object pixundo;
 	private boolean convert=false;
-	private boolean isEnabled=true;
-
-
+	
 
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "LOG";
+	//private  String FILTER_KEY = "LOG";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Laplacian of Gaussian";
+	//private  String FILTER_NAME = "Laplacian of Gaussian";
 
 	private Map< String, String > settings= new HashMap<String, String>();
-
+	
+	private boolean isEnabled=true;
+	
 	/**
 	 * 
 	 *	/* (non-Javadoc)
@@ -144,11 +145,12 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+		String key=getKey();	
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
-				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
-				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
+				String imageName=filterPath+"/"+key+"_"+sigma+".tif" ;
+				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 
 			}
 
@@ -220,8 +222,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 
 	}
 
-
-
+	
 
 	/* (non-Javadoc)
 	 * @see ij.plugin.filter.ExtendedPlugInFilter#showDialog(ij.ImagePlus, java.lang.String, ij.plugin.filter.PlugInFilterRunner)
@@ -324,16 +325,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
 	}
 
  
