@@ -376,10 +376,10 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "CURVATOR";
+	private final  String FILTER_KEY = "CURVATURE";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "CURVATOR";
+	private final String FILTER_NAME = "CURVATURE";
 	
 
 	/** It stores the settings of the Filter. */

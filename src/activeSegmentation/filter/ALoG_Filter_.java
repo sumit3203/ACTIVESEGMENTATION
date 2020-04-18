@@ -12,10 +12,8 @@ import java.util.*;
 import java.util.List;
 import static java.lang.Math.*;
 
-import org.jfree.chart.*;
-import org.jfree.chart.plot.*;
-import org.jfree.data.xy.*;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;

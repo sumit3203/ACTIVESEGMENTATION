@@ -38,6 +38,10 @@ public interface ASCommon {
 	public static final String DOTCLASS=".class";
 	// to look IFilter interface
 	public static final String IFILTER="IFilter";
+	// to look IMoment interface
+	public static final String IMOMENT="IMoment";
+	// to look IAnnotated interface
+	public static final String IANNO="IAnnotated";
 	// to check the .tif  extension
 	public static final String TIFFORMAT=".tif";
 	// to give common name to instance

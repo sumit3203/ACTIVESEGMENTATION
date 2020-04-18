@@ -3,7 +3,7 @@ package test;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import activeSegmentation.filter.AFilterField;
+import activeSegmentation.AFilterField;
 import activeSegmentation.filter.LoG_Filter_;
 
 public class testFilterAnn {

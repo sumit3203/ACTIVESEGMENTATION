@@ -26,6 +26,7 @@ import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
+import activeSegmentation.IMoment;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureContainer;
@@ -66,6 +67,8 @@ import ijaux.scale.Pair;
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
+	private Map<String, IMoment> momentMap= new HashMap<String, IMoment>();
+	
 	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
  
 	private IProjectManager projectManager;
@@ -86,7 +89,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			projectType=ProjectType.SEGM;
 		else 
 			projectType=ProjectType.CLASSIF;
-		//IJ.log("Project Type: " + ProjectType.valueOf(this.projectInfo.getProjectType()));
+		IJ.log("Project Type: " +  (projectInfo.getProjectType()));
 		System.out.println("Project Type: "+projectType +" pt "+ pt);
 		IJ.log("Loading Filters");
 		
@@ -127,37 +130,55 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		System.out.println("setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
-		for(String plugin: classes){
-			//System.out.println(plugin);
-			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
-			for(Class<?> cs:classesList){
-				if(cs.getSimpleName().equals(ASCommon.IFILTER)){
+		
+		
+			
+		if (projectType==ProjectType.SEGM  ) {
+			for(String plugin: classes){
+				//System.out.println("checking "+ plugin);
+				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
+
+				for(Class<?> cs:classesList){
+					// we load only IFilter classes
 					//System.out.println(cs.getSimpleName());
-					//IJ.log(plugin);
-					//IJ.debugMode=true;
-					IFilter	thePlugIn =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
-					if (projectType==ProjectType.SEGM && thePlugIn.getFilterType()==FilterType.SEGM ) {
-				//	if (thePlugIn.getFilterType()==projectType.getProjectType()){
-						String pkey=thePlugIn.getKey();
-						System.out.println(pkey);
-				 
-						Map<String, String> fmap=thePlugIn.getAnotatedFileds();
-						//System.out.println(fmap);
-						annotationMap.put(pkey, fmap);
-						filterMap.put(pkey, thePlugIn);
-					}
+					if (cs.getSimpleName().equals(ASCommon.IFILTER)){
 
-				}
-			}
+						IFilter	filter =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
+						String pkey=filter.getKey();
+						//System.out.println(" IFilter " + pkey);
+						
+					
+							FilterType ft=filter.getAType();
+							//System.out.println(ft);
+							
+							if (ft==FilterType.SEGM) {
 
-		}
-		//System.out.println("filter list ");
-		//System.out.println(filterMap);
-		if (filterMap.isEmpty()) 
-			throw new RuntimeException("filter list empty ");
-		else
-			setFiltersMetaData();
+								Map<String, String> fmap=filter.getAnotatedFileds();
+								annotationMap.put(pkey, fmap);
+								filterMap.put(pkey, filter);
+							} else if (ft==FilterType.CLASSIF) {
+								Map<String, String> fmap=filter.getAnotatedFileds();
+								annotationMap.put(pkey, fmap);
+								//momentMap.put(pkey, filter);
+							}
+					
+					} 
 
+				} // end for
+				
+			} // end for
+			
+		} // end if
+					 
+		 	System.out.println("filter list ");
+			System.out.println(filterMap);
+			System.out.println("moments list ");
+			System.out.println(momentMap);
+			if (filterMap.isEmpty() && momentMap.isEmpty()) 
+				throw new RuntimeException("filter list empty ");
+			else
+				setFiltersMetaData();
+		
 	}
 
 	private void addJar(File f) throws IOException {
@@ -329,17 +350,21 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		List<Map<String,String>> filterObj= projectInfo.getFilters();
 		for(Map<String, String> filter: filterObj){
 			String filterName=filter.get(ASCommon.FILTER);
-			System.out.println(filterName);
+			System.out.println("settings: name "+filterName);
 			try {
 				if (!updateFilterSettings(filterName, filter))
 					IJ.log("error reading settings " +filterName);
 			} catch (Exception e) {
 				IJ.log("error reading settings " +filterName);
 			}
-			if (filter.get("enabled").equalsIgnoreCase("true")){
-				filterMap.get(filterName).setEnabled(true);
-			}else{
-				filterMap.get(filterName).setEnabled(false);
+			try {
+				if (filter.get("enabled").equalsIgnoreCase("true"))
+					filterMap.get(filterName).setEnabled(true);
+				else
+					filterMap.get(filterName).setEnabled(false);
+			} catch (RuntimeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
@@ -351,6 +376,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		try {
 			return ((IFilterViz) filter).getImage();
 		} catch (Exception e) {
+			IJ.log(key+" not an IFilterViz");
 			e.printStackTrace();
 			return null;
 		}

@@ -2,7 +2,7 @@ package activeSegmentation;
 
 import java.util.Set;
 
-public interface IMoment {
+public interface IMoment  extends IAnnotated {
 
 	/**
 	 * Filter type: segmentation or classification
@@ -20,5 +20,8 @@ public interface IMoment {
 	 * names of features must be unique
 	 */
 	public Set<String> getFeatureNames();
+
+	
+	String getKey();
 
 }
