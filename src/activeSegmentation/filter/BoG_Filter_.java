@@ -24,10 +24,13 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
+
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 
@@ -65,7 +68,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
- 
+@AFilter(key="BOG", value="Bi-Laplacian of Gaussian", type=SEGM)
 public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 	private PlugInFilterRunner pfr=null;

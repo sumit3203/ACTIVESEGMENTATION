@@ -67,14 +67,14 @@ public interface IFilter extends IAnnotated {
 	 *  // to be changed for UID use
 	 * @return String
 	 */
-	public String getKey();
+	public default String getKey() {return "NOKEY";};
 	
 	/**
 	 * Returns the name of the filter
 	 * 
-	 * @return Integer
+	 * @return String
 	 */
-	public String getName();
+	public default String getName() {return "NONAME";};
 
 	
 	/**

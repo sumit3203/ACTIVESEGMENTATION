@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import ijaux.datatype.Pair;
+
 
 public interface IAnnotated {
 	
@@ -47,6 +49,24 @@ public interface IAnnotated {
 		//throw new RuntimeException("No filter annotations present");
 		System.out.println("No filter annotations present");
 		return FilterType.NONE;
+	}
+	
+	
+	default public Pair<String,String> getKeyVal() {
+		Class<?> c= this.getClass();
+		final Annotation[] arran=AnnotationManager.getClassAnnotations(c);
+		for (Annotation aa:arran  ) {
+			//System.out.println("AA: " +aa);
+			if (aa instanceof AFilter) {
+				//System.out.println("AF: " +aa);
+				final AFilter af= ((AFilter)aa);		 
+				return Pair.of(af.key(),af.value());
+			}
+			  
+		}
+		//throw new RuntimeException("No filter annotations present");
+		System.out.println("No filter annotations present");
+		return Pair.of("NONE","NONE");
 	}
 
 }

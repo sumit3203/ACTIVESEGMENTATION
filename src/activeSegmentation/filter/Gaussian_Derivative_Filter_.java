@@ -25,10 +25,12 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
@@ -67,6 +69,8 @@ import static java.lang.Math.*;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+@AFilter(key="GAUSSIAN", value="Gaussian", type=SEGM)
 public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")
@@ -110,7 +114,6 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Gaussian Derivatives";
 
-	private final int TYPE=1;
 	
 	private Map< String, String > settings= new HashMap<String, String>();
 

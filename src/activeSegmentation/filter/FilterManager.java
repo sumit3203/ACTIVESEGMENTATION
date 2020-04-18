@@ -355,6 +355,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				if (!updateFilterSettings(filterName, filter))
 					IJ.log("error reading settings " +filterName);
 			} catch (Exception e) {
+				e.printStackTrace();
 				IJ.log("error reading settings " +filterName);
 			}
 			try {
@@ -363,7 +364,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				else
 					filterMap.get(filterName).setEnabled(false);
 			} catch (RuntimeException e) {
-				// TODO Auto-generated catch block
+				IJ.log("error enabling " +filterName);
 				e.printStackTrace();
 			}
 		}

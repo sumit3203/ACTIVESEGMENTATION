@@ -16,12 +16,14 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
 import fftscale.filter.FFTAbstractKernel;
 import fftscale.filter.FFTKernelGauss;
 
+import static activeSegmentation.FilterType.SEGM;
 import static fftscale.FFTConvolver.*;
 import ij.*;
 import ij.gui.*;
@@ -58,6 +60,7 @@ import ijaux.scale.SUtils;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+@AFilter(key="FGAUSS", value="FFT Gaussian", type=SEGM)
 public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final static String KSZ = "KSZ", GEV="GEV1";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
@@ -80,7 +83,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "FFT Gaussian";
 
-	private final int TYPE=1;
+ 
 	private Map< String, String > settings= new HashMap<String, String>();
 
 	private ImageStack imageStack;

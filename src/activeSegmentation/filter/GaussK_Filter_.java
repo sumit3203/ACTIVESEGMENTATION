@@ -21,10 +21,12 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
@@ -60,6 +62,8 @@ import static java.lang.Math.*;
  */
 
 
+
+@AFilter(key="CURVATURE", value="Gaussian Jet", type=SEGM)
 public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;

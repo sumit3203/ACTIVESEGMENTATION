@@ -12,12 +12,14 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
 import fftscale.filter.FFTKernelGauss;
 import fftscale.filter.FFTKernelLoG;
 
+import static activeSegmentation.FilterType.SEGM;
 import static fftscale.FFTConvolver.*;
 import ij.*;
 import ij.gui.*;
@@ -63,6 +65,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+@AFilter(key="FLOG", value="FFT Laplacian of Gaussian", type=SEGM)
 public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
@@ -77,7 +80,8 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private  int sz= Prefs.getInt(LEN, 1);
 	private  int max_sz= Prefs.getInt(MAX_LEN, 9);
 
-
+	private ImageStack imageStack;
+	
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
@@ -86,10 +90,8 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "FFT Laplacian of Gaussian";
 
-	private final int TYPE=1;
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	private ImageStack imageStack;
 	private boolean isEnabled=true;
 
 	void showAbout() {
@@ -218,7 +220,6 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		// TODO Auto-generated method stub
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		return true;
@@ -227,7 +228,6 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
-		// TODO Auto-generated method stub
 		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
 			ImageProcessor fp=filter(image, sigma);
 			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
