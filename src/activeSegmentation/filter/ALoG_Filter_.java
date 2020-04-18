@@ -12,10 +12,8 @@ import java.util.*;
 import java.util.List;
 import static java.lang.Math.*;
 
-import org.jfree.chart.*;
-import org.jfree.chart.plot.*;
-import org.jfree.data.xy.*;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -95,7 +93,6 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
 	
-	private final int TYPE=1;
 	
 	
 	/** It stores the settings of the Filter. */

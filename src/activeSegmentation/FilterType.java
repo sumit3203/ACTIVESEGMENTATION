@@ -8,7 +8,8 @@ package activeSegmentation;
 public enum FilterType {
 
 	SEGM(1),  
-	CLASSIF(2);
+	CLASSIF(2),
+	NONE(3);
   
 	private final int filterType;
 

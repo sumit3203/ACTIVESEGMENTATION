@@ -6,8 +6,8 @@ package activeSegmentation;
 public enum ProjectType {
 
 	SEGM(1),  
-	CLASSIF(2), 
-	SEGM_CLASSIF(3) ;
+	CLASSIF(2); 
+	//SEGM_CLASSIF(3) ;
 
 
 	private final int projectType;

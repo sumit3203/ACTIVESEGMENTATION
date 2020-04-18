@@ -627,7 +627,7 @@ public class FeatureManager  {
 				String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
 				System.out.println("mask key "+key);
 				double[] classificationResult = learningManager
-						.applyClassifier(featureMap.get(key).createAllInstance(image));
+						.applyClassifier(featureMap.get(key).createAllInstances(image));
 				
 				//now classificationResult has predictions of all pixels of one particular image
 				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),

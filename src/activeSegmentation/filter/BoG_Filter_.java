@@ -24,9 +24,13 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
+
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 
@@ -46,7 +50,7 @@ import static java.lang.Math.*;
  *
  *
  * @contents
- * This pluign convolves an image with a Bi-Laplacian of Gaussian (BoG) filter
+ * This plug-in convolves an image with a Bi-Laplacian of Gaussian (BoG) filter
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -64,57 +68,67 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
- 
+@AFilter(key="BOG", value="Bi-Laplacian of Gaussian", type=SEGM)
 public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
-    @SuppressWarnings("unused")
-	private PlugInFilterRunner pfr=null;
-
-	final int flags=DOES_ALL+SUPPORTS_MASKING+KEEP_PREVIEW;
+   
+	//////////////////
+	// Declarations
+	/////////////////  
+	private final int flags=DOES_ALL+SUPPORTS_MASKING+KEEP_PREVIEW;
+	
 	private String version="1.5";
-	@SuppressWarnings("unused")
-
-	private int nPasses=1;
-	private int pass;
 	
 	public final static String SIGMA="LOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISO="G_iso", ISSEP="G_SEP";
 
-	@AFilterField(key=LEN, value="initial scale")
+	public static boolean debug=IJ.debugMode;
+	
+	////////////////////
+	// Annotated fields
+	///////////////////
+	
+	@AFilterField(key=LEN, value="minimal scale")
 	public static int sz= Prefs.getInt(LEN, 2);
 	
-	@AFilterField(key=MAX_LEN, value="max scale")
+	@AFilterField(key=MAX_LEN, value="maximal scale")
 	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
-	private float[][] kernel=null;
-
-	private ImagePlus image=null;
-	
-	public static boolean debug=IJ.debugMode;
-
 	@AFilterField(key=ISSEP, value="separable")
 	public static boolean sep= Prefs.getBoolean(ISSEP, false);
 	
 	@AFilterField(key=ISO, value="isotropic")
 	public static boolean isiso= Prefs.getBoolean(ISO, true);
 	
-	private boolean isEnabled=true;
 	
+	/* PRIVATE FIELDS */
+	private float[][] kernel=null;
 
-	public boolean isFloat=false;
+	private ImagePlus image=null;
+	
+	private boolean isFloat=false;
 	
 	@SuppressWarnings("unused")
     private boolean hasRoi=false;
 	
+	@SuppressWarnings("unused")
+	private int nPasses=1;
+	private int pass;
 	
+	@SuppressWarnings("unused")
+	private PlugInFilterRunner pfr=null;
+	
+	private Object pixundo;
+	 
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "BOG";
+	//private final  String FILTER_KEY = "BOG";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Bi-Laplacian of Gaussian";
+ 	//private final String FILTER_NAME = "Bi-Laplacian of Gaussian";
 	
 	private Map< String, String > settings= new HashMap<String, String>();
-
+	
+	private boolean isEnabled=true;
 	 
 	
 	/**
@@ -156,14 +170,14 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+		String key=getKey();
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+			GScaleSpace sp=new GScaleSpace(sigma);
+			ImageProcessor fp=filter(image, sp, sep, isiso);
+			String imageName=filterPath+"/"+key+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 
-			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
-				GScaleSpace sp=new GScaleSpace(sigma);
-				ImageProcessor fp=filter(image, sp,sep, isiso);
-				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
-				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
-
-			}
+		}
 
 	}
 
@@ -259,16 +273,6 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		//System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 		
-		/*if (convert) {
-			float[] minmax=findMinAndMax(fpaux);
-			final double d1 = -(fmin* minmax[1] - fmax* minmax[0])/(fmin - fmax);
-			dr = dr/ (minmax[1] - minmax[0]);
-			System.out.println("contrast adjustment y=ax+b \n " +
-					" b " +d1 +" a " + dr);
-				
-			contrastAdjust(fpaux, dr, d1);
-		}*/
-		
 		return fpaux;
 	
 	}
@@ -311,8 +315,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		return IJ.setupDialog(imp, flags);
 	}
 	
-	private Object pixundo;
-	//private boolean convert=false;
+
+ 
 	
 	// Called after modifications to the dialog. Returns true if valid input.
 	/* (non-Javadoc)
@@ -347,9 +351,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 	
 	
-	  /* Saves the current settings of the plugin for further use
-     * 
-     *
+	/** Saves the current settings of the plugin for further use
+    *
     * @param prefs
     */
    public static void savePreferences(Properties prefs) {
@@ -401,18 +404,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		return true;
 	}
 
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-
-
-	 
+	
 	private double bogKernel(double x){
 		final double x2=x*x;
 		return (x2*x2-8*(x2)+8)* exp(-0.5*x2) / (2.0*sqrt(PI));
@@ -439,10 +431,6 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		}
 		return data;
 	}
-
-	 
-
-
 
 
 }

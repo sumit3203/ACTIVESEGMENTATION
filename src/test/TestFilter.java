@@ -1,18 +1,26 @@
 package test;
 
+import static activeSegmentation.FilterType.SEGM;
+
 import java.awt.Image;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
+import activeSegmentation.AnnotationManager;
 import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
-import activeSegmentation.filter.AFilterField;
 import ij.Prefs;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
+import ijaux.datatype.Pair;
 
+@AFilter(key="TF", value="Test Filter", type=SEGM)
 public class TestFilter implements IFilter {
 
 	/*
@@ -102,9 +110,38 @@ public class TestFilter implements IFilter {
 	public static void main(String[] args) {
 		TestFilter filter = new TestFilter();
 		//filter.getDefaultSettings();
-		filter.getAnotatedFileds();
+		Map<String, String> fanot=filter.getAnotatedFileds();
+		System.out.println(fanot);
+		 
+		//if (filter.getClass().isAnnotationPresent(AFilter.class)) 
+		/*
+		 * Annotation[] arran=AnnotationManager.getClassAnnotations(filter.getClass());
+		 * AnnotationManager.printAnnotations(arran); for (Annotation aa:arran ) { if
+		 * (aa instanceof AFilter) { AFilter af= ((AFilter)aa); String skey=af.key();
+		 * FilterType ft=af.type(); Pair<String, FilterType> p=Pair.of(skey, ft);
+		 * System.out.println(p); }
+		 * 
+		 * }
+		 */
+		
+		
+		FilterType ft=filter.getAType();
+		System.out.println(ft);
+		
 
 	}
+
+	/**
+	 * @param arran
+	 */
+	/*
+	 * public FilterType getAType(Class<?> c) { final Annotation[]
+	 * arran=AnnotationManager.getClassAnnotations(c); for (Annotation aa:arran ) {
+	 * System.out.println(aa); if (aa instanceof AFilter) { final AFilter af=
+	 * ((AFilter)aa); FilterType ft=af.type(); return ft; }
+	 * 
+	 * } return null; }
+	 */
 
 	@Override
 	public FilterType getFilterType() {

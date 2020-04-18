@@ -19,7 +19,7 @@ import activeSegmentation.prj.ProjectInfo;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.util.ArrayUtil;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -184,7 +184,7 @@ public class RoiInstanceCreator implements IFeature {
 	 * TODO implement
 	 */
 	@Override
-	public IDataSet createAllInstance(String image) {
+	public IDataSet createAllInstances(String image) {
 		// TODO Auto-generated method stub
 		return null;
 	}

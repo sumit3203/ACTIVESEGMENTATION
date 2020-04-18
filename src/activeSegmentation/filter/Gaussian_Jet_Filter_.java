@@ -14,6 +14,7 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.*;
 
+import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.PI;
 import static java.lang.Math.exp;
 import static java.lang.Math.sqrt;
@@ -29,6 +30,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -59,6 +61,7 @@ import dsp.Conv;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+@AFilter(key="GAUSSIAN Jet", value="Gaussian Jet", type=SEGM)
 public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")
@@ -102,7 +105,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Gaussian Jet";
 
-	private final int TYPE=1;
+	
 	
 	private Map< String, String > settings= new HashMap<String, String>();
 
