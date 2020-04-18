@@ -22,6 +22,7 @@ import java.util.zip.ZipInputStream;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
+import activeSegmentation.IAnnotated;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
@@ -36,7 +37,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Roi;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
+
 
 /**
  * 				
@@ -117,7 +119,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
 		String cp=System.getProperty("java.class.path");
-		
+
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(plugin));
@@ -130,9 +132,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		System.out.println("setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
-		
-		
-			
+
+
+
 		if (projectType==ProjectType.SEGM  ) {
 			for(String plugin: classes){
 				//System.out.println("checking "+ plugin);
@@ -141,44 +143,46 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				for(Class<?> cs:classesList){
 					// we load only IFilter classes
 					//System.out.println(cs.getSimpleName());
-					if (cs.getSimpleName().equals(ASCommon.IFILTER)){
+					if (cs.getSimpleName().equals(ASCommon.IFILTER)||
+							cs.getSimpleName().equals(ASCommon.IMOMENT)){
 
-						IFilter	filter =(IFilter) (classLoader.loadClass(plugin)).newInstance(); 
-						String pkey=filter.getKey();
+						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						Pair<String, String> p=ianno.getKeyVal();
+						String pkey=p.first;
 						//System.out.println(" IFilter " + pkey);
-						
-					
-							FilterType ft=filter.getAType();
-							//System.out.println(ft);
-							
-							if (ft==FilterType.SEGM) {
 
-								Map<String, String> fmap=filter.getAnotatedFileds();
-								annotationMap.put(pkey, fmap);
-								filterMap.put(pkey, filter);
-							} else if (ft==FilterType.CLASSIF) {
-								Map<String, String> fmap=filter.getAnotatedFileds();
-								annotationMap.put(pkey, fmap);
-								//momentMap.put(pkey, filter);
-							}
-					
+						FilterType ft=ianno.getAType();
+						//System.out.println(ft);
+
+						if (ft==FilterType.SEGM) {
+							IFilter	filter =(IFilter) ianno;
+							Map<String, String> fmap=filter.getAnotatedFileds();
+							annotationMap.put(pkey, fmap);
+							filterMap.put(pkey, filter);
+						} else if (ft==FilterType.CLASSIF) {
+							IMoment	moment =(IMoment) ianno;
+							Map<String, String> fmap=moment.getAnotatedFileds();
+							annotationMap.put(pkey, fmap);
+							momentMap.put(pkey, moment);
+						}
+
 					} 
 
 				} // end for
-				
+
 			} // end for
-			
+
 		} // end if
-					 
-		 	System.out.println("filter list ");
-			System.out.println(filterMap);
-			System.out.println("moments list ");
-			System.out.println(momentMap);
-			if (filterMap.isEmpty() && momentMap.isEmpty()) 
-				throw new RuntimeException("filter list empty ");
-			else
-				setFiltersMetaData();
-		
+
+		System.out.println("filter list ");
+		System.out.println(filterMap);
+		System.out.println("moments list ");
+		System.out.println(momentMap);
+		if (filterMap.isEmpty() && momentMap.isEmpty()) 
+			throw new RuntimeException("filter list empty ");
+		else
+			setFiltersMetaData();
+
 	}
 
 	private void addJar(File f) throws IOException {

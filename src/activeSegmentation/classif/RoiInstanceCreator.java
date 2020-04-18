@@ -19,7 +19,7 @@ import activeSegmentation.prj.ProjectInfo;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.util.ArrayUtil;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;

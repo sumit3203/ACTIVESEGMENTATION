@@ -50,7 +50,7 @@ import static java.lang.Math.*;
  *
  *
  * @contents
- * This pluign convolves an image with a Bi-Laplacian of Gaussian (BoG) filter
+ * This plug-in convolves an image with a Bi-Laplacian of Gaussian (BoG) filter
  * 
  * 
  * @license This library is free software; you can redistribute it and/or

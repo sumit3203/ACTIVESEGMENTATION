@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import activeSegmentation.IClassifier;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
