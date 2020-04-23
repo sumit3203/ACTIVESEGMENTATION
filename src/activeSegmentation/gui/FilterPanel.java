@@ -3,20 +3,16 @@ package activeSegmentation.gui;
 
 
 import ij.IJ;
-import ij.ImagePlus;
-import test.FilterField;
-import test.testFilterAnn;
 
 import java.awt.Color;
-import java.awt.Font;
+
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +38,6 @@ import javax.swing.JTextField;
 
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFilter;
-import activeSegmentation.IFilterManager;
 import activeSegmentation.IProjectManager;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filter.FilterManager;
@@ -147,7 +141,7 @@ public class FilterPanel implements Runnable, ASCommon {
 			int size, int maxFilters,String filterName) {
 		JPanel p = new JPanel();
 		p.setLayout(null);
-		//p.setBackground(Color.GRAY);
+		
 		int  y=10;
 		if(size!=1)
 			addButton( new JButton(), "Previous", null, 10, 90, 95, 38,p,PREVIOUS_BUTTON_PRESSED , null);
@@ -361,7 +355,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
 			JComponent panel, final ActionEvent action,final Color color )	{
-		
+
 		panel.add( button );
 		button.setText( label );
 		button.setIcon( icon );
@@ -371,7 +365,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		button.setBackground(new Color(192, 192, 192));
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
-	
+
 		button.addActionListener( new ActionListener()	{
 			@Override
 			public void actionPerformed( final ActionEvent e ){
