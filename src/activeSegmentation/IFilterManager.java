@@ -124,5 +124,10 @@ public interface IFilterManager {
 	 */
 	public Map<String, String> getFieldAnnotations(String key);
 	
+	/**
+	 * title annotation
+	 */
+	public String getTitleAnnotation(String key);
+	
 
 }

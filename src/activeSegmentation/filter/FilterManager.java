@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,10 +70,12 @@ import ijaux.datatype.Pair;
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
-	private Map<String, IMoment> momentMap= new HashMap<String, IMoment>();
+	private Map<String, IMoment<?>> momentMap= new HashMap<String, IMoment<?>>();
 	
 	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
  
+	private Map<String,String> tabtitles=new HashMap<String,String>();
+	
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
@@ -150,17 +153,17 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 						Pair<String, String> p=ianno.getKeyVal();
 						String pkey=p.first;
 						//System.out.println(" IFilter " + pkey);
-
+						tabtitles.put(p.first, p.second);
 						FilterType ft=ianno.getAType();
 						//System.out.println(ft);
-
+						
 						if (ft==FilterType.SEGM) {
 							IFilter	filter =(IFilter) ianno;
-							Map<String, String> fmap=filter.getAnotatedFileds();
+							Map<String, String> fmap=filter.getAnotatedFileds();				
 							annotationMap.put(pkey, fmap);
 							filterMap.put(pkey, filter);
 						} else if (ft==FilterType.CLASSIF) {
-							IMoment	moment =(IMoment) ianno;
+							IMoment<?>	moment =(IMoment<?>) ianno;
 							Map<String, String> fmap=moment.getAnotatedFileds();
 							annotationMap.put(pkey, fmap);
 							momentMap.put(pkey, moment);
@@ -391,6 +394,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public Map<String, String> getFieldAnnotations(String key) {
 		return annotationMap.get(key);
+	}
+
+
+	@Override
+	public String getTitleAnnotation(String key) {
+		
+		return tabtitles.get(key);
 	}
 
 

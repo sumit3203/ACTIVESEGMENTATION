@@ -103,6 +103,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		scrollPane.setBounds(605,20,100,380);
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
+		
 		updateFilterList();
 		addButton( new JButton(),"Compute",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
 		addButton(new JButton(), "Default",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
@@ -125,11 +126,12 @@ public class FilterPanel implements Runnable, ASCommon {
 				Map<String,String> settings =filterManager.getDefaultFilterSettings(filter);
 				Map<String,String> annotations = filterManager.getFieldAnnotations(filter);
 				if (annotations.isEmpty()) {
-				pane.addTab(filter,null,
-						createTab(settings,	filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
-						);
-				} else {
 					pane.addTab(filter,null,
+							createTab(settings,	filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
+							);
+				} else {
+					String title=filterManager.getTitleAnnotation(filter);
+					pane.addTab(title,null,
 							createTabAnnotations(settings, annotations, filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
 							);
 				}
