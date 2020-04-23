@@ -24,7 +24,7 @@ import java.util.zip.ZipInputStream;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
@@ -34,6 +34,7 @@ import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureContainer;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -76,14 +77,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
  
 	private Map<String,String> tabtitles=new HashMap<String,String>();
 	
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
 	private ProjectType projectType;
 
 	private FeatureManager  featureManager;
 
-	public FilterManager(IProjectManager projectManager, FeatureManager  featureManager){
+	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 		
 		this.projectManager= projectManager;

@@ -2,7 +2,13 @@ package activeSegmentation;
 
 
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import activeSegmentation.prj.ProjectInfo;
+import ij.IJ;
 import weka.core.Instances;
 
 /**
@@ -40,7 +46,36 @@ public interface IProjectManager {
 	 * @param  filename
 	 * @return boolean
 	 */
-	public boolean writeDataToARFF(Instances data, String filename);
+	default boolean writeDataToARFF(Instances data, String path)	{
+		BufferedWriter out = null;
+		try{
+			out = new BufferedWriter(
+					new OutputStreamWriter(
+							new FileOutputStream( path) ) );
+
+			final Instances header = new Instances(data, 0);
+			out.write(header.toString());
+
+			for(int i = 0; i < data.numInstances(); i++)			{
+				out.write(data.get(i).toString()+"\n");
+			}
+		}	catch(Exception e)		{
+			IJ.log("Error: couldn't write instances into .ARFF file.");
+			IJ.showMessage("Exception while saving data as ARFF file");
+			e.printStackTrace();
+			return false;
+		}	finally{
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return true;
+
+	}
+
 	
 	/**
 	 * This method is used to read the training and text instance from directory

@@ -4,9 +4,9 @@ import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 
 import activeSegmentation.IClassifier;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.learning.WekaDataSet;
-import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.prj.ProjectManager;
 import weka.classifiers.functions.SMO;
 import weka.core.Instances;
 
@@ -17,7 +17,7 @@ public class ApplyClassifierTester {
 
 	public static void main(String[] args) {
 
-		IProjectManager dataManager= new ProjectManagerImp();
+		ProjectManager dataManager= new ProjectManager();
 
 		Instances instance=null;
 		//dataManager.readDataFromARFF("C:/Users/HP/Desktop/DataImages/aav_samples/aav_samples/test/LIBSVM/LIBSVM/Training1.arff");

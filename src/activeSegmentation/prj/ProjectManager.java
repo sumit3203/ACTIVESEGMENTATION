@@ -31,20 +31,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 
 import activeSegmentation.learning.WekaDataSet;
 import weka.core.Instances;
 
-public class ProjectManagerImp implements IProjectManager {
+public class ProjectManager {
 
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<String,String>();
+	
 	/**
 	 * Read ARFF file
 	 * @param filename ARFF file name
@@ -60,34 +61,26 @@ public class ProjectManagerImp implements IProjectManager {
 				data.setClassIndex(data.numAttributes() - 1);
 				reader.close();
 				return new WekaDataSet(data);
-			}
-			catch(IOException e){
+			} catch(IOException e){
 				e.printStackTrace();
 				IJ.showMessage("IOException");}
-		}
-		catch(FileNotFoundException e){IJ.showMessage("File not found!");}
+		}	catch(FileNotFoundException e){IJ.showMessage("File not found!");}
 		return null;
 	}
 
-	@Override
+	//@Override
 	public IDataSet getDataSet() {
-
 		return  dataSet;
 	}
 
-	@Override
+	//@Override
 	public void setData(IDataSet data) {
-		this.dataSet = data.copy();
+		dataSet = data.copy();
 	}
 
-	@Override
-	/**
-	 * Write current instances into an ARFF file
-	 * @param data set of instances
-	 * @param filename ARFF file name
-	 */
-	public boolean writeDataToARFF(Instances data, String filename)
-	{
+	//TODO use the default from the interface
+	//@Override
+	public boolean writeDataToARFF(Instances data, String filename)	{
 		BufferedWriter out = null;
 		try{
 			out = new BufferedWriter(
@@ -97,19 +90,15 @@ public class ProjectManagerImp implements IProjectManager {
 			final Instances header = new Instances(data, 0);
 			out.write(header.toString());
 
-			for(int i = 0; i < data.numInstances(); i++)
-			{
+			for(int i = 0; i < data.numInstances(); i++)			{
 				out.write(data.get(i).toString()+"\n");
 			}
-		}
-		catch(Exception e)
-		{
+		}	catch(Exception e)		{
 			IJ.log("Error: couldn't write instances into .ARFF file.");
 			IJ.showMessage("Exception while saving data as ARFF file");
 			e.printStackTrace();
 			return false;
-		}
-		finally{
+		}	finally{
 			try {
 				out.close();
 			} catch (IOException e) {
@@ -121,13 +110,8 @@ public class ProjectManagerImp implements IProjectManager {
 
 	}
 
-
-
-
-
-	@Override
+	//@Override
 	public boolean loadProject(String fileName) {
-		// TODO Auto-generated method stub
 		//System.out.println("IN LOAD PROJCT");
 		setDirectory();
 		//IJ.log(System.getProperty("plugins.dir"));
@@ -162,7 +146,7 @@ public class ProjectManagerImp implements IProjectManager {
 		return true;
 	}
 
-	@Override
+	//@Override
 	public void writeMetaInfo( ProjectInfo project) {
 		updateMetaInfo(project);
 		ObjectMapper mapper = new ObjectMapper();
@@ -186,13 +170,13 @@ public class ProjectManagerImp implements IProjectManager {
 		}
 	}
 
-	@Override
+	//@Override
 	public ProjectInfo getMetaInfo() {
 
 		return projectInfo;
 	}
 
-	@Override
+	//@Override
 	public String createProject(String projectName, String projectType,String projectDirectory, 
 			String projectDescription,
 			String trainingImage){
@@ -255,6 +239,7 @@ public class ProjectManagerImp implements IProjectManager {
 		}
 
 	}
+	
 	private void createStackImage(ImagePlus image,String format, String folder) {
 		IJ.log("createStack");
 		//String format=image.getTitle().substring(image.getTitle().lastIndexOf("."));
@@ -270,6 +255,7 @@ public class ProjectManagerImp implements IProjectManager {
 		}
 		IJ.log("createStackdone");
 	}
+	
 	private String validate(String projectName,String projectDirectory, 
 			String trainingImage) {
 		String message="done";
@@ -315,6 +301,7 @@ public class ProjectManagerImp implements IProjectManager {
 		projectDir.put(ASCommon.EVALUATIONDIR,projectString+"/evaluation/");
 		projectDir.put(ASCommon.IMAGESDIR,projectString+"/images/");
 	}
+	
 	private void createProjectSpace(String projectDirectory, String projectName) {
 
 		setProjectDir(projectDirectory, projectName);
@@ -326,7 +313,6 @@ public class ProjectManagerImp implements IProjectManager {
 		createDirectory(projectDir.get(ASCommon.IMAGESDIR));
 		IJ.log("DONE");
 	}
-
 	
 	private File[] sortImages(File[] images) {
 		final Pattern p = Pattern.compile("\\d+");
@@ -359,6 +345,7 @@ public class ProjectManagerImp implements IProjectManager {
 				);
 		return images;
 	}
+	
 	private List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<String>();
 		File folder = new File(directory);
@@ -372,6 +359,7 @@ public class ProjectManagerImp implements IProjectManager {
 		
 		return imageList;
 	}
+	
 	private boolean createDirectory(String project){
 
 		File file=new File(project);

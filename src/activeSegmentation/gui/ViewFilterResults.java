@@ -40,11 +40,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
-
+import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 
 public class ViewFilterResults extends ImageWindow  {
@@ -54,7 +54,7 @@ public class ViewFilterResults extends ImageWindow  {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final int IMAGE_CANVAS_DIMENSION = 560; //same width and height	
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	private FeatureManager featureManager;
 	private ProjectInfo projectInfo;
 	private String filterString;
@@ -96,7 +96,7 @@ public class ViewFilterResults extends ImageWindow  {
 	private JComboBox<LearningType> learningType;
 	private ImagePlus displayImage;
 	
-	public ViewFilterResults(IProjectManager projectManager, FeatureManager featureManager) {
+	public ViewFilterResults(ProjectManager projectManager, FeatureManager featureManager) {
 		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;
 		this.featureManager=featureManager;

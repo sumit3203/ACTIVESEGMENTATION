@@ -15,11 +15,12 @@ import javax.swing.SwingUtilities;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IEvaluation;
 //import activeSegmentation.ILearningManager;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.evaluation.EvaluationPanel;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
+import activeSegmentation.prj.ProjectManager;
 
 
 public class Gui implements ASCommon {
@@ -40,11 +41,11 @@ public class Gui implements ASCommon {
 	
 	private FeatureManager featureManager;
 	private ClassifierManager learningManager;
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	
 
 
-	public Gui(IProjectManager projectManager)	{
+	public Gui(ProjectManager projectManager)	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
 		featureManager=new FeatureManager(this.projectManager, this.learningManager);

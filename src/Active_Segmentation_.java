@@ -1,16 +1,10 @@
-
-
-
-
-
-
 import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.gui.CreateProjectUI;
-import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
@@ -38,7 +32,7 @@ public class Active_Segmentation_ implements PlugIn {
 	@Override
 	public void run(String arg0) {
 	
-		IProjectManager dataManager= new ProjectManagerImp();
+		ProjectManager dataManager= new ProjectManager();
 		CreateProjectUI creatProject= new CreateProjectUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
