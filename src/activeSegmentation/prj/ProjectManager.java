@@ -366,7 +366,6 @@ public class ProjectManager {
 	}
 	
 	private boolean createDirectory(String project){
-
 		File file=new File(project);
 		if(!file.exists()){
 			file.mkdirs();
@@ -374,8 +373,7 @@ public class ProjectManager {
 		return true;
 	}
 
-	 public void updateMetaInfo(ProjectInfo project)
-	  {
+	 public void updateMetaInfo(ProjectInfo project) {
 	    projectInfo = project;
 	  }
 

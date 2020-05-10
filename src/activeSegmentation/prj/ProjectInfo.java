@@ -10,50 +10,60 @@ import java.util.Map;
 import java.util.Set;
 
 import activeSegmentation.IClassifier;
+import activeSegmentation.ProjectType;
 import ijaux.datatype.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+ * Project metadata structure
+ */
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class ProjectInfo{
 	
 	///////////////////
-	// Public methods
+	// Public fields
 	///////////////////
 	
 	public String projectName;
 	
-	public String projectDescription;
+	public String projectDescription="Default description";
+	
 	public String comment = "Default Comment";
 	
 	////////////////////
-	// Private methods
+	// Private fields
 	////////////////////
 	
-	private String projectType;
-	private Date createdDate;
-	private Date modifyDate;
+	private ProjectType projectType=null;
+	private Date createdDate=null;
+	private Date modifyDate=null;
 	
 	private String version="1.0.0";
 	
 	@JsonProperty(value="classes")
-	private int classes;
+	private int classes=-1;
 	 
-	private String projectPath;
+	private String projectPath="";
 	
-	private List<String> pluginPath;
+	private List<String> pluginPath=null;
 
-	private String trainingStack;
-	private String testingStack;
-	private List<Map<String, String>> filters = new ArrayList<Map<String, String>>();
-	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
-	private Map<String, String> learning = new HashMap<String, String>();
-	private String groundtruth;
+	private String trainingStack="";
 	
-	private String featureSelection;
+	private String testingStack="";
+	
+	private List<Map<String, String>> filters = new ArrayList<Map<String, String>>();
+	
+	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
+	
+	private Map<String, String> learning = new HashMap<String, String>();
+	
+	private String groundtruth="";
+	
+	private String featureSelection="";
 	
 	/*
 	 * JSON ignore
@@ -77,22 +87,7 @@ public class ProjectInfo{
 	////////////////////////////////////////////
 	//  Methods
 	///////////////////////////////////////////
-	
-	/**
-	 * 
-	 * @return String
-	 */
-//	public String getComment()	{
-//		return this.comment;
-//	}
-	
-	/**
-	 * 
-	 * @param comment
-	 */
-//	public void setComment(String comment)	{
-//		this.comment = comment;
-//	}
+  
 
 	/**
 	 * 
@@ -210,6 +205,7 @@ public class ProjectInfo{
 	}
 
 	/**
+	 * @TODO version format decision
 	 * 
 	 * @param version
 	 */
@@ -221,48 +217,20 @@ public class ProjectInfo{
 	 * 
 	 * @return
 	 */
-//	public String getProjectName()	{
-//		return this.projectName;
-//	}
-
-	/**
-	 * 
-	 * @param projectName
-	 */
-//	public void setProjectName(String projectName)	{
-//		this.projectName = projectName;
-//	}
-
-	/**
-	 * 
-	 * @return
-	 */
-//	public String getProjectDescription()	{
-//		return this.projectDescription;
-//	}
-
-	/**
-	 * 
-	 * @param projectDescription
-	 */
-//	public void setProjectDescription(String projectDescription)	{
-//		this.projectDescription = projectDescription;
-//	}
-
-	/**
-	 * 
-	 * @return
-	 */
 	public String getProjectType()	{
-		return this.projectType;
+		return projectType.toString();
 	}
 
 	/**
 	 * 
 	 * @param projectType
 	 */
-	public void setProjectType(String projectType)	{
-		this.projectType = projectType;
+	public void setProjectType(String pt)	{
+		//this.projectType =  pt;
+		if (pt.equalsIgnoreCase("SEGMENTATION"))
+			projectType=ProjectType.SEGM;
+		else 
+			projectType=ProjectType.CLASSIF;
 	}
 
 	/**
