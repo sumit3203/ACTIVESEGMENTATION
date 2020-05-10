@@ -41,7 +41,8 @@ public interface IProjectManager {
 	
 	/**
 	 * This method is used to write ARFF file into the directory
-	 * It will store the training and test data in ARFF format
+	 * It will store the training and test data in ARFF format.
+	 * Returns true if successful. 
 	 * @param  data
 	 * @param  filename
 	 * @return boolean
@@ -69,6 +70,7 @@ public interface IProjectManager {
 				out.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
 
@@ -117,17 +119,26 @@ public interface IProjectManager {
 	
 	/**
 	 * This method will set the dataset
-	 * @param  data
+	 * @param data
 	 * 
 	 */
 	public void setData(IDataSet data);
 	
 	/**
-	 * This method will return  the dataset
+	 * This method will return the dataset
+	 * @return IDataSet
 	 */
 	public IDataSet getDataSet();
 	
-
+	/**
+	 *  creates a project
+	 * @param projectName
+	 * @param projectType
+	 * @param projectDirectory
+	 * @param projectDescription
+	 * @param trainingImage
+	 * @return String
+	 */
 	public String createProject(String projectName, String projectType, String projectDirectory, String projectDescription,String trainingImage);
 	
 	

@@ -70,12 +70,12 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	final int flags=DOES_ALL+CONVERT_TO_FLOAT+SUPPORTS_MASKING+KEEP_PREVIEW;
 	private String version="2.0";
-	   @SuppressWarnings("unused")
-
+	
+	@SuppressWarnings("unused")
 	private int nPasses=1;
-	    @SuppressWarnings("unused")
-
-	   private int pass=0;
+	   
+	@SuppressWarnings("unused")
+	private int pass=0;
 	public final static String SIGMA="LOG_sigma", LEN="G_len" ,MAX_LEN="G_MAX", 
 			ISSEP="G_SEP", GN="G_Xn", GM="G_Yn", SCNORM="G_SCNORM";
 

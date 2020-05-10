@@ -42,7 +42,7 @@ public class ProjectManager {
 
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
-	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<String,String>();
 	
@@ -157,7 +157,10 @@ public class ProjectManager {
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
 			//System.out.println("SAVING");
-			mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
+			//mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
+			mapper.writeValue(new File(projectInfo.getProjectPath()+
+					"/"+projectInfo.projectName+
+					"/"+projectInfo.projectName+".json"), projectInfo);
 
 			//System.out.println("DONE");
 
@@ -188,9 +191,11 @@ public class ProjectManager {
 		setDirectory();
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory);
-		projectInfo.setProjectName(projectName);
+		//projectInfo.setProjectName(projectName);
+		projectInfo.projectName=projectName;
 		projectInfo.setProjectType(projectType);
-		projectInfo.setProjectDescription(projectDescription);
+		//projectInfo.setProjectDescription(projectDescription);
+		projectInfo.projectDescription=projectDescription;
 		List<String> jars= new ArrayList<>();
 		jars.add(activeSegDir);
 		projectInfo.setPluginPath(jars);

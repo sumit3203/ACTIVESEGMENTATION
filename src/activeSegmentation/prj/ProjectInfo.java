@@ -1,6 +1,9 @@
 package activeSegmentation.prj;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,20 +14,36 @@ import ijaux.datatype.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class ProjectInfo{
 	
-	private String projectName;
+	///////////////////
+	// Public methods
+	///////////////////
+	
+	public String projectName;
+	
+	public String projectDescription;
+	public String comment = "Default Comment";
+	
+	////////////////////
+	// Private methods
+	////////////////////
+	
 	private String projectType;
-	private String projectDescription;
-	private String comment = "Default Comment";
-	private String createdDate;
-	private String modifyDate;
-	private String version="0.0.0.1";
+	private Date createdDate;
+	private Date modifyDate;
+	
+	private String version="1.0.0";
+	
+	@JsonProperty(value="classes")
 	private int classes;
+	 
 	private String projectPath;
+	
 	private List<String> pluginPath;
 
 	private String trainingStack;
@@ -33,6 +52,7 @@ public class ProjectInfo{
 	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
 	private Map<String, String> learning = new HashMap<String, String>();
 	private String groundtruth;
+	
 	private String featureSelection;
 	
 	/*
@@ -51,7 +71,7 @@ public class ProjectInfo{
 	private IClassifier classifier;
 	
 	@JsonIgnore
-	private Integer featureLength;
+	private int featureLength;
 	
 
 	////////////////////////////////////////////
@@ -62,24 +82,24 @@ public class ProjectInfo{
 	 * 
 	 * @return String
 	 */
-	public String getComment()	{
-		return this.comment;
-	}
+//	public String getComment()	{
+//		return this.comment;
+//	}
 	
 	/**
 	 * 
 	 * @param comment
 	 */
-	public void setComment(String comment)	{
-		this.comment = comment;
-	}
+//	public void setComment(String comment)	{
+//		this.comment = comment;
+//	}
 
 	/**
 	 * 
 	 * @return String
 	 */
 	public String getCreatedDate()	{
-		return this.createdDate;
+		return sdf.format(createdDate);
 	}
 
 	/**
@@ -87,15 +107,23 @@ public class ProjectInfo{
 	 * @param createdDate
 	 */
 	public void setCreatedDate(String createdDate)	{
-		this.createdDate = createdDate;
+	
+		try {
+			this.createdDate = sdf.parse(createdDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	private	SimpleDateFormat sdf=new SimpleDateFormat();
+	
 
 	/**
 	 * 
 	 * @return
 	 */
 	public String getModifyDate()	{
-		return this.modifyDate;
+		return sdf.format(modifyDate);
 	}
 
 	/**
@@ -103,7 +131,11 @@ public class ProjectInfo{
 	 * @param modifyDate
 	 */
 	public void setModifyDate(String modifyDate)	{
-		this.modifyDate = modifyDate;
+		try {
+			this.modifyDate = sdf.parse(modifyDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -177,6 +209,10 @@ public class ProjectInfo{
 		return version;
 	}
 
+	/**
+	 * 
+	 * @param version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
@@ -185,33 +221,33 @@ public class ProjectInfo{
 	 * 
 	 * @return
 	 */
-	public String getProjectName()	{
-		return this.projectName;
-	}
+//	public String getProjectName()	{
+//		return this.projectName;
+//	}
 
 	/**
 	 * 
 	 * @param projectName
 	 */
-	public void setProjectName(String projectName)	{
-		this.projectName = projectName;
-	}
+//	public void setProjectName(String projectName)	{
+//		this.projectName = projectName;
+//	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getProjectDescription()	{
-		return this.projectDescription;
-	}
+//	public String getProjectDescription()	{
+//		return this.projectDescription;
+//	}
 
 	/**
 	 * 
 	 * @param projectDescription
 	 */
-	public void setProjectDescription(String projectDescription)	{
-		this.projectDescription = projectDescription;
-	}
+//	public void setProjectDescription(String projectDescription)	{
+//		this.projectDescription = projectDescription;
+//	}
 
 	/**
 	 * 
