@@ -9,13 +9,14 @@ public enum ProjectType {
 	CLASSIF(2); 
 	//SEGM_CLASSIF(3) ;
 
-
+        //Create New Project dialog box at opening of ActiveSegmentaion PlugIn with option for selection
+	
 	private final int projectType;
 
 	ProjectType(int projectType) {
 		this.projectType = projectType;
 	}
-
+        
 	public int getProjectType() {
 		return this.projectType;
 	}
