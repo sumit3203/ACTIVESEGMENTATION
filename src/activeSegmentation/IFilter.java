@@ -3,10 +3,7 @@ package activeSegmentation;
 
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-//import ijaux.datatype.Pair;
-//Can be replaced by existing implementation in javafx
-import javafx.util.Pair;
-
+import ijaux.datatype.Pair;
 import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.HashMap;
