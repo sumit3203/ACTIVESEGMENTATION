@@ -20,7 +20,6 @@ public interface IAnnotated {
 		for (Field field:fields)   {
 			if (field.isAnnotationPresent(AFilterField.class)) {
 				AFilterField fielda =  field.getAnnotation(AFilterField.class);
-		        //System.out.println("key: " + fielda.key() +" value: " + fielda.value());
 		        afields.put(fielda.key(), fielda.value());
 			}
 		}
@@ -36,10 +35,8 @@ public interface IAnnotated {
 	default public FilterType getAType() {
 		Class<?> c= this.getClass();
 		final Annotation[] arran=AnnotationManager.getClassAnnotations(c);
-		for (Annotation aa:arran  ) {
-			//System.out.println("AA: " +aa);
+		for (Annotation aa:arran  ) {       //Iterator on array arran
 			if (aa instanceof AFilter) {
-				//System.out.println("AF: " +aa);
 				final AFilter af= ((AFilter)aa);		 
 				FilterType ft=af.type();
 				return ft;
@@ -55,10 +52,9 @@ public interface IAnnotated {
 	default public Pair<String,String> getKeyVal() {
 		Class<?> c= this.getClass();
 		final Annotation[] arran=AnnotationManager.getClassAnnotations(c);
-		for (Annotation aa:arran  ) {
-			//System.out.println("AA: " +aa);
+		for (Annotation aa:arran  ) {     //Iterator on arran array
+			
 			if (aa instanceof AFilter) {
-				//System.out.println("AF: " +aa);
 				final AFilter af= ((AFilter)aa);		 
 				return Pair.of(af.key(),af.value());
 			}
