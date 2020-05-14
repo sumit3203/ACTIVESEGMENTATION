@@ -10,13 +10,13 @@ public enum FilterType {
 	SEGM(1),  
 	CLASSIF(2),
 	NONE(3);
-  
+        
 	private final int filterType;
-
+        //
 	FilterType(int ft) {
 		this.filterType = ft;
 	}
-
+        //user input Filtertype at the starting dialog box of ActiveSegmentation plugin
 	public int getFilterType() {
 		return filterType;
 	}
