@@ -12,7 +12,6 @@ public enum FilterType {
 	NONE(3);
         
 	private final int filterType;
-        //
 	FilterType(int ft) {
 		this.filterType = ft;
 	}
