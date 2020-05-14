@@ -8,7 +8,7 @@ public interface IMoment  extends IAnnotated {
 	 * Filter type: segmentation or classification
 	 */
 	default public FilterType getFilterType() {
-		return FilterType.CLASSIF; //Currently Operating Classification Module
+		return FilterType.CLASSIF;              //from Enum FilterType
 	}
 	
 	/**
