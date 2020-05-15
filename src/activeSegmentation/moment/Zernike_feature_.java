@@ -1,5 +1,7 @@
 package activeSegmentation.moment;
 
+import static activeSegmentation.FilterType.CLASSIF;
+
 import java.awt.AWTEvent;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IMoment;
@@ -28,7 +31,8 @@ import ijaux.moments.zernike.ZernikeMoment;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import ijaux.scale.Pair;
 
-public class Zernike_feature_ implements PlugInFilter, DialogListener, IFilter, IMoment {
+@AFilter(key="ZMC", value="Zernike Moments", type=CLASSIF)
+public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment {
 
 	final int flags=DOES_ALL+ NO_CHANGES;
 	public final static String DEG="Degree";
