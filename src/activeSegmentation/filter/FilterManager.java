@@ -69,10 +69,9 @@ import ijaux.datatype.Pair;
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
-	private Map<String, IMoment> momentMap= new HashMap<String, IMoment>();
-	
-	private Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
- 
+
+
+
 	private IProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
@@ -82,19 +81,15 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	public FilterManager(IProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
-		
+
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
-		String pt=this.projectInfo.getProjectType();
-	
-		if (pt.equalsIgnoreCase("SEGMENTATION"))
-			projectType=ProjectType.SEGM;
-		else 
-			projectType=ProjectType.CLASSIF;
-		IJ.log("Project Type: " +  (projectInfo.getProjectType()));
-		System.out.println("Project Type: "+projectType +" pt "+ pt);
+		this.projectType=this.projectInfo.getProjectType();
+
+
+		System.out.println("Project Type: "+projectType +" pt ");
 		IJ.log("Loading Filters");
-		
+
 		try {
 			List<String> jars=projectInfo.getPluginPath();
 			System.out.println("plugin path: "+jars);
@@ -106,7 +101,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			e.printStackTrace();
 			IJ.log("Filters NOT Loaded. Check path");
 		}
-		
+
 		this.featureManager= featureManager;
 	}
 
@@ -135,50 +130,45 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 
-		if (projectType==ProjectType.SEGM  ) {
-			for(String plugin: classes){
-				//System.out.println("checking "+ plugin);
-				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
-				for(Class<?> cs:classesList){
-					// we load only IFilter classes
-					//System.out.println(cs.getSimpleName());
-					if (cs.getSimpleName().equals(ASCommon.IFILTER)||
-							cs.getSimpleName().equals(ASCommon.IMOMENT)){
+		for(String plugin: classes){
+			//System.out.println("checking "+ plugin);
+			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
-						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
-						Pair<String, String> p=ianno.getKeyVal();
-						String pkey=p.first;
-						//System.out.println(" IFilter " + pkey);
+			for(Class<?> cs:classesList){
+				// we load only IFilter classes
+				//System.out.println(cs.getSimpleName());
+				
+				if (cs.getSimpleName().equals(ASCommon.IFILTER) && !classLoader.loadClass(plugin).isInterface()){
 
-						FilterType ft=ianno.getAType();
-						//System.out.println(ft);
+					IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+					Pair<String, String> p=ianno.getKeyVal();
+					String pkey=p.first;
+					//System.out.println(" IFilter " + pkey);
 
+					FilterType ft=ianno.getAType();
+					//System.out.println(ft);
+					if (projectType==ProjectType.SEGM  ) {
 						if (ft==FilterType.SEGM) {
 							IFilter	filter =(IFilter) ianno;
 							Map<String, String> fmap=filter.getAnotatedFileds();
 							annotationMap.put(pkey, fmap);
 							filterMap.put(pkey, filter);
-						} else if (ft==FilterType.CLASSIF) {
-							IMoment	moment =(IMoment) ianno;
-							Map<String, String> fmap=moment.getAnotatedFileds();
-							annotationMap.put(pkey, fmap);
-							momentMap.put(pkey, moment);
 						}
 
 					} 
 
-				} // end for
+
+				} 
 
 			} // end for
 
-		} // end if
+		} // end for
 
-		System.out.println("filter list ");
-		System.out.println(filterMap);
-		System.out.println("moments list ");
-		System.out.println(momentMap);
-		if (filterMap.isEmpty() && momentMap.isEmpty()) 
+		//System.out.println("filter list ");
+		//System.out.println(filterMap);
+
+		if (filterMap.isEmpty()) 
 			throw new RuntimeException("filter list empty ");
 		else
 			setFiltersMetaData();
@@ -194,7 +184,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			}
 		}
 	}
-	
+
 	private List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<String>();
 		File folder = new File(directory);
@@ -206,78 +196,53 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 		return imageList;
 	}
-	
+
 	public void applyFilters(){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
- 
+
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
-        Map<String,Set<String>> features= new HashMap<String,Set<String>>();
-		
-        for(IFilter filter: filterMap.values()){
+		Map<String,Set<String>> features= new HashMap<String,Set<String>>();
+
+		for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
-				// classification case
-				// if(filter.getFilterType()==ProjectType.CLASSIF.getProjectType()){
-				if (filter.getFilterType()==FilterType.CLASSIF
-						&& projectType==ProjectType.CLASSIF ){
-					for(String image: images) {
-						for(String key: featureManager.getClassKeys()) {
-							List<Roi> rois=featureManager.getExamples(key, LearningType.TRAINING_TESTING.name(), image);
-							if(rois!=null && !rois.isEmpty()) {
-								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
-										filterString+image.substring(0, image.lastIndexOf(".")),
-										rois);
-								/*
-								if(filter.getFeatures()!=null) {
-									features.put(filter.getKey(),filter.getFeatureNames());
-									List<Pair<String,double[]>> featureL=filter.getFeatures();
-									featureList.put(filter.getKey(),featureL);
-								}
-								 */
-							}
-
-						}
-					}
-					
-				} else {
-					for(String image: images) {
-						//IJ.log(image);
-						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
-					}
-
+				for(String image: images) {
+					//IJ.log(image);
+					filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 				}
 
 			}
 
 		}
 		if(featureList!=null && featureList.size()>0) {
-	 
+
 			IJ.log("Features computed "+featureList.size());
 			projectInfo.setFeatures(featureList);
 			projectInfo.setFeatureNames(features);
- 
+
 		}
 
 	}
 
 
 	public Set<String> getAllFilters(){
+
+
 		return filterMap.keySet();
 	}
-	
-	
-	public IFilter getFilter(String key){
-		return filterMap.get(key);
-	}
+
 
 	public Map<String,String> getDefaultFilterSettings(String key){
+
 		return filterMap.get(key).getDefaultSettings();
 	}
 
 
 	public boolean isFilterEnabled(String key){
+
+
 
 		return filterMap.get(key).isEnabled();
 	}
@@ -388,10 +353,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
-	@Override
-	public Map<String, String> getFieldAnnotations(String key) {
-		return annotationMap.get(key);
-	}
 
 
 }

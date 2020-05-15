@@ -2,6 +2,7 @@ package activeSegmentation;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,8 @@ public interface IFilterManager {
 	 * @param diretory of filter
 	 *
 	 */
+	public Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
+
 	public  void loadFilters(List<String> home)throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException;
 	
@@ -119,10 +122,11 @@ public interface IFilterManager {
 	public void saveFiltersMetaData();
 	
 	
-	/**
-	 * field annotations
-	 */
-	public Map<String, String> getFieldAnnotations(String key);
 	
+	
+	public static Map<String, String> getFieldAnnotations(String key) {
+		return annotationMap.get(key);
+	}
+
 
 }
