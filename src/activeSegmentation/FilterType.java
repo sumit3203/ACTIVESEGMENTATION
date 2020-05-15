@@ -15,7 +15,7 @@ public enum FilterType {
 	FilterType(int ft) {
 		this.filterType = ft;
 	}
-        //user input Filtertype at the starting dialog box of ActiveSegmentation Filter dialog box 
+        //integer correlates with filter type 1->SEGMENTATION and 2->CLASSIFICATION 
 	public int getFilterType() {
 		return filterType;
 	}
