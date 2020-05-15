@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import activeSegmentation.IProjectManager;
+import activeSegmentation.ProjectType;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 
@@ -205,7 +206,7 @@ public class ProjectManagerImp implements IProjectManager {
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory);
 		projectInfo.setProjectName(projectName);
-		projectInfo.setProjectType(projectType);
+		projectInfo.setProjectType(ProjectType.valueOf(projectType));
 		projectInfo.setProjectDescription(projectDescription);
 		List<String> jars= new ArrayList<>();
 		jars.add(activeSegDir);
