@@ -93,7 +93,7 @@ public interface IProjectManager {
 	public IDataSet getDataSet();
 	
         /*
-	This Method will create project on user selected image if data is not opened beforehand in ImageJ
+	This Method will create project on user selected image if image is not opened/feeded beforehand in ImageJ
 	*/
 	public String createProject(String projectName, String projectType, String projectDirectory, String projectDescription,String trainingImage);
 	
