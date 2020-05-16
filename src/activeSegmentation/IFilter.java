@@ -60,15 +60,15 @@ public interface IFilter extends IAnnotated {
 	 *
 	 * Applies a filter to
 	 * @param image an instance of an ImageProcessor  - contains the pixel data of a 2D image
-	 * @param path
-	 * @param roiList
+	 * @param path - folder path in which the output is stored
+	 * @param roiList - allows for working on roi level, rather than on each pixel
 	 *
 	 */	
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList);
 	
 	/**
 	 * returns a unique key of filter
-	 *  // to be changed for UID use
+	 *  // to be replaced by universally unique identifier
 	 * @return String containing the key
 	 */
 	public default String getKey() {

@@ -36,16 +36,16 @@ public interface IProjectManager {
 	/**
 	 * This method is used to write ARFF file into the directory
 	 * It will store the training and test data in ARFF format
-	 * @param  data
-	 * @param  filename
-	 * @return boolean
+	 * @param  data to be wrriten into the specific directory
+	 * @param  filename name of the file directory
+	 * @return boolean indicating that the data has been succesfully written
 	 */
 	public boolean writeDataToARFF(Instances data, String filename);
 	
 	/**
 	 * This method is used to read the training and text instance from directory
 	 * It will return the genric Idataset instance 
-	 * @param  filename
+	 * @param  filename - source of the data
 	 * @return IDataset
 	 */
 	public IDataSet readDataFromARFF(String filename);

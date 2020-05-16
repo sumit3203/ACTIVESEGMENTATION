@@ -36,7 +36,7 @@ public interface IClassifier {
 	/**
      * It builds the classifier on the instances.
      *
-     * @param instances The instances to use
+     * @param instances The data provided to classify
      * @throws Exception The exception that will be launched.
      */
     public void buildClassifier(IDataSet instances) throws Exception;
@@ -49,14 +49,14 @@ public interface IClassifier {
     
     /**
     *
-    * @param instance The instance to classify.
+    * @param instance The specific instance to classify.
     * @return The predicted label for the classifier.
     * @throws Exception The exception that will be launched.
     */
     public double classifyInstance(Instance instance) throws Exception;
 
     /**
-    *
+    * Sets classifier
     * @param classifier
     */
 	public void setClassifier(Classifier classifier);
@@ -64,9 +64,9 @@ public interface IClassifier {
 	
 	 /**
      * Evaluates the classifier using the test dataset and stores the evaluation.
-     *
+     * Tests
      * @param instances The instances to test
-     * @return The evaluation
+     * @return The evaluation (what exactly is evaluation here?)
      */
  
      public double[] testModel(IDataSet instances);
