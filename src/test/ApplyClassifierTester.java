@@ -17,6 +17,7 @@ public class ApplyClassifierTester {
 
 	public static void main(String[] args) {
 
+		//TODO replace with a useful test case
 		ProjectManager dataManager= new ProjectManager();
 
 		Instances instance=null;

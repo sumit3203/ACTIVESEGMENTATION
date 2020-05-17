@@ -156,7 +156,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	}
 
-	public FloatProcessor filter(ImageProcessor ip, GScaleSpace sp, final boolean seperable,final boolean snorm){
+	private FloatProcessor filter(ImageProcessor ip, GScaleSpace sp, final boolean seperable,final boolean snorm){
 		float[][] kernel=null;
 		ip.snapshot();
 
