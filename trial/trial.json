@@ -1,0 +1,15 @@
+{
+  "projectName" : "trial",
+  "projectType" : "SEGM",
+  "projectDescription" : "",
+  "comment" : "Default Comment",
+  "createdDate" : "2020/05/21 12:02:13",
+  "modifyDate" : "2020/05/21 12:02:13",
+  "version" : "0.0.0.1",
+  "classes" : 2,
+  "projectPath" : "/home/jstachera/ACTIVESEGMENTATION",
+  "pluginPath" : [ "null//plugins//activeSegmentation//ACTIVE_SEG.jar" ],
+  "filters" : [ ],
+  "featureList" : [ ],
+  "learning" : { }
+}
