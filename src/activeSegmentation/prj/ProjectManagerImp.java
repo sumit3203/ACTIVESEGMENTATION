@@ -3,6 +3,7 @@ package activeSegmentation.prj;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IProjectManager;
+import activeSegmentation.ProjectType;
 import activeSegmentation.learning.WekaDataSet;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -189,7 +190,7 @@ public class ProjectManagerImp implements IProjectManager {
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory);
 		projectInfo.setProjectName(projectName);
-		projectInfo.setProjectType(projectType);
+		projectInfo.setProjectType(ProjectType.valueOf(projectType));
 		projectInfo.setProjectDescription(projectDescription);
 		List<String> jars= new ArrayList<>();
 		jars.add(activeSegDir);

@@ -72,7 +72,7 @@ public class FeatureManager  {
 	private String projectString, featurePath;
 	private int sliceNum, totalSlices;
 	private List<String> images;
-	private Map<String, IFeature> featureMap = new HashMap<String, IFeature>();
+	private Map<ProjectType, IFeature> featureMap = new HashMap<ProjectType, IFeature>();
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<String, ClassInfo>();
 	private List<Color> defaultColors;
@@ -99,8 +99,8 @@ public class FeatureManager  {
 		}
 	//	roiman.hide();
 	
-		featureMap.put("SEGMENTATION", new PixelInstanceCreator(projectInfo));
-		featureMap.put("CLASSIFICATION", new RoiInstanceCreator(projectInfo));
+		featureMap.put(ProjectType.SEGM, new PixelInstanceCreator(projectInfo));
+		featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
 	}
 
 	private int loadImages(String directory) {
@@ -401,7 +401,7 @@ public class FeatureManager  {
 		projectManager.writeMetaInfo(projectInfo);
 	}
 
-	public IDataSet extractFeatures(String featureType) {
+	public IDataSet extractFeatures(ProjectType featureType) {
        // System.out.println(featureType);
 		featureMap.get(featureType).createTrainingInstance(classes.values());
 		IDataSet dataset = featureMap.get(featureType).getDataSet();
@@ -557,7 +557,7 @@ public class FeatureManager  {
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
 		//System.out.println(roi.getName());
-		Instance instance= featureMap.get(ProjectType.valueOf(projectInfo.getProjectType()).toString()).createInstance(roi);
+		Instance instance= featureMap.get(projectInfo.getProjectType()).createInstance(roi);
 		//System.out.println(instance.toString());
 		return (int) learningManager.predict(instance);
 		//return getDummyPrediction();
@@ -572,14 +572,14 @@ public class FeatureManager  {
 
 	public ImagePlus compute() {
 		
-		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {
+		if(projectInfo.getProjectType()==ProjectType.CLASSIF) {
 			predictionResultClassification = new HashMap<>();
 		}		
 		// IJ.debugMode=true;
 		IJ.log("TRAINING STARTED");
 		System.out.println("TRAINING STARTED");
 		// extract features in weka format, returns IDataset object
-		extractFeatures(ProjectType.valueOf(projectInfo.getProjectType()).toString());
+		extractFeatures(projectInfo.getProjectType());
 		
 		// trains as per the setting of learning manager, we now have a trained classifier
 		learningManager.trainClassifier();
@@ -591,7 +591,7 @@ public class FeatureManager  {
 			//System.out.println(image +" image");
 																	
 			//classification setting
-			if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {															
+			if(projectInfo.getProjectType()==ProjectType.CLASSIF) {															
 							
 				//list of rois to make classified image instance				
 				List<Roi> training_roi_list;
@@ -624,10 +624,10 @@ public class FeatureManager  {
 		 		//classificationResult would have no of terms as number of pixels in particular image, 
 				//expects createAllinstance would provide instances of all pixels of the particular image
 				
-				String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
-				System.out.println("mask key "+key);
+				//String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
+				//System.out.println("mask key "+key);
 				double[] classificationResult = learningManager
-						.applyClassifier(featureMap.get(key).createAllInstances(image));
+						.applyClassifier(featureMap.get(projectInfo.getProjectType()).createAllInstances(image));
 				
 				//now classificationResult has predictions of all pixels of one particular image
 				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
@@ -641,13 +641,13 @@ public class FeatureManager  {
 												
 		}
 		
-		if(ProjectType.valueOf(projectInfo.getProjectType()).equals(ProjectType.CLASSIF)) {
+		if(projectInfo.getProjectType()==ProjectType.CLASSIF) {
 			return null;
 		}
 		return getClassifiedImage();
 	}
 	
-	public String getProjectType() {
+	public ProjectType getProjectType() {
 		return this.projectInfo.getProjectType();
 	}
 

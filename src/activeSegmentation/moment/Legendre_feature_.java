@@ -1,8 +1,8 @@
 package activeSegmentation.moment;
 
 
+import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
-import activeSegmentation.IFilter;
 import activeSegmentation.IMoment;
 import ij.IJ;
 import ij.ImagePlus;
@@ -12,7 +12,8 @@ import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.scale.Pair;
 
-import java.awt.*;
+import static activeSegmentation.FilterType.CLASSIF;
+
 import java.util.*;
 import java.util.List;
 
@@ -20,8 +21,8 @@ import java.util.List;
 /**
  */
 
-
-public class Legendre_feature_ implements IFilter, IMoment {
+@AFilter(key="LM", value="Legendre Moment Filter", type=CLASSIF)
+public class Legendre_feature_ implements IMoment {
 
 	public static boolean debug=IJ.debugMode;
 	public final static String DEGREE = "Degree";

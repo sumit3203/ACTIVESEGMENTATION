@@ -1,6 +1,7 @@
 package activeSegmentation.moment;
 
 
+import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
 import activeSegmentation.IFilter;
 import activeSegmentation.IMoment;
@@ -11,7 +12,8 @@ import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.scale.Pair;
 
-import java.awt.*;
+import static activeSegmentation.FilterType.*;
+
 import java.util.*;
 import java.util.List;
 
@@ -23,13 +25,14 @@ import java.util.List;
  *  convention 1->1  / filter
  *  		   N->1  / feature
  */
-
-public class GLCM_feature_ implements IFilter, IMoment {
+@AFilter(key="GLCM", value="Texture Descriptors Filter", type=CLASSIF)
+public class GLCM_feature_ implements IMoment {
 
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;
 	public static final int [] DIRECTIONS = {270,360,90,180};
 	public static final int [] DISTANCES = {1,2,3};
+	
 	public static final String ASM_FEATURE_KEY = "ASM";
 	public static final String CONTRAST_FEATURE_KEY = "contrast";
 	public static final String CORRELATION_FEATURE_KEY = "correlation";

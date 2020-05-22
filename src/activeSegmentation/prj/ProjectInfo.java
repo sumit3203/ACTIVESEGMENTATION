@@ -1,6 +1,7 @@
 package activeSegmentation.prj;
 
 import activeSegmentation.IClassifier;
+import activeSegmentation.ProjectType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import ijaux.datatype.Pair;
@@ -12,7 +13,7 @@ import java.util.*;
 public class ProjectInfo{
 	
 	private String projectName;
-	private String projectType;
+	private ProjectType projectType;
 	private String projectDescription;
 	private String comment = "Default Comment";
 	private String createdDate;
@@ -208,19 +209,14 @@ public class ProjectInfo{
 		this.projectDescription = projectDescription;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getProjectType()	{
-		return this.projectType;
+
+	
+
+	public ProjectType getProjectType() {
+		return projectType;
 	}
 
-	/**
-	 * 
-	 * @param projectType
-	 */
-	public void setProjectType(String projectType)	{
+	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
 	}
 
