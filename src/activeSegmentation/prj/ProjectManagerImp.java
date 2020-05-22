@@ -1,42 +1,26 @@
 package activeSegmentation.prj;
 
-import ij.IJ;
-import ij.ImagePlus;
-import ij.WindowManager;
-import ij.process.ImageProcessor;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import activeSegmentation.ASCommon;
+import activeSegmentation.IDataSet;
+import activeSegmentation.IProjectManager;
+import activeSegmentation.learning.WekaDataSet;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-
-import activeSegmentation.IProjectManager;
-import activeSegmentation.ASCommon;
-import activeSegmentation.IDataSet;
-
-import activeSegmentation.learning.WekaDataSet;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.WindowManager;
+import ij.process.ImageProcessor;
 import weka.core.Instances;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProjectManagerImp implements IProjectManager {
 
@@ -291,12 +275,13 @@ public class ProjectManagerImp implements IProjectManager {
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
+			//can i call on messenger ? sure
+
+			activeSegDir=System.getProperty("plugins.dir")+"/plugins/activeSegmentation/ACTIVE_SEG.jar";
 		}
 		else {
 			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
-
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 

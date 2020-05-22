@@ -1,16 +1,11 @@
 package activeSegmentation.prj;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import activeSegmentation.IClassifier;
-import ijaux.datatype.Pair;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import ijaux.datatype.Pair;
+
+import java.util.*;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
@@ -410,6 +405,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<String> getPluginPath() {
+		//i think this will be null
 		return pluginPath;
 	}
 
