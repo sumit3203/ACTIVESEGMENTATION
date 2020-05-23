@@ -226,7 +226,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		}
 	}
 	
-	public FloatProcessor filter(ImageProcessor ip, double sigma) {
+	private FloatProcessor filter(ImageProcessor ip, double sigma) {
 		
 		int width=ip.getWidth();
 		int height=ip.getHeight();
