@@ -2,13 +2,13 @@ package test;
 
 import java.util.Arrays;
 
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.CFS;
 import activeSegmentation.learning.GainRatio;
 import activeSegmentation.learning.PCA;
-import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.prj.ProjectManager;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.SMO;
@@ -19,7 +19,7 @@ public class TestFeatureSelection {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		IProjectManager dataManager= new ProjectManagerImp();
+		ProjectManager dataManager= new ProjectManager();
 		IDataSet trainingData=dataManager.readDataFromARFF("D:/DATASET/GFAPED2/GFAPED1/TrainingData1_Randomise.arff");
 		IFeatureSelection featureSelection= new GainRatio();
 		IDataSet trainingInstance= featureSelection.selectFeatures(trainingData);

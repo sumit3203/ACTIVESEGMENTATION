@@ -51,7 +51,8 @@ public class TestFile {
 	
 	public ProjectInfo createDummyObject(){
 		ProjectInfo metaInfo= new ProjectInfo();
-		metaInfo.setComment("Dummy");
+		//metaInfo.setComment("Dummy");
+		metaInfo.projectDescription="Dummy";
 		metaInfo.setCreatedDate("12/06/2016");
 		metaInfo.setModifyDate("12/07/2016");
 		metaInfo.setProjectPath("C://Program Files//ImageJ//plugins//activeSegmentation//");
