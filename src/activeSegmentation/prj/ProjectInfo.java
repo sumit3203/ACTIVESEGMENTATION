@@ -1,5 +1,6 @@
 package activeSegmentation.prj;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Project metadata structure
  */
 
-@JsonInclude(JsonInclude.Include.NON_NULL) 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectInfo{
 	
 	///////////////////
@@ -403,6 +404,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<String> getPluginPath() {
+		//i think this will be null
 		return pluginPath;
 	}
 

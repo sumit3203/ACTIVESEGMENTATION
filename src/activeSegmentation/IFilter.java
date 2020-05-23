@@ -44,29 +44,32 @@ public interface IFilter extends IAnnotated {
 	/**
 	 * Returns a new default settings map for the filter 
 	 * 
-	 * @return a new map.
+	 * @return a new map storing information about filter parameters and their numerical default value in a form of strings imported from ij.Prefs class
 	 */
 	public Map<String, String> getDefaultSettings();
 	
 	/**
-	 * Returns true if setting are update Successfully
-	 * @param  settingsMap
-	 * @return boolean
+	 * Returns true if setting are updated successfully
+	 * @param  settingsMap a map of Strings storing information about settings with their new, customised values
+	 * @return boolean value indicating if settings has been updated or has not
 	 */
 	public boolean updateSettings(Map<String, String> settingsMap);
 
 	
 	/**
-	 * Returns apply filter
-	 * 
-	 * @return String
+	 *
+	 * Applies a filter to
+	 * @param image an instance of an ImageProcessor  - contains the pixel data of a 2D image
+	 * @param path - folder path in which the output is stored
+	 * @param roiList - allows for working on roi level, rather than on each pixel
+	 *
 	 */	
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList);
 	
 	/**
 	 * returns a unique key of filter
-	 *  // to be changed for UID use
-	 * @return String
+	 *  // to be replaced by universally unique identifier
+	 * @return String containing the key
 	 */
 	public default String getKey() {
 		Pair<String,String> p=getKeyVal();
@@ -75,38 +78,36 @@ public interface IFilter extends IAnnotated {
 	
 	/**
 	 * Returns the name of the filter
-	 * 
-	 * @return String
+	 * @return String with its name
 	 */
 	public default String getName() {
-		Pair<String,String> p=getKeyVal();
+		Pair<String,String> p = getKeyVal();
 		return p.second;
 	}
 
 	
 	/**
 	 * checks if the filter is used
-	 * @return Image
+	 * @return boolean value indicating if the filter is enabled or not
 	 */
 	public boolean isEnabled();
 	
 	/**
-	 * resets all setting of filters
-	 * @return boolean
+	 * resets settings to the default values
+	 * @return boolean value containing information whether or not the settings has been successfully reset
 	 */
 	public boolean reset();
 	
 	
 	/**
-	 * changes the state
-	 * @return Image
+	 * changes the state of a filter - either to enabled or disabled
 	 */
 	public void setEnabled(boolean isEnabled);
 	
 	
 	/**
 	 * returns the type of filter as an {@link Enumeration}
-	 * @return FilterType
+	 * @return FilterType of a specific filter applied
 	 */
 	default public FilterType getFilterType() {
 		return FilterType.SEGM;

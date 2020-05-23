@@ -1,44 +1,25 @@
 package activeSegmentation.filter;
 
 
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import activeSegmentation.ASCommon;
-import activeSegmentation.FilterType;
-import activeSegmentation.IAnnotated;
-//import activeSegmentation.IProjectManager;
-import activeSegmentation.LearningType;
-import activeSegmentation.IFilter;
-import activeSegmentation.IFilterViz;
-import activeSegmentation.IMoment;
-import activeSegmentation.IFilterManager;
-import activeSegmentation.ProjectType;
-import activeSegmentation.feature.FeatureContainer;
+import activeSegmentation.*;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.gui.Roi;
 import ijaux.datatype.Pair;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /**
@@ -115,7 +96,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<String>();
 		String cp=System.getProperty("java.class.path");
-
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(plugin));
@@ -352,8 +332,4 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			return null;
 		}
 	}
-
-
-
-
 }
