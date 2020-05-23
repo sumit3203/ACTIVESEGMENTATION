@@ -4,9 +4,9 @@ package activeSegmentation.filter;
 import activeSegmentation.*;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.gui.Roi;
 import ijaux.datatype.Pair;
 
 import java.awt.*;
@@ -54,14 +54,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
 	private ProjectType projectType;
 
 	private FeatureManager  featureManager;
 
-	public FilterManager(IProjectManager projectManager, FeatureManager  featureManager){
+	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 
 		this.projectManager= projectManager;
@@ -332,8 +332,4 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			return null;
 		}
 	}
-
-
-
-
 }

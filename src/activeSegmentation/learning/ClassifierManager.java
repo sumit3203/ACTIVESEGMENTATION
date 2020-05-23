@@ -17,8 +17,9 @@ import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 //import activeSegmentation.LearningManager;
@@ -28,7 +29,7 @@ public class ClassifierManager  {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
-	private IProjectManager dataManager;
+	private ProjectManager dataManager;
 	private ProjectInfo metaInfo;
 	private List<String> learningList;
 	private String selectedType=ASCommon.PASSIVELEARNING;
@@ -36,7 +37,7 @@ public class ClassifierManager  {
 	private ForkJoinPool pool; 
 	private Map<String,IFeatureSelection> featureMap;
 	
-	public ClassifierManager(IProjectManager dataManager){
+	public ClassifierManager(ProjectManager dataManager){
 		learningList= new ArrayList<String>();
 		featureMap=new HashMap<String,IFeatureSelection>();
 		learningList.add(ASCommon.ACTIVELEARNING);

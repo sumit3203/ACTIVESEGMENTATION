@@ -21,14 +21,15 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartPanel;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import ijaux.scale.Pair;
 import activeSegmentation.IEvaluation;
+import activeSegmentation.prj.ProjectManager;
 
 public class EvaluationPanel  implements Runnable {
 
 
-	  private IProjectManager projectManager=null;
+	  private ProjectManager projectManager=null;
 	  private IEvaluation evaluation=null;
 	  public static final Font FONT = new Font("Arial", 0, 10);
 	  final ActionEvent REFRESH_BUTTON_PRESSED = new ActionEvent(this, 2, "Compute");
@@ -37,7 +38,7 @@ public class EvaluationPanel  implements Runnable {
 	 private EvaluationCurve evaluationCurve=new  EvaluationCurve();
 	  
 	  
-	  public EvaluationPanel(IProjectManager dataManager, IEvaluation evaluation)
+	  public EvaluationPanel(ProjectManager dataManager, IEvaluation evaluation)
 	  {
 	    this.projectManager = dataManager;
 	    this.evaluation = evaluation;

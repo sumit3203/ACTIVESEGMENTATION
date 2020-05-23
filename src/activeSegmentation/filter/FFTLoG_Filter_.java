@@ -235,6 +235,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		}
 	}
 
+	// TODO eventually to leave only 1 method
 	public FloatProcessor filter(ImageProcessor ip, double sigma) {
 
 		int width=ip.getWidth();

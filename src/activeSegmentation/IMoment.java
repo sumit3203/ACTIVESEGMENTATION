@@ -3,7 +3,7 @@ package activeSegmentation;
 
 import java.util.Set;
 
-public interface IMoment  extends IAnnotated, IFilter {
+public interface IMoment<T>  extends IAnnotated, IFilter {
 
 	/**
 	 * Filter type: segmentation or classification
@@ -15,7 +15,7 @@ public interface IMoment  extends IAnnotated, IFilter {
 	/**
 	 * used in for loops  -> typing on method level necessary
 	 */
-	<T> T getFeatures();
+	T getFeatures();
 	
 	/**
 	 * names of features must be unique

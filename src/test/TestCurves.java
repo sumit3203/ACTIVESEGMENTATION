@@ -4,16 +4,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.learning.SMO;
-import activeSegmentation.prj.ProjectManagerImp;
+import activeSegmentation.prj.ProjectManager;
 import weka.core.Instance;
 import weka.core.Instances;
 
 public class TestCurves
 {
   public static void main(String[] args)  {
-    IProjectManager dataManager = new ProjectManagerImp();
+    ProjectManager dataManager = new ProjectManager();
     // to change
     Instances trainingSet = dataManager.readDataFromARFF("C:\\Users\\sumit\\Documents\\GitHub\\ACTIVESEGMENTATION\\src\\activeSegmentation\\evaluation\\iris.arff").getDataset();
     SMO smo = new SMO();

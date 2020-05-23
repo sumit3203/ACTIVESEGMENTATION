@@ -42,13 +42,12 @@ import javax.swing.JTextField;
 
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
-import activeSegmentation.IProjectManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filter.FilterManager;
 import activeSegmentation.moment.MomentsManager;
+import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 
 public class FilterPanel implements Runnable, ASCommon {
@@ -78,7 +77,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	final JFrame frame = new JFrame("Filters");
 
-	public FilterPanel(IProjectManager projectManager, FeatureManager  featureManager) {
+	public FilterPanel(ProjectManager projectManager, FeatureManager  featureManager) {
 		if(projectManager.getMetaInfo().getProjectType() != ProjectType.SEGM) {
 			this.filterManager =new MomentsManager(projectManager, featureManager);
 		}else {

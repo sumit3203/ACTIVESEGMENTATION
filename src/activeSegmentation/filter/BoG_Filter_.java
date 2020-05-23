@@ -182,7 +182,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 
 
-	public FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean seperable,final boolean isotropic){
+	private FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean seperable,final boolean isotropic){
 		
 		ip.snapshot();
 	 	
