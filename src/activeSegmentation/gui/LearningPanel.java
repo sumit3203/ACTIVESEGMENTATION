@@ -23,9 +23,10 @@ import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
-import activeSegmentation.IProjectManager;
+//import activeSegmentation.IProjectManager;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 
 
@@ -37,7 +38,7 @@ public class LearningPanel implements Runnable, ASCommon {
   private GenericObjectEditor m_ClassifierEditor = new GenericObjectEditor();
   private String originalOptions;
   String originalClassifierName;
-  private IProjectManager projectManager;
+  private ProjectManager projectManager;
   private ProjectInfo projectInfo;
   final JFrame frame = new JFrame("LEARNING");
  // public static final Font FONT = new Font("Arial", 1, 13);
@@ -46,7 +47,7 @@ public class LearningPanel implements Runnable, ASCommon {
   final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
   ClassifierManager learningManager;
   
-  public LearningPanel(IProjectManager projectManager,ClassifierManager learningManager )  {
+  public LearningPanel(ProjectManager projectManager,ClassifierManager learningManager )  {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();

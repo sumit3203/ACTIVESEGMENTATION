@@ -66,7 +66,7 @@ import activeSegmentation.util.GuiUtil;
  */
 public class FeatureManager  {
 
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
 	private Random rand = new Random();
 	private String projectString, featurePath;
@@ -79,7 +79,7 @@ public class FeatureManager  {
 	ClassifierManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
 
-	public FeatureManager(IProjectManager projectManager, ClassifierManager learningManager) {
+	public FeatureManager(ProjectManager projectManager, ClassifierManager learningManager) {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();

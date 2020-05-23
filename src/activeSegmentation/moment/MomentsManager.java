@@ -5,15 +5,12 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,19 +20,16 @@ import java.util.zip.ZipInputStream;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
-import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
-import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import activeSegmentation.IMoment;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
-import activeSegmentation.feature.FeatureContainer;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.gui.Roi;
 import ijaux.datatype.Pair;
 
@@ -72,14 +66,14 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	private Map<String, IMoment> momentMap= new HashMap<String, IMoment>();
 
 	
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
 	private ProjectType projectType;
 
 	private FeatureManager  featureManager;
 
-	public MomentsManager(IProjectManager projectManager, FeatureManager  featureManager){
+	public MomentsManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 
 		this.projectManager= projectManager;

@@ -16,8 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import activeSegmentation.*;
-
-
+import activeSegmentation.prj.ProjectManager;
 import ij.WindowManager;
 
 
@@ -43,10 +42,10 @@ public class CreateProjectUI implements Runnable, ASCommon {
 	
 	JComboBox<ProjectType> projectList;
 	private JFrame createProject;
-	private IProjectManager projectManager;
+	private ProjectManager projectManager;
 	
 	
-	public CreateProjectUI(IProjectManager projectManager) {
+	public CreateProjectUI(ProjectManager projectManager) {
 		this.projectManager=projectManager;
 		projectList= new JComboBox<ProjectType>(ProjectType.values());
 	}
