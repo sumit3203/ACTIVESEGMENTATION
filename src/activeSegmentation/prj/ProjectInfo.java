@@ -1,6 +1,9 @@
 package activeSegmentation.prj;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,29 +15,55 @@ import ijaux.datatype.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+ * Project metadata structure
+ */
 
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class ProjectInfo{
 	
-	private String projectName;
-	private ProjectType projectType;
-	private String projectDescription;
-	private String comment = "Default Comment";
-	private String createdDate;
-	private String modifyDate;
-	private String version="0.0.0.1";
-	private int classes;
-	private String projectPath;
-	private List<String> pluginPath;
+	///////////////////
+	// Public fields
+	///////////////////
+	
+	public String projectName;
+	
+	public String projectDescription="Default description";
+	
+	public String comment = "Default Comment";
+	
+	////////////////////
+	// Private fields
+	////////////////////
+	
+	private ProjectType projectType=null;
+	private Date createdDate=null;
+	private Date modifyDate=null;
+	
+	private String version="1.0.0";
+	
+	@JsonProperty(value="classes")
+	private int classes=-1;
+	 
+	private String projectPath="";
+	
+	private List<String> pluginPath=null;
 
-	private String trainingStack;
-	private String testingStack;
+	private String trainingStack="";
+	
+	private String testingStack="";
+	
 	private List<Map<String, String>> filters = new ArrayList<Map<String, String>>();
+	
 	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
+	
 	private Map<String, String> learning = new HashMap<String, String>();
-	private String groundtruth;
-	private String featureSelection;
+	
+	private String groundtruth="";
+	
+	private String featureSelection="";
 	
 	/*
 	 * JSON ignore
@@ -52,35 +81,20 @@ public class ProjectInfo{
 	private IClassifier classifier;
 	
 	@JsonIgnore
-	private Integer featureLength;
+	private int featureLength;
 	
 
 	////////////////////////////////////////////
 	//  Methods
 	///////////////////////////////////////////
-	
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getComment()	{
-		return this.comment;
-	}
-	
-	/**
-	 * 
-	 * @param comment
-	 */
-	public void setComment(String comment)	{
-		this.comment = comment;
-	}
+  
 
 	/**
 	 * 
 	 * @return String
 	 */
 	public String getCreatedDate()	{
-		return this.createdDate;
+		return sdf.format(createdDate);
 	}
 
 	/**
@@ -88,15 +102,22 @@ public class ProjectInfo{
 	 * @param createdDate
 	 */
 	public void setCreatedDate(String createdDate)	{
-		this.createdDate = createdDate;
+	
+		try {
+			this.createdDate = sdf.parse(createdDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	private	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	/**
 	 * 
 	 * @return
 	 */
 	public String getModifyDate()	{
-		return this.modifyDate;
+		return sdf.format(modifyDate);
 	}
 
 	/**
@@ -104,7 +125,11 @@ public class ProjectInfo{
 	 * @param modifyDate
 	 */
 	public void setModifyDate(String modifyDate)	{
-		this.modifyDate = modifyDate;
+		try {
+			this.modifyDate = sdf.parse(modifyDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -178,44 +203,16 @@ public class ProjectInfo{
 		return version;
 	}
 
+	/**
+	 * @TODO version format decision
+	 * 
+	 * @param version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getProjectName()	{
-		return this.projectName;
-	}
 
-	/**
-	 * 
-	 * @param projectName
-	 */
-	public void setProjectName(String projectName)	{
-		this.projectName = projectName;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getProjectDescription()	{
-		return this.projectDescription;
-	}
-
-	/**
-	 * 
-	 * @param projectDescription
-	 */
-	public void setProjectDescription(String projectDescription)	{
-		this.projectDescription = projectDescription;
-	}
-
-
-	
 
 	public ProjectType getProjectType() {
 		return projectType;
