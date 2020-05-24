@@ -40,8 +40,8 @@ public class ProjectInfo{
 	////////////////////
 	
 	private ProjectType projectType=null;
-	private Date createdDate=null;
-	private Date modifyDate=null;
+	private Date createdDate=new Date();
+	private Date modifyDate=new Date();
 	
 	private String version="1.0.0";
 	
