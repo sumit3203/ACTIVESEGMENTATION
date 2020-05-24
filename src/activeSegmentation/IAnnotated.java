@@ -54,7 +54,10 @@ public interface IAnnotated {
 		return FilterType.NONE;
 	}
 	
-	
+	/**
+	 * returns a key-value pair
+	 * @return
+	 */
 	default public Pair<String,String> getKeyVal() {
 		Class<?> c= this.getClass();
 		final Annotation[] arran=AnnotationManager.getClassAnnotations(c);

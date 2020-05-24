@@ -13,10 +13,18 @@ public enum FilterType {
   
 	private final int filterType;
 
+	/**
+	 * 
+	 * @param ft
+	 */
 	FilterType(int ft) {
 		this.filterType = ft;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getFilterType() {
 		return filterType;
 	}

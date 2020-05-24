@@ -34,33 +34,15 @@ import weka.core.Instances;
  */
 public interface IDataSet {
 	
+	/*
+	 * based on Weka -> WekaDataSet
+	 */
 	 /**
      * @return The dataset in Weka format
      */
     public Instances getDataset();
 
-    /**
-     * @return The number of attributes of the dataset
-     */
-    public int getNumAttributes();
-
-    /**
-     * @return A copy of the current dataset
-     */
-    public IDataSet copy();
-
-    /**
-     * Add to the current dataset the dataset passed as argument
-     *
-     * @param dataset The dataset to addAll
-     */
-    public void addAll(IDataSet dataset);
-
-    /**
-     * @return The number of instances of the dataset
-     */
-    public int getNumInstances();
-
+   
     /**
      * @param index The index of the instance
      * @return The instance
@@ -76,17 +58,47 @@ public interface IDataSet {
     public void set(int index, Instance instance);
 
     /**
+     * Add an instance to the dataset
+     *
+     * @param instance The instance to add
+     */
+    public void add(Instance instance);
+    
+    //////////////////////////////////
+    // potentially mixed code
+    ////////////////////////////////
+    
+    /**
+     * Add to the current dataset the dataset passed as argument
+     *
+     * @param dataset The dataset to addAll
+     */
+    public void addAll(IDataSet dataset);
+    
+    /**
+     * @return A copy of the current dataset
+     */
+    public IDataSet copy();
+    
+    //////////////////////////////////
+    // Non Weka-specific code
+    ////////////////////////////////
+    
+    /**
+     * @return The number of instances of the dataset
+     */
+    public int getNumInstances();
+    
+    /**
      *
      * @return True if the dataset is empty, false otherwise.
      */
     public boolean isEmpty();
 
     /**
-     * Add an instance to the dataset
-     *
-     * @param instance The instance to add
+     * @return The number of attributes of the dataset
      */
-    public void add(Instance instance);
+    public int getNumAttributes();
 
     /**
      * Remove an instance from dataset

@@ -33,14 +33,11 @@ import weka.core.Instance;
  */
 public interface IClassifier {
 	
-	/**
+	/*
      * It builds the classifier on the instances.
-     *
-     * @param instances The data provided to classify
-     * @throws Exception The exception that will be launched.
+     * based on WEKA -> WekaClassifier
      */
-    public void buildClassifier(IDataSet instances) throws Exception;
-
+	
     /**
      * @param instance The instance
      * @return the distribution for instance
@@ -55,12 +52,9 @@ public interface IClassifier {
     */
     public double classifyInstance(Instance instance) throws Exception;
 
-    /**
-    * Sets classifier
-    * @param classifier
-    */
-	public void setClassifier(Classifier classifier);
-
+    //////////////////////////////////
+    // potentially mixed code
+    ////////////////////////////////
 	
 	 /**
      * Evaluates the classifier using the test dataset and stores the evaluation.
@@ -71,13 +65,31 @@ public interface IClassifier {
  
      public double[] testModel(IDataSet instances);
     
+ 	/**
+      * @param instances The data provided to classify
+      * @throws Exception The exception that will be launched.
+      */
+     public void buildClassifier(IDataSet instances) throws Exception;
+     
+     //////////////////////////////////
+     // Non Weka-specific code
+     ////////////////////////////////
+     
+     /**
+      * Sets classifier
+      * @param classifier
+      */
+  	public void setClassifier(Classifier classifier);
+
+  	
     /**
      * @return The copy of the IClassifier used.
      * @throws Exception The exception that will be launched.
      */
     public IClassifier makeCopy() throws Exception;
     
-    public Object getClassifier();
+    // Typing?
+    public <T> T getClassifier();
 
 
 }

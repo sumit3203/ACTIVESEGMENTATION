@@ -150,8 +150,9 @@ public class WekaClassifier implements IClassifier, Serializable {
 		return (IClassifier) new SerializedObject(this).getObject();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getClassifier() {
+	public Classifier getClassifier() {
 		// TODO Auto-generated method stub
 		return this.classifier;
 	}

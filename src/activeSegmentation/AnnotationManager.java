@@ -10,10 +10,22 @@ import java.lang.reflect.Method;
 public class AnnotationManager {
 
    
+	/**
+	 * 
+	 * @param clazz
+	 * @return
+	 */
     public static Annotation[] getClassAnnotations(Class<?> clazz) {
         return clazz.getAnnotations();
     }
 
+    /**
+     * 
+     * @param clazz
+     * @param methodName
+     * @return
+     * @throws NoSuchMethodException
+     */
     public static Annotation[] getMethodAnnotations(Class<?> clazz, String methodName) throws NoSuchMethodException {
         Annotation[] annotations = null;
         try {
@@ -27,6 +39,13 @@ public class AnnotationManager {
         return annotations;
     }
 
+    /**
+     * 
+     * @param clazz
+     * @param fieldName
+     * @return
+     * @throws NoSuchFieldException
+     */
     public static Annotation[] getFieldAnnotations(Class<?> clazz, String fieldName) throws NoSuchFieldException{
         Annotation[] annotations = null;
         try {
@@ -40,7 +59,10 @@ public class AnnotationManager {
         return annotations;
     }
 
-   
+   /**
+    * 
+    * @param ann
+    */
     public static void printAnnotations(Annotation[] ann) {
         if (ann == null) return;
         for (Annotation a : ann) {
