@@ -10,6 +10,12 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Learning class information - ROIs etc
+ * 
+ * @author Sumit Vohra
+ *
+ */
 public class ClassInfo {
 
 	String key;
@@ -73,9 +79,8 @@ public class ClassInfo {
 	public void addTrainingRois(String key, Roi roi){
 		if(this.trainingRois.containsKey(key)){
 			this.trainingRois.get(key).add(roi);
-		}
-		else{
-			List<Roi> rois= new ArrayList<Roi>();
+		} else{
+			List<Roi> rois= new ArrayList<>();
 			rois.add(roi);
 			this.trainingRois.put(key, rois);
 		}
@@ -84,9 +89,8 @@ public class ClassInfo {
 	public void addTestingRois(String key, Roi roi){
 		if(this.testingRois.containsKey(key)){
 			this.testingRois.get(key).add(roi);
-		}
-		else{
-			List<Roi> rois= new ArrayList<Roi>();
+		} else{
+			List<Roi> rois= new ArrayList<>();
 			rois.add(roi);
 			this.testingRois.put(key, rois);
 		}
@@ -102,12 +106,12 @@ public class ClassInfo {
 
 	 @JsonIgnore
 	public void deleteTrainingRoi(String imageKey, int index) {
-
 		if(this.trainingRois.containsKey(imageKey)){
 			this.trainingRois.get(imageKey).remove(index);
 		}
 	}
-	 @JsonIgnore
+	 
+	@JsonIgnore
 	public void deleteTestingRoi(String imageKey, int index) {
 		if(this.testingRois.containsKey(imageKey)){
 			this.testingRois.get(imageKey).remove(index);
@@ -124,8 +128,7 @@ public class ClassInfo {
 	public List<Roi> getTrainingRois(String imageKey){
 		if(this.trainingRois.containsKey(imageKey)){
 			return this.trainingRois.get(imageKey);
-		}	
-
+		}
 		return null;
 	}
 	
@@ -133,7 +136,6 @@ public class ClassInfo {
 		if(this.testingRois.containsKey(imageKey)){
 			return this.testingRois.get(imageKey);
 		}	
-
 		return null;
 	}
 
@@ -147,8 +149,8 @@ public class ClassInfo {
 	
 	
 	public Roi getTrainingRoi(String imageKey, int index){
-		if(this.trainingRois.containsKey(imageKey)){
-			return this.trainingRois.get(imageKey).get(index);
+		if(trainingRois.containsKey(imageKey)){
+			return trainingRois.get(imageKey).get(index);
 		}	
 
 		return null;

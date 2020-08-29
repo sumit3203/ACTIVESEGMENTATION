@@ -47,7 +47,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 	
 	public CreateProjectUI(ProjectManager projectManager) {
 		this.projectManager=projectManager;
-		projectList= new JComboBox<ProjectType>(ProjectType.values());
+		projectList= new JComboBox<>(ProjectType.values());
 	}
 	
 	

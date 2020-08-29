@@ -80,7 +80,7 @@ public class Test_FFTLog {
 		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 0, sigma, true);
 		FFTConvolver proc = new FFTConvolver(ip, fgauss);
 		IComplexFArray kern=fgauss.getKernelComplexF();
-		ComplexFProcessor ckern=new ComplexFProcessor(kw,kh, kern);
+		//ComplexFProcessor ckern=new ComplexFProcessor(kw,kh, kern);
 
 		FloatProcessor output=proc.convolve();
 

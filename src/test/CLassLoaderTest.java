@@ -33,16 +33,16 @@ class ClassLoaderTest{
 
      
       
-  	 String filesep = System.getProperty("file.separator");
-  	  String jarpath=filesep+"jars" +filesep;
-  	System.setProperty("plugins.dir","C:\\Applications\\ImageJ\\plugins");
-  	
+      String filesep = System.getProperty("file.separator");
+      String jarpath=filesep+"jars" +filesep;
+      System.setProperty("plugins.dir","C:\\Applications\\ImageJ\\plugins");
+
       String home = System.getProperty("plugins.dir")+jarpath; 
-		System.out.println("jars home:  "+home);
-		String cp=System.getProperty("java.class.path");
-		cp+=";"+ home + "act_segm_filters.jar";
-		System.setProperty("java.class.path", cp);
-		System.out.println("classpath:  "+cp);
+      System.out.println("jars home:  "+home);
+      String cp=System.getProperty("java.class.path");
+      cp+=";"+ home + "act_segm_filters.jar";
+      System.setProperty("java.class.path", cp);
+      System.out.println("classpath:  "+cp);
 		
 		 out.println("");
 	      out.println("Loading the  class");
