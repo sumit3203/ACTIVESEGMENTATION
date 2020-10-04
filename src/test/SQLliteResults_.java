@@ -20,13 +20,14 @@ import java.sql.*;
 import java.util.*;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import com.sun.image.codec.jpeg.*;
 
 /* This is a plugin for integration of ImageJ to SQLite database
  * based on the SQLResults plugin, version 1.1.5, 1 July 2008
  
- *     @version 1.0 
+ *     @version 1.0 4 Oct 2020
  *
  *     @author	Dimiter Prodanov
  *     @author  IMEC 
@@ -46,11 +47,19 @@ import com.sun.image.codec.jpeg.*;
  *
  */
 
-public class SQLliteResults_ {
+public class SQLliteResults_ implements IRoi {
+
+    // public
+    public final static String pluginname="SQLite client";
+    public final static String version="1.0.0";
+    public final static String driver="org.sqlite.JDBC";
+    public final String micro = "\u00B5";
+    
+    // private
 	/**
      * the image
      */    
-    ImagePlus imp;
+    private ImagePlus imp;
     private ResultsTable rt;
     private Hashtable<String, Integer> columnKeys=new Hashtable<>();
     private Calibration cal;
@@ -59,7 +68,7 @@ public class SQLliteResults_ {
     private boolean abort;
     private boolean repeated=false;
     /** The frame of the PlugIn */
-    public PlugInFrame pf;
+    private PlugInFrame pf;
     
     //private String calString;
     private float width=0.0f;
@@ -67,15 +76,26 @@ public class SQLliteResults_ {
     
     private Connection con;
     
-    private final static String driver="org.sqlite.JDBC";
-    
-    private String database="test.db";
+    private String database="";
 
+    /**
+     * 
+     */
 	public SQLliteResults_() {
 		rt=Analyzer.getResultsTable();
 	}
 	
-	public boolean connStart(String dbName) {
+	
+	public void setDatabase(String db) {
+		database=db;
+	}
+	
+	/**
+	 * 
+	 * @param dbName
+	 * @return
+	 */
+	boolean connStart(String dbName) {
     	String dbUrl="jdbc:sqlite:"+ dbName;
         try {
             //Class.forName("org.gjt.mm.mysql.Driver");
@@ -94,8 +114,8 @@ public class SQLliteResults_ {
         }
     }
 	
-	 /** closes the connection to the Database server */
-    public void ConnDestroy() {
+	/** closes the connection to the Database server */
+    void connDestroy() {
         try {
             con.close();
             IJ.log("Disconnected from database ");
@@ -103,27 +123,24 @@ public class SQLliteResults_ {
             IJ.log("SQLException: " + ex);
         }
     }
-
-    public final static String pluginname="SQLite client";
-    public final static String version="1.0.0";
     
     
     private void initComponents() {
         pf=new PlugInFrame(pluginname +" "+version);
-        panel1 = new java.awt.Panel();
-        chbox = new java.awt.Checkbox();
-        btnSend = new java.awt.Button();
-        btnRestart = new java.awt.Button();
-        btnClose = new java.awt.Button();
-        panel2 = new java.awt.Panel();
-        label1 = new java.awt.Label();
-        origfilelist = new java.awt.Choice();
-        label2 = new java.awt.Label();
-        ta = new java.awt.TextArea();
+        panel1 = new Panel();
+        chbox = new Checkbox();
+        btnSend = new Button();
+        btnRestart = new Button();
+        btnClose = new Button();
+        panel2 = new Panel();
+        label1 = new Label();
+        origfilelist = new Choice();
+        label2 = new Label();
+        ta = new TextArea();
         
-        pf.setLayout(new java.awt.GridLayout(2, 0));
+        pf.setLayout(new GridLayout(2, 0));
         
-        pf.setForeground(java.awt.Color.lightGray);
+        pf.setForeground(Color.lightGray);
         pf. setResizable(false);
         //pf.setTitle(pluginname +" "+version);
         pf.setSize(250,250);
@@ -217,35 +234,24 @@ public class SQLliteResults_ {
         
     }
     
-    
     private void exitForm(WindowEvent evt) {
         abort=true;
-        ConnDestroy();
+        connDestroy();
         pf.close();
     }
     
     private void  btnCloseActionPerformed(ActionEvent evt) {
-        //button2ActionPerformed
         abort=true;
-        //ta.append(" "+abort);
-        IJ.log(" "+abort);
-        //notifyAll();
-        ConnDestroy();
+        IJ.log("closing: "+abort);
+        connDestroy();
         pf.close();
-        
     }
     
-    private void chboxItemStateChanged(ItemEvent evt) {
-        // Add your handling code here:
+    private void chboxItemStateChanged(ItemEvent evt) {        
         repeated=chbox.getState();
-        //if (repeated)
-        //ta.append("repeated checked\r\n");
-        
     }
     
-    private void origfilelistItemStateChanged(ItemEvent evt) {
-        // Add your handling code here:
-        
+    private void origfilelistItemStateChanged(ItemEvent evt) { 
         int index=origfilelist.getSelectedIndex();
         //    IJ.log(index +" "+ ImageID[index]);
         fi=WindowManager.getImage(ImageID[index]).getOriginalFileInfo();
@@ -273,25 +279,25 @@ public class SQLliteResults_ {
     private int getImageRecord(String name) throws SQLException {
         int x=-1;
         String query="SELECT im_id from microimages WHERE name='"+name+"'";
-        java.sql.Statement Stmt = con.createStatement();
-        java.sql.ResultSet Rs=Stmt.executeQuery(query);
+        Statement stmt = con.createStatement();
+        ResultSet rs=stmt.executeQuery(query);
         
-        while (Rs.next()) {
-            x=Rs.getInt("im_id");
+        while (rs.next()) {
+            x=rs.getInt("im_id");
         }
-        Rs.close();    // Close the ResultSet object.
-        Stmt.close();  //
+        rs.close();    // Close the ResultSet object.
+        stmt.close();  //
         return x;
         
     }
     
-    
+    private int fr=4;
   
     @SuppressWarnings("restriction")
 	private void writeJPEG(ByteArrayOutputStream out){
         try {
-            int width = imp.getWidth()/4;
-            int height = imp.getHeight()/4;
+            int width = imp.getWidth()/fr;
+            int height = imp.getHeight()/fr;
             ImageProcessor ip2=imp.getProcessor().resize(width,height);
             
             BufferedImage   bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -310,48 +316,24 @@ public class SQLliteResults_ {
             IJ.log(e.toString());
         }
     }
-    
-    public boolean showDialog() {
-   
-       // GenericDialog gd2=new GenericDialog("SQLite client");
-       // gd2.setResizable(false);
-        // 2nd Dialog box for user input
-        //gd2.addMessage("DB Authentication");
-        //gd2.addStringField("database", database);
+       
 
-       // gd2.showDialog();
-        
-        //database=gd2.getNextString();
-  
-    	
-	   //if (gd2.wasCanceled())
-	   //     	return false;
-    	
-    	return true;
-     
-}
-    
     @SuppressWarnings("unused")
 	private void insertMeasurements() throws SQLException {
+    	PreparedStatement ps=null;
         try {
+        	
+            updateColumns();
             con.setAutoCommit(false);
+ 
+            /////////////////  calibration
+            String  update="INSERT INTO calibrations ( fX, fY, fZ, unit, cal_string) VALUES (?,?,?,?,?)";
             
-            String query="lock tables microimages write, measurements write, measurements_list write, calibrations write, rois write";
-            java.sql.Statement lock=con.createStatement();
-            lock.execute(query);
-            String  update="INSERT INTO calibrations ( fX, fY, fZ, unit, cal_string) VALUES (?, ?,?,?,?)";
-            java.sql.PreparedStatement ps = con.prepareStatement(update);
+            ps = con.prepareStatement(update);
             
-            String unit = cal.getUnit();
-            /*
-            IJ.log("w: " +1/cal.pixelWidth +"  pixels/"+unit);
-            IJ.log("h: " +1/cal.pixelHeight +"  pixels/"+unit);
-            IJ.log("d: " +1/cal.pixelDepth +"  pixels/"+unit);
-             */
-            final String micro = "\u00B5";
-            unit.trim();
-            if (unit.startsWith(micro))
-            	unit="um";
+            String unit = cal.getUnit().trim();
+            if (unit.startsWith(micro))	unit="um";
+            
             ps.setDouble(1, cal.pixelWidth);
             ps.setDouble(2, cal.pixelHeight);
             ps.setDouble(3, cal.pixelDepth);
@@ -359,27 +341,40 @@ public class SQLliteResults_ {
             ps.setString(5, cal.toString());
             int updateCount = ps.executeUpdate();
             IJ.log("calibrations: "+updateCount);
+                  
+      
             
-            query="select @c:=last_insert_id()";
-            lock.execute(query);
+            ResultSet rs;
+			int crowid = getID(ps);
+             
+            IJ.log("crowid "+crowid);
+          
             
             ps.clearParameters();
-            
-            
+           // ps.close();
+            //////////////////
+           
             if (fi==null) fi=imp.getOriginalFileInfo();
-            
-            String url=fi.directory+fi.fileName;
+            String url="";
+            if (fi.directory==null) 
+            	url=fi.fileName;
+            else  
+            	url=fi.directory+fi.fileName;
             IJ.log("path: "+url);
+            
             int im_id=-1;
+            
             if (repeated){
                 im_id=getImageRecord(fi.fileName);
-                IJ.log("im_id: "+im_id);
+                IJ.log("repeated measurement on im_id: "+im_id);
             }
             boolean updated=false;
             
+            // repeated measurements
             if (im_id==-1) {
                 
-                update="INSERT INTO microimages (url, name, notes, thumb, width, height) VALUES (?,?,?,?,?,?)";
+                update="INSERT INTO microimages (url, name, notes, mime,      thumb, width, height) "
+                					+ "VALUES   (?,    ?,    ?,   'image/jpeg',   ?,     ?,     ? )";
                 ps = con.prepareStatement(update);
                 ps.setString(1, url);
                 ps.setString(2, fi.fileName);
@@ -394,11 +389,10 @@ public class SQLliteResults_ {
                     baos.close();
                     
                     ps.setBytes(4, buf);
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     IJ.log("IOException");
-                  
                 }
+                
                 ps.setFloat(5,this.width);
                 ps.setFloat(6,this.height);
                 IJ.log("width "+width);
@@ -406,68 +400,72 @@ public class SQLliteResults_ {
                 updateCount = ps.executeUpdate();
                 IJ.log("microimages: "+updateCount);
                 
-                query="select @d:=last_insert_id()";
-                lock.execute(query);
+                final int drowid=getID(ps);
+                IJ.log("image_id / drowid "+drowid);
                 
                 ps.clearParameters();
+                //ps.close();
                 updated=true;
+                im_id=drowid;
             }
-				else {
-                query="set @d:="+im_id;
-                lock.execute(query);
-                ps.clearParameters();
-
-			}
-		
-           // ta.setText("");
-            
+				 
+                
             Roi roi = imp.getRoi();
-            
+            final int z=imp.getZ();
+            final int frm=imp.getFrame();
+            final int ch=imp.getC();
             
             if (roi!=null){ // ROI
             	
-                if (updated) {
-                    update="INSERT INTO rois (im_id, r_type, roi) VALUES ( @d,?,?)";
-                    ps = con.prepareStatement(update);
-                    
-                    ps.setInt(1, roi.getType());
-                    ps.setBytes(2, encodeROI(roi));
-                }
-                else {
-                    update="INSERT INTO rois (im_id, r_type, roi) VALUES ( ?,?,?)";
-                    ps = con.prepareStatement(update);
-                    ps.setInt(1, im_id);
-                    ps.setInt(2, roi.getType());
-                    ps.setBytes(3, encodeROI(roi));
-                }
-                
-                updateCount = ps.executeUpdate();
+            	update="INSERT INTO rois (im_id, r_type, roi) "
+            			+ 		" VALUES ( ?,    ?,       ?)";
+            	PreparedStatement rps = con.prepareStatement(update);
+             
+                rps.setInt(1, im_id);
+                rps.setInt(2, roi.getType());
+                rps.setBytes(3, encodeROI(roi));
+                updateCount = rps.executeUpdate();
                 IJ.log("rois "+updateCount);
                 
+                final int rrowid= getID(rps);
+                IJ.log("rrowid "+rrowid);
                 
-                query="select @r:=last_insert_id()";
-                lock.execute(query);
-                update="INSERT INTO measurements (im_id,   c_id, r_id, notes ) VALUES ( @d, @c ,@r,?)";
+                rps.clearParameters();
+                rps.close();
+                  
+                update="INSERT INTO measurements (im_id, slide_no,  frame, channel, c_id, r_id, notes ) "
+                		+ 				 "VALUES (?,      ?,        ?,          ?,     ?,    ?,     ? )";              
+                PreparedStatement mps = con.prepareStatement(update);
+                mps.setInt(1, im_id);
+                mps.setInt(2, z);
+                mps.setInt(3, frm);
+                mps.setInt(4, ch);
+                mps.setInt(5, crowid);
+                mps.setInt(6, rrowid);
+                mps.setString(7, ta.getText());
                 
+                updateCount = mps.executeUpdate();
+                mps.clearParameters();
+                mps.close();             
+            }   else { // no ROI
+                update="INSERT INTO measurements (im_id,  slide_no,  frame, channel, c_id, notes) "
+                		+ 				"VALUES  ( ?,            ?,      ?,       ?,    ?,     ?)";
+                PreparedStatement  mps = con.prepareStatement(update);
+                mps.setInt(1, im_id);
+                mps.setInt(2, z);
+                mps.setInt(3, frm);
+                mps.setInt(4, ch);
+                mps.setInt(5, crowid);          
+                mps.setString(6, ta.getText());
+                updateCount = mps.executeUpdate();
+                mps.clearParameters();
+                mps.close();
             }
-            else { // no ROI
-                
-                update="INSERT INTO measurements (im_id,  c_id, notes) VALUES ( @d, @c ,?)";
-            }
-
-            ps = con.prepareStatement(update);
-         
            
-            ps.setString(1, ta.getText());
-            
-            updateCount = ps.executeUpdate();
-            IJ.log("measurements: "+updateCount);
-            
-            query="select @a:=last_insert_id()";
-            lock.execute(query);
-            ps.clearParameters();
-            
-            update="INSERT INTO measurements_list (m_id, col_id, value, m_no) VALUES ( @a, ?, ?,?)";
+  
+           
+            final int arowid=getID(ps);
+            update="INSERT INTO measurements_list (m_id, col_id, value, m_no) VALUES (?, ?, ?, ?)";
             
             ps = con.prepareStatement(update);        
             
@@ -488,12 +486,14 @@ public class SQLliteResults_ {
             for( int i=0;i<col;i++) {
                 //IJ.log(index[i]);
                 float[] result=rt.getColumn(index[i]);
-                Integer colindex=(Integer) columnKeys.get(headings[i]);
-                //IJ.log ("colindex "+colindex);
+                int colindex=  columnKeys.get(headings[i]);
+                IJ.log ("colindex "+colindex);
                 for( int j=0;j<counter;j++) {
-                    ps.setFloat(2,result[j]);
-                    ps.setInt(3,j+1);
-                    ps.setInt(1,colindex.intValue());
+                	ps.setInt(1, arowid);
+                	ps.setInt(2, colindex);
+                    ps.setFloat(3,result[j]);
+                    ps.setInt(4,j+1);
+                   
                     ps.addBatch();
                 }
                 
@@ -501,38 +501,60 @@ public class SQLliteResults_ {
             int[] updateCounts = ps.executeBatch();
             
             IJ.log("measurements_list: "+updateCounts.length);
-            
-            ps.close();
-            
-            query= "unlock tables";
-            lock.execute(query);
-            //}
-            
             con.commit();
-            con.setAutoCommit(true);
+             
+        } catch (SQLException E) {
+        	IJ.log("SQL message: " + E.getMessage());
+        	IJ.log("SQL State:     " + E.getSQLState());
+        	IJ.log("M Error Code:  " + E.getErrorCode());
+        	con.rollback();
+        } finally {
+        	 ps.close();
+        	con.setAutoCommit(true);
         }
-        catch (SQLException E) {
-            IJ.log("SQL message: " + E.getMessage());
-            IJ.log("SQL State:     " + E.getSQLState());
-            IJ.log("Error Code:  " + E.getErrorCode());
-            con.rollback();
-        }
-        
+       
     }
+
+	/**
+	 * @param ps
+	 * @return
+	 * @throws SQLException
+	 */
+	private int getID(Statement ps) throws SQLException {
+		ResultSet rs= ps.getGeneratedKeys();
+		int id=-1;
+		if (rs.next())
+			id=rs.getInt(1);
+		rs.close();
+		return id;
+	}
     
+    /**
+     * 
+     * @param evt
+     */
     private void btnRestartActionPerformed(ActionEvent evt) {
-        updateColumns();
+        try {
+			updateColumns();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
+    /**
+     * 
+     * @param evt
+     */
     private void btnSendActionPerformed(ActionEvent evt) {
         try {
             if (rt.getCounter()>0){
                 insertMeasurements();
+            } else {
+            	IJ.log("no measurement present");
             }
             
-        }
-        catch (SQLException E) {
-            
+        } catch (SQLException E) {
             IJ.log("SQLException: " + E.getMessage());
             IJ.log("SQLState:     " + E.getSQLState());
             IJ.log("VendorError:  " + E.getErrorCode());
@@ -541,6 +563,10 @@ public class SQLliteResults_ {
         
     }
     
+    /**
+     * 
+     * @return
+     */
     public String[] getListColumns() {
         StringTokenizer st = new StringTokenizer(rt.getColumnHeadings());
         int n = st.countTokens();
@@ -553,7 +579,11 @@ public class SQLliteResults_ {
     }
     
     
-    
+    /**
+     * 
+     * @param headings
+     * @return
+     */
     public Hashtable<String, Integer> getColumnKeys(String[] headings) {
         Hashtable<String, Integer> ht=new Hashtable<>();
         StringBuffer  sb=new StringBuffer();
@@ -561,44 +591,41 @@ public class SQLliteResults_ {
             sb.append("'"+headings[i]+"', ");
             
         }
-        // sb.lastIndexOf(",");
-        
-        //sb.l
-        String astr= sb.substring(0,sb.length()-2);
+        String astr= sb.substring(0, sb.length()-2);
         try {
             String query="select col_id,name from mes_columns where name in ("+astr+")";
-            IJ.log(query);
-            java.sql.Statement Stmt=con.createStatement();
-            java.sql.ResultSet Rs=Stmt.executeQuery(query);
+            //IJ.log(query);
+            Statement stmt=con.createStatement();
+            ResultSet rs=stmt.executeQuery(query);
             
-            while (Rs.next()) {
-                ht.put(Rs.getString("name"), new Integer(Rs.getInt("col_id")));
+            while (rs.next()) {
+                ht.put(rs.getString("name"), new Integer(rs.getInt("col_id")));
             }
-            Rs.close();    // Close the ResultSet object.
-            Stmt.close();  //
-        }
-        catch (SQLException E) {
+            rs.close();    // Close the ResultSet object.
+            stmt.close();  //
+        } catch (SQLException E) {
             IJ.log("SQL Message: " + E.getMessage());
             IJ.log("SQL State:     " + E.getSQLState());
             IJ.log("Error Code:  " + E.getErrorCode());
         }
-        
-        
-        
-        return ht;
-        
+        return ht;      
     }
     
-    public int updateColumn(String name) {
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    private int updateColumn(String name) {
         int x=-1;
         String update="insert into mes_columns (name) values ('"+name+"')";
-        IJ.log(update);
+       // IJ.log(update);
         try {
             Statement upd=con.createStatement();
             int count=upd.executeUpdate(update);
-            IJ.log("rows inserted: "+count);
+            IJ.log("rows inserted: "+count +" name: "+name);
             
-            java.sql.ResultSet  rs = upd.getGeneratedKeys();
+            ResultSet  rs = upd.getGeneratedKeys();
             
             if (rs.next()) {
                 x=rs.getInt(1);
@@ -614,24 +641,49 @@ public class SQLliteResults_ {
         return x;
     }
     
+    /**
+     * 
+     * @param arg - path to database
+     */
     public void run(String arg) {
-    	initComponents();
     	
+    	if (database=="") {
+    		JFileChooser fileChooser = new JFileChooser();
+
+    		// For Directory
+    		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    				 
+    		fileChooser.setFileFilter(dbFilefilter);
+    		//fileChooser.setAcceptAllFileFilterUsed(true);
+    		int rVal = fileChooser.showOpenDialog(null);
+    		if (rVal == JFileChooser.APPROVE_OPTION) {
+    			String file=fileChooser.getSelectedFile().toString();
+    	 		//System.out.println(file);
+    			//resplugin.connStart(file);
+    			database=file;
+    		}
+    	}
+    		 
+    	
+    	System.out.println("run: "+arg);
     	imp=WindowManager.getCurrentImage();
         this.width=(float)imp.getWidth();
         this.height=(float)imp.getHeight();
     	cal = imp.getCalibration();
-    	if (showDialog()) { 
-	        if (connStart(database)){
-	            
-	            updateColumns();
-	            
-	        }
-    	}
-        
+
+        if (connStart(database)){
+        	
+            initComponents();
+ 	            
+        }
+         
     }
     
-    private void updateColumns() {
+    /**
+     * 
+     * @throws SQLException
+     */
+    private void updateColumns() throws SQLException {
         String[] headings=getListColumns();
         if (headings.length>0) {
             columnKeys=getColumnKeys(headings);
@@ -643,200 +695,105 @@ public class SQLliteResults_ {
                     if (!columnKeys.containsKey(headings[i])) {
                         index=updateColumn(headings[i]);
                         columnKeys.put(headings[i], new Integer(index));
-                        IJ.log("key: " +headings[i] +" value: "+index);
+                        //IJ.log("key: " +headings[i] +" value: "+index);
                     }
                     con.commit();
-                    con.setAutoCommit(true);
+                    
                 }
                 catch (SQLException E) {
                     IJ.log("SQLException: " + E.getMessage());
                     IJ.log("SQLState:     " + E.getSQLState());
-                    IJ.log("VendorError:  " + E.getErrorCode());
+                    IJ.log("UC: VendorError:  " + E.getErrorCode());
+                    con.rollback();
+                } finally {
+                	con.setAutoCommit(true);
                 }
             }
         }
     }
     
-    /*------------------------------------------------------------------*/
-    void showAbout() {
+  /**
+   * 
+   */
+   public void showAbout() {
         IJ.showMessage("About SQLResults.",
         "This plug-in filter interfaces MySQL and ImageJ"
         );
     }
     
-    
-    
-    
-    private byte mapRoiType(int roiType) {
-        byte polygon=0, rect=1, oval=2, line=3, freeline=4, polyline=5, noRoi=6, freehand=7, traced=8, angle=9;
-        byte type;
-        switch (roiType) {
-            case Roi.POLYGON:
-                type = polygon;
-                break;
-            case Roi.FREEROI:
-                type = freehand;
-                break;
-            case Roi.TRACED_ROI:
-                type = traced;
-                break;
-            case Roi.OVAL:
-                type = oval;
-                break;
-            case  Roi.LINE:
-                type = line;
-                break;
-            case Roi.POLYLINE:
-                type = polyline;
-                break;
-            case Roi.FREELINE:
-                type = freeline;
-                break;
-            case Roi.ANGLE:
-                type = angle;
-                break;
-            default :
-                type = rect;
-                
-        }
-        return type;
-        
-    }
-    
-    @SuppressWarnings("unused")
-	private byte[] encodeROI(Roi roi){
-        ByteArrayOutputStream os=new ByteArrayOutputStream();
-        int roi_type=roi.getType();
-        
-        int n=0;
-        int[] x=null,y=null;
-        try {
-            //Rectangle r = roi.getBoundingRect();
-            Rectangle r = roi.getBounds();
-            // IJ.log("x"+ r.x);
-            byte[] header={73,111,117,116}; // "Iout"
-            os.write(header);
-            
-            os.write(putShort(217));
-            os.write(mapRoiType(roi_type));
-            os.write(0);
-            
-            if (roi instanceof PolygonRoi) {
-                PolygonRoi p = (PolygonRoi)roi;
-                n = p.getNCoordinates();
-                x = p.getXCoordinates();
-                y = p.getYCoordinates();
-            }
-            
-            
-            // IJ.log("top: "+os.size());
-            os.write(putShort(r.y));			//top
-            os.write(putShort(r.x));			//left
-            os.write(putShort(r.y+r.height));	//bottom
-            os.write(putShort(r.x+r.width));	//right
-            os.write(putShort(n));
-            
-            if (roi instanceof Line) {
-                Line l = (Line)roi;
-                //IJ.log("line start: "+os.size());
-                os.write(putFloat(l.x1));
-                os.write(putFloat(l.y1));
-                os.write(putFloat(l.x2));
-                os.write(putFloat(l.y2));
-            }
-            //IJ.log("line end: "+os.size());
-            int u=64-os.size(); // the header is 64 bytes
-            os.write(new byte[u]);
-            
-            if (n>0) {
-                for (int i=0; i<n; i++)
-                    os.write(putShort(x[i]));
-                
-                for (int i=0; i<n; i++)
-                    os.write(putShort(y[i]));
-                
-            }
-            byte[] b=os.toByteArray();
-            // IJ.log(os.toString());
-            os.close();
-            return b;
-            
-        }
-        catch (IOException Ex) {
-            IJ.log("IOException");
-            return null;
-        }
-        
-    }
-    
-    private  byte[] putShort(int v) {
-        byte[] data=new byte[2];
-        data[0] = (byte)(v>>>8);
-        data[1] = (byte)v;
-        return data;
-    }
-    
-    private  byte[]  putFloat(float v) {
-        byte[] data=new byte[4];
-        int tmp = Float.floatToIntBits(v);
-        data[0]   = (byte)(tmp>>24);
-        data[1] = (byte)(tmp>>16);
-        data[2] = (byte)(tmp>>8);
-        data[3] = (byte)tmp;
-        return data;
-    }
+      
     
     
     // Variables declaration - do not modify
-    private java.awt.Button btnClose;
-    private java.awt.Button btnSend;
-    private java.awt.Button btnRestart;
-    private java.awt.Checkbox chbox;
-    private java.awt.Label label1;
-    private java.awt.Panel panel1;
-    private java.awt.Panel panel2;
-    private java.awt.TextArea ta;
-    private java.awt.Label label2;
-    private java.awt.Choice origfilelist;
+    private Button btnClose;
+    private Button btnSend;
+    private Button btnRestart;
+    private Checkbox chbox;
+    private Label label1;
+    private Panel panel1;
+    private Panel panel2;
+    private TextArea ta;
+    private Label label2;
+    private Choice origfilelist;
     // End of variables declaration
     
     
 	public static void main(String[] args) {
-		/*
-		 * try {
-		 * 
-		 * File f=new File(args[0]);
-		 * 
-		 * if (f.exists() && f.isDirectory() ) { System.setProperty("plugins.dir",
-		 * args[0]);
-		 * 
-		 * } else {
-		 * 
-		 * throw new IllegalArgumentException(); } } catch (Exception ex) {
-		 * IJ.log("plugins.dir misspecified\n"); ex.printStackTrace(); }
-		 */
+
 		new ImageJ();
 		IJ.run("Blobs (25K)");
 		
 		SQLliteResults_ resplugin = new SQLliteResults_();
 		
+		resplugin.chooseFile();
+	}
+	
+	private FileFilter dbFilefilter = new FileFilter() {
+		     @Override
+			public boolean accept(File file) {
+		             //if the file extension is .db return true, else false
+		             if (file.getName().endsWith(".db")) {
+		                return true;
+		             }
+		             return false;
+		      }
+
+			@Override
+			public String getDescription() {
+				return "SQLite files";
+			}
+		};
+
+
+	/**
+	 * 
+	 */
+	void chooseFile() {
 		JFileChooser fileChooser = new JFileChooser();
 
 		// For Directory
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				 
+		fileChooser.setFileFilter(dbFilefilter);
+		//fileChooser.setAcceptAllFileFilterUsed(true);
 		int rVal = fileChooser.showOpenDialog(null);
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			String file=fileChooser.getSelectedFile().toString();
-	 		System.out.println(file);
+	 		//System.out.println(file);
 			//resplugin.connStart(file);
-			resplugin.run(file);
-		}
-		
-		
-		
-		
+			System.out.println("run: "+file);
+			database=file;
+	    	imp=WindowManager.getCurrentImage();
+	        this.width=(float)imp.getWidth();
+	        this.height=(float)imp.getHeight();
+	    	cal = imp.getCalibration();
 
+	        if (connStart(database)){
+	        	
+	            initComponents();
+	 	            
+	        }
+		}
 	}
 
-}
+} /////////////////////////////////////////
