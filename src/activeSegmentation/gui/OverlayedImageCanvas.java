@@ -44,9 +44,14 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	private Image backBufferImage;
 	protected Composite backBufferComposite;
 	
+	private double af=1.0;
+	
 	public OverlayedImageCanvas(ImagePlus image) {
 		super(image);
-		overlays = new ArrayList<Overlay>();
+		double width = image.getWidth();
+		double height = image.getHeight();
+		af=width/height;
+		overlays = new ArrayList<>();
 	}
 
 	public void addOverlay(Overlay overlay) {
@@ -72,14 +77,13 @@ public class OverlayedImageCanvas extends ImageCanvas {
      *  at the magnification needed 
      *  
      */
+    @Override
+	protected Dimension canEnlarge(int newWidth, int newHeight) {
 
-
-
-    protected Dimension canEnlarge(int newWidth, int newHeight) {
-       // if (IJ.altKeyDown())
-      //      return null;
-    	//unzoom();
         ImageWindow win = imp.getWindow();
+        final int width = imp.getWidth();
+		final int height = imp.getHeight();
+		
         if (win==null) return null;
         Rectangle r1 = win.getBounds();
  
@@ -95,34 +99,34 @@ public class OverlayedImageCanvas extends ImageCanvas {
         //System.out.println("OverlayedImageCanvas: resizing");
     	//System.out.println("newWidth: "+ newWidth+" newHeight: "+newHeight); 
  
-     
-        if (newWidth>IMAGE_CANVAS_DIMENSION || newHeight > IMAGE_CANVAS_DIMENSION) {
-        	System.out.println("OverlayedImageCanvas: reset");
-        	resetImage( imp);
-        	return null;
+        final int maxdim=Math.max(newWidth, newHeight);
+        final int mindim=Math.max(newWidth, newHeight);
+        if (maxdim>IMAGE_CANVAS_DIMENSION) {
+        	System.out.println("OverlayedImageCanvas: reset (large) ");
+        	return  new Dimension(IMAGE_CANVAS_DIMENSION, (int) (IMAGE_CANVAS_DIMENSION*af));
+        } else if (mindim<IMAGE_CANVAS_DIMENSION/4) {
+        	System.out.println("OverlayedImageCanvas: reset (small) ");
+        //	resetImage( imp);
+        	return  new Dimension(IMAGE_CANVAS_DIMENSION, (int) (IMAGE_CANVAS_DIMENSION*af));
         }
         
-        if (win.getWidth()<IMAGE_CANVAS_DIMENSION/4 || win.getHeight() < IMAGE_CANVAS_DIMENSION/4) {
-        	System.out.println("OverlayedImageCanvas: reset");
-        	resetImage( imp);
-        	return null;
-        }
-    
+        // still to fix zoom out problems
         if (fitsHorizontally && fitsVertically) {        	
             return new Dimension(newWidth, newHeight);
         }
+        /*
         else if (fitsVertically && newHeight<dstWidth) {
             return new Dimension(dstWidth, newHeight);
         }
         else if (fitsHorizontally && newWidth<dstHeight) {
             return new Dimension(newWidth, dstHeight);
-        }
+        }*/
         else {
-            return null;
+            return  new Dimension(width, height);
         }
     }
 
- 
+ /*
    protected void resetImage(final ImagePlus imp) {
 		this.imp = imp;
 		int width = imp.getWidth();
@@ -139,7 +143,8 @@ public class OverlayedImageCanvas extends ImageCanvas {
 		setSize(imageWidth, imageHeight);
 		magnification = 1.0;
 	}
-   
+   */
+    
     // helper function, has only local variables
     Rectangle getMaxWindow(int xloc, int yloc) {
         Rectangle bounds = GUI.getMaxWindowBounds();
@@ -184,6 +189,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
 		overlays.clear();
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		
 		if(backBufferWidth!=getSize().width ||
