@@ -1,14 +1,12 @@
-import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-//import activeSegmentation.IProjectManager;
 import activeSegmentation.gui.CreateProjectUI;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
-import ijaux.scale.GScaleSpace;
+
 
 public class Active_Segmentation_ implements PlugIn {
 
