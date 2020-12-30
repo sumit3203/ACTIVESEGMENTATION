@@ -130,7 +130,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
-		imageStack = filter(ip,sp,sz,imageStack);
+		imageStack = filter(ip,sp,imageStack);
 
 		/*
 		float[] kernx= sp.gauss1D();
@@ -423,7 +423,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(processor.getWidth(),processor.getHeight());
 				GScaleSpace sp=new GScaleSpace(sigma);
-				imageStack=filter(processor, sp,sigma, imageStack);
+				imageStack=filter(processor, sp,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
 					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
@@ -432,14 +432,16 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			}
 
 	}
-	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, int r, ImageStack imageStack) {
-		// TODO Auto-generated method stub
+	
+	
+	private ImageStack filter(ImageProcessor ip, GScaleSpace sp,  ImageStack imageStack) {
 		if (!isFloat) 
 			ip=ip.convertToFloat();
 		if(ip instanceof ColorProcessor) {
 			ip=ip.convertToFloat();
 		}
-
+		
+		int r=sp.getSize();
 		//System.out.println("IN REEAL CODE");
 		float[] kernx= sp.gauss1D();
 		SUtils.flip(kernx);		

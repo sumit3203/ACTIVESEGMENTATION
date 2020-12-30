@@ -135,9 +135,11 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 */
 	private Calibration cal=null;
 	
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
 	
 	/*
 	 * (non-Javadoc)

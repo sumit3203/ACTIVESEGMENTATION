@@ -144,10 +144,10 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
-		imageStack = filter(ip,sp,sz,imageStack);
+		imageStack = filter(ip,sp, imageStack);
 
 
-		image=new ImagePlus("Hessian result hw="+((sz-1)/2),imageStack);
+		image=new ImagePlus("Hessian result hw="+(r),imageStack);
 		image.show();
 	}
 
@@ -159,7 +159,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
 				GScaleSpace sp=new GScaleSpace(sigma);
-				imageStack=filter(image, sp,sigma, imageStack);
+				imageStack=filter(image, sp,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
 					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
@@ -178,7 +178,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 * @param sp gaussian scale space
 	 * @param sigma filter sigma
 	 */
-	private ImageStack filter(ImageProcessor ip,GScaleSpace sp, float sigma, ImageStack imageStack){
+	private ImageStack filter(ImageProcessor ip,GScaleSpace sp,  ImageStack imageStack){
 
 		ip.snapshot();
 
@@ -186,6 +186,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			ip=ip.toFloat(0, null);
 
 		pass++;
+		double sigma=sp.getSigma();
 		//System.out.println(settings.get(LEN)+"MG");
 		//GScaleSpace sp=new GScaleSpace(sigma);
 		float[] kernx= sp.gauss1D();
