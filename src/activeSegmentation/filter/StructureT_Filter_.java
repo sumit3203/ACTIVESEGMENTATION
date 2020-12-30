@@ -76,7 +76,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private int nPasses=1;
 	private int pass;
 
-	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
+	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len",SLEN="G_slen";
 
 	private boolean isEnabled=true;
 
@@ -92,10 +92,15 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 	private boolean hasRoi=false;
 
-	@AFilterField(key=LEN, value="initial scale")
+    // noise scale
+	@AFilterField(key=LEN, value="noise scale")
 	public int sz= Prefs.getInt(LEN, 2);
 	
-	@AFilterField(key=MAX_LEN, value="max scale")
+	// smoothing scale
+	@AFilterField(key=SLEN, value="signal scale")
+	public int sz2= Prefs.getInt(LEN, 4);
+	
+	@AFilterField(key=MAX_LEN, value="max signal scale")
 	public int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	/* NEW VARIABLES*/
@@ -128,7 +133,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 	final int Ox=0, Oy=1, Oz=2;
 
-	// It is used to check whether to calibirate or not
+	// It is used to check whether to calibrate or not
 	private boolean doCalib = false;
 	/*
 	 * This variable is to calibrate the Image Window
@@ -149,12 +154,13 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	public void run(ImageProcessor ip) {
 		int r = (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
-
+		int r2 = (sz2-1)/2;
+		GScaleSpace sp2=new GScaleSpace(r2);
 
 		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
-		imageStack = filter(ip,sp,sz,imageStack);
-
+		imageStack = filter2(ip,sp, sp2, imageStack);
+		// imageStack = filter(ip,sp, sp2, imageStack);
 
 		image=new ImagePlus("Structure result hw="+((sz-1)/2),imageStack);
 		image.show();
@@ -164,11 +170,11 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-
-			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+		GScaleSpace sp=new GScaleSpace(sz);
+			for (int sigma=sz2; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
-				GScaleSpace sp=new GScaleSpace(sigma);
-				imageStack=filter(image, sp,sigma, imageStack);
+				GScaleSpace sp2=new GScaleSpace(sigma);
+				imageStack=filter2(image, sp, sp2, imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
 					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
@@ -187,7 +193,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 * @param sp gaussian scale space
 	 * @param sigma filter sigma
 	 */
-	private ImageStack filter(ImageProcessor ip,GScaleSpace sp, float sigma, ImageStack imageStack){
+	private ImageStack filter(ImageProcessor ip,GScaleSpace sp,  ImageStack imageStack){
 
 		ip.snapshot();
 
@@ -205,7 +211,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
 		
- 
+		double sigma=sp.getSigma();
 
 		kernel=new float[4][];
 		kernel[0]=kernx;
@@ -306,6 +312,171 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		return imageStack;
 	}
 
+	/**
+	 * 
+	 * This method is helper function for both applyFilter and run method
+	 * @param ip input image
+	 * @param sp gaussian scale space
+	 * @param sigma filter sigma
+	 */
+	private ImageStack filter2(ImageProcessor ip, GScaleSpace sp, GScaleSpace sp2, ImageStack imageStack){
+
+		ip.snapshot();
+
+		if (!isFloat) 
+			ip=ip.toFloat(0, null);
+
+		pass++;
+		//System.out.println(settings.get(LEN)+"MG");
+		//GScaleSpace sp=new GScaleSpace(sigma);
+		float[] kernx= sp.gauss1D();
+		//System.out.println("kernx :"+kernx.length);
+		GScaleSpace.flip(kernx);	
+
+		float[] kern_diff1=sp.diffGauss1D();
+		//System.out.println("kernx1:"+kern_diff1.length);
+		GScaleSpace.flip(kern_diff1);
+		
+		double sigma=sp2.getSigma();
+
+		kernel=new float[4][];
+		kernel[0]=kernx;
+ 
+		kernel[1]=kern_diff1;
+
+ 
+
+		int sz= sp.getSize();
+		if (debug && pass==1) {
+			FloatProcessor fpkern2=new FloatProcessor(sz,sz);
+
+			float[][] disp= new float[2][];
+
+			disp[0]=GScaleSpace.joinXY(kernel, 0, 1);
+			disp[1]=GScaleSpace.joinXY(kernel, 1, 0);
+
+			for (int i=0; i<sz*sz; i++)
+				fpkern2.setf(i, disp[0][i]+ disp[1][i]);
+
+			new ImagePlus("kernel sep",fpkern2).show();
+
+
+		}
+
+		FloatProcessor fpaux= (FloatProcessor) ip;
+
+		Conv cnv=new Conv();
+
+		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
+		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
+		
+ 
+		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+		cnv.convolveFloat1D(gradx, kernx, Oy);
+
+		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+		cnv.convolveFloat1D(grady, kernx, Ox);
+ 
+		int width=ip.getWidth();
+		int height=ip.getHeight();
+
+ 
+		
+		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
+		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
+		
+		FloatProcessor gx2=new FloatProcessor(width, height); // gx^2 
+		FloatProcessor gy2=new FloatProcessor(width, height); // gy^2 
+		FloatProcessor gxy=new FloatProcessor(width, height); // gx*gy 
+		
+		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
+		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
+		FloatProcessor coher=new FloatProcessor(width, height); // coherence 
+
+		for (int i=0; i<width*height; i++) {
+			double gx=gradx.getf(i);
+			double gy=grady.getf(i);
+
+			/*
+			 *  Gradient analysis
+			 */
+ 			final double x2=gx*gx;
+			gx2.setf(i, (float) x2);
+			final double y2=gy*gy;
+			gy2.setf(i, (float) y2);
+			
+			final double xy=gx*gy;
+			gxy.setf(i, (float) xy);
+			double amp=(gx*gx+gy*gy);
+			if (amp==0) amp+=1e-6;
+			pamp.setf(i, (float) sqrt(amp));
+			
+			double phase1=sqrt(gy/amp);
+				//	phase1=asin(phase1);
+			phase.setf(i, (float) phase1);
+		}
+		
+		if (fulloutput) {
+			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigma, gradx);
+			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigma, grady);
+		}
+		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
+		imageStack.addSlice(FILTER_KEY+"_Phase_"+sigma, phase);
+		
+		// second smoothing step
+		
+		kernx= sp2.gauss1D();
+		//System.out.println("kernx :"+kernx.length);
+		GScaleSpace.flip(kernx);	
+
+		kern_diff1=sp2.diffGauss1D();
+		//System.out.println("kernx1:"+kern_diff1.length);
+		GScaleSpace.flip(kern_diff1);
+		
+		//double sigma=sp.getSigma();
+		
+		cnv.convolveFloat1D(gx2, kern_diff1, Ox);
+		cnv.convolveFloat1D(gx2, kernx, Oy);
+
+		cnv.convolveFloat1D(gy2, kern_diff1, Oy);
+		cnv.convolveFloat1D(gy2, kernx, Ox);
+		
+		cnv.convolveFloat1D(gxy, kern_diff1, Oy);
+		cnv.convolveFloat1D(gxy, kernx, Ox);
+		
+		for (int i=0; i<width*height; i++) {
+			double xx=gx2.getf(i);
+			double yy=gy2.getf(i);
+			double xy=gxy.getf(i);
+ 
+			final double trace=xx+yy;
+			final double det=xx*yy- xy*xy;
+			final double disc= sqrt(abs(trace*trace-4.0*det));
+			final double ee1=0.5*(trace+disc);
+			final double ee2=0.5*(trace-disc);
+
+			final double l1=max(ee1, ee2);
+			final double l2=min(ee1, ee2);
+		    double coh=0;
+			if (l1+l2>0) 
+			   coh=(l1-l2)/(l1+l2);
+	  
+			eigen1.setf(i, (float) l1);
+			eigen2.setf(i, (float) l2);
+			coher.setf(i, (float) coh);
+		}
+
+		
+
+
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
+		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
+ 
+		eigen2.resetMinAndMax();
+ 
+		return imageStack;
+	}
 
 
 	/**
@@ -325,8 +496,8 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		int r = (sz-1)/2;
 		GenericDialog gd=new GenericDialog("Structure Tensor " + version);
 
-		gd.addNumericField("half width", r, 2);
-		//gd.addNumericField("sigma", sigma, 1);
+		gd.addNumericField("half width (noise)", r, 2);
+		gd.addNumericField("half width (signal)", 2*r, 1);
 		gd.addCheckbox("Show kernel", debug);
 		gd.addCheckbox("Full output", fulloutput);	
 		if (cal!=null) {
@@ -357,7 +528,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
-		//sigma = (float) (gd.getNextNumber());
+		double r2= (float) (gd.getNextNumber());
 		debug = gd.getNextBoolean();
 		fulloutput = gd.getNextBoolean();
 		if (cal!=null)
@@ -367,6 +538,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			r= (r/cal.pixelWidth);
 		}
 		sz =  (2*(int)r+1);
+		sz2 =  (2*(int)r2+1);
 		if (gd.wasCanceled()) {
 
 			return false;
@@ -391,14 +563,15 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 */
 	public void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
-		// prefs.put(SIGMA, Float.toString(sigma));
+		prefs.put(SLEN, Integer.toString(sz2));
 
 	}
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
 
-		settings.put(LEN, Integer.toString(sz));
+		settings.put(LEN, Integer.toString(sz));	
+		settings.put(SLEN, Integer.toString(sz2));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 
@@ -408,6 +581,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	@Override
 	public boolean reset() {
 		sz= Prefs.getInt(LEN, 2);
+		sz2= Prefs.getInt(LEN, 4);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
 		fulloutput= Prefs.getBoolean(FULL_OUTPUT, true);
 		return true;
@@ -464,13 +638,9 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		StructureT_Filter_ filter=new StructureT_Filter_();
 		System.out.println("annotated fields");
 		System.out.println(filter.getAnotatedFileds());
-		
-	 
-
-
+	
 		//new ImagePlus("convovled",output).show();
-	 
-		
+	
 	}
 
 
