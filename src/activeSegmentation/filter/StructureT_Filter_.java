@@ -11,6 +11,7 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import ijaux.datatype.IComplexFArray;
 import ijaux.scale.*;
 
 import java.awt.*;
@@ -27,12 +28,15 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
+import fftscale.FFTConvolver;
+import fftscale.filter.FFTKernelLoG;
 
 /**
- * @version 	1.0 24 Oct 2019
+ * @version 	30 Dec 2020
 
  * 				
  *   
@@ -41,7 +45,7 @@ import dsp.Conv;
  *
  *
  * @contents
- * The plugin computes the eigenvalues of the Hessian matrix
+ * The plugin computes the eigenvalues of the Structure matrix
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -59,14 +63,14 @@ import dsp.Conv;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="HESSIAN", value="Hessian components", type=SEGM)
-public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
+@AFilter(key="STRUCTURE", value="Structure tensor", type=SEGM)
+public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
 	private PlugInFilterRunner pfr=null;
 
 	final int flags=DOES_ALL+KEEP_PREVIEW+ NO_CHANGES;
-	private String version="2.0";
+	private String version="1.0";
     @SuppressWarnings("unused")
 
 	private int nPasses=1;
@@ -74,8 +78,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
-	private static int sz= Prefs.getInt(LEN, 2);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	private boolean isEnabled=true;
 
 	private float[][] kernel=null;
@@ -90,14 +92,19 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	private boolean hasRoi=false;
 
+	@AFilterField(key=LEN, value="initial scale")
+	public int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "HESSIAN";
+	private final  String FILTER_KEY = "STRUCTURE";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Hessian components";
+	private final String FILTER_NAME = "Strcuture components";
 	
   	
 	/** It stores the settings of the Filter. */
@@ -190,22 +197,24 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		//GScaleSpace sp=new GScaleSpace(sigma);
 		float[] kernx= sp.gauss1D();
 		//System.out.println("kernx :"+kernx.length);
-		GScaleSpace.flip(kernx);		
-		float[] kern_diff2= sp.diff2Gauss1D();
-		GScaleSpace.flip(kern_diff2);
-		//System.out.println("kernx2 :"+kern_diff2.length);
+		GScaleSpace.flip(kernx);	
+
 		float[] kern_diff1=sp.diffGauss1D();
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
+		
+		//float[] kern_diff2= sp.diff2Gauss1D();
+		//GScaleSpace.flip(kern_diff2);
+		//System.out.println("kernx2 :"+kern_diff2.length);
 
 		kernel=new float[4][];
 		kernel[0]=kernx;
-		kernel[1]=kern_diff2;
-		kernel[2]=kern_diff1;
+		//kernel[1]=kern_diff2;
+		kernel[1]=kern_diff1;
 
-		float[] kernel2=sp.computeDiff2Kernel2D();
-		kernel[3]=kernel2;
-		GScaleSpace.flip(kernel2);  // symmetric but this is the correct way
+		//float[] kernel2=sp.computeDiff2Kernel2D();
+		//kernel[3]=kernel2;
+	//	GScaleSpace.flip(kernel2);  // symmetric but this is the correct way
 
 		int sz= sp.getSize();
 		if (debug && pass==1) {
@@ -230,16 +239,18 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
+		
+		/*
 		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
-
+		 */
 		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
 		cnv.convolveFloat1D(gradx, kernx, Oy);
 
 		cnv.convolveFloat1D(grady, kern_diff1, Oy);
 		cnv.convolveFloat1D(grady, kernx, Ox);
-
+/*
 		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
 		cnv.convolveFloat1D(lap_xx, kernx, Oy);
 
@@ -248,6 +259,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
 		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+		*/
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
@@ -259,73 +271,56 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		
 		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
 		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
+		FloatProcessor coher=new FloatProcessor(width, height); // coherence 
 
 		for (int i=0; i<width*height; i++) {
 			double gx=gradx.getf(i);
 			double gy=grady.getf(i);
 
 			/*
-			 *  components of the Hessian
+			 *  components of the Structure Tensor
 			 */
-			double gxy=lap_xy.getf(i);
-
-			double gxx=lap_xx.getf(i);
-			double gyy=lap_yy.getf(i);
+ 
 			
-			final double trace=gxx+gyy;
-			final double det=gxx*gyy- gxy*gxy;
+			final double trace=gx*gx+gy*gy;
+			final double det=gx*gx*gy*gy- gx*gy*gx*gy;
 			final double disc= sqrt(abs(trace*trace-4.0*det));
 			final double ee1=0.5*(trace+disc);
 			final double ee2=0.5*(trace-disc);
 
-//			double lx=2.0f*gx*gy*gxy;
-
-			gx*=gx;
-			gy*=gy;		
-//			double dt=gy*gxx+gx*gyy;
-//			double dx=gx*gxx+gy*gyy;
-		 		
+			final double l1=max(ee1, ee2);
+			final double l2=min(ee1, ee2);
+		    double coh=0;
+			if (l1+l2>0) 
+			   coh=(l1-l2)/(l1+l2);
+			
 			double amp=(gx+gy)+ 1e-6;
 			
-			/*
-			if (abs(amp) > 1e-4) { 	
-				float lt=(float)((dt-lx)/amp);
-				float ot=(float)((dx+lx)/amp);
-				
-				if (abs(lt) <1e-8) lt=0;
-				if (abs(ot) <1e-8) ot=0;	
-				
-				lap_t.setf(i, lt);
-				lap_o.setf(i, ot);
-			} 
-			*/
+ 
 			pamp.setf(i, (float) sqrt(amp));
 			
 			double phase1=sqrt(gy/amp);
 				//	phase1=asin(phase1);
 			phase.setf(i, (float) phase1);
 
-			eigen1.setf(i, (float) ee1);
-			eigen2.setf(i, (float) ee2);
-				
+			eigen1.setf(i, (float) l1);
+			eigen2.setf(i, (float) l2);
+			coher.setf(i, (float) coh);
 		}
 
 		if (fulloutput) {
 			imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
 			imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
-			imageStack.addSlice(FILTER_KEY+"XX_diff"+sigma, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"YY_diff"+sigma, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"XY_diff"+sigma, lap_xy);
 		}
 
 		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
 		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
+		imageStack.addSlice(FILTER_KEY+"Coh"+sigma, phase);
 		imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
-		//imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
+		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
+ 
 		eigen2.resetMinAndMax();
-		//imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);
-		//System.out.println("ALOG_FILTER");
+ 
 		return imageStack;
 	}
 
@@ -346,7 +341,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public int showDialog(ImagePlus imp, String command, PlugInFilterRunner pfr) {
 		this.pfr = pfr;
 		int r = (sz-1)/2;
-		GenericDialog gd=new GenericDialog("Hessian " + version);
+		GenericDialog gd=new GenericDialog("Structure Tensor " + version);
 
 		gd.addNumericField("half width", r, 2);
 		//gd.addNumericField("sigma", sigma, 1);
@@ -377,6 +372,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
 		//sigma = (float) (gd.getNextNumber());
@@ -411,7 +407,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 *
 	 * @param prefs
 	 */
-	public static void savePreferences(Properties prefs) {
+	public void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
 		// prefs.put(SIGMA, Float.toString(sigma));
 
@@ -448,12 +444,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public String getKey() {
 		return this.FILTER_KEY;
 	}
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-
+ 
 
 	@Override
 	public boolean isEnabled() {
@@ -464,10 +455,16 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled= isEnabled;
 	}
+	
+	@Override
+	public String getName() {
+		return this.FILTER_NAME;
+	}
+	
 
 	private double logKernel(double x){
 		final double x2=x*x;
-		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
+		return -(x)* exp(-0.5*x2)/(2.0*sqrt(PI));
 	}
 	
 	@Override
@@ -481,7 +478,18 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return data;
 	}
 
+	public static void main (String[] args) {
+		StructureT_Filter_ filter=new StructureT_Filter_();
+		System.out.println("annotated fields");
+		System.out.println(filter.getAnotatedFileds());
+		
+	 
 
+
+		//new ImagePlus("convovled",output).show();
+	 
+		
+	}
 
 
 }

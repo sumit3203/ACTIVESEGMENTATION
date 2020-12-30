@@ -115,7 +115,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	/** The pretty name of the target detector. */
 	//private  String FILTER_NAME = "Laplacian of Gaussian";
 
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 	
 	private boolean isEnabled=true;
 	
@@ -257,6 +257,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		sz = (int)(gd.getNextNumber());
 		debug = gd.getNextBoolean();
@@ -346,7 +347,8 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	public static void main (String[] args) {
 		LoG_Filter_ filter=new LoG_Filter_();
-		filter.getAnotatedFileds();
+		System.out.println("annotated fields");
+		System.out.println(filter.getAnotatedFileds());
 	}
 
 

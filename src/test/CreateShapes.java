@@ -70,8 +70,8 @@ public class CreateShapes {
 
 		CreateShapes shapes= new CreateShapes();
 
-       // shapes.simpleTest();
-		shapes.complexTest();
+       shapes.simpleTest();
+		//shapes.complexTest();
 
 	}
 

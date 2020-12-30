@@ -115,9 +115,10 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	private final String FILTER_NAME = "Gaussian Derivatives";
 
 	
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 
-	private ImageStack imageStack;
+	// do we keep this variable?
+	private ImageStack imageStack=null;
 
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
@@ -335,6 +336,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	}
 
 	// Called after modifications to the dialog. Returns true if valid input.
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		wnd = (int)(gd.getNextNumber());
 		int r = (int)(gd.getNextNumber());
