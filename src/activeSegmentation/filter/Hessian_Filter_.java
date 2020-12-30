@@ -147,7 +147,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		imageStack = filter(ip,sp,sz,imageStack);
 
 
-		image=new ImagePlus("ALoG result hw="+((sz-1)/2),imageStack);
+		image=new ImagePlus("Hessian result hw="+((sz-1)/2),imageStack);
 		image.show();
 	}
 

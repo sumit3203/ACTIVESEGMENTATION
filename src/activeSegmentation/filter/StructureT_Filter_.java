@@ -154,7 +154,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		imageStack = filter(ip,sp,sz,imageStack);
 
 
-		image=new ImagePlus("ALoG result hw="+((sz-1)/2),imageStack);
+		image=new ImagePlus("Structure result hw="+((sz-1)/2),imageStack);
 		image.show();
 	}
 
@@ -203,18 +203,14 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
 		
-		//float[] kern_diff2= sp.diff2Gauss1D();
-		//GScaleSpace.flip(kern_diff2);
-		//System.out.println("kernx2 :"+kern_diff2.length);
+ 
 
 		kernel=new float[4][];
 		kernel[0]=kernx;
-		//kernel[1]=kern_diff2;
+ 
 		kernel[1]=kern_diff1;
 
-		//float[] kernel2=sp.computeDiff2Kernel2D();
-		//kernel[3]=kernel2;
-	//	GScaleSpace.flip(kernel2);  // symmetric but this is the correct way
+ 
 
 		int sz= sp.getSize();
 		if (debug && pass==1) {
@@ -240,31 +236,17 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
 		
-		/*
-		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
-		 */
+ 
 		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
 		cnv.convolveFloat1D(gradx, kernx, Oy);
 
 		cnv.convolveFloat1D(grady, kern_diff1, Oy);
 		cnv.convolveFloat1D(grady, kernx, Ox);
-/*
-		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-		cnv.convolveFloat1D(lap_xx, kernx, Oy);
-
-		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-		cnv.convolveFloat1D(lap_yy, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
-		*/
+ 
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
-//		FloatProcessor lap_t=new FloatProcessor(width, height); // tangential component
-//		FloatProcessor lap_o=new FloatProcessor(width, height); // orthogonal component
+ 
 		
 		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
 		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
@@ -280,9 +262,10 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			/*
 			 *  components of the Structure Tensor
 			 */
- 
+			double amp=(gx*gx+gy*gy);
+			if (amp==0) amp+=1e-6;
 			
-			final double trace=gx*gx+gy*gy;
+			final double trace=amp;
 			final double det=gx*gx*gy*gy- gx*gy*gx*gy;
 			final double disc= sqrt(abs(trace*trace-4.0*det));
 			final double ee1=0.5*(trace+disc);
@@ -293,10 +276,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		    double coh=0;
 			if (l1+l2>0) 
 			   coh=(l1-l2)/(l1+l2);
-			
-			double amp=(gx+gy)+ 1e-6;
-			
- 
+	 
 			pamp.setf(i, (float) sqrt(amp));
 			
 			double phase1=sqrt(gy/amp);
@@ -309,15 +289,15 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		}
 
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
-			imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
+			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigma, gradx);
+			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigma, grady);
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"Coh"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
-		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
+		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
+		imageStack.addSlice(FILTER_KEY+"_Phase_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
+		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
  
 		eigen2.resetMinAndMax();
  
