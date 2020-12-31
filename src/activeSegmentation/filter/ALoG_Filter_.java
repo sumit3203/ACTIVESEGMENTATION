@@ -123,10 +123,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	 */
 	private Calibration cal=null;
 	
-	// do we need this
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
 	
 	/*
 	 * (non-Javadoc)

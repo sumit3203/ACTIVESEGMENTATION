@@ -128,9 +128,11 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	private Calibration cal=null;
 	
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
 	
 	/*
 	 * (non-Javadoc)

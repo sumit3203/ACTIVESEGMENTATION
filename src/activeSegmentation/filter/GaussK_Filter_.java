@@ -411,11 +411,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return true;
 	}
 
-
+   /*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
-
+ */
 
 
 	@Override
