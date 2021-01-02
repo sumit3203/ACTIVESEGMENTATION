@@ -1,0 +1,51 @@
+package activeSegmentation.moment;
+
+import java.util.HashMap;
+
+import java.util.Map;
+import java.util.Set;
+
+import ij.ImagePlus;
+import ij.measure.Measurements;
+import ij.measure.ResultsTable;
+import ij.process.ImageProcessor;
+import test.Analyzer;
+
+public class ImageJRoiFeatures {
+
+	Map<String, Integer > featureMap=new HashMap<>();
+	String key="imagej_features";
+	public  ImageJRoiFeatures() {
+		String headings[]=ResultsTable.getDefaultHeadings();
+		for(int i=0; i<headings.length; i++) {
+
+			featureMap.put(headings[i], i);
+		}
+
+
+	}
+
+	public String getKey() {
+		return this.key;
+	}
+	public Set<String> getFeatureNames(){
+
+		//keys.add(e)
+		return featureMap.keySet();
+	}
+	public double[] apply(ImageProcessor ip_roi){
+		ResultsTable xx=new ResultsTable();
+		Analyzer analyzer= new Analyzer(new ImagePlus("",ip_roi),Measurements.ALL_STATS, xx);
+		analyzer.run(ip_roi);
+		String headings[]=xx.getHeadings();
+		double outvector[]= new double[ResultsTable.getDefaultHeadings().length];
+		for(int i=0; i<headings.length; i++) {
+			double value=xx.getValue(headings[i], 0);
+			outvector[featureMap.get(headings[i])]=value;
+		}
+		//keys.add(e)
+		return outvector;
+	}
+
+
+}
