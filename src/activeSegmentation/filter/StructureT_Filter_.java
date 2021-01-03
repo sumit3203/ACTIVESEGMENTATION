@@ -407,11 +407,11 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			
 			final double xy=gx*gy;
 			gxy.setf(i, (float) xy);
-			double amp=(gx*gx+gy*gy);
+			double amp=sqrt(gx*gx+gy*gy);
 			if (amp==0) amp+=1e-6;
-			pamp.setf(i, (float) sqrt(amp));
+			pamp.setf(i, (float)  (amp));
 			
-			double phase1=sqrt(gy/amp);
+			double phase1= (gy/amp);
 				//	phase1=asin(phase1);
 			phase.setf(i, (float) phase1);
 		}

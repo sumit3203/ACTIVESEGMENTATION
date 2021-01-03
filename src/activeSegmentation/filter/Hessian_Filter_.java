@@ -121,7 +121,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	final int Ox=0, Oy=1, Oz=2;
 
-	// It is used to check whether to calibirate or not
+	// It is used to check whether to calibrate or not
 	private boolean doCalib = false;
 	/*
 	 * This variable is to calibrate the Image Window
@@ -254,8 +254,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
-//		FloatProcessor lap_t=new FloatProcessor(width, height); // tangential component
-//		FloatProcessor lap_o=new FloatProcessor(width, height); // orthogonal component
 		
 		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
 		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
@@ -281,30 +279,16 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			final double ee1=0.5*(trace+disc);
 			final double ee2=0.5*(trace-disc);
 
-//			double lx=2.0f*gx*gy*gxy;
 
-			gx*=gx;
-			gy*=gy;		
-//			double dt=gy*gxx+gx*gyy;
-//			double dx=gx*gxx+gy*gyy;
+			//gx*=gx;
+			//gy*=gy;		
 		 		
-			double amp=(gx+gy)+ 1e-6;
+			double amp=sqrt(gx*gx+gy*gy);
+			if (amp==0) amp+=1e-6;
 			
-			/*
-			if (abs(amp) > 1e-4) { 	
-				float lt=(float)((dt-lx)/amp);
-				float ot=(float)((dx+lx)/amp);
-				
-				if (abs(lt) <1e-8) lt=0;
-				if (abs(ot) <1e-8) ot=0;	
-				
-				lap_t.setf(i, lt);
-				lap_o.setf(i, ot);
-			} 
-			*/
-			pamp.setf(i, (float) sqrt(amp));
+			pamp.setf(i, (float)  (amp));
 			
-			double phase1=sqrt(gy/amp);
+			double phase1= (gy/amp);
 				//	phase1=asin(phase1);
 			phase.setf(i, (float) phase1);
 

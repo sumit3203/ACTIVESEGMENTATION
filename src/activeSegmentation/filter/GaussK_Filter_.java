@@ -527,9 +527,9 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			gy*=gy;		
 
 
-			double amp=(1+ gx+gy); 
+			double amp=(1.0+ gx+gy); 
 			
-			if (abs(amp) < 1.0e8) amp=1e-6;
+			//if (abs(amp) < 1.0e8) amp=1e-6;
 			
 			double damp=amp*amp;
 

@@ -200,7 +200,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			imageStack.addSlice( FILTER_KEY+"_" + sigma, fp);		
 		}
 		initialseimageStack(imageStack);
-		return new Pair<Integer,ImageStack>(index, imageStack);
+		return new Pair<>(index, imageStack);
 	}
 
 	@Override
