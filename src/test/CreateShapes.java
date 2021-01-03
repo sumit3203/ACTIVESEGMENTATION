@@ -174,6 +174,8 @@ public class CreateShapes {
 
 			//Roi roi= new Ro
 		}
+		ImagePlus image= new ImagePlus("", imageProcessor);
+		image.show();
 		return roiList;
 
 	}
