@@ -8,8 +8,9 @@ import java.util.Set;
 import ij.ImagePlus;
 import ij.measure.Measurements;
 import ij.measure.ResultsTable;
+import ij.plugin.filter.Analyzer;
 import ij.process.ImageProcessor;
-import test.Analyzer;
+
 
 public class ImageJRoiFeatures {
 

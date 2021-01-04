@@ -256,7 +256,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		
 		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
-		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
+		FloatProcessor sin_phase=new FloatProcessor(width, height); // phase of gradient
+		FloatProcessor cos_phase=new FloatProcessor(width, height); // phase of gradient
 		
 		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
 		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
@@ -288,31 +289,32 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			
 			pamp.setf(i, (float)  (amp));
 			
-			double phase1= (gy/amp);
+			double gsin= (gy/amp);
 				//	phase1=asin(phase1);
-			phase.setf(i, (float) phase1);
-
+			sin_phase.setf(i, (float) gsin);
+			double gcos= (gx/amp);
+			//	phase1=asin(phase1);
+			cos_phase.setf(i, (float) gcos);
 			eigen1.setf(i, (float) ee1);
 			eigen2.setf(i, (float) ee2);
 				
 		}
 
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
-			imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
-			imageStack.addSlice(FILTER_KEY+"XX_diff"+sigma, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"YY_diff"+sigma, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"XY_diff"+sigma, lap_xy);
+			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sz, gradx);
+			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sz, grady);
+			imageStack.addSlice(FILTER_KEY+"_XX_diff_"+sz, lap_xx);
+			imageStack.addSlice(FILTER_KEY+"_YY_diff_"+sz, lap_yy);
+			imageStack.addSlice(FILTER_KEY+"_XY_diff_"+sz, lap_xy);
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
-		imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
-		//imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
+		imageStack.addSlice(FILTER_KEY+"_Amp_"+sz, pamp);
+		imageStack.addSlice(FILTER_KEY+"_Sin_"+sz, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_E1_"+sz, eigen1);
+		imageStack.addSlice(FILTER_KEY+"_E2_"+sz, eigen2);
+ 
 		eigen2.resetMinAndMax();
-		//imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);
-		//System.out.println("ALOG_FILTER");
+ 
 		return imageStack;
 	}
 

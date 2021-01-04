@@ -296,8 +296,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 			} 
 			
 			pamp.setf(i, (float) sqrt(amp));
-			
-			double phase1=sqrt(gy/amp);
+			gy=grady.getf(i);
+			double phase1=gy/sqrt(amp);
 				//	phase1=asin(phase1);
 			phase.setf(i, (float) phase1);
 

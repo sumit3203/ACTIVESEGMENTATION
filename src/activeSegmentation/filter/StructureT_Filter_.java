@@ -383,8 +383,8 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
  
 		
 		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
-		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
-		
+		FloatProcessor sin_phase=new FloatProcessor(width, height); // phase of gradient
+		FloatProcessor cos_phase=new FloatProcessor(width, height); // phase of gradient
 		FloatProcessor gx2=new FloatProcessor(width, height); // gx^2 
 		FloatProcessor gy2=new FloatProcessor(width, height); // gy^2 
 		FloatProcessor gxy=new FloatProcessor(width, height); // gx*gy 
@@ -411,9 +411,12 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			if (amp==0) amp+=1e-6;
 			pamp.setf(i, (float)  (amp));
 			
-			double phase1= (gy/amp);
+			double gsin= (gy/amp);
 				//	phase1=asin(phase1);
-			phase.setf(i, (float) phase1);
+			sin_phase.setf(i, (float) gsin);
+			double gcos= (gy/amp);
+			//	phase1=asin(phase1);
+			cos_phase.setf(i, (float) gcos);
 		}
 		
 		if (fulloutput) {
@@ -421,7 +424,8 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigma, grady);
 		}
 		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"_Phase_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_Sin_"+sigma, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_Cos_"+sigma, cos_phase);
 		
 		// second smoothing step
 		
@@ -469,7 +473,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 
 
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, sin_phase);
 		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
 		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
  
