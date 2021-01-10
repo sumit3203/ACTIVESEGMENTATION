@@ -8,6 +8,7 @@ public interface IMoment<T>  extends IAnnotated, IFilter {
 	/**
 	 * Filter type: segmentation or classification
 	 */
+	@Override
 	default public FilterType getFilterType() {
 		return FilterType.CLASSIF;
 	}

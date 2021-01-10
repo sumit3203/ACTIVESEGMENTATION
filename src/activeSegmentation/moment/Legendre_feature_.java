@@ -32,8 +32,8 @@ public class Legendre_feature_ implements IMoment {
 
 	
 	//private ArrayList<Pair<String,Pair<String[],Double[]>>> moment_vector = new ArrayList<>();
-	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<Pair<String,double[]>>();
-	private Set<String> features=new HashSet<String>();
+	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<>();
+	private Set<String> features=new HashSet<>();
 
 	//private Pair<String,Pair<String[],Double>> moment_vector = new Pair<String,Pair<String[],Double>>[33];
 

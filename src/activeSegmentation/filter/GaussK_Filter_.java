@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.List;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -75,8 +76,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	public final static String SIGMA="GK_sigma", MAX_LEN="G_MAX", LEN="GK_len";
 
+	@AFilterField(key=LEN, value="initial scale")
 	private static int sz= Prefs.getInt(LEN, 2);
 	//private static float sigma=(float) Prefs.getDouble(SIGMA, 2.0f);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	private float[][] kernel=null;
@@ -88,13 +92,32 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	private boolean isFloat=false;
 
-	private boolean hasRoi=false;
+	//private boolean hasRoi=false;
 
 	final int Ox=0, Oy=1, Oz=2;
 
 	private boolean doCalib = false;
 	private Calibration cal=null;
-	private final int TYPE=1;
+	//private final int TYPE=1;
+	
+	
+	/* NEW VARIABLES*/
+
+	private boolean isEnabled=true;
+
+
+	/** A string key identifying this factory. */
+	private final  String FILTER_KEY = "CURVATURE";
+
+	/** The pretty name of the target detector. */
+	//private final String FILTER_NAME = "CURVATURE";
+	
+
+	/** It stores the settings of the Filter. */
+	private Map< String, String > settings= new HashMap<>();
+
+	/** It is the result stack*/
+	private ImageStack imageStack=null;
 
 	/**
 	 * 
@@ -106,7 +129,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	public int setup(String arg, ImagePlus imp) {
 		image=imp;
 		isFloat= (image.getType()==ImagePlus.GRAY32);
-		hasRoi=imp.getRoi()!=null;
+		//hasRoi=imp.getRoi()!=null;
 		cal=image.getCalibration();
 		return  flags;
 	}
@@ -132,116 +155,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 		imageStack = filter(ip,sp,imageStack);
 
-		/*
-		float[] kernx= sp.gauss1D();
-		SUtils.flip(kernx);		
-		float[] kern_diff2= sp.diff2Gauss1D();
-		SUtils.flip(kern_diff2);
-
-		float[] kern_diff1=sp.diffGauss1D();
-		SUtils.flip(kern_diff1);
-
-		kernel=new float[4][];
-		kernel[0]=kernx;
-		kernel[1]=kern_diff2;
-		kernel[2]=kern_diff1;
-
-		float[] kernel2=sp.computeDiff2Kernel2D();
-		kernel[3]=kernel2;
-		SUtils.flip(kernel2);  // symmetric but this is the correct way
-
-		int sz= sp.getSize();
-		if (debug && pass==1) {
-			FloatProcessor fpkern2=new FloatProcessor(sz,sz);
-			float[][] disp= new float[2][];
-			disp[0]=GScaleSpace.joinXY(kernel, 0, 1);
-			disp[1]=GScaleSpace.joinXY(kernel, 1, 0);
-			for (int i=0; i<sz*sz; i++)
-				fpkern2.setf(i, disp[0][i]+ disp[1][i]);
-			new ImagePlus("kernel sep",fpkern2).show();
-
-
-		}
-		long time=-System.nanoTime();	
-		FloatProcessor fpaux= (FloatProcessor) ip;
-
-		Conv cnv=new Conv();
-		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
-		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-		cnv.convolveFloat1D(lap_xx, kernx, Oy);
-		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-		cnv.convolveFloat1D(lap_yy, kernx, Ox);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
-		int width=ip.getWidth();
-		int height=ip.getHeight();
-		FloatProcessor lap_k1k2=new FloatProcessor(width, height); // Log Gaussian component
-		FloatProcessor lap_kk=new FloatProcessor(width, height); // mean curvature component
-
-
-		for (int i=0; i<width*height; i++) {
-			// components of the gradient
-			double gx=gradx.getf(i);
-			double gy=grady.getf(i);
-			// components of the Hessian
-			double gxy=lap_xy.getf(i);
-			double gxx=lap_xx.getf(i);
-			double gyy=lap_yy.getf(i);
-			double lx=2.0f*gx*gy*gxy;
-			double dx=gx*gy;
-			gx*=gx;
-			gy*=gy;		
-
-
-			double amp=(1+ gx+gy); 
-
-			double damp=amp*amp;
-
-			// Log Gaussian curvature
-			//https://en.wikipedia.org/wiki/Gaussian_curvature
-			float gk=(float)(  log( abs(( gxx*gyy - gxy*gxy) * damp) +1e-6)  );
-
-			// mean curvature
-			float mk=(float)(0.5*((1+gx)* gyy - 2.0*dx *gxy + (1+gy)*gxx  )/sqrt(amp*damp));
-
-			if (abs(gk) <1e-8) gk=0;
-			if (abs(mk) <1e-8) mk=0;	
-
-			lap_k1k2.setf(i, gk);
-			lap_kk.setf(i, mk);
-		}
-
-		ImageStack is=new ImageStack(width,height);
-		int apos=2;
-
-		if (fulloutput) {
-			is.addSlice("X diff", gradx);
-			is.addSlice("Y diff", grady);
-			is.addSlice("XX diff", lap_xx);
-			is.addSlice("YY diff", lap_yy);
-			is.addSlice("XY diff", lap_xy);
-			apos=5;
-		}
-		is.addSlice("Gauss  Log K1K2", lap_k1k2);
-		lap_kk.resetMinAndMax();
-		is.addSlice("Gauss  K1 + K2", lap_kk);
-
-		time+=System.nanoTime();
-		time/=1000.0f;
-		System.out.println("elapsed time: " + time +" us");
-		System.out.println("sigma: " + sp.getSigma() + 
-						   " scale: " + sp.getScale() + 
-						   " kernel size: "+ sp.getSize()
-						   );
-		 */
 
 		String stackloc="";
 
@@ -374,23 +287,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	}
 
 
-	/* NEW VARIABLES*/
 
-	private boolean isEnabled=true;
-
-
-	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "CURVATURE";
-
-	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "CURVATURE";
-	
-
-	/** It stores the settings of the Filter. */
-	private Map< String, String > settings= new HashMap<String, String>();
-
-	/** It is the result stack*/
-	private ImageStack imageStack=null;
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
@@ -407,7 +304,6 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		//fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-
 		return true;
 	}
 
@@ -567,7 +463,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		//System.out.println("elapsed time: " + time +" us");
+		System.out.println("elapsed time: " + time +" us");
 		/*System.out.println("sigma: " + sp.getSigma() + 
 				" scale: " + sp.getScale() + 
 				" kernel size: "+ sp.getSize()
@@ -577,7 +473,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return imageStack;
 	}
 
-
+/*
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
@@ -588,7 +484,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	public String getName() {
 		return this.FILTER_NAME;
 	}
-
+*/
 
 	@Override
 	public boolean isEnabled() {

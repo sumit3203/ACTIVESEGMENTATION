@@ -96,7 +96,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	
 	
 	/** It stores the settings of the Filter. */
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
 	private ImageStack imageStack;
