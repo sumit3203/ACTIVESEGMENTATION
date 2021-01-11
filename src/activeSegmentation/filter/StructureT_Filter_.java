@@ -159,7 +159,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
-		imageStack = filter2(ip,sp, sp2, imageStack);
+		imageStack = filter2(ip,sp, sp2, imageStack, 0);
 		// imageStack = filter(ip,sp, sp2, imageStack);
 
 		image=new ImagePlus("Structure result hw="+((sz-1)/2),imageStack);
@@ -174,7 +174,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			for (int sigma=sz2; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
 				GScaleSpace sp2=new GScaleSpace(sigma);
-				imageStack=filter2(image, sp, sp2, imageStack);
+				imageStack=filter2(image, sp, sp2, imageStack, sigma);
 				for(int j=1;j<=imageStack.getSize();j++){
 					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
@@ -319,7 +319,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 * @param sp gaussian scale space
 	 * @param sigma filter sigma
 	 */
-	private ImageStack filter2(ImageProcessor ip, GScaleSpace sp, GScaleSpace sp2, ImageStack imageStack){
+	private ImageStack filter2(ImageProcessor ip, GScaleSpace sp, GScaleSpace sp2, ImageStack imageStack, int sigmaFixed){
 
 		ip.snapshot();
 
@@ -336,6 +336,13 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		float[] kern_diff1=sp.diffGauss1D();
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
+		
+		int sigmaname=0;
+        if(sigmaFixed >0) {
+        	sigmaname=sigmaFixed;
+            
+        }
+        	
 		
 		double sigma=sp2.getSigma();
 
@@ -420,12 +427,12 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		}
 		
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigma, gradx);
-			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigma, grady);
+			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigmaname, gradx);
+			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigmaname, grady);
 		}
-		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"_Sin_"+sigma, sin_phase);
-		imageStack.addSlice(FILTER_KEY+"_Cos_"+sigma, cos_phase);
+		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigmaname, pamp);
+		imageStack.addSlice(FILTER_KEY+"_Sin_"+sigmaname, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_Cos_"+sigmaname, cos_phase);
 		
 		// second smoothing step
 		
@@ -473,9 +480,9 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 
 
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, sin_phase);
-		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
-		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigmaname, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_E2_"+sigmaname, eigen2);
+		imageStack.addSlice(FILTER_KEY+"_E1_"+sigmaname, eigen1);
  
 		eigen2.resetMinAndMax();
  
