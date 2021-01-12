@@ -312,10 +312,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 			imageStack.addSlice(FILTER_KEY+"XX_diff"+sigma, lap_xx);
 			imageStack.addSlice(FILTER_KEY+"YY_diff"+sigma, lap_yy);
 			imageStack.addSlice(FILTER_KEY+"XY_diff"+sigma, lap_xy);
+			imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
+			imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
+		
 		//imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
 		//imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
 		imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);

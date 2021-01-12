@@ -93,6 +93,8 @@ public interface ASCommon {
 	public static final String LEARNINGDIR="LEARNINGDIR";
 	public static final String IMAGESDIR="IMAGESDIR";
 	public static final String EVALUATIONDIR="EVALUATIONDIR";
+	public static final String TESTIMAGESDIR="TESTIMAGESDIR";
+	public static final String TESTFILTERSDIR="TESTFILTERSDIR";
 	
 	/*
 	 *  GUI constants
