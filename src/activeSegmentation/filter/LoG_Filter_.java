@@ -40,9 +40,9 @@ import static java.lang.Math.*;
  *              1.1	14 Oct 2013
  * 				- moved contratAdjust -> Conv
  * 				- changed brightness adjustment factor to sigma^2		
- * 				1.1 	18 Jul 2013
+ * 				1.1 18 Jul 2013
  * 				- refactoring
- * 				1.0		05 Feb 2013 
+ * 				1.0	05 Feb 2013 
  * 				Based on Mexican_Hat_Filter v 2.2
  * 				- common functionality is refactored in a library class
  * 				
@@ -52,7 +52,7 @@ import static java.lang.Math.*;
  *
  *
  * @contents
- * This pluign convolves an image with a Mexican Hat (Laplacian of Gaussian, LoG) filter
+ * This plugin convolves an image with a Mexican Hat (Laplacian of Gaussian, LoG) filter
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
