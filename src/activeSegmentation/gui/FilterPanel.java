@@ -4,6 +4,7 @@ package activeSegmentation.gui;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ijaux.datatype.Pair;
 import test.FilterField;
 import test.testFilterAnn;
 
@@ -61,7 +62,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> filerMap = new HashMap<>();
 	
-	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
+	private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -261,7 +262,10 @@ public class FilterPanel implements Runnable, ASCommon {
 		
 
 		List<JTextField> jtextList= new ArrayList<>();
-	//	List<JCheckBox> jcboxList= new ArrayList<>();
+		
+		//List<Pair<String, String>> skvList=new ArrayList<>();
+		
+//		List<JCheckBox> jcboxList= new ArrayList<>();
 		
 		for (String key: settingsMap.keySet()){
 
@@ -281,7 +285,7 @@ public class FilterPanel implements Runnable, ASCommon {
 //				if (value.equalsIgnoreCase("true"))
 //					cbox.setSelected(true);
 //				jcboxList.add(cbox);
-//				
+//	 
 //				cbox.addActionListener(new ActionListener() {
 //		    	    @Override
 //		    	    public void actionPerformed(ActionEvent event) {
@@ -292,7 +296,7 @@ public class FilterPanel implements Runnable, ASCommon {
 //		    	            System.out.println("cbox is disabled");
 //		    	        }
 //		    	    }
-//		    	}); 
+//		    	});  
 //			} else {
 				JTextField input= new JTextField(settingsMap.get(key));
 				input.setFont(ASCommon.FONT);
@@ -305,7 +309,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 		filerMap.put(filterName, jtextList);
 
-		//filerMap2.put(filterName, jcboxList);
+//		filerMap2.put(filterName, jcboxList);
 		
 		// enable button
 		JButton button= new JButton();
@@ -346,26 +350,37 @@ public class FilterPanel implements Runnable, ASCommon {
 		if(event==SAVE_BUTTON_PRESSED){
 
 			//System.out.println("");
-			String key= pane.getTitleAt( pane.getSelectedIndex());
-			int i=0;
-			Map<String,String> settingsMap= new HashMap<>();
+			final String key= pane.getTitleAt( pane.getSelectedIndex());
+//			int i=0;
+			final Map<String,String> settingsMap= new HashMap<>();
 			List<JTextField> l=filerMap.get(key);
 			ListIterator<JTextField> iter=l.listIterator();
+			//Set<String> ks=filterManager.getDefaultFilterSettings(key).keySet();
+			//System.out.println(ks);
 			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
-//				for (JTextField f: l) 
 //					settingsMap.put(settingsKey, f.getText());
 				//	settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
 				//settingsMap.put(settingsKey, l.get(i).getText());	
 				final String strval= iter.next().getText();
+				System.out.println("save/button "+settingsKey+" " + strval );
 				settingsMap.put(settingsKey, strval );
-				System.out.println("save/button "+settingsKey+" "+ l.get(i).getText() +" :: " + strval );
+	
+//				System.out.println("save/button "+settingsKey+" "+ l.get(i).getText() +" :: " + strval );
 //				List<JCheckBox> l2 = filerMap2.get(key);
 //				for (JCheckBox c:l2) {
 //					String bs=   Boolean.toString( c.isSelected());
 //					settingsMap.put(settingsKey, bs );
 //				}
-				i++;
+//				i++;
 			}
+			/*
+			 List<JCheckBox> lb = filerMap2.get(key);
+			 ListIterator<JCheckBox> iter2=lb.listIterator();
+				for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
+					final String strval= iter2.next().getText();
+					settingsMap.put(settingsKey, strval );
+				}
+			*/
 			filterManager.updateFilterSettings(key, settingsMap);		
 			filterManager.saveFiltersMetaData();
 			IJ.log("FILTER SETTINGS SAVED");
@@ -386,14 +401,17 @@ public class FilterPanel implements Runnable, ASCommon {
 	}
 
 	private void updateTabbedGui(String key){
-		int i=0;
+		//int i=0;
 		Map<String,String> settingsMap=filterManager.getDefaultFilterSettings(key);
+		List<JTextField> l=filerMap.get(key);
+		ListIterator<JTextField> iter=l.listIterator();
+		
 		for (String settingsKey: settingsMap.keySet() ){
-			//List<JTextField> l=filerMap.get(key);
-			//for (JTextField f: l) 
-			//	 f.setText(settingsMap.get(settingsKey));
-			filerMap.get(key).get(i).setText(settingsMap.get(settingsKey));
-			i++;
+			//filerMap.get(key).get(i).setText(settingsMap.get(settingsKey));
+			final String strval= settingsMap.get(settingsKey);
+			iter.next().setText(strval);
+			System.out.println("default/button "+settingsKey+" " + strval );
+			//i++;
 		}
 
 	}
