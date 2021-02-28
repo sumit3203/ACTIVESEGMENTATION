@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import java.util.Set;
@@ -348,11 +349,16 @@ public class FilterPanel implements Runnable, ASCommon {
 			String key= pane.getTitleAt( pane.getSelectedIndex());
 			int i=0;
 			Map<String,String> settingsMap= new HashMap<>();
+			List<JTextField> l=filerMap.get(key);
+			ListIterator<JTextField> iter=l.listIterator();
 			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
-//				List<JTextField> l=filerMap.get(key);
 //				for (JTextField f: l) 
 //					settingsMap.put(settingsKey, f.getText());
-					settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
+				//	settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
+				//settingsMap.put(settingsKey, l.get(i).getText());	
+				final String strval= iter.next().getText();
+				settingsMap.put(settingsKey, strval );
+				System.out.println("save/button "+settingsKey+" "+ l.get(i).getText() +" :: " + strval );
 //				List<JCheckBox> l2 = filerMap2.get(key);
 //				for (JCheckBox c:l2) {
 //					String bs=   Boolean.toString( c.isSelected());
