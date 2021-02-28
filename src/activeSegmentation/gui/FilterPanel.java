@@ -42,6 +42,7 @@ import javax.swing.JTextField;
 
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureManager;
@@ -87,7 +88,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 		this.filterList =GuiUtil.model();
 		this.filterList.setForeground(Color.ORANGE);
-		filerMap= new HashMap<String, List<JTextField>>();
+		filerMap= new HashMap<>();
 	}
 
 	@Override
@@ -123,6 +124,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 
 	private void loadFilters(){
+		// gets all detected filters in the path
 		Set<String> filters= filterManager.getAllFilters();  
 
 		System.out.println(filters);
@@ -131,6 +133,7 @@ public class FilterPanel implements Runnable, ASCommon {
 			if(filterManager.isFilterEnabled(filter)){
 				Map<String,String> settings =filterManager.getDefaultFilterSettings(filter);
 				Map<String,String> annotations = IFilterManager.getFieldAnnotations(filter);
+				//filterManager.get
 				if (annotations.isEmpty()) {
 					System.out.println("tab-"+filter);
 					pane.addTab(filter,null,
@@ -157,17 +160,21 @@ public class FilterPanel implements Runnable, ASCommon {
 		int  y=10;
 		if(size!=1)
 			addButton( new JButton(), "Previous", null, 10, 90, 95, 38,p,PREVIOUS_BUTTON_PRESSED , null);
-		if(size != maxFilters)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38,p ,NEXT_BUTTON_PRESSED , null);
-
+		IFilter instance=filterManager.getInstance(filterName);
+		String longname=instance.getName();
+		
 		if(image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
-			imagelabel.setBounds(100, 3,210,225);
+			imagelabel.setBounds(100, 3, 210, 225);
 			p.add(imagelabel);
 		}
 
-		List<JTextField> jtextList= new ArrayList<JTextField>();
+		if(size != maxFilters)
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38,p ,NEXT_BUTTON_PRESSED , null);
+
+	
+		List<JTextField> jtextList= new ArrayList<>();
 
 		for (String key: settingsMap.keySet()){
 			JLabel label= new JLabel(key);
@@ -200,19 +207,39 @@ public class FilterPanel implements Runnable, ASCommon {
 		panel.setLayout(null);
 
 		int  y=10;
+		// previous button
 		if (size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, panel, PREVIOUS_BUTTON_PRESSED , null);
-		if (size != maxFilters)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
-
+			addButton( new JButton(), "Previous", null, 10, 90, 90, 38, panel, PREVIOUS_BUTTON_PRESSED , null);
+		
+		IFilter instance=filterManager.getInstance(filterName);
+		String longname=instance.getName();
+		
+		// kernel plot
 		if (image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
-			imagelabel.setBounds(100, 3,210,225);
+			int offset1=3;
+			imagelabel.setBounds(100, offset1, 210, 225);
 			panel.add(imagelabel);
+			offset1+=225+2;
+			
+			JLabel label= new JLabel(longname);
+			
+			label.setFont(ASCommon.FONT);
+			label.setForeground(Color.BLACK);
+			
+			label.setBounds( 105, offset1, 210, 25 );
+			panel.add(label);
+			
 		}
+		
+		// next button
+		if (size != maxFilters)
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
 
-		List<JTextField> jtextList= new ArrayList<JTextField>();
+		
+
+		List<JTextField> jtextList= new ArrayList<>();
 
 		for (String key: settingsMap.keySet()){
 
@@ -246,9 +273,11 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 
 		filerMap.put(filterName, jtextList);
+		
+		// enable button
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filterName);
-		addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20,panel ,event, Color.GREEN);
+		addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20, panel ,event, Color.GREEN);
 
 
 		return panel;
@@ -291,7 +320,7 @@ public class FilterPanel implements Runnable, ASCommon {
 			//System.out.println("");
 			String key= pane.getTitleAt( pane.getSelectedIndex());
 			int i=0;
-			Map<String,String> settingsMap= new HashMap<String, String>();
+			Map<String,String> settingsMap= new HashMap<>();
 			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
 				settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
 				i++;
@@ -333,7 +362,7 @@ public class FilterPanel implements Runnable, ASCommon {
 
 	private void updateFilterList() {
 		Set<String> filters= filterManager.getAllFilters();  
-		Vector<String> listModel = new Vector<String>();
+		Vector<String> listModel = new Vector<>();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){
 
@@ -346,6 +375,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	}
 
 	private  MouseListener mouseListener = new MouseAdapter() {
+		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList<?> theList = ( JList<?>) mouseEvent.getSource();
 			if (mouseEvent.getClickCount() == 2) {

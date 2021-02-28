@@ -18,7 +18,7 @@ public interface IAnnotated {
 	 * @return Map<String, String>
 	 */
 	default Map<String, String> getAnotatedFileds(){		
-		final Map< String, String > afields= new HashMap<String, String>();
+		final Map< String, String > afields= new HashMap<>();
 		final Field [] fields = this.getClass().getFields();
 		for (Field field:fields)   {
 			if (field.isAnnotationPresent(AFilterField.class)) {

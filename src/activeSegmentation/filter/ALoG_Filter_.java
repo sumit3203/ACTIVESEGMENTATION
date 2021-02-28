@@ -91,7 +91,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	private final  String FILTER_KEY = "ALOG";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
+	//private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
 	
 	
 	
@@ -309,19 +309,19 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		if (fulloutput) {
 			//imageStack.addSlice(FILTER_KEY+"X_diff"+sigma, gradx);
 			//imageStack.addSlice(FILTER_KEY+"Y_diff"+sigma, grady);
-			imageStack.addSlice(FILTER_KEY+"XX_diff"+sigma, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"YY_diff"+sigma, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"XY_diff"+sigma, lap_xy);
-			imageStack.addSlice(FILTER_KEY+"Amp"+sigma, pamp);
-			imageStack.addSlice(FILTER_KEY+"Phase"+sigma, phase);
+			imageStack.addSlice(FILTER_KEY+"_XX_diff"+sigma, lap_xx);
+			imageStack.addSlice(FILTER_KEY+"_YY_diff"+sigma, lap_yy);
+			imageStack.addSlice(FILTER_KEY+"_XY_diff"+sigma, lap_xy);
+			imageStack.addSlice(FILTER_KEY+"_Amp"+sigma, pamp);
+			imageStack.addSlice(FILTER_KEY+"_Phase"+sigma, phase);
 		}
 
 		
 		//imageStack.addSlice(FILTER_KEY+"E1"+sigma, eigen1);
 		//imageStack.addSlice(FILTER_KEY+"E2"+sigma, eigen2);
-		imageStack.addSlice(FILTER_KEY+"Lap_T"+sigma, lap_t);
+		imageStack.addSlice(FILTER_KEY+"_Lap_T"+sigma, lap_t);
 		lap_o.resetMinAndMax();
-		imageStack.addSlice(FILTER_KEY+"Lap_O"+sigma, lap_o);
+		imageStack.addSlice(FILTER_KEY+"_Lap_O"+sigma, lap_o);
 		//System.out.println("ALOG_FILTER");
 		return imageStack;
 	}
@@ -439,6 +439,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		return true;
 	}
 
+	/*
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
@@ -448,7 +449,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	public String getName() {
 		return this.FILTER_NAME;
 	}
-
+	 */
 	
 	private double logKernel(double x){
 		final double x2=x*x;

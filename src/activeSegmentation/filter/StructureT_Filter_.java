@@ -85,6 +85,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
 
+	@AFilterField(key=FULL_OUTPUT, value="full output")
 	public boolean fulloutput=false;
 
 	private boolean isFloat=false;
@@ -97,10 +98,10 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	public int sz= Prefs.getInt(LEN, 2);
 	
 	// smoothing scale
-	@AFilterField(key=SLEN, value="signal scale")
+	@AFilterField(key=SLEN, value="min scale")
 	public int sz2= Prefs.getInt(LEN, 4);
 	
-	@AFilterField(key=MAX_LEN, value="max signal scale")
+	@AFilterField(key=MAX_LEN, value="max scale")
 	public int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	/* NEW VARIABLES*/
@@ -109,7 +110,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private final  String FILTER_KEY = "STRUCTURE";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Strcuture components";
+//	private final String FILTER_NAME = "Strcuture components";
 	
   	
 	/** It stores the settings of the Filter. */
@@ -623,11 +624,12 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		this.isEnabled= isEnabled;
 	}
 	
+	/*
 	@Override
 	public String getName() {
 		return this.FILTER_NAME;
 	}
-	
+	*/
 
 	private double logKernel(double x){
 		final double x2=x*x;

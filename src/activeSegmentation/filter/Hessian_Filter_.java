@@ -27,6 +27,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -75,6 +76,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
 	private static int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	private boolean isEnabled=true;
 

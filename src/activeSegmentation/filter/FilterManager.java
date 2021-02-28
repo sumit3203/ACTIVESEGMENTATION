@@ -50,7 +50,7 @@ import java.util.zip.ZipInputStream;
  */
 public class FilterManager extends URLClassLoader implements IFilterManager {
 
-	private Map<String, IFilter> filterMap= new HashMap<String, IFilter>();
+	private Map<String, IFilter> filterMap= new HashMap<>();
 
 
 
@@ -59,6 +59,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	private ProjectType projectType;
 
+	// what is the use?
 	private FeatureManager  featureManager;
 
 	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
@@ -88,13 +89,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
+	@Override
 	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
 		//File f=new File(home);
 		//String[] plugins = f.list();
-		List<String> classes=new ArrayList<String>();
+		List<String> classes=new ArrayList<>();
 		String cp=System.getProperty("java.class.path");
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
@@ -156,7 +158,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	}
 
-	private void addJar(File f) throws IOException {
+	private void addJar(File f) {
 		if (f.getName().endsWith(".jar")) {
 			try {
 				addURL(f.toURI().toURL());
@@ -167,7 +169,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		for (File file : images) {
@@ -309,10 +311,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				IJ.log("error reading settings " +filterName);
 			}
 			try {
+				IFilter instance=getInstance(filterName);
 				if (filter.get("enabled").equalsIgnoreCase("true"))
-					filterMap.get(filterName).setEnabled(true);
+					instance.setEnabled(true);
 				else
-					filterMap.get(filterName).setEnabled(false);
+					instance.setEnabled(false);
 			} catch (RuntimeException e) {
 				IJ.log("error enabling " +filterName);
 				e.printStackTrace();
@@ -323,7 +326,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
-		IFilter filter=filterMap.get(key);
+		IFilter filter=getInstance(key);
 		try {
 			return ((IFilterViz) filter).getImage();
 		} catch (Exception e) {
@@ -331,5 +334,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+
+	@Override
+	public IFilter getInstance(String key) {
+		return filterMap.get(key);
 	}
 }

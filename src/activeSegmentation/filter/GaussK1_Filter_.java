@@ -57,7 +57,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="CURVATURE", value="Gaussian Jet", type=SEGM)
+@AFilter(key="CURVATURE1", value="Gaussian Jet", type=SEGM)
 public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;

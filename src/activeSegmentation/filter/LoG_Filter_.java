@@ -119,6 +119,15 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private boolean isEnabled=true;
 	
+	
+	@Override
+	public String helpInfo() {
+		return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";
+	}
+	
+	
 	/**
 	 * 
 	 *	/* (non-Javadoc)
@@ -363,5 +372,6 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		}
 		return data;
 	}
+
 
 }

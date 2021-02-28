@@ -42,7 +42,7 @@ public interface IFilterManager {
 	 * @param diretory of filter
 	 *
 	 */
-	public Map<String, Map<String,String>> annotationMap= new HashMap<String, Map<String,String>>();
+	public Map<String, Map<String,String>> annotationMap= new HashMap<>();
 
 	public  void loadFilters(List<String> home)throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException;
@@ -71,7 +71,8 @@ public interface IFilterManager {
 	 */
 	public Map<String,String> getDefaultFilterSettings(String key);
 	
- 
+	
+	public IFilter getInstance(String key);
 	
 	/**
 	 * This method will update the setting of the particular filters 
