@@ -72,9 +72,9 @@ public class FeatureManager  {
 	private String projectString, featurePath;
 	private int sliceNum, totalSlices;
 	private List<String> images;
-	private Map<ProjectType, IFeature> featureMap = new HashMap<ProjectType, IFeature>();
+	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
-	private Map<String, ClassInfo> classes = new TreeMap<String, ClassInfo>();
+	private Map<String, ClassInfo> classes = new TreeMap<>();
 	private List<Color> defaultColors;
 	ClassifierManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
@@ -83,7 +83,7 @@ public class FeatureManager  {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
-		this.images = new ArrayList<String>();
+		this.images = new ArrayList<>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.FEATURESDIR);
@@ -267,7 +267,7 @@ public class FeatureManager  {
 	public List<Roi> getExamples(String key, String type, String imageKey) {
 		//System.out.println(key +"----"+type+"----"+imageKey);
 		if(LearningType.valueOf(type).equals(LearningType.TRAINING_TESTING)){
-			List<Roi> roiList=new ArrayList<Roi>();
+			List<Roi> roiList=new ArrayList<>();
 			if( classes.get(key).getTestingRois(imageKey)!=null) {
 				roiList.addAll(classes.get(key).getTestingRois(imageKey));
 			}
@@ -300,8 +300,8 @@ public class FeatureManager  {
 	public void addClass() {
 		String key = UUID.randomUUID().toString();
 		if (!classes.containsKey(key)) {
-			Map<String, List<Roi>> trainingRois = new HashMap<String, List<Roi>>();
-			Map<String, List<Roi>> testingRois = new HashMap<String, List<Roi>>();
+			Map<String, List<Roi>> trainingRois = new HashMap<>();
+			Map<String, List<Roi>> testingRois = new HashMap<>();
 			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
@@ -341,7 +341,7 @@ public class FeatureManager  {
 	}
 
 	private Map<String, List<Roi>> loadRois(String filename, Map<String, List<String>> roiMapper) {
-		Map<String, List<Roi>> roiMap = new HashMap<String, List<Roi>>();
+		Map<String, List<Roi>> roiMap = new HashMap<>();
 		List<Roi> classRoiList = openZip(featurePath + filename);
 		for (String imageKey : roiMapper.keySet()) {
 			roiMap.put(imageKey, getRois(classRoiList, roiMapper.get(imageKey)));
@@ -351,7 +351,7 @@ public class FeatureManager  {
 	}
 
 	private List<Roi> getRois(List<Roi> classRoiList, List<String> roiNames) {
-		List<Roi> roiList = new ArrayList<Roi>();
+		List<Roi> roiList = new ArrayList<>();
 		for (String name : roiNames) {			
 			for (Roi roi : classRoiList) {				
 				if (roi.getName().equalsIgnoreCase(name)) {
@@ -368,13 +368,13 @@ public class FeatureManager  {
 		projectInfo = projectManager.getMetaInfo();
 		projectInfo.resetFeatureInfo();
 		for (ClassInfo classInfo : classes.values()) {
-			List<Roi> classRois = new ArrayList<Roi>();
+			List<Roi> classRois = new ArrayList<>();
 			FeatureInfo featureInfo = new FeatureInfo();
 			featureInfo.setKey(classInfo.getKey());
 			featureInfo.setLabel(classInfo.getLabel());
 			featureInfo.setColor(classInfo.getColor().getRGB());
 			for (String imageKey : classInfo.getTrainingRoiSlices()) {
-				List<String> trainingRois = new ArrayList<String>();
+				List<String> trainingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTrainingRois(imageKey)) {
 					trainingRois.add(roi.getName());
 				}
@@ -382,7 +382,7 @@ public class FeatureManager  {
 				classRois.addAll(classInfo.getTrainingRois(imageKey));
 			}
 			for (String imageKey : classInfo.getTestingRoiSlices()) {
-				List<String> testingRois = new ArrayList<String>();
+				List<String> testingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTestingRois(imageKey)) {
 					testingRois.add(roi.getName());
 				}
@@ -457,9 +457,9 @@ public class FeatureManager  {
 	}
 
 	private List<Roi> openZip(String fileName) {
-		Hashtable<String, Roi> rois = new Hashtable<String, Roi>();
+		Hashtable<String, Roi> rois = new Hashtable<>();
 		ZipInputStream in = null;
-		List<Roi> roiList = new ArrayList<Roi>();
+		List<Roi> roiList = new ArrayList<>();
 		ByteArrayOutputStream out = null;
 		int nRois = 0;
 		try {
@@ -548,7 +548,8 @@ public class FeatureManager  {
 	        File dir = new File(dirName);
 
 	        return dir.listFiles(new FilenameFilter() { 
-	                 public boolean accept(File dir, String filename)
+	                 @Override
+					public boolean accept(File dir, String filename)
 	                      {return filename.toLowerCase().endsWith(".tif"); }
 	        } );
 
@@ -607,7 +608,7 @@ public class FeatureManager  {
 					}					
 				}				
 				
-				// iterate over all testing rois (of all the classes) and predict their output
+				// iterate over all testing ROIs (of all the classes) and predict their output
 				for(String key: getClassKeys()){					
 					testing_roi_list = classes.get(key).getTestingRois(image);
 					if(testing_roi_list!=null) {

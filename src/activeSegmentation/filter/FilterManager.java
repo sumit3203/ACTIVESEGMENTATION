@@ -180,13 +180,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		return imageList;
 	}
 
+	@Override
 	public void applyFilters(){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
-		Map<String,Set<String>> features= new HashMap<String,Set<String>>();
+		Map<String,Set<String>> features= new HashMap<>();
 
 		for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
@@ -210,27 +211,25 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	}
 
 
+	@Override
 	public Set<String> getAllFilters(){
-
-
 		return filterMap.keySet();
 	}
 
 
+	@Override
 	public Map<String,String> getDefaultFilterSettings(String key){
-
 		return filterMap.get(key).getDefaultSettings();
 	}
 
 
+	@Override
 	public boolean isFilterEnabled(String key){
-
-
-
 		return filterMap.get(key).isEnabled();
 	}
 
 
+	@Override
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
 		return filterMap.get(key).updateSettings(settingsMap);
 	}
@@ -238,7 +237,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 	private  List<String> installJarPlugins(String plugin) throws IOException {
-		List<String> classNames = new ArrayList<String>();
+		List<String> classNames = new ArrayList<>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
@@ -275,9 +274,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	public void saveFiltersMetaData(){	
 		projectInfo= projectManager.getMetaInfo();
 		//System.out.println("meta Info"+projectInfo.toString());
-		List<Map<String,String>> filterObj= new ArrayList<Map<String,String>>();
+		List<Map<String,String>> filterObj= new ArrayList<>();
 		for(String key: getAllFilters()){
-			Map<String,String> filters = new HashMap<String,String>();
+			Map<String,String> filters = new HashMap<>();
 			Map<String,String> filtersetting =getDefaultFilterSettings(key);
 			filters.put(ASCommon.FILTER, key);
 			for(String setting: filtersetting.keySet()){
