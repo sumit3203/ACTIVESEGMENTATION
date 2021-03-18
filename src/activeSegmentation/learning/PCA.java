@@ -11,6 +11,7 @@ public class PCA implements IFeatureSelection {
 private PrincipalComponents filter;
 	
 	private String selectionName="PCA";
+	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
 		//ASEvaluation asEvaluation=
@@ -37,6 +38,7 @@ private PrincipalComponents filter;
 		return new WekaDataSet(filteredIns);
 	}
 	
+	@Override
 	public IDataSet applyOnTestData(IDataSet data){
 		Instances filteredIns = null;
 		Instances testData= data.getDataset();

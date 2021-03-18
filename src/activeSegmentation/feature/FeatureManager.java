@@ -425,6 +425,7 @@ public class FeatureManager  {
 		return saveRois(filename, rois);
 	}
 
+	@SuppressWarnings("unused")
 	private boolean saveRois(String filename, List<Roi> rois) {
 		DataOutputStream out = null;
 		try {
@@ -456,6 +457,7 @@ public class FeatureManager  {
 
 	}
 
+	@SuppressWarnings("unused")
 	private List<Roi> openZip(String fileName) {
 		Hashtable<String, Roi> rois = new Hashtable<>();
 		ZipInputStream in = null;

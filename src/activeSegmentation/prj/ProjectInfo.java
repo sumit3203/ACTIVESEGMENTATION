@@ -58,11 +58,11 @@ public class ProjectInfo{
 	
 	private String testingStack="";
 	
-	private List<Map<String, String>> filters = new ArrayList<Map<String, String>>();
+	private List<Map<String, String>> filters = new ArrayList<>();
 	
-	private List<FeatureInfo> featureList = new ArrayList<FeatureInfo>();
+	private List<FeatureInfo> featureList = new ArrayList<>();
 	
-	private Map<String, String> learning = new HashMap<String, String>();
+	private Map<String, String> learning = new HashMap<>();
 	
 	private String groundtruth="";
 	
@@ -72,13 +72,13 @@ public class ProjectInfo{
 	 * JSON ignore
 	 */
 	@JsonIgnore
-	private Map<String, String> projectDirectory = new HashMap<String,String>();
+	private Map<String, String> projectDirectory = new HashMap<>();
 	
 	@JsonIgnore
-	private Map<String, Set<String>> featureNames = new HashMap<String, Set<String>>();
+	private Map<String, Set<String>> featureNames = new HashMap<>();
 	
 	@JsonIgnore
-	private Map<String,List<Pair<String,double[]>>> features=new HashMap<String,List<Pair<String,double[]>>>();
+	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
 	
 	@JsonIgnore
 	private IClassifier classifier;

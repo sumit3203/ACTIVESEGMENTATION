@@ -44,13 +44,14 @@ public class ProjectManager {
 	private static ProjectInfo projectInfo;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
-	private Map<String,String> projectDir=new HashMap<String,String>();
+	private Map<String,String> projectDir=new HashMap<>();
 	
 	/**
 	 * Read ARFF file
 	 * @param filename ARFF file name
 	 * @return set of instances read from the file
 	 */
+	@SuppressWarnings("unused")
 	public IDataSet readDataFromARFF(String filename){
 		try{
 			BufferedReader reader = new BufferedReader(
@@ -63,8 +64,11 @@ public class ProjectManager {
 				return new WekaDataSet(data);
 			} catch(IOException e){
 				e.printStackTrace();
-				IJ.showMessage("IOException");}
-		}	catch(FileNotFoundException e){IJ.showMessage("File not found!");}
+				IJ.showMessage("IOException");
+				}
+		} catch(FileNotFoundException e){
+			IJ.showMessage("File not found!");
+			}
 		return null;
 	}
 

@@ -4,7 +4,9 @@ package activeSegmentation.parallel;
 import java.util.*;
 import java.util.concurrent.*;
 
-
+/*
+ *  possibly to put in PixLib
+ */
 
 /*
  * basic implementation
@@ -16,7 +18,7 @@ public class ConcurentProcessor<T> extends ParallelFramework implements Callable
 
 	private ThreadPoolExecutor executor;
 	
-	private ArrayList<ForkJoinJob<T>> jobs=new ArrayList<ForkJoinJob<T>>();;
+	private ArrayList<ForkJoinJob<T>> jobs=new ArrayList<>();;
 	
 		
 	/*
@@ -94,7 +96,7 @@ public class ConcurentProcessor<T> extends ParallelFramework implements Callable
 	 */
 	public void exec(Executor e,  ArrayList<ForkJoinJob<T>> jobs)
 			throws InterruptedException {
-		ExecutorCompletionService <T> ecs = new ExecutorCompletionService<T>(e);
+		ExecutorCompletionService <T> ecs = new ExecutorCompletionService<>(e);
 		for (Callable<T> s : jobs) {
 			ecs.submit(s);
 		}

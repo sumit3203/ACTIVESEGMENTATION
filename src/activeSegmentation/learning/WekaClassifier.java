@@ -41,7 +41,6 @@ public class WekaClassifier implements IClassifier, Serializable {
 	private Classifier classifier;
 	
    public WekaClassifier(Classifier iClassifier) {
-		// TODO Auto-generated constructor stub
 	   this.classifier= iClassifier;
 	}
 
@@ -53,9 +52,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 */
 	@Override
 	public void buildClassifier(IDataSet instances) throws Exception {
-
 		classifier.buildClassifier(instances.getDataset());
-		//System.out.println(classifier.toString());
 	}
 
 	/**
