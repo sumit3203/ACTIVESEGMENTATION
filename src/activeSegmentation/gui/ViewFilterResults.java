@@ -139,7 +139,7 @@ public class ViewFilterResults extends ImageWindow  {
 
 	public void showPanel() {
 
-		frame = new JFrame("Feature Visualization");
+		frame = new JFrame("Feature Inspector");
 		roiPanel=new JPanel();
 		
 		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "NEXT_F" );
@@ -426,8 +426,9 @@ public class ViewFilterResults extends ImageWindow  {
 
 
 	private  MouseListener mouseListener = new MouseAdapter() {
+		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
-			JList theList = ( JList) mouseEvent.getSource();
+			JList<?> theList = ( JList<?>) mouseEvent.getSource();
 			if (mouseEvent.getClickCount() == 1) {
 				int index = theList.getSelectedIndex();
 
@@ -530,7 +531,7 @@ public class ViewFilterResults extends ImageWindow  {
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		for(String key:featureManager.getClassKeys()){
 			exampleList.get(key).removeAll();
-			Vector<String> listModel = new Vector<String>();
+			Vector<String> listModel = new Vector<>();
 
 			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString(), sliceNum); j++){	
 				listModel.addElement(key+ " "+ j + " " +
@@ -540,6 +541,7 @@ public class ViewFilterResults extends ImageWindow  {
 			exampleList.get(key).setForeground(featureManager.getClassColor(key));
 		}
 	}		
+	
 	/*public static void main(String[] args) {
 		new ImageJ();
 

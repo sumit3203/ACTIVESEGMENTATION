@@ -35,7 +35,7 @@ import static java.lang.Math.*;
  * 
  * 				
  * 				1.2 31 Oct 2019
- * 				- Active Segementation version
+ * 				- Active Segmentation version
  * 				1.1 10 Sept 2019
  * 				- bug fixes
  * 				1.0 24 Aug 2019
@@ -85,12 +85,12 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "FLOG";
+	//private final  String FILTER_KEY = "FLOG";
 
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "FFT Laplacian of Gaussian";
 
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 
 	private boolean isEnabled=true;
 
@@ -228,10 +228,11 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
+		String key=getKey();	
 		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
 			ImageProcessor fp=filter(image, sigma);
-			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
-			IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
+			String imageName=path+"/"+key+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 		}
 	}
 
@@ -251,11 +252,12 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	}
 	
+	/*
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
 	}
-
+	 */
 	@Override
 	public String getName() {
 		return this.FILTER_NAME;
