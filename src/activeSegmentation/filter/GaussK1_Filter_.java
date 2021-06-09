@@ -458,7 +458,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		//is.addSlice("Gauss  K1K2", lap_k1k2);
 		lap_kk.resetMinAndMax();
-		is.addSlice("Gauss  K1 + K2", lap_kk);
+		is.addSlice("Line curvature", lap_kk);
 		is.addSlice("Hess det", hesdet);
 		return is;
 	}

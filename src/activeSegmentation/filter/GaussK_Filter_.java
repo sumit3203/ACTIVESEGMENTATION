@@ -64,7 +64,7 @@ import static java.lang.Math.*;
 
 
 
-@AFilter(key="CURVATURE", value="Gaussian Jet", type=SEGM)
+@AFilter(key="CURVATURE", value="Curvature", type=SEGM)
 public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -401,7 +401,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
-		FloatProcessor lap_k1k2=new FloatProcessor(width, height); // Log Gaussian component
+		FloatProcessor lap_k1k2=new FloatProcessor(width, height); //  Gaussian  curvature component
 		FloatProcessor lap_kk=new FloatProcessor(width, height); // mean curvature component
 
 
@@ -457,7 +457,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			//apos=5;
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Gauss_Log_K1K2"+r, lap_k1k2);
+		imageStack.addSlice(FILTER_KEY+"Gauss_K1*K2"+r, lap_k1k2);
 		lap_kk.resetMinAndMax();
 		imageStack.addSlice(FILTER_KEY+"Gauss_K1+K2"+r, lap_kk);
 
