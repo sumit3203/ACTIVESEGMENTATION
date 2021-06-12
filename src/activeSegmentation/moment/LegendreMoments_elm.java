@@ -133,7 +133,7 @@ public class LegendreMoments_elm {
         return moment_matrix;
     }
 
-    // returns nth order moment of the ith row,
+    // returns nth order moment of the i-th row,
 
     private double row_moment(int i, int n, int N, ImageProcessor ip){
         double row_moment_value = 0.0;

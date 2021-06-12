@@ -19,7 +19,10 @@ import ij.process.ImageProcessor;
 public class IJstat_feature_ {
 
 	Map<String, Integer > featureMap=new HashMap<>();
+	
+	
 	String key="imagej_features";
+	
 	public  IJstat_feature_() {
 		String headings[]=ResultsTable.getDefaultHeadings();
 		for(int i=0; i<headings.length; i++) {
@@ -33,11 +36,11 @@ public class IJstat_feature_ {
 	public String getKey() {
 		return this.key;
 	}
+	
 	public Set<String> getFeatureNames(){
-
-		//keys.add(e)
 		return featureMap.keySet();
 	}
+	
 	public double[] apply(ImageProcessor ip_roi){
 		ResultsTable xx=new ResultsTable();
 		Analyzer analyzer= new Analyzer(new ImagePlus("",ip_roi),Measurements.ALL_STATS, xx);

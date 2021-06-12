@@ -30,13 +30,10 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 	private  int degree = Prefs.getInt(DEGREE, 6);
 	private boolean isEnabled=true;
 
-	
-	//private ArrayList<Pair<String,Pair<String[],Double[]>>> moment_vector = new ArrayList<>();
 	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<>();
 	private Set<String> features=new HashSet<>();
 
-	//private Pair<String,Pair<String[],Double>> moment_vector = new Pair<String,Pair<String[],Double>>[33];
-
+ 
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
@@ -44,7 +41,7 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 	public static final String LM_FEATURE_KEY = "LM";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Legendre Moment Filter";
+	private final String FILTER_NAME = "Legendre Moments";
 
 	//private final int TYPE=2;
 	// 1 Means Segmentation
