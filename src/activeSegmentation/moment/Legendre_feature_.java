@@ -21,8 +21,8 @@ import java.util.List;
 /**
  */
 
-@AFilter(key="LM", value="Legendre Moment Filter", type=CLASSIF)
-public class Legendre_feature_ implements IMoment {
+@AFilter(key="LM", value="Legendre Moments", type=CLASSIF)
+public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 
 	public static boolean debug=IJ.debugMode;
 	public final static String DEGREE = "Degree";

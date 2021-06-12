@@ -32,7 +32,7 @@ import ijaux.moments.zernike.ZernikeMoment;
 import ijaux.scale.Pair;
 
 @AFilter(key="ZMC", value="Zernike Moments", type=CLASSIF)
-public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment {
+public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<ArrayList<?>> {
 
 	final int flags=DOES_ALL+ NO_CHANGES;
 	public final static String DEG="Degree";
@@ -45,21 +45,17 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment {
 	private final  String FILTER_KEY = "ZMC";
 	private final static String ZM_FEATURE_KEY = "ZM";
 	
-	//private ImagePlus img;
-	
-	/** It is the result stack*/
-	//private ImageStack imageStack;
-	
+  	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<String, String>();
 	
 	private boolean isEnabled=true;
 
-	//private int nPasses=1;
+ 
 	
 	/** The pretty name of the target detector. */
 	private final String FILTER_NAME = "Zernike Moments";
-	//private final int TYPE=2;
+ 
 	
 	ZernikeMoment zm = null;
 	

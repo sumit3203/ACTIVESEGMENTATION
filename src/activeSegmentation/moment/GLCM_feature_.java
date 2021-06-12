@@ -32,7 +32,7 @@ import java.util.List;
 	  5 - Entropy;
 	  6 - Homogeneity;
  */
-@AFilter(key="GLCM", value="Texture Descriptors Filter", type=CLASSIF)
+@AFilter(key="GLCM", value="Haraick Texture Features", type=CLASSIF)
 public class GLCM_feature_ implements IMoment<ArrayList<?>>  {
 
 	public static boolean debug=IJ.debugMode;
@@ -74,7 +74,7 @@ public class GLCM_feature_ implements IMoment<ArrayList<?>>  {
 	    ic.convertToGray8();
 	    ip=imp.getProcessor();
 
-		GLCMTextureDescriptors glcm = new GLCMTextureDescriptors();
+		GLCMTexture glcm = new GLCMTexture();
 		
 		//features has DIRECTIONS*DISTANCES*NO_OF_DESCRIPTORS (HERE 4*1*7) size
 		double[] moment_values = new double[features.size()];

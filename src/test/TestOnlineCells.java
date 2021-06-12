@@ -13,7 +13,7 @@ import java.util.Set;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.moment.GLCM_feature_;
-import activeSegmentation.moment.ImageJRoiFeatures;
+import activeSegmentation.moment.IJstat_feature_;
 import activeSegmentation.moment.Legendre_feature_;
 import activeSegmentation.moment.Zernike_feature_;
 import ij.IJ;
@@ -37,7 +37,7 @@ public class TestOnlineCells {
 	Legendre_feature_ legendre_filter_=new Legendre_feature_();
 	GLCM_feature_ glcm_Filter_= new GLCM_feature_();
 	Zernike_feature_ zernike_Filter_= new Zernike_feature_();
-	ImageJRoiFeatures imageJfeatures= new ImageJRoiFeatures();
+	IJstat_feature_ imageJfeatures= new IJstat_feature_();
 	// create attribute list
 	Map<String, Set<String>> featureNames= new HashMap<>();
 	int numberOfFeatures=0;
