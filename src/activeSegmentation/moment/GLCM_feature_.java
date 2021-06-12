@@ -24,13 +24,20 @@ import java.util.List;
 /*
  *  convention 1->1  / filter
  *  		   N->1  / feature
+ *    0 -  Angular2ndMoment;
+ 	  1 - Contrast;
+ 	  2 - Correlation;
+	  3 - Dissimilarity;
+	  4 - Energy;
+	  5 - Entropy;
+	  6 - Homogeneity;
  */
 @AFilter(key="GLCM", value="Texture Descriptors Filter", type=CLASSIF)
-public class GLCM_feature_ implements IMoment {
+public class GLCM_feature_ implements IMoment<ArrayList<?>>  {
 
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;
-	public static final int [] DIRECTIONS = {270,360,90,180};
+	public static final int [] DIRECTIONS = {270, 360, 90, 180};
 	public static final int [] DISTANCES = {1,2,3};
 	
 	public static final String ASM_FEATURE_KEY = "ASM";
@@ -60,7 +67,8 @@ public class GLCM_feature_ implements IMoment {
 	private Map<String, String> settings= new HashMap<>();
 
 
-	public  Pair<String,double[]> filter(ImageProcessor ip,String roi_name){
+	public  Pair<String,double[]> filter(ImageProcessor ip, String roi_name){
+		//TODO review later: not economical
 		ImagePlus imp = new ImagePlus("tempglcm", ip);
 		ImageConverter ic= new ImageConverter(imp);
 	    ic.convertToGray8();
@@ -202,13 +210,11 @@ public class GLCM_feature_ implements IMoment {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return isEnabled;
 	}
 
 	@Override
 	public void setEnabled(boolean isEnabled) {
-		// TODO Auto-generated method stub
 		this.isEnabled= isEnabled;
 	}
 
@@ -219,13 +225,11 @@ public class GLCM_feature_ implements IMoment {
 
 	@Override
 	public ArrayList<Pair<String,double[]>> getFeatures() {
-		// TODO Auto-generated method stub
 		return feature_vector;
 	}
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return this.features;
 	}
 
