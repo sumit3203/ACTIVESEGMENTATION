@@ -182,8 +182,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public void applyFilters(){
-		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);

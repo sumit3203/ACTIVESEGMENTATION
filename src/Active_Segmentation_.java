@@ -1,4 +1,6 @@
 
+import java.io.File;
+
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.gui.CreateProjectUI;
@@ -21,8 +23,8 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 	/**
-	 * This method will be an entry point into the Plugin. All the
-	 * dependency are inject through this class. This method is written according to 
+	 * This method will be an entry point into the Plugin. 
+	 * This method is written according to 
 	 * ImageJ plugin loading requirements
 	 * @param parameter for imageJ
 	 *
@@ -39,24 +41,29 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 
-
+	/**
+	 * Stand alone operation
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		/*try {
+		 try {
 			File f=new File(args[0]);
 			if (f.exists() && f.isDirectory() ) {
 				System.setProperty("plugins.dir", args[0]);
+				
+				new ImageJ();
+				Active_Segmentation_ as=new Active_Segmentation_();
+				as.run("");
 	 		} else {
 				throw new IllegalArgumentException();
 			}
-		}
-		catch (Exception ex) {
-			IJ.log("plugins.dir misspecified\n");
+		}	catch (Exception ex) {
+			IJ.log("plugins.dir misspecified\n"
+					+ "To run the platform in stand-alone mode specify plugins.dir");
 			ex.printStackTrace();
-		}*/
+		} 
 		
-		new ImageJ();
-		Active_Segmentation_ as=new Active_Segmentation_();
-		as.run("");
+		
 	}
 
 }

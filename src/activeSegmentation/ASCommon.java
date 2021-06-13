@@ -85,16 +85,29 @@ public interface ASCommon {
 	public static final String LEARNINGTYPE="learningType";
 	// session file name
 	public static final String FILENAME="project.json";
-	
-	public static final String TRAININGIMAGE="trainingstack";
-	public static final String PROJECTDIR="PROJECTDIR";
-	public static final String FEATURESDIR="FEATURESDIR";
-	public static final String FILTERSDIR="FILTERSDIR";
-	public static final String LEARNINGDIR="LEARNINGDIR";
-	public static final String IMAGESDIR="IMAGESDIR";
-	public static final String EVALUATIONDIR="EVALUATIONDIR";
-	public static final String TESTIMAGESDIR="TESTIMAGESDIR";
-	public static final String TESTFILTERSDIR="TESTFILTERSDIR";
+	/*  
+	 * folder structure
+	 * 
+	 *  projectDir.put(ASCommon.PROJECTDIR, projectString);
+		projectDir.put(ASCommon.FILTERSDIR, projectString+"/filters/");
+		projectDir.put(ASCommon.FEATURESDIR, projectString+"/features/");
+		projectDir.put(ASCommon.LEARNINGDIR, projectString+"/learning/");
+		projectDir.put(ASCommon.EVALUATIONDIR,projectString+"/evaluation/");
+		projectDir.put(ASCommon.IMAGESDIR,projectString+"/images/");
+		projectDir.put(ASCommon.TESTIMAGESDIR,projectString+"/testimages/");
+		projectDir.put(ASCommon.TESTFILTERSDIR,projectString+"/testfilters/");
+		
+	 */
+	/* keys */
+	public static final String K_TRAININGIMAGE="trainingstack";
+	public static final String K_PROJECTDIR="PROJECTDIR";
+	public static final String K_FEATURESDIR="FEATURESDIR";
+	public static final String K_FILTERSDIR="FILTERSDIR";
+	public static final String K_LEARNINGDIR="LEARNINGDIR";
+	public static final String K_IMAGESDIR="IMAGESDIR";
+	public static final String K_EVALUATIONDIR="EVALUATIONDIR";
+	public static final String K_TESTIMAGESDIR="TESTIMAGESDIR";
+	public static final String K_TESTFILTERSDIR="TESTFILTERSDIR";
 	
 	/*
 	 *  GUI constants

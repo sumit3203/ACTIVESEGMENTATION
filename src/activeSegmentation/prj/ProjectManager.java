@@ -242,8 +242,8 @@ public class ProjectManager {
 		if(currentImage.getStackSize()>0) {
 			createStackImage(currentImage,format,folder);
 		}else {
-			createDirectory(projectDir.get(ASCommon.FILTERSDIR)+folder);
-			IJ.saveAs(currentImage,format,projectDir.get(ASCommon.IMAGESDIR)+folder);
+			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+folder);
+			IJ.saveAs(currentImage,format,projectDir.get(ASCommon.K_IMAGESDIR)+folder);
 
 		}
 
@@ -259,8 +259,8 @@ public class ProjectManager {
 			String title= folder+i;
 			IJ.log(folder);
 			IJ.log(title);
-			createDirectory(projectDir.get(ASCommon.FILTERSDIR)+title);
-			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.IMAGESDIR)+title);
+			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+title);
+			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+title);
 		}
 		IJ.log("createStackdone");
 	}
@@ -303,27 +303,27 @@ public class ProjectManager {
 			projectString=projectDirectory+"/"+"Training";
 		}
 		
-		projectDir.put(ASCommon.PROJECTDIR, projectString);
-		projectDir.put(ASCommon.FILTERSDIR, projectString+"/filters/");
-		projectDir.put(ASCommon.FEATURESDIR, projectString+"/features/");
-		projectDir.put(ASCommon.LEARNINGDIR, projectString+"/learning/");
-		projectDir.put(ASCommon.EVALUATIONDIR,projectString+"/evaluation/");
-		projectDir.put(ASCommon.IMAGESDIR,projectString+"/images/");
-		projectDir.put(ASCommon.TESTIMAGESDIR,projectString+"/testimages/");
-		projectDir.put(ASCommon.TESTFILTERSDIR,projectString+"/testfilters/");
+		projectDir.put(ASCommon.K_PROJECTDIR, projectString);
+		projectDir.put(ASCommon.K_FILTERSDIR, projectString+"/filters/");
+		projectDir.put(ASCommon.K_FEATURESDIR, projectString+"/features/");
+		projectDir.put(ASCommon.K_LEARNINGDIR, projectString+"/learning/");
+		projectDir.put(ASCommon.K_EVALUATIONDIR,projectString+"/evaluation/");
+		projectDir.put(ASCommon.K_IMAGESDIR,projectString+"/images/");
+		projectDir.put(ASCommon.K_TESTIMAGESDIR,projectString+"/testimages/");
+		projectDir.put(ASCommon.K_TESTFILTERSDIR,projectString+"/testfilters/");
 	}
 	
 	private void createProjectSpace(String projectDirectory, String projectName) {
 
 		setProjectDir(projectDirectory, projectName);
-		createDirectory(projectDir.get(ASCommon.PROJECTDIR));
-		createDirectory(projectDir.get(ASCommon.FILTERSDIR));
-		createDirectory(projectDir.get(ASCommon.FEATURESDIR));
-		createDirectory(projectDir.get(ASCommon.LEARNINGDIR));
-		createDirectory(projectDir.get(ASCommon.EVALUATIONDIR));
-		createDirectory(projectDir.get(ASCommon.IMAGESDIR));
-		createDirectory(projectDir.get(ASCommon.TESTIMAGESDIR));
-		createDirectory(projectDir.get(ASCommon.TESTFILTERSDIR));
+		createDirectory(projectDir.get(ASCommon.K_PROJECTDIR));
+		createDirectory(projectDir.get(ASCommon.K_FILTERSDIR));
+		createDirectory(projectDir.get(ASCommon.K_FEATURESDIR));
+		createDirectory(projectDir.get(ASCommon.K_LEARNINGDIR));
+		createDirectory(projectDir.get(ASCommon.K_EVALUATIONDIR));
+		createDirectory(projectDir.get(ASCommon.K_IMAGESDIR));
+		createDirectory(projectDir.get(ASCommon.K_TESTIMAGESDIR));
+		createDirectory(projectDir.get(ASCommon.K_TESTFILTERSDIR));
 		IJ.log("DONE");
 	}
 	

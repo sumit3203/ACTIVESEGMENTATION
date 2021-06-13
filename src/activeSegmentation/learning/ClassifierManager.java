@@ -55,9 +55,9 @@ public class ClassifierManager  {
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
     	System.out.println("in training");
-    	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.LEARNINGDIR));
+    	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
-		System.out.println(this.metaInfo.getProjectDirectory().get(ASCommon.LEARNINGDIR)+this.metaInfo.getGroundtruth());
+		System.out.println(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+this.metaInfo.getGroundtruth());
 		try {
 			System.out.println("ClassifierManager: in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());

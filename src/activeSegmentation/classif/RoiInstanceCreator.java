@@ -67,7 +67,7 @@ public class RoiInstanceCreator implements IFeature {
 	public RoiInstanceCreator(ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		//this.classLabels=new ArrayList<String>();
-		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
+		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		this.images=new ArrayList<String>();
 		loadImages(this.projectString);
 	}

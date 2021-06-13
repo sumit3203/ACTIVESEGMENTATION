@@ -20,6 +20,7 @@ import java.util.zip.ZipInputStream;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
+import activeSegmentation.IFilter;
 import activeSegmentation.LearningType;
 import activeSegmentation.IFilterViz;
 import activeSegmentation.IMoment;
@@ -63,7 +64,7 @@ import ijaux.datatype.Pair;
 public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	
-	private Map<String, IMoment> momentMap= new HashMap<String, IMoment>();
+	private Map<String, IMoment<?>> momentMap= new HashMap<String, IMoment<?>>();
 
 	
 	private ProjectManager projectManager;
@@ -145,7 +146,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 					if (projectType==ProjectType.CLASSIF  ) {
 						if (ft==FilterType.CLASSIF) {
 							System.out.println("in classification");
-							IMoment	moment =(IMoment) ianno;
+							IMoment<?>	moment =(IMoment<?>) ianno;
 							Map<String, String> fmap=moment.getAnotatedFileds();
 							annotationMap.put(pkey, fmap);
 							momentMap.put(pkey, moment);
@@ -192,8 +193,8 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 	public void applyFilters(){
-		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
@@ -232,21 +233,16 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 
 	public Set<String> getAllFilters(){
-
-		
 		return momentMap.keySet();
 	}
 
 
 	public Map<String,String> getDefaultFilterSettings(String key){
-		
 		return momentMap.get(key).getDefaultSettings();
 	}
 
 
 	public boolean isFilterEnabled(String key){
-
-
 		return momentMap.get(key).isEnabled();
 	}
 
@@ -345,7 +341,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
-		IMoment filter=momentMap.get(key);
+		IMoment<?> filter=momentMap.get(key);
 		try {
 			return ((IFilterViz) filter).getImage();
 		} catch (Exception e) {
@@ -356,6 +352,10 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 
+	@Override
+	public IFilter getInstance(String key) {
+		return momentMap.get(key);
+	}
 
 
 

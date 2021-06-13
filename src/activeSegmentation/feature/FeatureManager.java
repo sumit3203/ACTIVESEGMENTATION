@@ -84,9 +84,9 @@ public class FeatureManager  {
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
 		this.images = new ArrayList<>();
-		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
+		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
-		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.FEATURESDIR);
+		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
 		this.totalSlices = loadImages(this.projectString);
 		this.defaultColors = GuiUtil.setDefaultColors();
 		if (this.totalSlices > 0) {

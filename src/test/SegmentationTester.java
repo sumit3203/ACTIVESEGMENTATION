@@ -66,8 +66,8 @@ public class SegmentationTester {
 	public void run(String trainingImage, String trainlabels, String[] labels, String testImageTiff, String testLabelTiff) throws Exception {
 
 		loadDataset(trainingImage, trainlabels);
-		String trainDir=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
-		String featuresDir=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		String trainDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String featuresDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		applyFilters(trainDir, featuresDir);
 		for(String cellType: labels) {
@@ -84,8 +84,8 @@ public class SegmentationTester {
 		saveResult(trainDir, traininglabels, featuresDir);
 		
 		//testing
-		String testImagesDir=this.projectInfo.getProjectDirectory().get(ASCommon.TESTIMAGESDIR);
-		String testFilterDir=this.projectInfo.getProjectDirectory().get(ASCommon.TESTFILTERSDIR);
+		String testImagesDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTIMAGESDIR);
+		String testFilterDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTFILTERSDIR);
 		ImagePlus testImage=new ImagePlus(testImageTiff);
 		createStackImage(testImage, ".tif", testImagesDir, testFilterDir);
 		applyFilters(testImagesDir, testFilterDir);
@@ -97,7 +97,7 @@ public class SegmentationTester {
 	}
 
 	public void saveResult(String dir, ImagePlus currentImage, String featuresDir) throws Exception {
-		String segPath = this.projectInfo.getProjectDirectory().get(ASCommon.FEATURESDIR);
+		String segPath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
 		List<String>images= loadImages(dir);
 		//now classificationResult has predictions of all pixels of one particular image
 		for(String image: images) {
@@ -168,8 +168,8 @@ public class SegmentationTester {
 	}
 
 	public  List<Instance> createTrainingInstance(ImagePlus labelImage) {
-		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		List<String>images= loadImages(projectString);
 		List<Instance> instances= new ArrayList<>();
 		ImageStack imageStack= labelImage.getImageStack();

@@ -106,7 +106,7 @@ public class ViewFilterResults extends ImageWindow  {
 		this.allexampleList = new HashMap<String, JList<String>>();
 		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
 		this.projectInfo=this.projectManager.getMetaInfo();
-		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		this.setVisible(false);
 		showPanel();
 	}

@@ -73,11 +73,11 @@ public class PixelInstanceCreator implements IFeature {
 	private String projectString;
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
-		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.IMAGESDIR);
+		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		this.images=new ArrayList<String>();
 		loadImages(this.projectString);
 		this.classLabels=new ArrayList<String>();
-		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.FILTERSDIR);
+		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		updateFeatures();
 	}
 
