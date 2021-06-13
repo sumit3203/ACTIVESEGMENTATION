@@ -69,9 +69,9 @@ public interface ASCommon {
 	public static final String COMMENT="Comment";
 	public static final String DEFAULTCOMMENT=" DefaultComment";
 	public static final String CREATEDATE="CreateDate";
-	public static final String  MODIFYDATE="ModifyDate";
-	public static final String  PATH="Path";
-	public static final String  FORMAT=".zip";
+	//public static final String MODIFYDATE="ModifyDate";
+	public static final String PATH="Path";
+	public static final String FORMAT=".zip";
 	public static final String ROILIST="RoiList";
 	public static final String FILTERFILELIST="FilterFileList";
 	// type of learning
@@ -87,16 +87,6 @@ public interface ASCommon {
 	public static final String FILENAME="project.json";
 	/*  
 	 * folder structure
-	 * 
-	 *  projectDir.put(ASCommon.PROJECTDIR, projectString);
-		projectDir.put(ASCommon.FILTERSDIR, projectString+"/filters/");
-		projectDir.put(ASCommon.FEATURESDIR, projectString+"/features/");
-		projectDir.put(ASCommon.LEARNINGDIR, projectString+"/learning/");
-		projectDir.put(ASCommon.EVALUATIONDIR,projectString+"/evaluation/");
-		projectDir.put(ASCommon.IMAGESDIR,projectString+"/images/");
-		projectDir.put(ASCommon.TESTIMAGESDIR,projectString+"/testimages/");
-		projectDir.put(ASCommon.TESTFILTERSDIR,projectString+"/testfilters/");
-		
 	 */
 	/* keys */
 	public static final String K_TRAININGIMAGE="trainingstack";
@@ -108,7 +98,7 @@ public interface ASCommon {
 	public static final String K_EVALUATIONDIR="EVALUATIONDIR";
 	public static final String K_TESTIMAGESDIR="TESTIMAGESDIR";
 	public static final String K_TESTFILTERDIR="TESTFILTERSDIR";
-	
+	/* default folders */
 	public static final String filterDir="/filters/";
 	public static final String testfilterDir="/testfilters/";
 	public static final String featureDir="/features/";
