@@ -62,8 +62,6 @@ public class ProjectInfo{
 	
 	private List<FeatureInfo> featureList = new ArrayList<>();
 	
-	private Map<String, String> learning = new HashMap<>();
-	
 	private String groundtruth="";
 	
 	private String featureSelection="";
@@ -71,6 +69,9 @@ public class ProjectInfo{
 	/*
 	 * JSON ignore
 	 */
+	@JsonIgnore
+	private Map<String, String> learning = new HashMap<>();
+	
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
 	

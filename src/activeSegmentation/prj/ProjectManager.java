@@ -5,14 +5,8 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.process.ImageProcessor;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,12 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
-//import activeSegmentation.IProjectManager;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.ProjectType;
-import activeSegmentation.learning.WekaDataSet;
-import weka.core.Instances;
 
 public class ProjectManager {
 
@@ -45,33 +36,6 @@ public class ProjectManager {
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<>();
-	
-	/**
-	 * Read ARFF file
-	 * @param filename ARFF file name
-	 * @return set of instances read from the file
-	 */
-	@SuppressWarnings("unused")
-	public IDataSet readDataFromARFF(String filename){
-		try{
-			BufferedReader reader = new BufferedReader(
-					new FileReader(filename));
-			try{
-				Instances data = new Instances(reader);
-				// setting class attribute
-				data.setClassIndex(data.numAttributes() - 1);
-				reader.close();
-				return new WekaDataSet(data);
-			} catch(IOException e){
-				e.printStackTrace();
-				IJ.showMessage("IOException");
-				}
-		} catch(FileNotFoundException e){
-			IJ.showMessage("File not found!");
-			}
-		return null;
-	}
-
 
 	public IDataSet getDataSet() {
 		return  dataSet;
@@ -81,42 +45,16 @@ public class ProjectManager {
 	public void setData(IDataSet data) {
 		dataSet = data.copy();
 	}
+	
 
-	//TODO use the default from the interface
-	//@Override
-	public boolean writeDataToARFF(Instances data, String filename)	{
-		BufferedWriter out = null;
-		try{
-			out = new BufferedWriter(
-					new OutputStreamWriter(
-							new FileOutputStream( projectInfo.getProjectPath()+filename ) ) );
-
-			final Instances header = new Instances(data, 0);
-			out.write(header.toString());
-
-			for(int i = 0; i < data.numInstances(); i++)			{
-				out.write(data.get(i).toString()+"\n");
-			}
-		}	catch(Exception e)		{
-			IJ.log("Error: couldn't write instances into .ARFF file.");
-			IJ.showMessage("Exception while saving data as ARFF file");
-			e.printStackTrace();
-			return false;
-		}	finally{
-			try {
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return true;
-
-	}
-
-
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 */
 	public boolean loadProject(String fileName) {
 		//System.out.println("IN LOAD PROJCT");
+		IJ.log("loading project");
 		setDirectory();
 		//IJ.log(System.getProperty("plugins.dir"));
 		if(projectInfo==null){
@@ -150,7 +88,10 @@ public class ProjectManager {
 		return true;
 	}
 
-
+	/**
+	 * 
+	 * @param project
+	 */
 	public void writeMetaInfo( ProjectInfo project) {
 		updateMetaInfo(project);
 		ObjectMapper mapper = new ObjectMapper();
@@ -161,7 +102,6 @@ public class ProjectManager {
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
 			//System.out.println("SAVING");
-			//mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
 			mapper.writeValue(new File(projectInfo.getProjectPath()+
 					"/"+projectInfo.projectName+
 					"/"+projectInfo.projectName+".json"), projectInfo);
@@ -177,13 +117,24 @@ public class ProjectManager {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public ProjectInfo getMetaInfo() {
 
 		return projectInfo;
 	}
 
-
+	/**
+	 * 
+	 * @param projectName
+	 * @param projectType
+	 * @param projectDirectory
+	 * @param projectDescription
+	 * @param trainingImage
+	 * @return
+	 */
 	public String createProject(String projectName, String projectType,String projectDirectory, 
 			String projectDescription,
 			String trainingImage){
@@ -235,7 +186,11 @@ public class ProjectManager {
 		return message;
 	}
 
-
+	/**
+	 * 
+	 * @param image
+	 * @param currentImage
+	 */
 	private void createImages(String image, ImagePlus currentImage) {
 		String format=image.substring(image.lastIndexOf("."));
 		String folder=image.substring(0, image.lastIndexOf("."));	
@@ -249,6 +204,12 @@ public class ProjectManager {
 
 	}
 	
+	/**
+	 * 
+	 * @param image
+	 * @param format
+	 * @param folder
+	 */
 	private void createStackImage(ImagePlus image,String format, String folder) {
 		IJ.log("createStack");
 		//String format=image.getTitle().substring(image.getTitle().lastIndexOf("."));
@@ -265,6 +226,13 @@ public class ProjectManager {
 		IJ.log("createStackdone");
 	}
 	
+	/**
+	 * 
+	 * @param projectName
+	 * @param projectDirectory
+	 * @param trainingImage
+	 * @return
+	 */
 	private String validate(String projectName,String projectDirectory, 
 			String trainingImage) {
 		String message="done";
@@ -281,26 +249,36 @@ public class ProjectManager {
 		return message;
 	}
 
+	/**
+	 * 
+	 */
 	private void setDirectory() {
 		//IJ.debugMode=true;
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
-		//TODO check for null here
-		//String plugindir=System.getProperty("plugins.dir");
+		//check for null here
+		String plugindir=System.getProperty("plugins.dir");
+		if (plugindir==null) throw new RuntimeException("plugins.dir not set.");
+		
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
+			activeSegDir=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+			activeSegDir=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
 
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
+	/**
+	 * 
+	 * @param projectDirectory
+	 * @param projectName
+	 */
 	private void setProjectDir(String projectDirectory, String projectName) {
 		String projectString;
 		if(projectName!=null) {
-			projectString=projectDirectory+"/"+projectName+"/"+"Training";
+			projectString=projectDirectory+"/"+projectName+"/"+"training";
 		}else {
 			projectString=projectDirectory+"/"+"Training";
 		}

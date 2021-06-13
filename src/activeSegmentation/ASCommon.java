@@ -68,7 +68,7 @@ public interface ASCommon {
 	public static final String CLASSIFIER="classifier";
 	public static final String COMMENT="Comment";
 	public static final String DEFAULTCOMMENT=" DefaultComment";
-	public static final String CREATEDATE="CreateDate";
+	//public static final String CREATEDATE="CreateDate";
 	//public static final String MODIFYDATE="ModifyDate";
 	public static final String PATH="Path";
 	public static final String FORMAT=".zip";

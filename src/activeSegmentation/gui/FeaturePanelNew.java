@@ -56,7 +56,11 @@ import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.util.GuiUtil;
 
 import static  activeSegmentation.ProjectType.*;
-
+/**
+ *  Main interaction
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
 public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	/**
@@ -104,7 +108,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
 	private ActionEvent SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
 	private ActionEvent DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
-	private ActionEvent COMPUTE_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
+	private ActionEvent TRAIN_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
 	private ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
 	private ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	private ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
@@ -220,7 +224,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		
 		JPanel computePanel = new JPanel();
 		addButton(new JButton(), "Next",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "Train",null, 550,550,350,100,computePanel, COMPUTE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Train",null, 550,550,350,100,computePanel, TRAIN_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Save",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Overlay",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, MASKS_BUTTON_PRESSED,null);
@@ -489,7 +493,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			updateGui();
 		} // end if
 		
-		if(event==COMPUTE_BUTTON_PRESSED){
+		if(event==TRAIN_BUTTON_PRESSED){
 			if(featureManager.getProjectType()==ProjectType.CLASSIF) {
 				// it means new round of training, so set result setting to false
 				showColorOverlay = false;
@@ -696,6 +700,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList<?>  theList = ( JList<?>) mouseEvent.getSource();
+			// what is this?
 			if (mouseEvent.getClickCount() == 1) {
 				int index = theList.getSelectedIndex();
 
@@ -743,6 +748,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		displayImage.setRoi(newRoi);
 		displayImage.updateAndDraw();
 	}  
+	
+	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
 			JComponent panel, final ActionEvent action,final Color color )

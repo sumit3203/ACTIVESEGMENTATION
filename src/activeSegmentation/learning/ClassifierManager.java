@@ -8,23 +8,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.trees.J48;
-import weka.classifiers.trees.REPTree;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
-//import activeSegmentation.IProjectManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
+import activeSegmentation.util.InstanceUtil;
+import ij.IJ;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-//import activeSegmentation.LearningManager;
 
-///public class ClassifierManager implements ILearningManager {
+
+
 public class ClassifierManager  {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
@@ -36,6 +32,8 @@ public class ClassifierManager  {
 	private IDataSet dataset;
 	private ForkJoinPool pool; 
 	private Map<String,IFeatureSelection> featureMap;
+	
+	
 	
 	public ClassifierManager(ProjectManager dataManager){
 		learningList= new ArrayList<String>();
@@ -51,7 +49,6 @@ public class ClassifierManager  {
 	}
 	
 
-   // @Override
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
     	System.out.println("in training");
@@ -65,7 +62,7 @@ public class ClassifierManager  {
 			if(this.metaInfo.getGroundtruth()!=null && !this.metaInfo.getGroundtruth().isEmpty())
 			{
 				System.out.println(filename);
-				dataset=dataManager.readDataFromARFF(filename);
+				dataset=InstanceUtil.readDataFromARFF(filename);
 				System.out.println("ClassifierManager: in learning");
 			}
 			if(dataset!=null) {
@@ -79,22 +76,24 @@ public class ClassifierManager  {
 
 			currentClassifier.buildClassifier(dataset);
 			//
-			//System.out.println("Training Results");
-			System.out.println(currentClassifier.toString());
+			IJ.log("Training Results");
+			IJ.log(currentClassifier.toString());
 			//classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
 		} catch (Exception e) {
 		
 			e.printStackTrace();
 		}
 	}
+	
+	// when do we call this method?
 
-	//@Override
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
 		Map<String,String> learningMap = new HashMap<String, String>();
 		if(dataset!=null){
 			learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
-			dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);		
+			//dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);	
+			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
 		}
 		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
 		learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
@@ -102,23 +101,19 @@ public class ClassifierManager  {
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
-	//@Override
 	public void loadLearningMetaData() {
 		if(metaInfo.getLearning()!=null){
-			dataset= dataManager.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
+			dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
 			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
 		}
 	}
 
-	//@Override
 	public void setClassifier(Object classifier) {
 		//System.out.println(classifier.toString());
-			currentClassifier = (WekaClassifier)classifier;		 	
-			System.out.println(currentClassifier.toString());
-		
+		currentClassifier = (WekaClassifier)classifier;		 	
+		System.out.println(currentClassifier.toString());
 	}
 
-   // @Override
 	public double[] applyClassifier(IDataSet dataSet){
 		//System.out.println("Testing Results");
 		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
@@ -127,32 +122,25 @@ public class ClassifierManager  {
 			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
 					classificationResult, currentClassifier);
 					pool.invoke(applyTask);
-							
-			
 		return classificationResult;
 	}
 
-
-//	@Override
 	public Set<String> getFeatureSelList() {
-		
 		return featureMap.keySet();
 	}
 
 
-//	@Override
 	public double predict(Instance instance) {
 		try {
 			return currentClassifier.classifyInstance(instance);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return -1;
+		return PREDERR;
 	}
 
+	public static final int PREDERR=-1;
 
-//	@Override
 	public Object getClassifier() {
 		return this.currentClassifier.getClassifier();
 	}

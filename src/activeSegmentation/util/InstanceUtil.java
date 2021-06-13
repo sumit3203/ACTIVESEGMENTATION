@@ -1,19 +1,32 @@
 package activeSegmentation.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import activeSegmentation.IDataSet;
+import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.prj.ProjectInfo;
+import ij.IJ;
 import ij.ImageStack;
 import ijaux.datatype.ComplexArray;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import weka.core.DenseInstance;
+import weka.core.Instances;
 
 /**
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra and Dimiter Prodanov, IMEC
  *
  *
  * @contents
- * Util for Filter Manager
+ * Utils class for general uses
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -112,35 +125,67 @@ public class InstanceUtil {
 		return new DenseInstance(1.0,final_result);
 		
 	}
-	/*
-	public DenseInstance createInstance(ComplexWrapper rv, int classValue) throws Exception{
-		int size=0;
-		for(int i=0;i<rv.getReal().length;i++){
-			size++;
-			if(rv.getImaginary()[i]!=0.0)
-				size++;
-		}
-		double[] final_result = new double[size+1];
-
-		int t=0;
-		for(int i=0;i<rv.getReal().length;i++){
-			final_result[t++] = rv.getReal()[i];
-			if(rv.getImaginary()[i]!=0){
-				final_result[t++] = rv.getImaginary()[i];
+	
+	
+	/**
+	 * Read ARFF file
+	 * @param filename ARFF file name
+	 * @return set of instances read from the file
+	 */
+	@SuppressWarnings("unused")
+	public static IDataSet readDataFromARFF(String filename){
+		try{
+			BufferedReader reader = new BufferedReader(
+					new FileReader(filename));
+			try{
+				Instances data = new Instances(reader);
+				// setting class attribute
+				data.setClassIndex(data.numAttributes() - 1);
+				reader.close();
+				return new WekaDataSet(data);
+			} catch(IOException e){
+				e.printStackTrace();
+				IJ.showMessage("IOException");
+				}
+		} catch(FileNotFoundException e){
+			IJ.showMessage("Arff file not found!");
 			}
+		return null;
+	}
+	
+	
+	//TODO use the default from the interface
+		//@Override
+		public static boolean writeDataToARFF(Instances data, ProjectInfo projectInfo)	{
+			BufferedWriter out = null;
 			
+			try{
+				out = new BufferedWriter(
+						new OutputStreamWriter(
+								new FileOutputStream( projectInfo.getProjectPath()+projectInfo.projectName ) ) );
+
+				final Instances header = new Instances(data, 0);
+				out.write(header.toString());
+
+				for(int i = 0; i < data.numInstances(); i++)			{
+					out.write(data.get(i).toString()+"\n");
+				}
+			}	catch(Exception e)		{
+				IJ.log("Error: couldn't write instances into .ARFF file.");
+				IJ.showMessage("Exception while saving data as ARFF file");
+				e.printStackTrace();
+				return false;
+			}	finally{
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			return true;
+
 		}
-		
-		//System.out.println("Zernike Values Checking:");
-		for(int i=0;i<final_result.length;i++){
-			System.out.println(final_result[i]);
-		}
-		
-		
-		// Assign class
-		final_result[final_result.length-1] = (double) classValue;
-		return new DenseInstance(1.0,final_result);
-		
-	}*/
+
 
 }
