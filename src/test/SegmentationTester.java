@@ -85,7 +85,7 @@ public class SegmentationTester {
 		
 		//testing
 		String testImagesDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTIMAGESDIR);
-		String testFilterDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTFILTERSDIR);
+		String testFilterDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTFILTERDIR);
 		ImagePlus testImage=new ImagePlus(testImageTiff);
 		createStackImage(testImage, ".tif", testImagesDir, testFilterDir);
 		applyFilters(testImagesDir, testFilterDir);

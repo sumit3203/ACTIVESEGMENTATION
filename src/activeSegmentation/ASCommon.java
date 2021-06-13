@@ -107,7 +107,15 @@ public interface ASCommon {
 	public static final String K_IMAGESDIR="IMAGESDIR";
 	public static final String K_EVALUATIONDIR="EVALUATIONDIR";
 	public static final String K_TESTIMAGESDIR="TESTIMAGESDIR";
-	public static final String K_TESTFILTERSDIR="TESTFILTERSDIR";
+	public static final String K_TESTFILTERDIR="TESTFILTERSDIR";
+	
+	public static final String filterDir="/filters/";
+	public static final String testfilterDir="/testfilters/";
+	public static final String featureDir="/features/";
+	public static final String learnDir="/learning/";
+	public static final String evalDir="/evaluation/";
+	public static final String imagDir="/images/";
+	public static final String testimagDir="/testimages/";
 	
 	/*
 	 *  GUI constants

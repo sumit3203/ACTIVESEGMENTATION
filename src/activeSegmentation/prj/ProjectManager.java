@@ -72,12 +72,12 @@ public class ProjectManager {
 		return null;
 	}
 
-	//@Override
+
 	public IDataSet getDataSet() {
 		return  dataSet;
 	}
 
-	//@Override
+
 	public void setData(IDataSet data) {
 		dataSet = data.copy();
 	}
@@ -114,7 +114,7 @@ public class ProjectManager {
 
 	}
 
-	//@Override
+
 	public boolean loadProject(String fileName) {
 		//System.out.println("IN LOAD PROJCT");
 		setDirectory();
@@ -150,7 +150,7 @@ public class ProjectManager {
 		return true;
 	}
 
-	//@Override
+
 	public void writeMetaInfo( ProjectInfo project) {
 		updateMetaInfo(project);
 		ObjectMapper mapper = new ObjectMapper();
@@ -177,13 +177,13 @@ public class ProjectManager {
 		}
 	}
 
-	//@Override
+
 	public ProjectInfo getMetaInfo() {
 
 		return projectInfo;
 	}
 
-	//@Override
+
 	public String createProject(String projectName, String projectType,String projectDirectory, 
 			String projectDescription,
 			String trainingImage){
@@ -195,10 +195,10 @@ public class ProjectManager {
 		setDirectory();
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory);
-		//projectInfo.setProjectName(projectName);
+	
 		projectInfo.projectName=projectName;
 		projectInfo.setProjectType(ProjectType.valueOf(projectType));
-		//projectInfo.setProjectDescription(projectDescription);
+
 		projectInfo.projectDescription=projectDescription;
 		List<String> jars= new ArrayList<>();
 		jars.add(activeSegDir);
@@ -285,6 +285,8 @@ public class ProjectManager {
 		//IJ.debugMode=true;
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
+		//TODO check for null here
+		//String plugindir=System.getProperty("plugins.dir");
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
 			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
@@ -304,13 +306,23 @@ public class ProjectManager {
 		}
 		
 		projectDir.put(ASCommon.K_PROJECTDIR, projectString);
+		/*
 		projectDir.put(ASCommon.K_FILTERSDIR, projectString+"/filters/");
 		projectDir.put(ASCommon.K_FEATURESDIR, projectString+"/features/");
 		projectDir.put(ASCommon.K_LEARNINGDIR, projectString+"/learning/");
 		projectDir.put(ASCommon.K_EVALUATIONDIR,projectString+"/evaluation/");
 		projectDir.put(ASCommon.K_IMAGESDIR,projectString+"/images/");
 		projectDir.put(ASCommon.K_TESTIMAGESDIR,projectString+"/testimages/");
-		projectDir.put(ASCommon.K_TESTFILTERSDIR,projectString+"/testfilters/");
+		projectDir.put(ASCommon.K_TESTFILTERDIR,projectString+"/testfilters/");
+		*/
+		projectDir.put(ASCommon.K_FILTERSDIR,   projectString + ASCommon.filterDir);
+		projectDir.put(ASCommon.K_FEATURESDIR,  projectString + ASCommon.featureDir);
+		projectDir.put(ASCommon.K_LEARNINGDIR,  projectString + ASCommon.learnDir);
+		projectDir.put(ASCommon.K_EVALUATIONDIR,projectString + ASCommon.evalDir);
+		projectDir.put(ASCommon.K_IMAGESDIR,    projectString + ASCommon.imagDir);
+		projectDir.put(ASCommon.K_TESTIMAGESDIR,projectString + ASCommon.testimagDir);
+		projectDir.put(ASCommon.K_TESTFILTERDIR,projectString + ASCommon.testfilterDir);
+		
 	}
 	
 	private void createProjectSpace(String projectDirectory, String projectName) {
@@ -323,8 +335,8 @@ public class ProjectManager {
 		createDirectory(projectDir.get(ASCommon.K_EVALUATIONDIR));
 		createDirectory(projectDir.get(ASCommon.K_IMAGESDIR));
 		createDirectory(projectDir.get(ASCommon.K_TESTIMAGESDIR));
-		createDirectory(projectDir.get(ASCommon.K_TESTFILTERSDIR));
-		IJ.log("DONE");
+		createDirectory(projectDir.get(ASCommon.K_TESTFILTERDIR));
+		IJ.log("Project folders created");
 	}
 	
 	private File[] sortImages(File[] images) {
