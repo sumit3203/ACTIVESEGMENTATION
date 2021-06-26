@@ -41,12 +41,15 @@ import fftscale.filter.FFTKernelLoG;
  * 				
  *   
  * 
- * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra , KULeuven
+ * @author Dimiter Prodanov, IMEC, BAS,  Sumit Kumar Vohra, ZIB
  *
  *
  * @contents
  * The plugin computes the eigenvalues of the Structure matrix
- * 
+ * https://en.wikipedia.org/wiki/Structure_tensor
+ * T. Brox, J. Weickert, B. Burgeth and P. Mrazek, "Nonlinear Structure Tensors," 
+ * in Universitat des Saarlandes, Tech. Report#113, pp.1-32, 2004.
+ * https://www.mia.uni-saarland.de/Publications/brox-pp113.pdf
  * 
  * @license This library is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU Lesser General Public
@@ -193,8 +196,9 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 * @param ip input image
 	 * @param sp gaussian scale space
 	 * @param sigma filter sigma
+	 *  naive implementation equivalent to the gradient
 	 */
-	private ImageStack filter(ImageProcessor ip,GScaleSpace sp,  ImageStack imageStack){
+	private ImageStack filter(ImageProcessor ip, GScaleSpace sp,  ImageStack imageStack){
 
 		ip.snapshot();
 
@@ -304,7 +308,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
 		imageStack.addSlice(FILTER_KEY+"_Phase_"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, phase);
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, coher);
 		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
 		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
  
@@ -330,6 +334,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		pass++;
 		//System.out.println(settings.get(LEN)+"MG");
 		//GScaleSpace sp=new GScaleSpace(sigma);
+		// sp  -differentiating scale space
 		float[] kernx= sp.gauss1D();
 		//System.out.println("kernx :"+kernx.length);
 		GScaleSpace.flip(kernx);	
@@ -345,7 +350,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
         }
         	
 		
-		double sigma=sp2.getSigma();
+		// double sigma=sp2.getSigma();
 
 		kernel=new float[4][];
 		kernel[0]=kernx;
@@ -481,7 +486,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 
 
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigmaname, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigmaname, coher);
 		imageStack.addSlice(FILTER_KEY+"_E2_"+sigmaname, eigen2);
 		imageStack.addSlice(FILTER_KEY+"_E1_"+sigmaname, eigen1);
  

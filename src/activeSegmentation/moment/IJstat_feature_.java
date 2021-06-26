@@ -43,7 +43,7 @@ public class IJstat_feature_ {
 	
 	public double[] apply(ImageProcessor ip_roi){
 		ResultsTable xx=new ResultsTable();
-		Analyzer analyzer= new Analyzer(new ImagePlus("",ip_roi),Measurements.ALL_STATS, xx);
+		Analyzer analyzer= new Analyzer(new ImagePlus("dummy",ip_roi),Measurements.ALL_STATS, xx);
 		analyzer.run(ip_roi);
 		String headings[]=xx.getHeadings();
 		double outvector[]= new double[ResultsTable.getDefaultHeadings().length];
