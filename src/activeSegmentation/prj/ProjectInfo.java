@@ -113,7 +113,7 @@ public class ProjectInfo{
 		}
 	}
 	
-	private	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
+	private	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
 
 	/**
 	 * 

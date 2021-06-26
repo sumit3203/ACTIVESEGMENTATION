@@ -377,7 +377,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			
 		}
 		
-		FloatProcessor fpaux= (FloatProcessor) ip;
+		FloatProcessor fpaux= (FloatProcessor) ip.convertToFloat();
 	 		
 		Conv cnv=new Conv();
 

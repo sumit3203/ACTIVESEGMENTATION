@@ -42,7 +42,7 @@ public class ProjectManager {
 
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
-	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
 	private String activeSegDir;
 	private Map<String,String> projectDir=new HashMap<>();
 	
@@ -156,15 +156,15 @@ public class ProjectManager {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
-			projectInfo.setModifyDate(dateFormat.format(new Date()));
-			if(projectInfo.getCreatedDate()==null){
-				projectInfo.setCreatedDate(dateFormat.format(new Date()));
+			project.setModifyDate(dateFormat.format(new Date()));
+			if(project.getCreatedDate()==null){
+				project.setCreatedDate(dateFormat.format(new Date()));
 			}
 			//System.out.println("SAVING");
 			//mapper.writeValue(new File(projectInfo.getProjectPath()+"/"+projectInfo.getProjectName()+"/"+projectInfo.getProjectName()+".json"), projectInfo);
-			mapper.writeValue(new File(projectInfo.getProjectPath()+
-					"/"+projectInfo.projectName+
-					"/"+projectInfo.projectName+".json"), projectInfo);
+			mapper.writeValue(new File(project.getProjectPath()+
+					"/"+project.projectName+
+					"/"+project.projectName+".json"), project);
 
 			//System.out.println("DONE");
 
@@ -231,7 +231,7 @@ public class ProjectManager {
 		}
 
 		projectInfo.setProjectDirectory(projectDir);
-		writeMetaInfo(projectInfo);
+		writeMetaInfo(this.projectInfo);
 		return message;
 	}
 
@@ -289,7 +289,7 @@ public class ProjectManager {
 			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEGMENTATION.jar";
 		}
 
 		//System.out.println(System.getProperty("plugins.dir"));

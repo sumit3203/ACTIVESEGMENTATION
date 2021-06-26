@@ -121,7 +121,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			for(Class<?> cs:classesList){
 				// we load only IFilter classes
 				//System.out.println(cs.getSimpleName());
-				
+				//TODO: Check for test classes whether they are filters
 				if (cs.getSimpleName().equals(ASCommon.IFILTER) && !classLoader.loadClass(plugin).isInterface()){
 
 					IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
@@ -275,6 +275,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		projectInfo= projectManager.getMetaInfo();
 		//System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<>();
+//		filterMap.remove("TF");
 		for(String key: getAllFilters()){
 			Map<String,String> filters = new HashMap<>();
 			Map<String,String> filtersetting =getDefaultFilterSettings(key);
@@ -291,7 +292,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 
 		projectInfo.setFilters(filterObj);
-		projectManager.writeMetaInfo(projectInfo);
+		projectManager.writeMetaInfo(this.projectInfo);
 	}
 
 
