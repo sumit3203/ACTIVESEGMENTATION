@@ -38,7 +38,7 @@ IEEE Transactions on Systems, Man, and Cybernetics,
 	  6 - Homogeneity;
  */
 @AFilter(key="GLCM", value="Haralick Texture Features", type=CLASSIF)
-public class GLCM_feature_ implements IMoment<ArrayList<?>>  {
+public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 
 	public static boolean debug=IJ.debugMode;
 	private boolean isEnabled=true;

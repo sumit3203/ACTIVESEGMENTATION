@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.Set;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.moment.GLCM_feature_;
+import activeSegmentation.moment.Haralick_feature_;
 import activeSegmentation.moment.IJstat_feature_;
 import activeSegmentation.moment.Legendre_feature_;
 import activeSegmentation.moment.Zernike_feature_;
@@ -35,7 +35,7 @@ import weka.filters.unsupervised.attribute.Normalize;
 public class TestOnlineCells {
 	//features
 	Legendre_feature_ legendre_filter_=new Legendre_feature_();
-	GLCM_feature_ glcm_Filter_= new GLCM_feature_();
+	Haralick_feature_ glcm_Filter_= new Haralick_feature_();
 	Zernike_feature_ zernike_Filter_= new Zernike_feature_();
 	IJstat_feature_ imageJfeatures= new IJstat_feature_();
 	// create attribute list
