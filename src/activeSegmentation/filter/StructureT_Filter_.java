@@ -40,7 +40,6 @@ import fftscale.filter.FFTKernelLoG;
 
  * 				
  *   
- * 
  * @author Dimiter Prodanov, IMEC, BAS,  Sumit Kumar Vohra, ZIB
  *
  *
@@ -432,13 +431,15 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			cos_phase.setf(i, (float) gcos);
 		}
 		
+		String fkey=this.getKey();
+		
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigmaname, gradx);
-			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigmaname, grady);
+			imageStack.addSlice(fkey+"_X_diff_"+sigmaname, gradx);
+			imageStack.addSlice(fkey+"_Y_diff_"+sigmaname, grady);
 		}
-		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigmaname, pamp);
-		imageStack.addSlice(FILTER_KEY+"_Sin_"+sigmaname, sin_phase);
-		imageStack.addSlice(FILTER_KEY+"_Cos_"+sigmaname, cos_phase);
+		imageStack.addSlice(fkey+"_Amp_"+sigmaname, pamp);
+		imageStack.addSlice(fkey+"_Sin_"+sigmaname, sin_phase);
+		imageStack.addSlice(fkey+"_Cos_"+sigmaname, cos_phase);
 		
 		// second smoothing step
 		
@@ -486,9 +487,9 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 
 
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigmaname, coher);
-		imageStack.addSlice(FILTER_KEY+"_E2_"+sigmaname, eigen2);
-		imageStack.addSlice(FILTER_KEY+"_E1_"+sigmaname, eigen1);
+		imageStack.addSlice(fkey+"_Coh_"+sigmaname, coher);
+		imageStack.addSlice(fkey+"_E2_"+sigmaname, eigen2);
+		imageStack.addSlice(fkey+"_E1_"+sigmaname, eigen1);
  
 		eigen2.resetMinAndMax();
  
@@ -527,7 +528,6 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		gd.setResizable(false);
 		gd.showDialog();
 
-		//pixundo=imp.getProcessor().getPixelsCopy();
 		if (gd.wasCanceled()) {			
 			return DONE;
 		}
@@ -613,11 +613,12 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		return true;
 	}
 
+	/*
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
 	}
- 
+	 */
 
 	@Override
 	public boolean isEnabled() {
