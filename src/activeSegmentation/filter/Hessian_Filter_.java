@@ -76,7 +76,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public final static String SIGMA="HESS_sigma",MAX_LEN="H_MAX",FULL_OUTPUT="HFull_out",LEN="H_len";
 
 	@AFilterField(key=LEN, value="initial scale")
-	public static int sz= Prefs.getInt(LEN, 2);
+	public  int sz= Prefs.getInt(LEN, 2);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
 	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
@@ -407,7 +407,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 *
 	 * @param prefs
 	 */
-	public static void savePreferences(Properties prefs) {
+	public void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
 		// prefs.put(SIGMA, Float.toString(sigma));
 

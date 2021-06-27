@@ -79,7 +79,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private int nPasses=1;
 	private int pass;
 
-	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len",SLEN="G_slen";
+	public final static String SIGMA="ST_sigma",MAX_LEN="ST_MAX",FULL_OUTPUT="STFull_out",LEN="ST_len",SLEN="ST_slen";
 
 	private boolean isEnabled=true;
 
@@ -113,7 +113,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private final  String FILTER_KEY = "STRUCTURE";
 
 	/** The pretty name of the target detector. */
-//	private final String FILTER_NAME = "Strcuture components";
+//	private final String FILTER_NAME = "Structure components";
 	
   	
 	/** It stores the settings of the Filter. */
