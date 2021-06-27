@@ -313,6 +313,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		imageStack.addSlice(FILTER_KEY+"_Amp_"+sz, pamp);
 		imageStack.addSlice(FILTER_KEY+"_Sin_"+sz, sin_phase);
+		imageStack.addSlice(FILTER_KEY+"_Cos_"+sz, cos_phase);
 		imageStack.addSlice(FILTER_KEY+"_E1_"+sz, eigen1);
 		imageStack.addSlice(FILTER_KEY+"_E2_"+sz, eigen2);
  
