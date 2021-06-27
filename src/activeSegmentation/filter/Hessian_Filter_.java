@@ -100,7 +100,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private final  String FILTER_KEY = "HESSIAN";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Hessian components";
+	//private final String FILTER_NAME = "Hessian components";
 	
   	
 	/** It stores the settings of the Filter. */
@@ -441,11 +441,12 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return this.FILTER_KEY;
 	}
 
+		/*
 	@Override
 	public String getName() {
 		return this.FILTER_NAME;
 	}
-
+		 */
 
 	@Override
 	public boolean isEnabled() {
