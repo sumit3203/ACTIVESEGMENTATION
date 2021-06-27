@@ -188,6 +188,8 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 			IJ.log("plugins.dir misspecified\n");
 			ex.printStackTrace();
 		}*/
+		
+		
 		new ImageJ();
 		IJ.run("Blobs (25K)");
 		ImageProcessor ip=IJ.getImage().getProcessor();
@@ -208,6 +210,10 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 		new ImagePlus("convovled",output).show();
 		new ImagePlus("kernel",ckern.stackviz()).show();
+		
+		FFTLoG_Filter_ filter=new FFTLoG_Filter_();
+		System.out.println("annotated fields");
+		System.out.println(filter.getAnotatedFileds());
 	}
 
 	@Override

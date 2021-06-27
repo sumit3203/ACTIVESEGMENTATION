@@ -36,8 +36,9 @@ import fftscale.FFTConvolver;
 import fftscale.filter.FFTKernelLoG;
 
 /**
- * @version 	30 Dec 2020
-
+ * @version 	27 Jun 2021
+ * 				30 Dec 2020
+ *
  * 				
  *   
  * @author Dimiter Prodanov, IMEC, BAS,  Sumit Kumar Vohra, ZIB

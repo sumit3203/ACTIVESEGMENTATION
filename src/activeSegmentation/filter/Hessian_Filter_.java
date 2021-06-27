@@ -33,8 +33,9 @@ import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 /**
- * @version 	1.0 24 Oct 2019
-
+ * @version 	
+ * 				1.1 27 Jun 2021
+ * 				1.0 24 Oct 2019
  * 				
  *   
  * 
