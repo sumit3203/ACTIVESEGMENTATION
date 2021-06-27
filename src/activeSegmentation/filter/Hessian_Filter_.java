@@ -73,12 +73,14 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private int nPasses=1;
 	private int pass;
 
-	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
+	public final static String SIGMA="HESS_sigma",MAX_LEN="H_MAX",FULL_OUTPUT="HFull_out",LEN="H_len";
 
-	private static int sz= Prefs.getInt(LEN, 2);
+	@AFilterField(key=LEN, value="initial scale")
+	public static int sz= Prefs.getInt(LEN, 2);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
 	private boolean isEnabled=true;
 
 	private float[][] kernel=null;
@@ -97,7 +99,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "HESSIAN";
+	//private final String FILTER_KEY = "HESSIAN";
 
 	/** The pretty name of the target detector. */
 	//private final String FILTER_NAME = "Hessian components";
@@ -438,10 +440,12 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return true;
 	}
 
+	/*
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
 	}
+	*/
 
 		/*
 	@Override
@@ -477,6 +481,14 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	}
 
 
+	/*
+	 * testing method
+	 */
+	public static void main (String[] args) {
+		Hessian_Filter_ filter=new Hessian_Filter_();
+		System.out.println("annotated fields");
+		System.out.println(filter.getAnotatedFileds());
+	}
 
 
 }

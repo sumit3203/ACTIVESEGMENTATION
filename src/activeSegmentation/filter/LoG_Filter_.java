@@ -353,7 +353,9 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		this.isEnabled= isEnabled;
 	}
 
-	
+	/*
+	 * testing method
+	 */
 	public static void main (String[] args) {
 		LoG_Filter_ filter=new LoG_Filter_();
 		System.out.println("annotated fields");
