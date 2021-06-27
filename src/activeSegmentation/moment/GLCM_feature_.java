@@ -19,6 +19,11 @@ import java.util.List;
 
 
 /**
+ * The feature implements the 
+ * Haralick, R. M.; Shanmugam, K. & Dinstein, I.
+Textural Features for Image Classification 
+IEEE Transactions on Systems, Man, and Cybernetics, 
+1973, {SMC}-3, 610-621
  */
 
 /*
@@ -32,7 +37,7 @@ import java.util.List;
 	  5 - Entropy;
 	  6 - Homogeneity;
  */
-@AFilter(key="GLCM", value="Haraick Texture Features", type=CLASSIF)
+@AFilter(key="GLCM", value="Haralick Texture Features", type=CLASSIF)
 public class GLCM_feature_ implements IMoment<ArrayList<?>>  {
 
 	public static boolean debug=IJ.debugMode;
