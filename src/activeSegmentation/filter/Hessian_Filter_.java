@@ -302,20 +302,21 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			eigen2.setf(i, (float) ee2);
 				
 		}
-
+		String fkey=this.getKey();
+		
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sz, gradx);
-			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sz, grady);
-			imageStack.addSlice(FILTER_KEY+"_XX_diff_"+sz, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"_YY_diff_"+sz, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"_XY_diff_"+sz, lap_xy);
+			imageStack.addSlice(fkey+"_X_diff_"+sz, gradx);
+			imageStack.addSlice(fkey+"_Y_diff_"+sz, grady);
+			imageStack.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
+			imageStack.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
+			imageStack.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
 		}
 
-		imageStack.addSlice(FILTER_KEY+"_Amp_"+sz, pamp);
-		imageStack.addSlice(FILTER_KEY+"_Sin_"+sz, sin_phase);
-		imageStack.addSlice(FILTER_KEY+"_Cos_"+sz, cos_phase);
-		imageStack.addSlice(FILTER_KEY+"_E1_"+sz, eigen1);
-		imageStack.addSlice(FILTER_KEY+"_E2_"+sz, eigen2);
+		imageStack.addSlice(fkey+"_Amp_"+sz, pamp);
+		imageStack.addSlice(fkey+"_Sin_"+sz, sin_phase);
+		imageStack.addSlice(fkey+"_Cos_"+sz, cos_phase);
+		imageStack.addSlice(fkey+"_E1_"+sz, eigen1);
+		imageStack.addSlice(fkey+"_E2_"+sz, eigen2);
  
 		eigen2.resetMinAndMax();
  
