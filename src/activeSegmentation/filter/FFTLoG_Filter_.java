@@ -13,6 +13,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
@@ -67,18 +68,28 @@ import static java.lang.Math.*;
 
 @AFilter(key="FLOG", value="FFT Laplacian of Gaussian", type=SEGM)
 public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
-	private final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL";
+	
+	public final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL",LEN="G_len",MAX_LEN="G_MAX";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
 	private ImagePlus imp;
 
 	private final static String version = "1.0";
-	private static double sigma=Prefs.getInt(KSZ,3);
-	private static double order=Prefs.getDouble(ORD,1.0);
+	
+	
+	public static double sigma=Prefs.getInt(KSZ,3);
+	
+	@AFilterField(key=ORD, value="order")
+	public static double order=Prefs.getDouble(ORD,1.0);
+	
 	private static boolean showkernel=true;
 	private static boolean even=Prefs.getBoolean(GEV,false);
-	private String LEN="G_len",MAX_LEN="G_MAX";
-	private  int sz= Prefs.getInt(LEN, 1);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 9);
+ 
+	
+	@AFilterField(key=KSZ, value="initial scale")
+	public int sz= Prefs.getInt(LEN, 1);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public  int max_sz= Prefs.getInt(MAX_LEN, 9);
 
 	private ImageStack imageStack;
 	
@@ -88,7 +99,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	//private final  String FILTER_KEY = "FLOG";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "FFT Laplacian of Gaussian";
+	//private final String FILTER_NAME = "FFT Laplacian of Gaussian";
 
 	private Map< String, String > settings= new HashMap<>();
 
@@ -200,7 +211,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		int kh=frame[3];
 		System.out.println(kw);
 		System.out.println(kh);
-		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 0, sigma, true);
+		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 1, sigma, true);
 		FFTConvolver proc = new FFTConvolver(ip, fgauss);
 		IComplexFArray kern=fgauss.getKernelComplexF();
 		ComplexFProcessor ckern=new ComplexFProcessor(kw,kh, kern);
@@ -234,23 +245,24 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
-		String key=getKey();	
-		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
-			ImageProcessor fp=filter(image, sigma);
-			String imageName=path+"/"+key+"_"+sigma+".tif" ;
-			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
+		String key=getKey();
+		// fix reprarametrization by sz
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+			ImageProcessor fp=filter(image, order, sigma);
+			String imageName=path+"/"+key+"_"+order+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(key+"_"+order+"_" + sigma, fp),imageName );
 		}
 	}
 
-	// TODO eventually to leave only 1 method
-	public FloatProcessor filter(ImageProcessor ip, double sigma) {
+	// TODO eventually to leave only 1 method - order!
+	public FloatProcessor filter(ImageProcessor ip, double ord, double sigma) {
 
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 		int[] frame=framesize(new int[]{width,height},true);
 		int kw=frame[2];
 		int kh=frame[3];
-		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, 0, sigma, true);
+		FFTKernelLoG fgauss=new FFTKernelLoG (kw,kh, ord, sigma, true);
 		FFTConvolver proc = new FFTConvolver(ip, fgauss);
 
 		FloatProcessor output=proc.convolve();
@@ -264,11 +276,13 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		return this.FILTER_KEY;
 	}
 	 */
+	/*
 	@Override
 	public String getName() {
 		return this.FILTER_NAME;
 	}
-
+	 */
+	
 	private double logKernel(double x){
 		final double x2=x*x;
 		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
