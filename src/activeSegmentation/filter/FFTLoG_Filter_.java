@@ -82,10 +82,12 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	public static double order=Prefs.getDouble(ORD,1.0);
 	
 	private static boolean showkernel=true;
-	private static boolean even=Prefs.getBoolean(GEV,false);
+	
+	@AFilterField(key=GEV, value="even")
+	public static boolean even=Prefs.getBoolean(GEV, false);
  
 	
-	@AFilterField(key=KSZ, value="initial scale")
+	@AFilterField(key=LEN, value="initial scale")
 	public int sz= Prefs.getInt(LEN, 1);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
@@ -175,9 +177,12 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		return true;
 	}
 
-	public static void savePreferences(Properties prefs) {
+	public void savePreferences(Properties prefs) {
 		prefs.put(KSZ, Double.toString(sigma));
+		prefs.put(LEN, Double.toString(sz));
+		prefs.put(MAX_LEN, Double.toString(max_sz));
 		prefs.put(ORD, Double.toString(order));
+		prefs.put(GEV, Boolean.toString(even));
 	}
 
 	/*
@@ -229,9 +234,10 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
-		// TODO Auto-generated method stub
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
+		settings.put(ORD, Double.toString(order));
+		settings.put(GEV, Boolean.toString(even));
 		return settings;
 	}
 
@@ -239,6 +245,8 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+		order=Double.parseDouble(settingsMap.get(ORD));
+		even=Boolean.parseBoolean(settingsMap.get(GEV));
 		return true;
 	}
 
@@ -246,7 +254,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
 		String key=getKey();
-		// fix reprarametrization by sz
+		// re-prarametrization by sz
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			ImageProcessor fp=filter(image, order, sigma);
 			String imageName=path+"/"+key+"_"+order+"_"+sigma+".tif" ;
