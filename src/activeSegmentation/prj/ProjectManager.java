@@ -289,7 +289,7 @@ public class ProjectManager {
 			activeSegDir=System.getProperty("plugins.dir")+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEGMENTATION.jar";
+			activeSegDir=System.getProperty("plugins.dir")+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
 		}
 
 		//System.out.println(System.getProperty("plugins.dir"));
