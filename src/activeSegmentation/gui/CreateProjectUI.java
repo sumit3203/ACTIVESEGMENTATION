@@ -80,6 +80,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 		//controlFrame.add(new JLabel(createImageIcon("images/logo.png", "logo")));
 		controlFrame.add(addButton("Create New Project",createImageIcon("addProject.png","add"), 30, 250, 220, 60, CREATE_BUTTON_PRESSED));
 		controlFrame.add(addButton("Open Project",createImageIcon("openProject.png","add"),270, 250, 200, 60, OPEN_BUTTON_PRESSED));
+		controlFrame.add(addButton("TIFF based project", createImageIcon("openProject.png", "add"), 150,320,220,60, Tiff_BUTTON_PRESSED ));
 		controlFrame.setLocation(0, 0);
 		mainFrame.add(controlFrame);
 		mainFrame.setVisible(true);  

@@ -7,6 +7,8 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
 
+import java.io.File;
+
 
 public class Active_Segmentation_ implements PlugIn {
 
@@ -41,7 +43,7 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 	public static void main(String[] args) {
-		/*try {
+		try {
 			File f=new File(args[0]);
 			if (f.exists() && f.isDirectory() ) {
 				System.setProperty("plugins.dir", args[0]);
@@ -52,7 +54,7 @@ public class Active_Segmentation_ implements PlugIn {
 		catch (Exception ex) {
 			IJ.log("plugins.dir misspecified\n");
 			ex.printStackTrace();
-		}*/
+		}
 		
 		new ImageJ();
 		Active_Segmentation_ as=new Active_Segmentation_();
