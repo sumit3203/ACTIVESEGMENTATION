@@ -19,7 +19,7 @@ import activeSegmentation.*;
 import activeSegmentation.prj.ProjectManager;
 import ij.WindowManager;
 
-
+//  to rename to CreateOpenProjectUI
 public class CreateProjectUI implements Runnable, ASCommon {
 
 	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
@@ -102,7 +102,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 			 String file=fileChooser.getSelectedFile().toString();
 			 projectManager.loadProject(file);
 			 new Gui(projectManager);
-			// new Gui2(projectManager);
+
 			}
 		}
 

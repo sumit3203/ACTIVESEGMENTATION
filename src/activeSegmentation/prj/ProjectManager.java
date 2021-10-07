@@ -54,9 +54,9 @@ public class ProjectManager {
 	 */
 	public boolean loadProject(String fileName) {
 		//System.out.println("IN LOAD PROJCT");
-		IJ.log("loading project");
+		IJ.log(System.getProperty("plugins.dir"));
+		IJ.log("loading project ...");
 		setDirectory();
-		//IJ.log(System.getProperty("plugins.dir"));
 		if(projectInfo==null){
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -71,14 +71,19 @@ public class ProjectManager {
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				//System.out.println(projectInfo.toString());
+				IJ.log("project type "+projectInfo.getProjectType() );
 				
 			} catch (UnrecognizedPropertyException e) {
+				IJ.log("Error: Wrong version");
 				e.printStackTrace();
 			} catch (JsonGenerationException e) {
+				IJ.log("Error: Not a JSON file!");
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
+				IJ.log("Error: Wrong version");
 				e.printStackTrace();
 			} catch (IOException e) {
+				IJ.log("Error: IO");
 				e.printStackTrace();
 			}			
 

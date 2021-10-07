@@ -115,7 +115,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 		for(String plugin: classes){
-			//System.out.println("checking "+ plugin);
+			System.out.println("checking "+ plugin);
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 			for(Class<?> cs:classesList){

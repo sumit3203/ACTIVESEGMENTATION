@@ -1,17 +1,9 @@
 package activeSegmentation.filter;
-import java.awt.Image;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
@@ -33,6 +25,8 @@ import static java.lang.Math.*;
 
 /**
  * @version 	
+ * 				1.3.1 7 Oct 2021
+ * 				- annotations
  * 				1.3 28 Jun 2021
  * 				- all parameters revealed to Active Segmentation
  * 				1.2 31 Oct 2019
@@ -67,7 +61,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="FLOG", value="FFT Laplacian of Gaussian", type=SEGM)
+@AFilter(key="FGaus", value="FFT Gaussian", type=SEGM)
 public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	
 	public final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL",LEN="G_len",MAX_LEN="G_MAX";
@@ -109,7 +103,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private boolean isEnabled=true;
 
 	void showAbout() {
-		IJ.showMessage("FFT LoG " + version, "The plugin applies a Gaussian kernel to the image");
+		IJ.showMessage("FFT Gauss " + version, "The plugin applies a Gaussian kernel to the image");
 	}
 
 	@Override
