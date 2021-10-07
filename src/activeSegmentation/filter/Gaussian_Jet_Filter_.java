@@ -31,6 +31,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -40,7 +41,7 @@ import dsp.Conv;
  * 					- gaussian jet
  *   
  * 
- * @author Dimiter Prodanov,IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov,IMEC, Sumit Kumar Vohra
  *
  *
  * @contents
@@ -76,15 +77,23 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	@SuppressWarnings("unused")
 	private int pass=0;
 	public final static String SIGMA="LOG_sigma", LEN="G_len" ,MAX_LEN="G_MAX", 
-			ISSEP="G_SEP", GN="G_Xn", GM="G_Yn", SCNORM="G_SCNORM";
+			ISSEP="G_SEP", GN="G_Xn", GM="G_Yn", SCNORM="G_SCNORM", ORDN="ord_x", ORDM="ord_y";
 
-	private static int sz = Prefs.getInt(LEN, 2);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	@AFilterField(key=LEN, value="initial scale")
+	public static int sz = Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
 	private float[][] kernel=null;
+	
 	public static boolean debug=IJ.debugMode;
 
-	private static int nn = Prefs.getInt(GN, 1);
-	private static int mm = Prefs.getInt(GM, 0);
+	@AFilterField(key=ORDN, value="order x")
+	public static int nn = Prefs.getInt(GN, 1);
+	
+	@AFilterField(key=ORDM, value="order y")
+	public static int mm = Prefs.getInt(GM, 0);
 
 	private static boolean sep=Prefs.getBoolean(ISSEP, false);
 	private static boolean scnorm=Prefs.getBoolean(SCNORM, false);

@@ -33,8 +33,8 @@ import static java.lang.Math.*;
 
 /**
  * @version 	
- * 
- * 				
+ * 				1.3 28 Jun 2021
+ * 				- all parameters revealed to Active Segmentation
  * 				1.2 31 Oct 2019
  * 				- Active Segmentation version
  * 				1.1 10 Sept 2019
@@ -48,7 +48,8 @@ import static java.lang.Math.*;
  *
  *
  * @contents
- * This pluign convolves an image with a power of the Laplacian of Gaussian Derivative filter
+ * This pluign convolves an image with a power of the alpha Laplacian of Gaussian filter.
+ * This filter implements alpha scale space.
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -73,7 +74,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
 	private ImagePlus imp;
 
-	private final static String version = "1.0";
+	private final static String version = "1.1";
 	
 	
 	public static double sigma=Prefs.getInt(KSZ,3);
@@ -93,7 +94,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	@AFilterField(key=MAX_LEN, value="max scale")
 	public  int max_sz= Prefs.getInt(MAX_LEN, 9);
 
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 	
 	/* NEW VARIABLES*/
 
