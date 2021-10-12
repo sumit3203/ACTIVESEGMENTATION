@@ -98,14 +98,14 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
     // noise scale
 	@AFilterField(key=LEN, value="noise scale")
-	public int sz= Prefs.getInt(LEN, 2);
+	public static int sz= Prefs.getInt(LEN, 2);
 	
 	// smoothing scale
 	@AFilterField(key=SLEN, value="min scale")
-	public int sz2= Prefs.getInt(LEN, 4);
+	public static  int sz2= Prefs.getInt(SLEN, 4);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
-	public int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	/* NEW VARIABLES*/
 
@@ -593,7 +593,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 
-		return this.settings;
+		return settings;
 	}
 
 	@Override
@@ -607,11 +607,16 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		sz=Integer.parseInt(settingsMap.get(LEN));
+		try {
+ 		sz=Integer.parseInt(settingsMap.get(LEN));
+		sz2=Integer.parseInt(settingsMap.get(SLEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
 		
 		return true;
+		} catch (NumberFormatException ex) {
+			return false;
+		}
 	}
 
 	/*
