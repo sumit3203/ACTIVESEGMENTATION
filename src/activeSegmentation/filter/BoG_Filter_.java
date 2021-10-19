@@ -78,7 +78,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private String version="1.5";
 	
-	public final static String SIGMA="LOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISO="G_iso", ISSEP="G_SEP";
+	public final static String SIGMA="BOG_sigma", LEN="G_len",MAX_LEN="G_MAX", ISO="G_iso", ISSEP="G_SEP";
 
 	public static boolean debug=IJ.debugMode;
 	
