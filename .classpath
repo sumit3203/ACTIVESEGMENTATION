@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java|activeSegmentation/gui/FeaturePanel.java|activeSegmentation/gui/Gui2.java|activeSegmentation/evaluation/Curves.java|activeSegmentation/gui/Curves.java|activeSegmentation/util/ClassLoaderHelper.java|activeSegmentation/Project.java|activeSegmentation/IFeatureManager.java|activeSegmentation/ILearningManager.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-annotations-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-core-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jackson-databind-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/java-cup-0.11a.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/pentaho-package-manager-1.0.8.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/pixlib-1-0.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/dsplib-1-0.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/fftscale-1-0.jar"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/sqlite-jdbc-3.30.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/jackson-annotations-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/jackson-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/jackson-databind-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/java-cup-0.11a.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/pixlib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/dsplib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/fftscale-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/sqlite-jdbc-3.30.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Applications/ImageJ/plugins/jars/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Users/billa/Documents/GitHub/ACTIVESEGMENTATION/jars/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x64)/ImageJ/ij.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
