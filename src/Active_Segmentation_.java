@@ -12,7 +12,7 @@ import ij.plugin.PlugIn;
 
 public class Active_Segmentation_ implements PlugIn {
 
-
+	public static final String version="1.0";
 
 
 	/** main GUI panel (containing the buttons panel on the left,
@@ -36,7 +36,7 @@ public class Active_Segmentation_ implements PlugIn {
 		CreateProjectUI creatProject= new CreateProjectUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
-
+		IJ.log("AS version "+version);
 	}
 
 
