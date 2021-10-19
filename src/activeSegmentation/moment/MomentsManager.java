@@ -200,7 +200,6 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		List<String>images= loadImages(projectString);
 		Map<String,Set<String>> features= new HashMap<String,Set<String>>();
 
-		for(IMoment filter: momentMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
 					for(String image: images) {
