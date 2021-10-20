@@ -71,14 +71,16 @@ public class PixelInstanceCreator implements IFeature {
 	private InstanceUtil instanceUtil= new InstanceUtil();
 	private ProjectInfo projectInfo;
 	private String projectString;
+	
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		this.images=new ArrayList<String>();
-		loadImages(this.projectString);
+		int sz=loadImages(this.projectString);
 		this.classLabels=new ArrayList<String>();
 		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
-		updateFeatures();
+		if (sz>0) 
+			updateFeatures();
 	}
 
 	private void updateFeatures() {
@@ -97,10 +99,14 @@ public class PixelInstanceCreator implements IFeature {
 			labels[i]=featureName[0];
 		}
 	}
+	
+	// merge with FeatureManager loadImages
 	private int loadImages(String directory){
 		this.images.clear();
 		File folder = new File(directory);
-		File[] images = sortImages(folder.listFiles());
+		File[] images = folder.listFiles();
+		if (images== null) return -1;
+		  images = sortImages(images);
 
 		for (File file : images) {
 			if (file.isFile()) {

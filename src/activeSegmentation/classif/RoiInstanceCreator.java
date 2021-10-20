@@ -76,6 +76,7 @@ public class RoiInstanceCreator implements IFeature {
 		this.images.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
+		if (images==null) return -1;
 		for (File file : images) {
 			if (file.isFile()) {
 				this.images.add(file.getName());

@@ -341,6 +341,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
+		/*
 		IMoment<?> filter=momentMap.get(key);
 		try {
 			return ((IFilterViz) filter).getImage();
@@ -349,6 +350,8 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 			e.printStackTrace();
 			return null;
 		}
+		*/
+		return null;
 	}
 
 

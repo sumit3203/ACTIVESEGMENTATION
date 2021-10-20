@@ -262,7 +262,9 @@ public class ProjectManager {
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
 		//check for null here
-		String plugindir=System.getProperty("user.dir");
+		//String plugindir=System.getProperty("user.dir");
+		String plugindir=IJ.getDir("imagej");
+		// do not escape \
 		IJ.log(plugindir);
 		//if (plugindir==null) throw new RuntimeException("plugins.dir not set.");
 		
