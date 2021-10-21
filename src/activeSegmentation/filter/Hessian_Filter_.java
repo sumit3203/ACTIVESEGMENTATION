@@ -434,11 +434,15 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		sz=Integer.parseInt(settingsMap.get(LEN));
-		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-		
-		return true;
+		try {
+			sz=Integer.parseInt(settingsMap.get(LEN));
+			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+			fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
+
+			return true;
+		} catch ( NumberFormatException ex) {
+			return false;
+		}
 	}
 
 	/*
