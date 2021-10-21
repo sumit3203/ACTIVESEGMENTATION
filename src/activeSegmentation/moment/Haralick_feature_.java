@@ -3,7 +3,7 @@ package activeSegmentation.moment;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
-import activeSegmentation.IFilter;
+import activeSegmentation.IFilterViz;
 import activeSegmentation.IMoment;
 import ij.IJ;
 import ij.ImagePlus;
