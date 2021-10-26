@@ -60,7 +60,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	private ProjectType projectType;
 
 	// what is the use?
-	private FeatureManager  featureManager;
+	//private FeatureManager  featureManager;
 
 	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
@@ -82,10 +82,10 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-			IJ.log("Filters NOT Loaded. Check path");
+			IJ.log("Filters NOT Loaded. Check pluginPath variable");
 		}
 
-		this.featureManager= featureManager;
+		//this.featureManager= featureManager;
 	}
 
 
@@ -97,6 +97,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		//File f=new File(home);
 		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<>();
+		System.setProperty("java.class.path","C:/PROGRA~4/ImageJ/ij.jar");
 		String cp=System.getProperty("java.class.path");
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
@@ -115,7 +116,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 
 		for(String plugin: classes){
-			//System.out.println("checking "+ plugin);
+			System.out.println("checking "+ plugin);
+			try{
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 			for(Class<?> cs:classesList){
@@ -145,7 +147,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				} 
 
 			} // end for
-
+			} catch (ClassNotFoundException ex) {
+				System.out.println("error:" + plugin +"not found");
+			}
 		} // end for
 
 		//System.out.println("filter list ");
@@ -231,8 +235,14 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
-		return filterMap.get(key).updateSettings(settingsMap);
-	}
+		try {
+			IFilter filter=filterMap.get(key);
+			return filter.updateSettings(settingsMap);
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+			return false;}
+		}
+	
 
 
 
@@ -273,7 +283,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public void saveFiltersMetaData(){	
 		projectInfo= projectManager.getMetaInfo();
-		//System.out.println("meta Info"+projectInfo.toString());
+		System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<>();
 		for(String key: getAllFilters()){
 			Map<String,String> filters = new HashMap<>();
