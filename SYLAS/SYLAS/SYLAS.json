@@ -1,0 +1,18 @@
+{
+  "projectName" : "SYLAS",
+  "projectDescription" : "",
+  "comment" : "Default Comment",
+  "projectType" : "CLASSIF",
+  "createdDate" : "2021/27/21 13:27:30",
+  "modifyDate" : "2021/27/21 13:27:30",
+  "version" : "1.0.0",
+  "projectPath" : "SYLAS",
+  "pluginPath" : [ "C:\\Program Files (x64)\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar" ],
+  "trainingStack" : "",
+  "testingStack" : "",
+  "filters" : [ ],
+  "featureList" : [ ],
+  "groundtruth" : "",
+  "featureSelection" : "",
+  "classes" : 2
+}
