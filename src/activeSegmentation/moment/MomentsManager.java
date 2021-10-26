@@ -35,6 +35,7 @@ import ij.gui.Roi;
 import ijaux.datatype.Pair;
 
 
+
 /**
  * 				
  *   
@@ -64,7 +65,7 @@ import ijaux.datatype.Pair;
 public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	
-	private Map<String, IMoment<?>> momentMap= new HashMap<String, IMoment<?>>();
+	private Map<String, IMoment<?>> momentMap= new HashMap<>();
 
 	
 	private ProjectManager projectManager;
@@ -101,14 +102,15 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		this.featureManager= featureManager;
 	}
 
-
+	@Override
 	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
 	IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
 		//File f=new File(home);
 		//String[] plugins = f.list();
-		List<String> classes=new ArrayList<String>();
+		List<String> classes=new ArrayList<>();
+		System.setProperty("java.class.path", "C:\\PROGRA~4\\ImageJ\\ij.jar");
 		String cp=System.getProperty("java.class.path");
 
 		for(String plugin: plugins){
@@ -181,7 +183,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		for (File file : images) {
@@ -191,15 +193,18 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		}
 		return imageList;
 	}
-
+	
+	@Override
 	public void applyFilters(){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
-
+		
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
 		Map<String,Set<String>> features= new HashMap<String,Set<String>>();
-
+		System.out.println(projectString);
+		System.out.println(filterString);
+		for(IMoment<?> filter: momentMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
 					for(String image: images) {
@@ -230,22 +235,22 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	}
 
-
+	@Override
 	public Set<String> getAllFilters(){
 		return momentMap.keySet();
 	}
 
-
+	@Override
 	public Map<String,String> getDefaultFilterSettings(String key){
 		return momentMap.get(key).getDefaultSettings();
 	}
 
-
+	@Override
 	public boolean isFilterEnabled(String key){
 		return momentMap.get(key).isEnabled();
 	}
 
-
+	@Override
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
 		return momentMap.get(key).updateSettings(settingsMap);
 	}
@@ -253,7 +258,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 
 	private  List<String> installJarPlugins(String plugin) throws IOException {
-		List<String> classNames = new ArrayList<String>();
+		List<String> classNames = new ArrayList<>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
@@ -289,7 +294,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public void saveFiltersMetaData(){	
 		projectInfo= projectManager.getMetaInfo();
-		//System.out.println("meta Info"+projectInfo.toString());
+		System.out.println("meta Info"+projectInfo.toString());
 		List<Map<String,String>> filterObj= new ArrayList<Map<String,String>>();
 		for(String key: getAllFilters()){
 			Map<String,String> filters = new HashMap<String,String>();
@@ -340,14 +345,18 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 	@Override
 	public Image getFilterImage(String key) {
+		/*
 		IMoment<?> filter=momentMap.get(key);
 		try {
 			return ((IFilterViz) filter).getImage();
 		} catch (Exception e) {
 			IJ.log(key+" not an IFilterViz");
 			e.printStackTrace();
+			
 			return null;
 		}
+		*/
+		return null;
 	}
 
 
