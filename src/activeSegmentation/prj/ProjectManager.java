@@ -101,12 +101,12 @@ public class ProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			//System.out.println("SAVING");
+			System.out.println("SAVING");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+
 					"/"+projectInfo.projectName+
 					"/"+projectInfo.projectName+".json"), projectInfo);
 
-			//System.out.println("DONE");
+			System.out.println("DONE");
 
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
@@ -180,6 +180,9 @@ public class ProjectManager {
 			
 			
 		}
+		
+		IJ.log("creating project in "+projectDirectory);
+		IJ.log("AS path in "+activeSegDir);
 
 		projectInfo.setProjectDirectory(projectDir);
 		writeMetaInfo(projectInfo);
@@ -257,16 +260,18 @@ public class ProjectManager {
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
 		//check for null here
-		String plugindir=System.getProperty("plugins.dir");
-		if (plugindir==null) throw new RuntimeException("plugins.dir not set.");
+		System.setProperty("user.dir",IJ.getDirectory("imagej"));
+		String plugindir=System.getProperty("user.dir");
+		IJ.log(plugindir);
+		//if (plugindir==null) throw new RuntimeException("plugins.dir not set.");
 		
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegDir=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
+			activeSegDir=plugindir+"plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+			activeSegDir=plugindir+"plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
-
+		IJ.log(activeSegDir);
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
@@ -350,7 +355,7 @@ public class ProjectManager {
 	}
 	
 	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = sortImages(folder.listFiles());
 		
