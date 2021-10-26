@@ -144,5 +144,15 @@ public class ClassifierManager  {
 	public Object getClassifier() {
 		return this.currentClassifier.getClassifier();
 	}
+	
+	public double[] getDistribution(Instance instance) {
+		try {
+			return currentClassifier.distributionForInstance(instance);
+		} catch(Exception e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
