@@ -87,6 +87,7 @@ public class FeatureManager  {
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
+		IJ.log("loading images from"+this.projectString);
 		this.totalSlices = loadImages(this.projectString);
 		this.defaultColors = GuiUtil.setDefaultColors();
 		if (this.totalSlices > 0) {
@@ -107,8 +108,9 @@ public class FeatureManager  {
 		this.images.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
+		if (images==null) return -1;
 		final Pattern p = Pattern.compile("\\d+");
-		Arrays.sort(images, new  Comparator<File>(){
+				Arrays.sort(images, new  Comparator<File>(){
 		    @Override public int compare(File o1, File o2) {
 		    	   Matcher m = p.matcher(o1.getName());
 		           Integer number1 = null;
