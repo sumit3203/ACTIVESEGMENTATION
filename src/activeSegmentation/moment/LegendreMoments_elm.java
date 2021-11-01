@@ -12,15 +12,16 @@ import ij.process.ImageProcessor;
 
 public class LegendreMoments_elm {
 
-    private int degree_m;
-    private int degree_n;
-    private int highest_degree;
-    private double [][] matrix_B;
-    private double [][] matrix_Q_m;
-    private double [][] matrix_Q_n;
-    private int M,N;
-    private int Dm, Dn;
-    private int highest_dx;
+    private int degree_m=0;
+    private int degree_n=0;
+    private int highest_degree=0;
+    // Bernoulli coeffs matrix
+    private double [][] matrix_B=null;
+    private double [][] matrix_Q_m=null;
+    private double [][] matrix_Q_n=null;
+    private int M=0,N=0;
+    private int Dm=0, Dn=0;
+    private int highest_dx=0;
 
     public LegendreMoments_elm(int degree_m, int degree_n){
         this.degree_m = degree_m;
@@ -53,7 +54,7 @@ public class LegendreMoments_elm {
         }
     }
 
-    // Returns Legendre moment of image of degree (m+n) in form of array of m*n
+    // Returns Legendre moment table of image of degree (m+n) in form of array of m*n
 
     public double[][] extractLegendreMoment(ImageProcessor ip){
 
@@ -129,7 +130,7 @@ public class LegendreMoments_elm {
             }
         }
 
-        //return Legendre moments in form of degree_m*degree_n matrix
+        //returns Legendre moments in form of degree_m*degree_n matrix
         return moment_matrix;
     }
 
