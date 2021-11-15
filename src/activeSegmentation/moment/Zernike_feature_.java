@@ -38,8 +38,8 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 	public final static String DEG="Degree";
 	private int degree= Prefs.getInt(DEG, 6);
  
-	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<Pair<String,double[]>>();
-	private Set<String> features=new HashSet<String>();
+	private ArrayList<Pair<String,double[]>> moment_vector = new ArrayList<>();
+	private Set<String> features=new HashSet<>();
 
 	/** A string key identifying this factory. */
 	private final  String FILTER_KEY = "ZMC";
@@ -47,7 +47,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 	
   	
 	/** It stores the settings of the Filter. */
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 	
 	private boolean isEnabled=true;
 
@@ -111,10 +111,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 				//utility.display_image(ip_roi);
 				filter(ip_roi,list.get(i).getName());
 			}
-		}
-
-		// if asked for moment of image, we do not have any use case where we need both at a time
-		else{
+		}else{// if asked for moment of image, we do not have any use case where we need both at a time
 			filter(imageProcessor,s);
 		}
 
@@ -176,13 +173,6 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 		
 		moment_vector.add(roi_moment);
 		return  roi_moment;
-		/*int index = position_id;
-		ip.snapshot();
-		ip.getDefaultColorModel();
-		if(zm==null){
-			zm=new ZernikeMoment(degree);
-		}
-		return new Pair<Integer,Complex>(index, zm.extractZernikeMoment(ip));*/
 
 	}
 
@@ -232,13 +222,11 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 
 	@Override
 	public ArrayList<Pair<String,double[]>> getFeatures() {
-		// TODO Auto-generated method stub
 		return moment_vector;
 	}
 
 	@Override
 	public Set<String> getFeatureNames() {
-		// TODO Auto-generated method stub
 		return this.features;
 	}
 

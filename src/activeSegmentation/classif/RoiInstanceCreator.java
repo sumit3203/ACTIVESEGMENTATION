@@ -64,6 +64,10 @@ public class RoiInstanceCreator implements IFeature {
 	private List<String> images;
 	
 	
+	/**
+	 * 
+	 * @param projectInfo
+	 */
 	public RoiInstanceCreator(ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		//this.classLabels=new ArrayList<String>();
@@ -72,6 +76,11 @@ public class RoiInstanceCreator implements IFeature {
 		loadImages(this.projectString);
 	}
 
+	/**
+	 * 
+	 * @param directory
+	 * @return
+	 */
 	private int loadImages(String directory){
 		this.images.clear();
 		File folder = new File(directory);
@@ -85,6 +94,9 @@ public class RoiInstanceCreator implements IFeature {
 		return this.images.size();
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
 		instanceMap.clear();
@@ -145,7 +157,12 @@ public class RoiInstanceCreator implements IFeature {
     // System.out.println(trainingData.toString());
 	}
 
-	
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public double[] combine(double[] a, double[] b){
         int length = a.length + b.length;
         double[] result = new double[length];
@@ -154,6 +171,11 @@ public class RoiInstanceCreator implements IFeature {
         return result;
     }
 
+	/**
+	 * 
+	 * @param classInfos
+	 * @return
+	 */
 	private List<String> getCLassLabels(Collection<ClassInfo>  classInfos) {
 
 		List<String> labels= new ArrayList<String>();
@@ -163,16 +185,26 @@ public class RoiInstanceCreator implements IFeature {
 		//this.classLabels=labels;
 		return labels;
 	}
+	
+	/**
+	 * 
+	 */
 	@Override
 	public String getFeatureName() {
 		return featureName;
 	}
  
+	/**
+	 * 
+	 */
 	@Override
 	public IDataSet getDataSet() {
 		return new WekaDataSet(trainingData);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void setDataset(IDataSet trainingData) {
 		this.trainingData= trainingData.getDataset();
@@ -191,7 +223,9 @@ public class RoiInstanceCreator implements IFeature {
 	}
 
 
-
+	/**
+	 * 
+	 */
 	@Override
 	public Instance createInstance(Roi roi) {
 		//System.out.println("IN ROI INSTANCE Creator"+roi.getName());
