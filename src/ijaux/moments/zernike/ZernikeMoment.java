@@ -142,48 +142,5 @@ public class ZernikeMoment {
     	System.out.println(bb-aa);
 	}
 	
-	// TODO change into complex from PixLib
-	private class ComplexWrapper {
-        /** real part. */
-        private double[] m_real;
-
-        /** imaginary part. */
-        private double[] m_imaginary;
-
-        /**
-         * constructor for number with imaginary part = 0.
-         * 
-         * @param real the real part
-         */
-        public ComplexWrapper(final double[] real) {
-            m_real = real;
-            m_imaginary = null;
-        }
-
-        /**
-         * constructor.
-         * 
-         * @param real the real part
-         * @param imaginary the imaginary part
-         */
-        public ComplexWrapper(final double[] real, final double[] imaginary) {
-            m_real = real;
-            m_imaginary = imaginary;
-        }
-
-        /**
-         * @return the real part of the complex number.
-         */
-        public double[] getReal() {
-            return m_real;
-        }
-
-        /**
-         * @return the imaginary part of the complex number.
-         */
-        public double[] getImaginary() {
-            return m_imaginary;
-        }
-
-     }
+	
 }
