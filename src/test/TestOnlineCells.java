@@ -64,7 +64,7 @@ public class TestOnlineCells {
 		// TODO Auto-generated method stub
 		new ImageJ();
 		TestOnlineCells test= new TestOnlineCells();
-		String directory="C:\\Users\\vohra\\Documents\\EM\\hela\\";
+		String directory="C:\\Users\\vohra\\Documents\\EM\\hela_test\\";
 		test.run(directory);
 		//System.out.println(dirs);
 	}
