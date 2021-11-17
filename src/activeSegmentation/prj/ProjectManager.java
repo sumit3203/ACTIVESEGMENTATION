@@ -242,14 +242,13 @@ public class ProjectManager implements IUtil{
 			String trainingImage) {
 		String message="done";
 		if(projectName==null|| projectName.isEmpty()) {
-			return " Project Name cannot be Empty";
+			return " Project name cannot be empty";
 
 		} else if(projectDirectory==null|| projectDirectory.isEmpty() || projectDirectory.equalsIgnoreCase(trainingImage)) {
-			return "Project Directory cannot be Empty and Should not be same as training image directory";
+			return "Project directory cannot be empty and should not be the same as training image directory";
 		}
 		else if (null == WindowManager.getCurrentImage() &&(trainingImage==null|| trainingImage.isEmpty())) {
-			return "Training cannot be Empty and should be either tif file or folder with tiff images are"
-					+ "located";
+			return "Training folder cannot be empty and should contain either a tif file or folder with tiff images";
 		}
 		return message;
 	}
