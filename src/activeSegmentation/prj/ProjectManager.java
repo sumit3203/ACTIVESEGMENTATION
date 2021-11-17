@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+//import java.util.Arrays;
+//import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -39,11 +39,18 @@ public class ProjectManager implements IUtil{
 	private String activeSegJarPath;
 	private Map<String,String> projectDir=new HashMap<>();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public IDataSet getDataSet() {
 		return  dataSet;
 	}
 
-
+	/**
+	 * 
+	 * @param data
+	 */
 	public void setData(IDataSet data) {
 		dataSet = data.copy();
 	}
@@ -64,12 +71,7 @@ public class ProjectManager implements IUtil{
 			try {
 				//System.out.println(fileName);
 				File projectFile=new File(fileName);
-				//System.out.println(projectFile.getParent());
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
-				//projectInfo.setPluginPath(activeSegDir);
-				//metaInfo.setPath(path);
-				//System.out.println("done");
-				//System.out.println( projectInfo.getProjectName());
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				//System.out.println(projectInfo.toString());
@@ -82,7 +84,7 @@ public class ProjectManager implements IUtil{
 				IJ.log("Error: Not a JSON file!");
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				IJ.log("Error: Wrong version");
+				IJ.log("Error: Wrong version mapping");
 				e.printStackTrace();
 			} catch (IOException e) {
 				IJ.log("Error: IO");
@@ -111,8 +113,6 @@ public class ProjectManager implements IUtil{
 			System.out.println("SAVING project file ");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+
 					fs+projectInfo.projectName+".json"), projectInfo);
-
-			//System.out.println("DONE");
 
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
@@ -176,7 +176,7 @@ public class ProjectManager implements IUtil{
 			
 			}else {
 				// TRAINING IMAGE FOLDER
-				List<String> images=loadImages(trainingImage);
+				List<String> images=loadImages(trainingImage, true);
 				for(String image: images) {
 					ImagePlus currentImage=IJ.openImage(trainingImage+fs+image);
 					createImages(image, currentImage);
@@ -283,21 +283,12 @@ public class ProjectManager implements IUtil{
 	private void setProjectDir(String projectDirectory, String projectName) {
 		String projectString;
 		if(projectName!=null) {
-			projectString=projectDirectory+"/"+projectName+"/"+"training";
+			projectString=projectDirectory+fs+projectName+fs+"training";
 		}else {
-			projectString=projectDirectory+"/"+"Training";
+			projectString=projectDirectory+fs+"training";
 		}
 		
-		projectDir.put(ASCommon.K_PROJECTDIR, projectString);
-		/*
-		projectDir.put(ASCommon.K_FILTERSDIR, projectString+"/filters/");
-		projectDir.put(ASCommon.K_FEATURESDIR, projectString+"/features/");
-		projectDir.put(ASCommon.K_LEARNINGDIR, projectString+"/learning/");
-		projectDir.put(ASCommon.K_EVALUATIONDIR,projectString+"/evaluation/");
-		projectDir.put(ASCommon.K_IMAGESDIR,projectString+"/images/");
-		projectDir.put(ASCommon.K_TESTIMAGESDIR,projectString+"/testimages/");
-		projectDir.put(ASCommon.K_TESTFILTERDIR,projectString+"/testfilters/");
-		*/
+		projectDir.put(ASCommon.K_PROJECTDIR,   projectString);
 		projectDir.put(ASCommon.K_FILTERSDIR,   projectString + ASCommon.filterDir);
 		projectDir.put(ASCommon.K_FEATURESDIR,  projectString + ASCommon.featureDir);
 		projectDir.put(ASCommon.K_LEARNINGDIR,  projectString + ASCommon.learnDir);
@@ -321,8 +312,8 @@ public class ProjectManager implements IUtil{
 		createDirectory(projectDir.get(ASCommon.K_TESTFILTERDIR));
 		IJ.log("Project folders created");
 	}
-	
-	private File[] sortImages(File[] images) {
+/*	
+	private File[] sortFiles(File[] images) {
 		final Pattern p = Pattern.compile("\\d+");
 		Arrays.sort(images, new  Comparator<File>(){
 			@Override public int compare(File o1, File o2) {
@@ -353,13 +344,13 @@ public class ProjectManager implements IUtil{
 				);
 		return images;
 	}
-	
-
+	*/
+/*
 	@Override
 	public List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
-		File[] images = sortImages(folder.listFiles());
+		File[] images = sortFiles(folder.listFiles());
 		
 		for (File file : images) {
 			if (file.isFile()) {
@@ -369,7 +360,7 @@ public class ProjectManager implements IUtil{
 		
 		return imageList;
 	}
-
+*/
 	
 	private boolean createDirectory(String project){
 		File file=new File(project);

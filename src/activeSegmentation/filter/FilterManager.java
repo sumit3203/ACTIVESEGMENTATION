@@ -198,7 +198,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		Map<String,Set<String>> features= new HashMap<>();
 			
-		List<String>images= loadImages(projectString);
+		List<String>images= loadImages(projectString, false);
 		for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
