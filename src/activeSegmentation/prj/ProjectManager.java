@@ -36,7 +36,7 @@ public class ProjectManager implements IUtil{
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	private String activeSegDir;
+	private String activeSegJarPath;
 	private Map<String,String> projectDir=new HashMap<>();
 
 	public IDataSet getDataSet() {
@@ -128,7 +128,6 @@ public class ProjectManager implements IUtil{
 	 * @return
 	 */
 	public ProjectInfo getMetaInfo() {
-
 		return projectInfo;
 	}
 
@@ -158,7 +157,7 @@ public class ProjectManager implements IUtil{
 
 		projectInfo.projectDescription=projectDescription;
 		List<String> jars= new ArrayList<>();
-		jars.add(activeSegDir);
+		jars.add(activeSegJarPath);
 		projectInfo.setPluginPath(jars);
 		//DEFAULT 2 classes
 		projectInfo.setClasses(2);
@@ -179,7 +178,7 @@ public class ProjectManager implements IUtil{
 				// TRAINING IMAGE FOLDER
 				List<String> images=loadImages(trainingImage);
 				for(String image: images) {
-					ImagePlus currentImage=IJ.openImage(trainingImage+"/"+image);
+					ImagePlus currentImage=IJ.openImage(trainingImage+fs+image);
 					createImages(image, currentImage);
 				}
 			}
@@ -259,24 +258,20 @@ public class ProjectManager implements IUtil{
 	 * 
 	 */
 	private void setDirectory() {
-		//IJ.debugMode=true;
-		String OS = System.getProperty("os.name").toLowerCase();
-		IJ.log(OS);
-		//check for null here
-		//String plugindir=System.getProperty("user.dir");
+		//String OS = System.getProperty("os.name").toLowerCase();
+		//IJ.log(OS);
 		String plugindir=IJ.getDir("imagej");
-		// do not escape \
 		IJ.log(plugindir);
-		//if (plugindir==null) throw new RuntimeException("plugins.dir not set.");
-		
-		
+		/*
 		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegDir=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
+			activeSegJarPath=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
 		}
 		else {
-			activeSegDir=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
-		IJ.log(activeSegDir);
+		*/
+		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+"ACTIVE_SEG.jar";
+		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
