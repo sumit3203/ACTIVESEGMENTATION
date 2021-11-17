@@ -1,6 +1,7 @@
 package activeSegmentation;
 
 import java.awt.Font;
+import java.io.File;
 
 /**
  * 				
@@ -107,6 +108,7 @@ public interface ASCommon {
 	public static final String imagDir="/images/";
 	public static final String testimagDir="/testimages/";
 	
+	public static final String fs=File.separator;
 	/*
 	 *  GUI constants
 	 */

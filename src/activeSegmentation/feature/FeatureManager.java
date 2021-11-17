@@ -69,7 +69,7 @@ public class FeatureManager  {
 	private ProjectInfo projectInfo;
 	private Random rand = new Random();
 	private String projectString, featurePath;
-	private int sliceNum, totalSlices;
+	private int sliceNum=0, totalSlices=0;
 	private List<String> imageList;
 	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
@@ -91,11 +91,12 @@ public class FeatureManager  {
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
-		IJ.log("loading images from "+this.projectString);
-		this.totalSlices = loadImages(this.projectString);
-		this.defaultColors = GuiUtil.setDefaultColors();
-		if (this.totalSlices > 0) {
-			this.sliceNum = 1;
+		//IJ.log("loading images from "+this.projectString);
+		totalSlices = loadImages(projectString);
+		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from"+ projectString);
+		defaultColors = GuiUtil.setDefaultColors();
+		if (totalSlices > 0) {
+			sliceNum = 1;
 		}
 		if (!setFeatureMetadata()) {
 			for (int i = 1; i <= projectInfo.getClasses(); i++) {
@@ -873,7 +874,8 @@ public class FeatureManager  {
 		if (sliceNum == 0) {
 			ret= createImageIcon("no-image.jpg");
 		}
-		String url=projectString + imageList.get(sliceNum - 1);
+		if (sliceNum==0) sliceNum++;
+		String url=projectString + imageList.get(sliceNum-1 );
 		IJ.log("url "+url);
 		ret=new ImagePlus(url);
 		return ret; 

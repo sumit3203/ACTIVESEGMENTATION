@@ -60,7 +60,8 @@ public class Active_Segmentation_ implements PlugIn {
 			}
 		}	catch (Exception ex) {
 			IJ.log("plugins.dir misspecified\n"
-					+ "To run the platform in stand-alone mode specify plugins.dir");
+					+ "To run the platform in stand-alone mode specify plugins.dir"
+					+ "as a command line argument");
 			ex.printStackTrace();
 		} 
 		

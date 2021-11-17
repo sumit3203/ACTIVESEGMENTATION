@@ -26,10 +26,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import activeSegmentation.ASCommon;
+import static activeSegmentation.ASCommon.*;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IUtil;
 import activeSegmentation.ProjectType;
 
-public class ProjectManager {
+public class ProjectManager implements IUtil{
 
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
@@ -106,10 +108,9 @@ public class ProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			System.out.println("SAVING ");
+			System.out.println("SAVING project file ");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+
-					//"/"+projectInfo.projectName+
-					"/"+projectInfo.projectName+".json"), projectInfo);
+					fs+projectInfo.projectName+".json"), projectInfo);
 
 			//System.out.println("DONE");
 
@@ -135,7 +136,7 @@ public class ProjectManager {
 	 * 
 	 * @param projectName
 	 * @param projectType
-	 * @param projectDirectory
+	 * @param projectDirectory+ 
 	 * @param projectDescription
 	 * @param trainingImage
 	 * @return
@@ -150,7 +151,7 @@ public class ProjectManager {
 		}
 		setDirectory();
 		projectInfo= new ProjectInfo();
-		projectInfo.setProjectPath(projectDirectory);
+		projectInfo.setProjectPath(projectDirectory+ fs+projectName);
 	
 		projectInfo.projectName=projectName;
 		projectInfo.setProjectType(ProjectType.valueOf(projectType));
@@ -161,9 +162,9 @@ public class ProjectManager {
 		projectInfo.setPluginPath(jars);
 		//DEFAULT 2 classes
 		projectInfo.setClasses(2);
-		createProjectSpace(projectDirectory,projectName);
+		createProjectSpace(projectDirectory, projectName);
 		//CURRENT IMAGE
-		if(null !=WindowManager.getCurrentImage()) {
+		if (null !=WindowManager.getCurrentImage()) {
 			ImagePlus image= WindowManager.getCurrentImage();
 			IJ.log(Integer.toString(image.getStackSize()));
 			IJ.log(image.getTitle());
@@ -358,8 +359,10 @@ public class ProjectManager {
 		return images;
 	}
 	
-	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+
+	@Override
+	public List<String> loadImages(String directory){
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = sortImages(folder.listFiles());
 		
@@ -371,6 +374,7 @@ public class ProjectManager {
 		
 		return imageList;
 	}
+
 	
 	private boolean createDirectory(String project){
 		File file=new File(project);

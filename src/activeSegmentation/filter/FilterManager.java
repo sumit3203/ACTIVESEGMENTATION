@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IMEC
  *
  *
  * @contents
@@ -48,7 +48,7 @@ import java.util.zip.ZipInputStream;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class FilterManager extends URLClassLoader implements IFilterManager {
+public class FilterManager extends URLClassLoader implements IFilterManager, IUtil {
 
 	private Map<String, IFilter> filterMap= new HashMap<>();
 
@@ -172,10 +172,15 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 	}
 
-	private List<String> loadImages(String directory){
+	/*
+	public List<String> loadImages(String directory){
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
+		if (!folder.exists())
+			throw new RuntimeException(directory+" does not exist ");
 		File[] images = folder.listFiles();
+		if (images==null) 
+				throw new RuntimeException("no files found in "+directory);
 		for (File file : images) {
 			if (file.isFile()) {
 				imageList.add(file.getName());
@@ -183,16 +188,17 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 		return imageList;
 	}
+	*/
 
 	@Override
 	public void applyFilters(){
-		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
+		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
-		List<String>images= loadImages(projectString);
 		Map<String,Set<String>> features= new HashMap<>();
-
+			
+		List<String>images= loadImages(projectString);
 		for(IFilter filter: filterMap.values()){
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
