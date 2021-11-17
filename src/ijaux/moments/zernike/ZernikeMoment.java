@@ -14,6 +14,7 @@ public class ZernikeMoment {
 	int centerX;
 	int centerY;
 	double radius;
+	// eliminate RadialValue
 	public RadialValue[] rv=null;
 	
 	public ZernikeMoment(int degree){

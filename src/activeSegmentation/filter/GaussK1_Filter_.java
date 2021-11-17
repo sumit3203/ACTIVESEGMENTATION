@@ -340,6 +340,11 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
  
 	
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
+		ip.snapshot();
+
+		if (!isFloat) 
+			ip=ip.toFloat(0, null);
+		
 		float[] kernx= sp.gauss1D();
 		System.out.println("kernx :"+kernx.length);
 		SUtils.flip(kernx);		

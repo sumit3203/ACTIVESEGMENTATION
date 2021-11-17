@@ -9,6 +9,7 @@ import ij.io.RoiDecoder;
 import ij.io.RoiEncoder;
 import ij.plugin.filter.RankFilters;
 import ij.plugin.frame.RoiManager;
+import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import weka.core.Instance;
@@ -69,7 +70,7 @@ public class FeatureManager  {
 	private Random rand = new Random();
 	private String projectString, featurePath;
 	private int sliceNum, totalSlices;
-	private List<String> images;
+	private List<String> imageList;
 	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<>();
@@ -86,7 +87,7 @@ public class FeatureManager  {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
-		this.images = new ArrayList<>();
+		this.imageList = new ArrayList<>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
@@ -113,7 +114,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	private int loadImages(String directory) {
-		this.images.clear();
+		imageList.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		if (images== null) return -1;
@@ -151,10 +152,10 @@ public class FeatureManager  {
 		for (File file : images) {
 			//System.out.println(file.getName());
 			if (file.isFile()) {
-				this.images.add(file.getName());
+				imageList.add(file.getName());
 			}
 		}
-		return this.images.size();
+		return imageList.size();
 	}
 
 	/**
@@ -168,7 +169,7 @@ public class FeatureManager  {
 	public boolean addExample(String key, Roi roi, String type, int sliceNum) {
 		
 		if(!contains(key, roi, type, sliceNum)) {
-			String imageKey = this.images.get(sliceNum - 1);
+			String imageKey = imageList.get(sliceNum - 1);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 				classes.get(key).addTestingRois(imageKey, roi);
 			} else {
@@ -185,7 +186,7 @@ public class FeatureManager  {
 	 * improve
 	 */
 	public boolean contains(String key, Roi roi, String type, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		for(String classKey: classes.keySet()) {
 			
 				if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
@@ -256,7 +257,7 @@ public class FeatureManager  {
 	 * @param type
 	 */
 	public void deleteExample(String key, int index, String type) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			classes.get(key).deleteTestingRoi(imageKey, index);
 		} else {
@@ -273,7 +274,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public List<Roi> getExamples(String key, String type, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRois(imageKey);
 		} else {
@@ -290,7 +291,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public Roi getRoi(String key, int index, String type) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRoi(imageKey, index);
 		} else {
@@ -323,7 +324,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public int getRoiListSize(String key, String learningType, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
 			return classes.get(key).getTestingRoiSize(imageKey);
 		} else {
@@ -769,7 +770,7 @@ public class FeatureManager  {
 		IJ.log("TRAINING DONE");
 		System.out.println("TRAINING DONE");
 		
-		for (String image : images) {
+		for (String image : imageList) {
 			//System.out.println(image +" image");
 																	
 			//classification setting
@@ -860,7 +861,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public int getTotalSlice() {
-		return this.images.size();
+		return imageList.size();
 	}
 
 	/**
@@ -868,10 +869,14 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public ImagePlus getCurrentImage() {
+		ImagePlus ret=null;
 		if (sliceNum == 0) {
-			return createImageIcon("no-image.jpg");
+			ret= createImageIcon("no-image.jpg");
 		}
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		String url=projectString + imageList.get(sliceNum - 1);
+		IJ.log("url "+url);
+		ret=new ImagePlus(url);
+		return ret; 
 	}
 
 	/**
@@ -887,7 +892,7 @@ public class FeatureManager  {
 	 * @return
 	 */
 	public ImagePlus getClassifiedImage() {
-		return new ImagePlus(featurePath + this.images.get(sliceNum - 1));
+		return new ImagePlus(featurePath + imageList.get(sliceNum - 1));
 	}
 
 	/**
@@ -899,7 +904,7 @@ public class FeatureManager  {
 			this.sliceNum += 1;
 		}
 		//System.out.println("next slice"+sliceNum);
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		return new ImagePlus(projectString + imageList.get(sliceNum - 1));
 	}
 
 	/**
@@ -910,7 +915,7 @@ public class FeatureManager  {
 		if (this.sliceNum > 1) {
 			this.sliceNum -= 1;
 		}
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		return new ImagePlus(projectString + imageList.get(sliceNum - 1));
 	}
 
 	/**
@@ -923,7 +928,8 @@ public class FeatureManager  {
 		if (imgURL != null) {
 			return new ImagePlus(imgURL.getPath());
 		} else {
-			return null;
+			ByteProcessor bp=new ByteProcessor(256,256);
+			return new ImagePlus("no image", bp);
 		}
 	}
 

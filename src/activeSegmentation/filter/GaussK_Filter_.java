@@ -333,9 +333,9 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp,  ImageStack imageStack) {
 		if (!isFloat) 
 			ip=ip.convertToFloat();
-		if(ip instanceof ColorProcessor) {
-			ip=ip.convertToFloat();
-		}
+//		if(ip instanceof ColorProcessor) {
+//			ip=ip.convertToFloat();
+//		}
 		
 		int r=sp.getSize();
 		//System.out.println("IN REEAL CODE");
@@ -372,7 +372,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 		}
-		//System.out.println("Calculating Curvatue");
+		//System.out.println("Calculating Curvature");
 		long time=-System.nanoTime();	
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
@@ -457,9 +457,9 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			//apos=5;
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Gauss_K1*K2"+r, lap_k1k2);
+		imageStack.addSlice(FILTER_KEY+"Gauss_K1xK2"+r, lap_k1k2);
 		lap_kk.resetMinAndMax();
-		imageStack.addSlice(FILTER_KEY+"Gauss_K1+K2"+r, lap_kk);
+		imageStack.addSlice(FILTER_KEY+"Gauss_K1_K2"+r, lap_kk);
 
 		time+=System.nanoTime();
 		time/=1000.0f;
