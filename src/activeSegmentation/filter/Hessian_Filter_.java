@@ -89,6 +89,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
 
+	@AFilterField(key=FULL_OUTPUT, value="full output")
 	public boolean fulloutput=false;
 
 	private boolean isFloat=false;

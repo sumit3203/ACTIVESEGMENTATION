@@ -57,7 +57,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="CURVATURE1", value="Gaussian Jet", type=SEGM)
+@AFilter(key="CURVATURE1", value="Gaussian Curvature 1", type=SEGM)
 public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -67,14 +67,14 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private int nPasses=1;
 	private int pass;
  
-	public final static String SIGMA="GK_sigma", LEN="GK_len",MAX_LEN="G_MAX";
+	public final static String SIGMA="GK_sigma", LEN="GK_len", MAX_LEN="G_MAX";
  
 	@AFilterField(key=LEN, value="initial scale")
-	private static int sz= Prefs.getInt(LEN, 2);
+	public static int sz= Prefs.getInt(LEN, 2);
 	//private static float sigma=(float) Prefs.getDouble(SIGMA, 2.0f);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	private float[][] kernel=null;
 
