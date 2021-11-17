@@ -62,7 +62,6 @@ public class ProjectManager implements IUtil{
 	 * @return
 	 */
 	public boolean loadProject(String fileName) {
-		//System.out.println("IN LOAD PROJCT");
 		IJ.log(System.getProperty("plugins.dir"));
 		IJ.log("loading project ...");
 		setDirectory();
@@ -110,10 +109,13 @@ public class ProjectManager implements IUtil{
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
-			System.out.println("SAVING project file ");
-			mapper.writeValue(new File(projectInfo.getProjectPath()+
-					fs+projectInfo.projectName+".json"), projectInfo);
+		
+			final String projectFile=projectInfo.getProjectPath()+
+					fs+projectInfo.projectName+".json";
+			mapper.writeValue(new File(projectFile), projectInfo);
 
+			System.out.println("SAVING project file "+projectFile);
+			
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {

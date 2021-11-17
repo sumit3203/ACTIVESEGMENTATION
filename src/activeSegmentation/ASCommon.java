@@ -125,7 +125,7 @@ public interface ASCommon {
 	 */
 	public static final Font labelFONT = new Font("Arial", Font.BOLD, 13);
 	public static final Font panelFONT = new Font("Arial", Font.BOLD, 10);
-	// General font of plugin
+	// default font for plugin
 	public static final Font FONT = new Font("Arial", Font.PLAIN, 10);
 	
 }

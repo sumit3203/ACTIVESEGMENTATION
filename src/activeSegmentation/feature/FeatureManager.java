@@ -4,10 +4,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Roi;
-import ij.gui.TextRoi;
 import ij.io.RoiDecoder;
 import ij.io.RoiEncoder;
-import ij.plugin.filter.RankFilters;
 import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
@@ -63,7 +61,7 @@ import activeSegmentation.util.GuiUtil;
  *          Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  *          USA
  */
-public class FeatureManager  {
+public class FeatureManager implements IUtil {
 
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
@@ -92,7 +90,8 @@ public class FeatureManager  {
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
 		//IJ.log("loading images from "+this.projectString);
-		totalSlices = loadImages(projectString);
+		final List<String> images=loadImages(projectString, true);
+		totalSlices = images.size();
 		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from"+ projectString);
 		defaultColors = GuiUtil.setDefaultColors();
 		if (totalSlices > 0) {
@@ -114,6 +113,7 @@ public class FeatureManager  {
 	 * @param directory
 	 * @return
 	 */
+	/*
 	private int loadImages(String directory) {
 		imageList.clear();
 		File folder = new File(directory);
@@ -158,7 +158,7 @@ public class FeatureManager  {
 		}
 		return imageList.size();
 	}
-
+*/
 	/**
 	 * 
 	 * @param key

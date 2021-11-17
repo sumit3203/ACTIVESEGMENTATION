@@ -99,14 +99,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 
 	/* NEW VARIABLES*/
-
-	/** A string key identifying this factory. */
-	//private final String FILTER_KEY = "HESSIAN";
-
-	/** The pretty name of the target detector. */
-	//private final String FILTER_NAME = "Hessian components";
-	
-  	
+ 	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 	
@@ -135,11 +128,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	private Calibration cal=null;
 	
-	/*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
-	*/
 	
 	/*
 	 * (non-Javadoc)
@@ -150,12 +138,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int r = (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 
-
 		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-
 		imageStack = filter(ip,sp, imageStack);
-
-
 		image=new ImagePlus("Hessian result hw="+(r),imageStack);
 		image.show();
 	}
@@ -445,20 +429,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			return false;
 		}
 	}
-
-	/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-	*/
-
-		/*
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-		 */
 
 	@Override
 	public boolean isEnabled() {

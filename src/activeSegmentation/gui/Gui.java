@@ -50,7 +50,7 @@ public class Gui implements ASCommon {
 		learningManager = new ClassifierManager(this.projectManager);
 		featureManager=new FeatureManager(this.projectManager, this.learningManager);
 		
-		prepareGUI();
+		initGUI();
 	}
 
 	public void doAction(ActionEvent event) 	{
@@ -90,7 +90,7 @@ public class Gui implements ASCommon {
 	
 	
 
-	private void prepareGUI()	{
+	private void initGUI()	{
 		this.mainFrame = new JFrame("Active Segmentation");
 		this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
