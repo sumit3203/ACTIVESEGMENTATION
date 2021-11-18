@@ -493,7 +493,7 @@ public class ViewFilterResults extends ImageWindow  {
 	private void drawExamples(){
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getExamples(key,learningType.getSelectedItem().toString(), sliceNum);
+					getRoiList(key,learningType.getSelectedItem().toString(), sliceNum);
 			this.roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			this.roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
@@ -527,13 +527,15 @@ public class ViewFilterResults extends ImageWindow  {
 		displayImage.setRoi(newRoi);
 		displayImage.updateAndDraw();
 	} 
+	
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		for(String key:featureManager.getClassKeys()){
 			exampleList.get(key).removeAll();
 			Vector<String> listModel = new Vector<>();
-
-			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString(), sliceNum); j++){	
+			final String stype=type.toString();
+			final int n=featureManager.getRoiList(key, stype, sliceNum).size();
+			for(int j=0; j<n; j++){	
 				listModel.addElement(key+ " "+ j + " " +
 						featureManager.getCurrentSlice()+" "+type.getLearningType());
 			}

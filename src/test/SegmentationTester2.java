@@ -54,10 +54,10 @@ public class SegmentationTester2 {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
-		String trainingImage="C:\\GitHub\\U-net-2D-EM-segmentation\\data\\train.tif";
-		String trainlabels="C:\\GitHub\\U-net-2D-EM-segmentation\\data\\labels.tif";
-		String testImage="C:\\GitHub\\U-net-2D-EM-segmentation\\data\\train.tif";
-		String testlabels="C:\\GitHub\\U-net-2D-EM-segmentation\\data\\labels.tif";
+		String trainingImage="C:\\Data\\isbi2012\\train.tif";
+		String trainlabels="C:\\Data\\isbi2012\\labels.tif";
+		String testImage="C:\\Data\\isbi2012\\train.tif";
+		String testlabels="C:\\Data\\isbi2012\\labels.tif";
 		String[] labels= {"black", "cell"};
 		SegmentationTester2 tester= new SegmentationTester2();
 		tester.run(trainingImage, trainlabels, labels, testImage, testlabels);

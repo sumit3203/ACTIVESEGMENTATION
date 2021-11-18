@@ -15,8 +15,8 @@ import weka.core.Instance;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
-import java.util.Arrays;
-import java.util.Comparator;
+//import java.util.Arrays;
+//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -68,7 +68,7 @@ public class FeatureManager implements IUtil {
 	private Random rand = new Random();
 	private String projectString, featurePath;
 	private int sliceNum=0, totalSlices=0;
-	private List<String> imageList;
+	private List<String> imageList=new ArrayList<>();
 	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<>();
@@ -85,12 +85,11 @@ public class FeatureManager implements IUtil {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
-		this.imageList = new ArrayList<>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
 		//IJ.log("loading images from "+this.projectString);
-		final List<String> images=loadImages(projectString, true);
+		final List<String> images=loadImages(projectString);
 		totalSlices = images.size();
 		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from"+ projectString);
 		defaultColors = GuiUtil.setDefaultColors();
@@ -113,6 +112,11 @@ public class FeatureManager implements IUtil {
 	 * @param directory
 	 * @return
 	 */
+	public List<String> loadImages(String directory) {
+		imageList.clear();
+		imageList= loadImages( directory, true);
+		return imageList;
+	}
 	/*
 	private int loadImages(String directory) {
 		imageList.clear();
@@ -274,14 +278,16 @@ public class FeatureManager implements IUtil {
 	 * @param sliceNum
 	 * @return
 	 */
-	public List<Roi> getExamples(String key, String type, int sliceNum) {
-		String imageKey = imageList.get(sliceNum - 1);
-		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRois(imageKey);
-		} else {
-			return classes.get(key).getTrainingRois(imageKey);
-		}
-
+	public List<Roi> getRoiList(String key, String type, int sliceNum) {
+		if (imageList.size()>0) {
+			String imageKey = imageList.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				return classes.get(key).getTestingRois(imageKey);
+			} else {
+				return classes.get(key).getTrainingRois(imageKey);
+			}
+		} else 
+			return new  ArrayList<>();
 	}
 
 	/**
@@ -292,12 +298,15 @@ public class FeatureManager implements IUtil {
 	 * @return
 	 */
 	public Roi getRoi(String key, int index, String type) {
-		String imageKey = imageList.get(sliceNum - 1);
-		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRoi(imageKey, index);
-		} else {
-			return classes.get(key).getTrainingRoi(imageKey, index);
-		}
+		if (imageList.size()>0) {
+			String imageKey = imageList.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				return classes.get(key).getTestingRoi(imageKey, index);
+			} else {
+				return classes.get(key).getTrainingRoi(imageKey, index);
+			}
+		} else 
+			return null;
 	}
 
 	/**
@@ -324,6 +333,7 @@ public class FeatureManager implements IUtil {
 	 * @param sliceNum
 	 * @return
 	 */
+	/*
 	public int getRoiListSize(String key, String learningType, int sliceNum) {
 		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
@@ -332,7 +342,7 @@ public class FeatureManager implements IUtil {
 			return classes.get(key).getTrainingRoiSize(imageKey);
 		}
 	}
-	
+	*/
 	/**
 	 * 
 	 * @param key
@@ -556,7 +566,7 @@ public class FeatureManager implements IUtil {
 	 */
 	public boolean saveExamples(String filename, String classKey, String type, int sliceNum) {
 		//System.out.println(classKey + type);
-		List<Roi> rois = getExamples(classKey, type, sliceNum);
+		List<Roi> rois = getRoiList(classKey, type, sliceNum);
 		//System.out.println(rois.size());
 		return saveRois(filename, rois);
 	}
@@ -770,18 +780,19 @@ public class FeatureManager implements IUtil {
 		
 		IJ.log("TRAINING DONE");
 		System.out.println("TRAINING DONE");
+		final ProjectType projtype=	projectInfo.getProjectType();	
 		
 		for (String image : imageList) {
 			//System.out.println(image +" image");
-																	
+			
 			//classification setting
-			if(projectInfo.getProjectType()==ProjectType.CLASSIF) {															
+			if (projtype==ProjectType.CLASSIF) {															
 							
 				//list of rois to make classified image instance				
 				List<Roi> training_roi_list;
 				List<Roi> testing_roi_list;
 																		
-				// iterate over all training rois (of all the classes) and predict their output
+				// iterate over all training ROIs (of all the classes) and predict their output
 				for(String key: getClassKeys()){										
 					training_roi_list = classes.get(key).getTrainingRois(image);
 					if(training_roi_list!=null) {
@@ -805,7 +816,7 @@ public class FeatureManager implements IUtil {
 			} else {//segmentation setting
 		 		//get the current image
 				ImagePlus currentImage = getCurrentImage();
-		 		//classificationResult would have no of terms as number of pixels in particular image, 
+		 		//classificationResult would have number of terms as number of pixels in particular image, 
 				//expects createAllinstance would provide instances of all pixels of the particular image
 				
 				//String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
@@ -825,7 +836,7 @@ public class FeatureManager implements IUtil {
 												
 		}
 		
-		if(projectInfo.getProjectType()==ProjectType.CLASSIF) {
+		if(projtype==ProjectType.CLASSIF) {
 			return null;
 		}
 		return getClassifiedImage();
@@ -871,13 +882,15 @@ public class FeatureManager implements IUtil {
 	 */
 	public ImagePlus getCurrentImage() {
 		ImagePlus ret=null;
-		if (sliceNum == 0) {
-			ret= createImageIcon("no-image.jpg");
+		System.out.println("imageList size "+imageList.size());
+		if ( imageList.size()==0) {
+			ret= createImageIcon("./no-image.jpg");
+		} else {
+			if (sliceNum==0) sliceNum++;
+			String url=projectString + imageList.get(sliceNum-1 );
+			IJ.log("url "+url);
+			ret=new ImagePlus(url);
 		}
-		if (sliceNum==0) sliceNum++;
-		String url=projectString + imageList.get(sliceNum-1 );
-		IJ.log("url "+url);
-		ret=new ImagePlus(url);
 		return ret; 
 	}
 
@@ -926,7 +939,7 @@ public class FeatureManager implements IUtil {
 	 * @return
 	 */
 	private ImagePlus createImageIcon(String path) {
-		java.net.URL imgURL = FeatureManager.class.getResource(path);
+		java.net.URL imgURL = FeatureManager.class.getClassLoader().getResource(path);
 		if (imgURL != null) {
 			return new ImagePlus(imgURL.getPath());
 		} else {

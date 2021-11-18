@@ -73,6 +73,7 @@ public class TestOnlineCells {
 		Map<String,List<CellType>>cells=loadCells(directory);
 		List<Instance> trainInstances= new ArrayList<>();
 		List<Instance> testInstances= new ArrayList<>();
+		// cross-validation step
 		for(String key: cells.keySet()) {
 			List<CellType> cellsinside=cells.get(key);
 			Collections.shuffle(cellsinside);

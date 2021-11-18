@@ -319,7 +319,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private void drawExamples(){
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getExamples(key,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
+					getRoiList(key,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
 			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
@@ -640,7 +640,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			ArrayList<Roi> rois;
 			for(String classKey:featureManager.getClassKeys()) {
 				//returns rois of current image slice of given class, current slice is updated internally
-				rois = (ArrayList<Roi>) featureManager.getExamples(classKey,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
+				rois = (ArrayList<Roi>) featureManager.getRoiList(classKey,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
 				if(rois!=null) {					
 					for (Roi roi:rois) {
 						int pred = predictionResultClassification.get(roi.getName());
@@ -684,11 +684,17 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
+		
 		for(String key:featureManager.getClassKeys()){
 			exampleList.get(key).removeAll();
-			Vector<String> listModel = new Vector<String>();
-
-			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()); j++){	
+			Vector<String> listModel = new Vector<>();
+			final int slicenum=featureManager.getCurrentSlice();
+			final String stype=type.toString();
+			final List<Roi> lst= featureManager.getRoiList(key, stype ,slicenum);
+			int n=0;
+			if (lst!=null)
+				n=lst.size();
+			for(int j=0; j<n; j++){	
 				listModel.addElement(key+ " "+ j + " " +
 						featureManager.getCurrentSlice()+" "+type.getLearningType());
 			}
