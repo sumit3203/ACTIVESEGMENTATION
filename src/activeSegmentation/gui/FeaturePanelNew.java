@@ -49,7 +49,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
- 
+import activeSegmentation.IUtil;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureManager;
@@ -61,7 +61,7 @@ import static  activeSegmentation.ProjectType.*;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class FeaturePanelNew extends ImageWindow implements ASCommon  {
+public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 
 	/**
 	 * 
@@ -681,8 +681,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void updateExampleLists()	{
+		LearningType type=(LearningType) learningType.getSelectedItem();
+		updateExampleLists(featureManager, type,  exampleList);
+	}
+	
+	/*
+	public void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		
 		for(String key:featureManager.getClassKeys()){
@@ -702,7 +708,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			exampleList.get(key).setForeground(featureManager.getClassColor(key));
 		}
 	}	
-
+	 */
+	
 	private  MouseListener mouseListener = new MouseAdapter() {
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList<?>  theList = ( JList<?>) mouseEvent.getSource();

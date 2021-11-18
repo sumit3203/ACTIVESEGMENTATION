@@ -8,8 +8,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JList;
+
+import activeSegmentation.feature.FeatureManager;
+import ij.gui.Roi;
 
 /**
  * @author prodanov
@@ -71,5 +79,27 @@ public interface IUtil {
 				);
 		return images;
 	}
+	
+	
+	default public void updateExampleLists(FeatureManager featureManager, LearningType type, Map<String, JList<String>> exampleList)	{
+		//LearningType type=(LearningType) learningType.getSelectedItem();
+		final Set<String> keyset=featureManager.getClassKeys();
+		for(String key:keyset){
+			exampleList.get(key).removeAll();
+			Vector<String> listModel = new Vector<>();
+			final int slicenum=featureManager.getCurrentSlice();
+			final String stype=type.toString();
+			final List<Roi> lst= featureManager.getRoiList(key, stype ,slicenum);
+			int n=0;
+			if (lst!=null)
+				n=lst.size();
+			for(int j=0; j<n; j++){	
+				listModel.addElement(key+ " "+ j + " " +
+						featureManager.getCurrentSlice()+" "+type.getLearningType());
+			}
+			exampleList.get(key).setListData(listModel);
+			exampleList.get(key).setForeground(featureManager.getClassColor(key));
+		}
+	}	
 
 }

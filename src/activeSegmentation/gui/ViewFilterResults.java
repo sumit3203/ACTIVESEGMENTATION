@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.IUtil;
 //import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
@@ -47,7 +48,7 @@ import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 
-public class ViewFilterResults extends ImageWindow  {
+public class ViewFilterResults extends ImageWindow implements IUtil  {
 
 	/**
 	 * 
@@ -530,6 +531,12 @@ public class ViewFilterResults extends ImageWindow  {
 	
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
+		updateExampleLists(featureManager, type,  exampleList);
+	}
+	
+	/*
+	private void updateExampleLists()	{
+		LearningType type=(LearningType) learningType.getSelectedItem();
 		for(String key:featureManager.getClassKeys()){
 			exampleList.get(key).removeAll();
 			Vector<String> listModel = new Vector<>();
@@ -543,6 +550,7 @@ public class ViewFilterResults extends ImageWindow  {
 			exampleList.get(key).setForeground(featureManager.getClassColor(key));
 		}
 	}		
+	*/
 	
 	/*public static void main(String[] args) {
 		new ImageJ();
