@@ -172,7 +172,8 @@ public class PixelInstanceCreator implements IFeature {
 		IJ.log(featurePath);
 		IJ.log(localPath);
 		File[] images=sortImages(new File(featurePath+localPath).listFiles());
-
+		
+		System.out.println("loadFeatureStack: "+featurePath+localPath+"/"+images[0].getName());
 		ImagePlus firstImage=IJ.openImage(featurePath+localPath+"/"+images[0].getName());
 		ImageStack featureStack = new ImageStack(firstImage.getWidth(), firstImage.getHeight());
 		for(File file : images){
