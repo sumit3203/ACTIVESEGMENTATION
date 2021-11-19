@@ -15,8 +15,8 @@ public class ZernikeMoment {
 	int centerY;
 	double radius;
 	// eliminate RadialValue
+	//public RadialValue[] rv=null;
 	public RadialValue[] rv=null;
-	
 	public ZernikeMoment(int degree){
 		this.degree=degree;
 	}
@@ -64,7 +64,7 @@ public class ZernikeMoment {
     	// TODO change into PixLib form
     	final int sz=ip.getHeight()*ip.getWidth();
     	Zps[] zps=new Zps[sz];
-    	//ComplexArray zps2= ComplexArray.create(sz);
+    	//ComplexArray[] zps2=  new ComplexArray[sz];
     	int index=0;
         for(int i=0;i<ip.getHeight();i++){
         	for(int j=0;j<ip.getWidth();j++){
@@ -97,7 +97,7 @@ public class ZernikeMoment {
         		}
         		
         		zps[index].setComplex(real, imag);
-        		 
+        		
         		index++;
         		
         		 	
@@ -130,8 +130,8 @@ public class ZernikeMoment {
 		IJ.run("Blobs (25K)");
     	//ImagePlus imp=IJ.openImage(path);
 		ImagePlus imp=IJ.getImage();
-    	ImageConverter ic=new ImageConverter(imp);
-    	ic.convertToGray8();
+    	//ImageConverter ic=new ImageConverter(imp);
+    	//ic.convertToGray8();
     	
     	ImageProcessor ip=imp.getProcessor();
     	ZernikeMoment zm=new ZernikeMoment(8);
@@ -141,48 +141,5 @@ public class ZernikeMoment {
     	System.out.println(bb-aa);
 	}
 	
-	// TODO change into complex from PixLib
-//	private class ComplexWrapper {
-//        /** real part. */
-//        private double[] m_real;
-//
-//        /** imaginary part. */
-//        private double[] m_imaginary;
-//
-//        /**
-//         * constructor for number with imaginary part = 0.
-//         * 
-//         * @param real the real part
-//         */
-//        public ComplexWrapper(final double[] real) {
-//            m_real = real;
-//            m_imaginary = null;
-//        }
-//
-//        /**
-//         * constructor.
-//         * 
-//         * @param real the real part
-//         * @param imaginary the imaginary part
-//         */
-//        public ComplexWrapper(final double[] real, final double[] imaginary) {
-//            m_real = real;
-//            m_imaginary = imaginary;
-//        }
-//
-//        /**
-//         * @return the real part of the complex number.
-//         */
-//        public double[] getReal() {
-//            return m_real;
-//        }
-//
-//        /**
-//         * @return the imaginary part of the complex number.
-//         */
-//        public double[] getImaginary() {
-//            return m_imaginary;
-//        }
-//
-//     }
+
 }
