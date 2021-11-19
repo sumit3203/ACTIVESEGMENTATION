@@ -65,7 +65,7 @@ public class Gui implements ASCommon {
 		
 		if(event==this.FILTERVIS_BUTTON_PRESSED){
 		      // filterManager.getFinalImage().show();		
-				new ViewFilterResults(this.projectManager,featureManager);
+				new ViewFilterOutputPanel(this.projectManager,featureManager);
 
 			}
 

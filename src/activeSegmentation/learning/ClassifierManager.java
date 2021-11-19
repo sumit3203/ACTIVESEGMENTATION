@@ -21,7 +21,7 @@ import activeSegmentation.IFeatureSelection;
 
 
 
-public class ClassifierManager  {
+public class ClassifierManager implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
@@ -58,7 +58,8 @@ public class ClassifierManager  {
 		try {
 			System.out.println("ClassifierManager: in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
-			String filename=folder.getCanonicalPath()+"\\"+this.metaInfo.getGroundtruth();
+			String filename=folder.getCanonicalPath()+fs+this.metaInfo.getGroundtruth();
+			IJ.log(filename);
 			if(this.metaInfo.getGroundtruth()!=null && !this.metaInfo.getGroundtruth().isEmpty())
 			{
 				System.out.println(filename);
@@ -118,10 +119,15 @@ public class ClassifierManager  {
 		//System.out.println("Testing Results");
 		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
 		//	System.out.println("WORK LOAD : "+ Common.WORKLOAD);
-			double[] classificationResult = new double[dataSet.getNumInstances()];		
+			double[] classificationResult = new double[dataSet.getNumInstances()];	
+			
 			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
 					classificationResult, currentClassifier);
-					pool.invoke(applyTask);
+			try {
+				pool.invoke(applyTask);
+			} catch (@SuppressWarnings("unused") Exception ex) {
+				System.out.println("Exception in applyClassifier ");
+			}
 		return classificationResult;
 	}
 

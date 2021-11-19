@@ -133,11 +133,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
-		this.jCheckBoxList= new ArrayList<JCheckBox>();
-		this.jTextList= new HashMap<String,JTextArea>();
-		this.exampleList = new HashMap<String, JList<String>>();
-		this.allexampleList = new HashMap<String, JList<String>>();
-		roiOverlayList = new HashMap<String, RoiListOverlay>();
+		this.jCheckBoxList= new ArrayList<>();
+		this.jTextList= new HashMap<>();
+		this.exampleList = new HashMap<>();
+		this.allexampleList = new HashMap<>();
+		roiOverlayList = new HashMap<>();
 		//tempClassifiedImage = new ImagePlus();		
 		this.setVisible(false);
 		showPanel();
@@ -168,7 +168,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 */
 		imagePanel.setLayout(new BorderLayout());
 		
-		ic=new SimpleCanvas(featureManager.getCurrentImage());
+		//ic=new SimpleCanvas(featureManager.getCurrentImage());
+		ic=new SimpleCanvas(displayImage);
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
 		setOverlay();
@@ -434,7 +435,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 
 		if(event==SAVE_BUTTON_PRESSED){
 			featureManager.saveFeatureMetadata();
-			JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
+			IJ.log("Successfully saved regions of interest");
+			//JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		} //end if
 		
 		if(event==SAVECLASS_BUTTON_PRESSED){
@@ -513,7 +515,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			else {
 				classifiedImage=featureManager.compute();
 			}
-			IJ.log("compute");
+			IJ.log("computing");
 
 			toggleOverlay();
 		} //end if

@@ -174,7 +174,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			GScaleSpace sp=new GScaleSpace(sigma);
 			ImageProcessor fp=filter(image, sp, sep, isiso);
-			String imageName=filterPath+"/"+key+"_"+sigma+".tif" ;
+			String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 
 		}

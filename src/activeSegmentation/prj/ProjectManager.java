@@ -199,8 +199,14 @@ public class ProjectManager implements IUtil{
 	 * @param currentImage
 	 */
 	private void createImages(String image, ImagePlus currentImage) {
-		String format=image.substring(image.lastIndexOf("."));
-		String folder=image.substring(0, image.lastIndexOf("."));	
+		
+		final int dotindex=image.lastIndexOf(".");
+		String format="tif";
+		String folder=image;
+		if (dotindex>0) {
+		  format=image.substring(dotindex);
+		  folder=image.substring(0, dotindex);	
+		}
 		if(currentImage.getStackSize()>0) {
 			createStackImage(currentImage,format,folder);
 		}else {

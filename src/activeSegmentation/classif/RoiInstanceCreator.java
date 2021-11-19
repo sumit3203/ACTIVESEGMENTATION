@@ -57,7 +57,7 @@ public class RoiInstanceCreator implements IFeature {
 	private String featureName="classLevel";
 	private ProjectInfo projectInfo;
 	//private List<String> classLabels;
-	private Map<String, double[]> instanceMap= new HashMap<String, double[]>();
+	private Map<String, double[]> instanceMap= new HashMap<>();
 	int classindex = 0;
 	private int numberOfFeatures;
 	private String projectString;
@@ -154,7 +154,7 @@ public class RoiInstanceCreator implements IFeature {
 			}
 		}
      //System.out.println("TRaininf Data Size"+trainingData.size());
-    // System.out.println(trainingData.toString());
+     //System.out.println(trainingData.toString());
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class RoiInstanceCreator implements IFeature {
 	 */
 	private List<String> getCLassLabels(Collection<ClassInfo>  classInfos) {
 
-		List<String> labels= new ArrayList<String>();
+		List<String> labels= new ArrayList<>();
 		for(ClassInfo classInfo:classInfos) {
 			labels.add(classInfo.getLabel());
 		}

@@ -200,7 +200,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			
 		List<String>images= loadImages(projectString, false);
 		for(IFilter filter: filterMap.values()){
-			//System.out.println("filter applied"+filter.getName());
+			System.out.println("FeatureManager: filter applied "+filter.getName());
 			if(filter.isEnabled()){
 				for(String image: images) {
 					//IJ.log(image);

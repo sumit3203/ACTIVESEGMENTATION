@@ -82,7 +82,6 @@ public interface IUtil {
 	
 	
 	default public void updateExampleLists(FeatureManager featureManager, LearningType type, Map<String, JList<String>> exampleList)	{
-		//LearningType type=(LearningType) learningType.getSelectedItem();
 		final Set<String> keyset=featureManager.getClassKeys();
 		for(String key:keyset){
 			exampleList.get(key).removeAll();

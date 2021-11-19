@@ -3,7 +3,6 @@ package activeSegmentation.moment;
 import static activeSegmentation.FilterType.CLASSIF;
 
 import java.awt.AWTEvent;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.Set;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
-import activeSegmentation.IFilter;
 import activeSegmentation.IMoment;
 import ij.ImagePlus;
 //import ij.ImageStack;

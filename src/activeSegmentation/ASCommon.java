@@ -100,15 +100,18 @@ public interface ASCommon {
 	public static final String K_TESTIMAGESDIR="TESTIMAGESDIR";
 	public static final String K_TESTFILTERDIR="TESTFILTERSDIR";
 	/* default folders */
-	public static final String filterDir="/filters/";
-	public static final String testfilterDir="/testfilters/";
-	public static final String featureDir="/features/";
-	public static final String learnDir="/learning/";
-	public static final String evalDir="/evaluation/";
-	public static final String imagDir="/images/";
-	public static final String testimagDir="/testimages/";
 	
 	public static final String fs=File.separator;
+	
+	public static final String filterDir= fs+"filters"+fs;
+	public static final String testfilterDir=fs+"testfilters"+fs;
+	public static final String featureDir=fs+"features"+fs;
+	public static final String learnDir=fs+"learning"+fs;
+	public static final String evalDir=fs+"evaluation"+fs;
+	public static final String imagDir=fs+"images"+fs;
+	public static final String testimagDir=fs+"testimages"+fs;
+	
+	
 	/*
 	 *  GUI constants
 	 */

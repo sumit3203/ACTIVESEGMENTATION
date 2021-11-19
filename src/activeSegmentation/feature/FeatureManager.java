@@ -61,7 +61,7 @@ import activeSegmentation.util.GuiUtil;
  *          Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  *          USA
  */
-public class FeatureManager implements IUtil {
+public class FeatureManager implements IUtil, ASCommon {
 
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
@@ -91,7 +91,7 @@ public class FeatureManager implements IUtil {
 		//IJ.log("loading images from "+this.projectString);
 		final List<String> images=loadImages(projectString);
 		totalSlices = images.size();
-		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from"+ projectString);
+		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from "+ projectString);
 		defaultColors = GuiUtil.setDefaultColors();
 		if (totalSlices > 0) {
 			sliceNum = 1;
@@ -399,7 +399,7 @@ public class FeatureManager implements IUtil {
 		if (!classes.containsKey(key)) {
 			Map<String, List<Roi>> trainingRois = new HashMap<>();
 			Map<String, List<Roi>> testingRois = new HashMap<>();
-			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getColor(classes.size()), trainingRois,
+			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getNextColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
 			
@@ -411,7 +411,7 @@ public class FeatureManager implements IUtil {
 	 * @param number
 	 * @return
 	 */
-	private Color getColor(int number) {
+	private Color getNextColor(int number) {
 		if (number < defaultColors.size()) {
 			return defaultColors.get(number);
 		} else {
@@ -441,7 +441,9 @@ public class FeatureManager implements IUtil {
 		projectInfo = projectManager.getMetaInfo();
 		for (FeatureInfo featureInfo : projectInfo.getFeatureList()) {
 			alreadysetClass = true;
+			System.out.println("loading training ROIs");
 			Map<String, List<Roi>> trainingRois = loadRois(featureInfo.getZipFile(), featureInfo.getTrainingList());
+			System.out.println("loading testing ROIs");
 			Map<String, List<Roi>> testingRois = loadRois(featureInfo.getZipFile(), featureInfo.getTestingList());
 			ClassInfo classInfo = new ClassInfo(featureInfo.getKey(), featureInfo.getLabel(),
 					new Color(featureInfo.getColor()), trainingRois, testingRois);
@@ -459,6 +461,7 @@ public class FeatureManager implements IUtil {
 	private Map<String, List<Roi>> loadRois(String filename, Map<String, List<String>> roiMapper) {
 		Map<String, List<Roi>> roiMap = new HashMap<>();
 		List<Roi> classRoiList = openZip(featurePath + filename);
+		System.out.println("loading ROIs from "+featurePath + filename);
 		for (String imageKey : roiMapper.keySet()) {
 			roiMap.put(imageKey, getRois(classRoiList, roiMapper.get(imageKey)));
 		}
@@ -498,6 +501,7 @@ public class FeatureManager implements IUtil {
 			featureInfo.setKey(classInfo.getKey());
 			featureInfo.setLabel(classInfo.getLabel());
 			featureInfo.setColor(classInfo.getColor().getRGB());
+			
 			for (String imageKey : classInfo.getTrainingRoiSlices()) {
 				List<String> trainingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTrainingRois(imageKey)) {
@@ -506,6 +510,7 @@ public class FeatureManager implements IUtil {
 				featureInfo.addTrainingRois(imageKey, trainingRois);
 				classRois.addAll(classInfo.getTrainingRois(imageKey));
 			}
+			
 			for (String imageKey : classInfo.getTestingRoiSlices()) {
 				List<String> testingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTestingRois(imageKey)) {
@@ -516,8 +521,10 @@ public class FeatureManager implements IUtil {
 			}
 
 			String fileName = ASCommon.ROISET + classInfo.getKey() + ASCommon.FORMAT;
-			if (classRois != null & classRois.size() > 0) {				
-				saveRois(featurePath + "/" + fileName, classRois);
+			if (classRois != null & classRois.size() > 0) {	
+				final String roipath=featurePath + fileName;
+				System.out.println("Saving ROIs in " +roipath);
+				saveRois(roipath, classRois);
 				featureInfo.setZipFile(fileName);
 			}
 			projectInfo.addFeature(featureInfo);
@@ -592,7 +599,6 @@ public class FeatureManager implements IUtil {
 			}
 			out.close();
 		} catch (IOException e) {
-
 			return false;
 		} finally {
 			if (out != null)
@@ -669,7 +675,7 @@ public class FeatureManager implements IUtil {
 				}
 		}
 		if (nRois == 0)
-			System.out.println("ERROR OCCURED");
+			System.out.println("openZip error");
 			
 		return roiList;
 		
@@ -771,7 +777,7 @@ public class FeatureManager implements IUtil {
 		}		
 		// IJ.debugMode=true;
 		IJ.log("TRAINING STARTED");
-		System.out.println("TRAINING STARTED");
+		System.out.println("Training started");
 		// extract features in weka format, returns IDataset object
 		extractFeatures(projectInfo.getProjectType());
 		
@@ -779,7 +785,7 @@ public class FeatureManager implements IUtil {
 		learningManager.trainClassifier();
 		
 		IJ.log("TRAINING DONE");
-		System.out.println("TRAINING DONE");
+		System.out.println("Training done");
 		final ProjectType projtype=	projectInfo.getProjectType();	
 		
 		for (String image : imageList) {
