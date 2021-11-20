@@ -111,7 +111,7 @@ public class ProjectManager implements IUtil{
 			}
 		
 			final String projectFile=projectInfo.getProjectPath()+
-					fs+projectInfo.projectName+".json";
+					 projectInfo.projectName+".json";
 			mapper.writeValue(new File(projectFile), projectInfo);
 
 			System.out.println("SAVING project file "+projectFile);
@@ -236,7 +236,7 @@ public class ProjectManager implements IUtil{
 			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+title);
 			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+title);
 		}
-		IJ.log("createStackdone");
+		IJ.log("createStack done");
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class ProjectManager implements IUtil{
 			String trainingImage) {
 		String message="done";
 		if(projectName==null|| projectName.isEmpty()) {
-			return " Project name cannot be empty";
+			return "Project name cannot be empty";
 
 		} else if(projectDirectory==null|| projectDirectory.isEmpty() || projectDirectory.equalsIgnoreCase(trainingImage)) {
 			return "Project directory cannot be empty and should not be the same as training image directory";

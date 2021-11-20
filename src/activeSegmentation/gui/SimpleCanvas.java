@@ -51,7 +51,7 @@ public class SimpleCanvas extends OverlayedImageCanvas {
 		repaint();
 	}
 
-	//@Override
+	@Override
 	public void paint(Graphics g) {
 		Rectangle srcRect = getSrcRect();
 		double mag = getMagnification();
@@ -60,7 +60,7 @@ public class SimpleCanvas extends OverlayedImageCanvas {
 		g.setClip(0, 0, dw, dh);
 
 		super.paint(g);
-
+		//this.repaintOverlay();
 		int w = getWidth();
 		int h = getHeight();
 		g.setClip(0, 0, w, h);

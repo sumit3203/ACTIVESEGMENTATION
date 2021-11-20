@@ -120,10 +120,10 @@ public class ClassifierManager implements ASCommon {
 		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
 		//	System.out.println("WORK LOAD : "+ Common.WORKLOAD);
 			double[] classificationResult = new double[dataSet.getNumInstances()];	
-			
-			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
-					classificationResult, currentClassifier);
 			try {
+				ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), 
+				classificationResult, currentClassifier);
+			
 				pool.invoke(applyTask);
 			} catch (@SuppressWarnings("unused") Exception ex) {
 				System.out.println("Exception in applyClassifier ");

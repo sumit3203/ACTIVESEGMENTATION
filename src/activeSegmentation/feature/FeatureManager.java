@@ -42,8 +42,8 @@ import activeSegmentation.util.GuiUtil;
  * @author Sumit Kumar Vohra, ZIB, and Dimiter Prodanov, IMEC
  *
  *
- * @contents Feature Manager to store , update and delete Samples , It also
- *           consist of code to load from metafile
+ * @contents Feature Manager to store, update and delete ROIs. It also
+ *           contains code to load from the metafile
  * 
  * 
  * @license This library is free software; you can redistribute it and/or modify
@@ -298,7 +298,7 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @return
 	 */
 	public Roi getRoi(String key, int index, String type) {
-		if (imageList.size()>0) {
+		if (imageList.size()>0 && index< imageList.size()) {
 			String imageKey = imageList.get(sliceNum - 1);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 				return classes.get(key).getTestingRoi(imageKey, index);
@@ -853,7 +853,7 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @return
 	 */
 	public ProjectType getProjectType() {
-		return this.projectInfo.getProjectType();
+		return projectInfo.getProjectType();
 	}
 
 	/**

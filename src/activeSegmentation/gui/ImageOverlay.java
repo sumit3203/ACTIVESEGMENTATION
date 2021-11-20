@@ -48,7 +48,7 @@ public class ImageOverlay implements Overlay{
 		this.imp = imp;
 	}
 	
-	//@Override
+	@Override
 	public void paint(Graphics g, int x, int y, double magnification) {
 		if ( null == this.imp )
 			return;
@@ -76,6 +76,7 @@ public class ImageOverlay implements Overlay{
 	 * 
 	 * @param composite composite mode
 	 */
+	@Override
 	public void setComposite (Composite composite){
 		this.composite = composite;
 	}

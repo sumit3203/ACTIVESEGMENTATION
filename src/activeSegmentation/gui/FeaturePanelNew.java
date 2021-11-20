@@ -77,7 +77,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	LUT overlayLUT;
 	/** flag to display the overlay image */
 	private boolean showColorOverlay=false;
-	ImagePlus classifiedImage;
+	ImagePlus classifiedImage=null;
 	// Create overlay LUT
 	byte[] red = new byte[ 256 ];
 	byte[] green = new byte[ 256 ];
@@ -318,16 +318,20 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	 * Draw the painted traces on the display image
 	 */
 	private void drawExamples(){
+	//	imp.setHideOverlay(true);
+		final String type=learningType.getSelectedItem().toString();
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getRoiList(key,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
+					getRoiList(key, type, featureManager.getCurrentSlice());
 			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
 		}
-
-		getImagePlus().updateAndDraw();
+		//imp.setHideOverlay(false);
+		//getImagePlus().updateAndDraw();
+		imp.updateAndDraw();
 	}
+	
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
 		JList<String> current=GuiUtil.model();
@@ -393,6 +397,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	
 	private void loadImage(ImagePlus image){
 		this.displayImage=image;
+		this.activeRoi=displayImage.getRoi();
 		setImage(this.displayImage);
 		updateImage(this.displayImage);
 	}
@@ -496,6 +501,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		} // end if
 		
 		if(event==TRAIN_BUTTON_PRESSED){
+			//toggleOverlay();
 			if(featureManager.getProjectType()==ProjectType.CLASSIF) {
 				// it means new round of training, so set result setting to false
 				showColorOverlay = false;
@@ -514,10 +520,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			//segmentation setting
 			else {
 				classifiedImage=featureManager.compute();
+				toggleOverlay();
 			}
 			IJ.log("computing");
 
-			toggleOverlay();
+			
 		} //end if
 		
 		if(event==TOGGLE_BUTTON_PRESSED){
@@ -589,7 +596,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	{
 		if(featureManager.getProjectType()== ProjectType.SEGM) {
 			showColorOverlay = !showColorOverlay;			
-			if (showColorOverlay && (null != classifiedImage)){
+			if (showColorOverlay && ( classifiedImage!=null)){
 				updateResultOverlay(classifiedImage);
 			}
 			else{
@@ -677,6 +684,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			drawExamples();
 			updateExampleLists();
 			//updateallExampleLists();
+
 			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 			ic.repaint();
 		}catch(Exception e){
@@ -724,8 +732,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 					String[] arr= item.split(" ");
 					//System.out.println("Class Id"+ arr[0].trim());
 					//int sliceNum=Integer.parseInt(arr[2].trim());
-					showSelected( arr[0].trim(),index);
-
+					try {
+						showSelected( arr[0].trim(),index);
+					} catch (ArrayIndexOutOfBoundsException ex ) {
+						ex.printStackTrace();
+					}
 				}
 			}
 
@@ -737,8 +748,12 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 					//System.out.println("ITEM : "+ item);
 					String[] arr= item.split(" ");
 					//int classId= featureManager.getclassKey(arr[0].trim())-1;
-					featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
-					updateGui();
+					try {
+						featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
+						updateGui();
+					} catch (ArrayIndexOutOfBoundsException ex ) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
@@ -759,11 +774,16 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		//System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
 		//System.out.println(newRoi);
-		newRoi.setImage(displayImage);
-		displayImage.setRoi(newRoi);
-		displayImage.updateAndDraw();
+		if (newRoi!=null) {
+			newRoi.setImage(displayImage);
+			displayImage.setRoi(newRoi);
+			displayImage.updateAndDraw();
+			activeRoi=newRoi;
+		}
 	}  
 	
+	// to eventually rescale
+	Roi activeRoi=null;
 	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,

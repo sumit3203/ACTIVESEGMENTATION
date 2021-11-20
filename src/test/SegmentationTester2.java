@@ -48,14 +48,15 @@ public class SegmentationTester2 {
 	ProjectManager pm;
 	FilterManager fm;
 	ProjectInfo projectInfo;
-	RandomForest randomForest= new RandomForest();
+	SMO randomForest= new SMO();
+	//RandomForest randomForest= new RandomForest();
 	//training Data
 	Instances trainingData;
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
-		String trainingImage="C:\\Data\\isbi2012\\train.tif";
-		String trainlabels="C:\\Data\\isbi2012\\labels.tif";
+		String trainingImage="C:\\Data\\isbi2012\\train_small.tif";
+		String trainlabels="C:\\Data\\isbi2012\\labels_small.tif";
 		String testImage="C:\\Data\\isbi2012\\train.tif";
 		String testlabels="C:\\Data\\isbi2012\\labels.tif";
 		String[] labels= {"black", "cell"};
@@ -145,9 +146,9 @@ public class SegmentationTester2 {
 			trainingData.add(instance);
 		}
 		//SegmentationTester.System.out.println(trainingData);	
-		//smo.setBatchSize("100");
+		randomForest.setBatchSize("100");
 		//	randomForest.setNumIterations(100);
-		randomForest.setNumExecutionSlots(4);
+		//randomForest.setNumExecutionSlots(4);
 		try {
 			;
 			Instances newdata = trainingData;
@@ -243,7 +244,7 @@ public class SegmentationTester2 {
 		deleteDirectory(new File(projectDirectory+projectName));
 		pm.createProject(projectName, ProjectType.SEGM.toString(),
 				projectDirectory, projectDescription, trainingImage);
-		this.projectInfo=pm.getMetaInfo();
+		projectInfo=pm.getMetaInfo();
 
 		return projectInfo;
 	}
@@ -263,7 +264,7 @@ public class SegmentationTester2 {
 		//String folder=image.getTitle().substring(0, image.getTitle().lastIndexOf("."));
 		String imagename=image.getTitle();
 		String folder=imagename.substring(0, imagename.lastIndexOf("."));
-		IJ.log(format);
+		System.out.println(folder);
 		for(int i=1; i<=image.getStackSize();i++) {
 			ImageProcessor processor= image.getStack().getProcessor(i);
 			String title= folder+i;
@@ -272,7 +273,7 @@ public class SegmentationTester2 {
 			createDirectory(filterFolder+title);
 			IJ.saveAs(new ImagePlus(title, processor),format, testimagefolder+title);
 		}
-		IJ.log("createStackdone");
+		IJ.log("createStack done");
 	}	
 
 	public void createHeader(String dir, List<String> classlabels) {
@@ -298,6 +299,7 @@ public class SegmentationTester2 {
 		return deleteDir.delete();
 
 	}
+	
 	public void loadFilters() {
 		Hessian_Filter_ hessian_Filter_= new Hessian_Filter_();
 		hessian_Filter_.setEnabled(true);
