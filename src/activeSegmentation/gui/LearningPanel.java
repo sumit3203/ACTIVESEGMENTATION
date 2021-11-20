@@ -40,7 +40,7 @@ public class LearningPanel implements Runnable, ASCommon {
   String originalClassifierName;
   private ProjectManager projectManager;
   private ProjectInfo projectInfo;
-  final JFrame frame = new JFrame("LEARNING");
+  final JFrame frame = new JFrame("Learning");
  // public static final Font FONT = new Font("Arial", 1, 13);
   JList<String> featureSelList;
   final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent(this, 1, "Compute");
@@ -65,14 +65,16 @@ public class LearningPanel implements Runnable, ASCommon {
       if(testClassifier!=null) {
     	  IClassifier classifier = new WekaClassifier(testClassifier);
           
-          this.learningManager.setClassifier(classifier);
-          this.projectManager.updateMetaInfo(this.projectInfo);
+          learningManager.setClassifier(classifier);
+          learningManager.saveLearningMetaData();
+          projectManager.updateMetaInfo(this.projectInfo);
       }
      
     }
   }
   
-  public void run()  {
+  @Override
+public void run()  {
     this.frame.setDefaultCloseOperation(1);
     this.frame.getContentPane().setBackground(Color.GRAY);
     this.frame.setLocationRelativeTo(null);
@@ -166,8 +168,7 @@ public class LearningPanel implements Runnable, ASCommon {
     button.setBackground(new Color(192, 192, 192));
     button.setForeground(Color.WHITE);
     button.setBounds(x, y, width, height);
-    button.addActionListener(new ActionListener()
-    {
+    button.addActionListener(new ActionListener()  {
       public void actionPerformed(ActionEvent e)
       {
         LearningPanel.this.doAction(action);

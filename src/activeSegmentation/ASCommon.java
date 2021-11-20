@@ -48,7 +48,7 @@ public interface ASCommon {
 	// to give common name to instance
 	public static final String INSTANCE_NAME="segment";
 	// to set the workload for worker thread
-	public static Integer WORKLOAD = 100000000;
+	public static Integer WORKLOAD = 256;
 	// initial number of classes
 	public static int DEFAULT_CLASSES=2;
 	// To name the segmentation result
@@ -68,7 +68,7 @@ public interface ASCommon {
 	public static final String ARFF="arff";
 	public static final String CLASSIFIER="classifier";
 	public static final String COMMENT="Comment";
-	public static final String DEFAULTCOMMENT=" DefaultComment";
+	public static final String DEFAULTCOMMENT="DefaultComment";
 	//public static final String CREATEDATE="CreateDate";
 	//public static final String MODIFYDATE="ModifyDate";
 	public static final String PATH="Path";

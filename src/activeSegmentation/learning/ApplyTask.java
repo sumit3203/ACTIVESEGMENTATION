@@ -22,6 +22,14 @@ public class ApplyTask extends RecursiveAction{
 	private int mStart=0;
 	private int mLength=256;
 
+	/**
+	 * 
+	 * @param dataSet
+	 * @param mStart
+	 * @param length
+	 * @param classificationResult
+	 * @param classifier
+	 */
 	public ApplyTask(IDataSet dataSet,Integer mStart,int length, double[] classificationResult, 
 			IClassifier classifier) {
 		this.dataSet = dataSet;
@@ -34,12 +42,12 @@ public class ApplyTask extends RecursiveAction{
 
 	@Override
 	protected void compute() {
-		if (mLength < 16) {
+		if (mLength < 128) {
 			
 			classifyPixels();
 			 
 		} else {
-			System.out.println("Splitting workLoad : " + this.mLength);
+			System.out.println("ApplyTask: splitting workLoad: " + mLength);
 		
 		/*
 		int split = mLength / 2;
@@ -66,16 +74,13 @@ public class ApplyTask extends RecursiveAction{
 	 
 	private void classifyPixels(){
 		try {
-				IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy());
-			 
+				IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
 				Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
 				for (int index = 0; index < testInstances.size(); index++){				
 						classificationResult[mStart+index]=classifierCopy.
 						classifyInstance(testInstances.get(index));
 				}
-			} catch (Exception e) {
-
-				
+			} catch (Exception e) {	
 				e.printStackTrace();
 		}
 	}

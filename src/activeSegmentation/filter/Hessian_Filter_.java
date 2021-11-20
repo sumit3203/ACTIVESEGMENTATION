@@ -34,6 +34,8 @@ import dsp.Conv;
 
 /**
  * @version 	
+ * 				1.2 21 Nov 2021
+ * 				- added determinant output
  * 				1.1 27 Jun 2021
  * 				1.0 24 Oct 2019
  * 				
@@ -154,7 +156,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 				GScaleSpace sp=new GScaleSpace(sigma);
 				imageStack=filter(image, sp,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
-					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
+					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 				}
 
@@ -252,6 +254,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		
 		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
 		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
+		
+		FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
 
 		for (int i=0; i<width*height; i++) {
 			double gx=gradx.getf(i);
@@ -288,7 +292,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			cos_phase.setf(i, (float) gcos);
 			eigen1.setf(i, (float) ee1);
 			eigen2.setf(i, (float) ee2);
-				
+			hesdet.setf(i, (float) det);	
 		}
 		String fkey=this.getKey();
 		
@@ -303,6 +307,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		imageStack.addSlice(fkey+"_Amp_"+sz, pamp);
 		imageStack.addSlice(fkey+"_Sin_"+sz, sin_phase);
 		imageStack.addSlice(fkey+"_Cos_"+sz, cos_phase);
+		imageStack.addSlice(fkey+"_Hess_det_"+sz, hesdet); 
 		imageStack.addSlice(fkey+"_E1_"+sz, eigen1);
 		imageStack.addSlice(fkey+"_E2_"+sz, eigen2);
  

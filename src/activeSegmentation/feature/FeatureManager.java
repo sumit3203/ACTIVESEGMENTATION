@@ -905,7 +905,7 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @return
 	 */
 	public int getCurrentSlice() {
-		return this.sliceNum;
+		return sliceNum;
 	}
 
 	/**

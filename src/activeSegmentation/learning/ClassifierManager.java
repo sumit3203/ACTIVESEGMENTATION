@@ -86,11 +86,10 @@ public class ClassifierManager implements ASCommon {
 		}
 	}
 	
-	// when do we call this method?
-
+	
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
-		Map<String,String> learningMap = new HashMap<String, String>();
+		Map<String,String> learningMap = new HashMap<>();
 		if(dataset!=null){
 			learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
 			//dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);	
@@ -102,6 +101,7 @@ public class ClassifierManager implements ASCommon {
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
+	// where do we call this method?
 	public void loadLearningMetaData() {
 		if(metaInfo.getLearning()!=null){
 			dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));

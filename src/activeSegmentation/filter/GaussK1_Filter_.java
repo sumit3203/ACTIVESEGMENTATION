@@ -410,7 +410,6 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
-		//FloatProcessor lap_k1k2=new FloatProcessor(width, height); // Log Gaussian component
 		FloatProcessor lap_kk=new FloatProcessor(width, height); // mean curvature component
 		FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
 		
@@ -450,21 +449,21 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			hesdet.setf(i, det);
 		}
 			
-		//ImageStack is=new ImageStack(width,height);
+
+		String fkey=this.getKey();
 		
 		if (fulloutput) {
-			is.addSlice("X diff", gradx);
-			is.addSlice("Y diff", grady);
-			is.addSlice("XX diff", lap_xx);
-			is.addSlice("YY diff", lap_yy);
-			is.addSlice("XY diff", lap_xy);
+			is.addSlice(fkey+"_X_diff_"+sz, gradx);
+			is.addSlice(fkey+"_Y_diff_"+sz, grady);
+			is.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
+			is.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
+			is.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
 			//apos=6;
 		}
 
-		//is.addSlice("Gauss  K1K2", lap_k1k2);
 		lap_kk.resetMinAndMax();
-		is.addSlice("Line curvature", lap_kk);
-		is.addSlice("Hess det", hesdet);
+		is.addSlice(fkey+"_Line_curvature_"+sz, lap_kk);
+		is.addSlice(fkey+"_Hess_det_"+sz, hesdet);
 		return is;
 	}
 

@@ -107,7 +107,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "CURVATURE";
+	//private final  String FILTER_KEY = "CURVATURE";
 
 	/** The pretty name of the target detector. */
 	//private final String FILTER_NAME = "CURVATURE";
@@ -447,19 +447,20 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 
 		//int apos=2;
-
+		String fkey=this.getKey();
+		
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"X diff"+r, gradx);
-			imageStack.addSlice(FILTER_KEY+"Y diff"+r, grady);
-			imageStack.addSlice(FILTER_KEY+"XX diff"+r, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"YY diff"+r, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"XY diff"+r, lap_xy);
+			imageStack.addSlice(fkey+"_X_diff_"+r, gradx);
+			imageStack.addSlice(fkey+"_Y_diff_"+r, grady);
+			imageStack.addSlice(fkey+"_XX_diff_"+r, lap_xx);
+			imageStack.addSlice(fkey+"_YY_diff_"+r, lap_yy);
+			imageStack.addSlice(fkey+"_XY_diff_"+r, lap_xy);
 			//apos=5;
 		}
 
-		imageStack.addSlice(FILTER_KEY+"Gauss_K1xK2"+r, lap_k1k2);
+		imageStack.addSlice(fkey+"_Gauss_K1xK2_"+r, lap_k1k2);
 		lap_kk.resetMinAndMax();
-		imageStack.addSlice(FILTER_KEY+"Gauss_K1_K2"+r, lap_kk);
+		imageStack.addSlice(fkey+"_Gauss_K1_K2_"+r, lap_kk);
 
 		time+=System.nanoTime();
 		time/=1000.0f;
