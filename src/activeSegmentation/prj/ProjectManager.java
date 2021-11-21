@@ -70,6 +70,9 @@ public class ProjectManager implements IUtil{
 			try {
 				//System.out.println(fileName);
 				File projectFile=new File(fileName);
+				// elementary check if the file is a project file
+				if (projectFile.getName().indexOf(".json") <0) return false;
+				
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
@@ -79,15 +82,19 @@ public class ProjectManager implements IUtil{
 			} catch (UnrecognizedPropertyException e) {
 				IJ.log("Error: Wrong version");
 				e.printStackTrace();
+				return false;
 			} catch (JsonGenerationException e) {
 				IJ.log("Error: Not a JSON file!");
 				e.printStackTrace();
+				return false;
 			} catch (JsonMappingException e) {
 				IJ.log("Error: Wrong version mapping");
 				e.printStackTrace();
+				return false;
 			} catch (IOException e) {
 				IJ.log("Error: IO");
 				e.printStackTrace();
+				return false;
 			}			
 
 

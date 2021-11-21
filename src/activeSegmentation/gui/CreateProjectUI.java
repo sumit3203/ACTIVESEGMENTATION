@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import activeSegmentation.*;
 import activeSegmentation.prj.ProjectManager;
+import ij.IJ;
 import ij.WindowManager;
 
 //  to rename to CreateOpenProjectUI
@@ -77,7 +78,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 		label.setBounds( 100, 150, 450, 100 );
 		label.setForeground(Color.ORANGE);
 		controlFrame.add(label);
-		//controlFrame.add(new JLabel(createImageIcon("images/logo.png", "logo")));
+
 		controlFrame.add(addButton("Create New Project",createImageIcon("addProject.png","add"), 30, 250, 220, 60, CREATE_BUTTON_PRESSED));
 		controlFrame.add(addButton("Open Project",createImageIcon("openProject.png","add"),270, 250, 200, 60, OPEN_BUTTON_PRESSED));
 		controlFrame.setLocation(0, 0);
@@ -100,9 +101,10 @@ public class CreateProjectUI implements Runnable, ASCommon {
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 			 String file=fileChooser.getSelectedFile().toString();
-			 projectManager.loadProject(file);
-			 new Gui(projectManager);
-
+			if (projectManager.loadProject(file))
+				new Gui(projectManager);
+			else 
+				IJ.showMessage("Not a project file!");
 			}
 		}
 
@@ -245,19 +247,11 @@ public class CreateProjectUI implements Runnable, ASCommon {
 			controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
 		}
 		
-		/*JLabel testImage= new JLabel("Plugin Dir :");
-		testImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
-		testImage.setBounds( 50, 300, 200, 30 );
-		controlFrame.add(testImage);		*/
-		//pluginsDir.setColumns(200);
-		//pluginsDir.setBounds( 200, 300, 250, 30 );
-		//controlFrame.add(pluginsDir);	
 		errorText.setFont(new Font( "Arial", Font.BOLD, 12 ));
 		errorText.setBounds(30, 300, 600, 30 );
 		errorText.setForeground(Color.RED);
 		controlFrame.add(errorText);
 
-		//controlFrame.add(addButton("Browse",null, 460, 300, 100, 30, TESTINGF_BUTTON_PRESSED));
 		controlFrame.add(addButton("Finish",null, 30, 350, 220, 60, FINISH_BUTTON_PRESSED));
 		controlFrame.add(addButton("Cancel",null,270, 350, 200, 60, CANCEL_BUTTON_PRESSED));
 
