@@ -65,7 +65,7 @@ public class RoiListOverlay implements Overlay
 		setColor( color );
 	}
 	
-	//@Override
+	@Override
 	public void paint(Graphics g, int x, int y, double magnification) 
 	{
 		if ( null == this.roi )
@@ -111,12 +111,14 @@ public class RoiListOverlay implements Overlay
 		this.roi = roi;
 	}
 	
+	@Override
 	public void setComposite (Composite composite)
 	{this.composite = composite;}
 	
 	public void setColor(Color color)
 	{this.color = color;}
 	
+	@Override
 	public String toString() {
 		return "RoiOverlay(" + roi + ")";
 	}

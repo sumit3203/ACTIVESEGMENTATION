@@ -117,11 +117,11 @@ public class ProjectManager implements IUtil{
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
 		
-			final String projectFile=projectInfo.getProjectPath()+
+			final String projectFile=projectInfo.getProjectPath()+fs+
 					 projectInfo.projectName+".json";
 			mapper.writeValue(new File(projectFile), projectInfo);
 
-			System.out.println("SAVING project file "+projectFile);
+			System.out.println("ProjectManager: saving project file "+projectFile);
 			
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();

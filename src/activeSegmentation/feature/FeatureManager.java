@@ -298,7 +298,8 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @return
 	 */
 	public Roi getRoi(String key, int index, String type) {
-		if (imageList.size()>0 && index< imageList.size()) {
+		System.out.println("getRoi "+index+ " "+imageList.size() );
+		if (imageList.size()>0 ) {
 			String imageKey = imageList.get(sliceNum - 1);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 				return classes.get(key).getTestingRoi(imageKey, index);

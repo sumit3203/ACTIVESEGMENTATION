@@ -569,7 +569,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
 				updateGui();
 			else 
-			    JOptionPane.showMessageDialog(null, "Other class already contain roi");	
+			    JOptionPane.showMessageDialog(null, "Other class already contains roi");	
 	
 			
 		} //end if
@@ -773,11 +773,12 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		String type= learningType.getSelectedItem().toString();
 		//System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
-		//System.out.println(newRoi);
+		System.out.println(newRoi);
 		if (newRoi!=null) {
 			newRoi.setImage(displayImage);
 			displayImage.setRoi(newRoi);
-			displayImage.updateAndDraw();
+			displayImage.draw();
+			//displayImage.updateAndDraw();
 			activeRoi=newRoi;
 		}
 	}  
@@ -801,8 +802,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			button.setBackground(color);
 		}
 		button.setBounds( x, y, width, height );
-		button.addActionListener( new ActionListener()
-		{
+		button.addActionListener( new ActionListener()	{
 			@Override
 			public void actionPerformed( final ActionEvent e )
 			{

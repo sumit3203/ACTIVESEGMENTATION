@@ -20,7 +20,7 @@ public class ApplyTask extends RecursiveAction{
 	private double[] classificationResult;
 	private IClassifier iClassifier;
 	private int mStart=0;
-	private int mLength=256;
+	private int mLength=512;
 
 	/**
 	 * 
@@ -42,13 +42,10 @@ public class ApplyTask extends RecursiveAction{
 
 	@Override
 	protected void compute() {
-		if (mLength < 128) {
-			
-			classifyPixels();
-			 
+		if (mLength < 128) {		
+			classifyPixels();		 
 		} else {
-			System.out.println("ApplyTask: splitting workLoad: " + mLength);
-		
+			System.out.println("ApplyTask: splitting workLoad: " + mLength);	
 		/*
 		int split = mLength / 2;
 		
