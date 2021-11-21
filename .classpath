@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java|activeSegmentation/gui/FeaturePanel.java|activeSegmentation/gui/Gui2.java|activeSegmentation/evaluation/Curves.java|activeSegmentation/gui/Curves.java|activeSegmentation/util/ClassLoaderHelper.java|activeSegmentation/Project.java|activeSegmentation/IFeatureManager.java|activeSegmentation/ILearningManager.java|test/TestCurves.java|test/TestFeatureSelection.java|test/CellsClassification.java" kind="src" path="src"/>
+	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java|activeSegmentation/gui/FeaturePanel.java|activeSegmentation/gui/Gui2.java|activeSegmentation/evaluation/Curves.java|activeSegmentation/gui/Curves.java|activeSegmentation/util/ClassLoaderHelper.java|activeSegmentation/Project.java|activeSegmentation/IFeatureManager.java|activeSegmentation/ILearningManager.java|test/TestCurves.java|test/TestFeatureSelection.java|test/CellsClassification.java|activeSegmentation/feature/FeatureContainer.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>

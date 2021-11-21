@@ -140,7 +140,6 @@ public class WekaDataSet implements IDataSet {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

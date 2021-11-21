@@ -142,7 +142,8 @@ public class PixelInstanceCreator implements IFeature {
 			for(ClassInfo classInfo : classInfos){
 				if(classInfo.getTrainingRois(image)!=null) {
 					for(Roi roi:classInfo.getTrainingRois(image)) {
-						//new ImagePlus("test", featureStack).show();								
+						//new ImagePlus("test", featureStack).show();		
+						//final int rtype=roi.getType();
 						addRectangleRoiInstances( trainingData, index, featureStack, roi );
 					}
 					//IJ.log(trainingData.toString());
@@ -248,7 +249,7 @@ public class PixelInstanceCreator implements IFeature {
 			for( int y = y0; y < lastY; y++ )				
 			{
 
-				if(poly.contains(new Point(x0, y0))){
+				if(poly.contains(new Point(x, y))){
 					trainingData.add( instanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );
 				}				
 				// increase number of instances for this class
@@ -288,9 +289,7 @@ public class PixelInstanceCreator implements IFeature {
 	 * @param r shape roi
 	 * @return number of instances added
 	 */
-	private Instances addRectangleRoiInstances(
-			ImageStack featureStack) 
-	{		
+	private Instances addRectangleRoiInstances(ImageStack featureStack) {		
 
 		Instances testingData;
 		ArrayList<Attribute> attributes = createFeatureHeader();

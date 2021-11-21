@@ -100,6 +100,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 *
 	 * @param classifier The weka classifier.
 	 */
+	@Override
 	public void setClassifier(Classifier classifier) {
 		try {
 			this.classifier = weka.classifiers.AbstractClassifier
@@ -128,7 +129,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 			
 			double[] predict =evaluator.evaluateModel(classifier, instances.getDataset());
 
-			//System.out.println(evaluator.toSummaryString());
+			System.out.println(evaluator.toSummaryString());
 			return predict;
 
 
@@ -143,14 +144,12 @@ public class WekaClassifier implements IClassifier, Serializable {
 
 	@Override
 	public IClassifier makeCopy() throws Exception {
-		// TODO Auto-generated method stub
 		return (IClassifier) new SerializedObject(this).getObject();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Classifier getClassifier() {
-		// TODO Auto-generated method stub
 		return this.classifier;
 	}
 

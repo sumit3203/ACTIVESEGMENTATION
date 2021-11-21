@@ -559,9 +559,9 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @param featureType
 	 * @return
 	 */
-	public List<IDataSet> extractAll(String featureType) {
-		return null;
-	}
+//	public List<IDataSet> extractAll(String featureType) {
+//		return null;
+//	}
 
 	/**
 	 * 
@@ -830,7 +830,7 @@ public class FeatureManager implements IUtil, ASCommon {
 				double[] classificationResult = learningManager
 						.applyClassifier(featureMap.get(projectInfo.getProjectType()).createAllInstances(image));
 				
-				//now classificationResult has predictions of all pixels of one particular image
+				//now classificationResult has predictions for all pixels in one particular image
 				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
 						currentImage.getHeight(), classificationResult);
 				

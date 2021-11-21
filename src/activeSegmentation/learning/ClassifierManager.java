@@ -54,7 +54,7 @@ public class ClassifierManager implements ASCommon {
     	System.out.println("in training");
     	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
-		System.out.println(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+this.metaInfo.getGroundtruth());
+		System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			System.out.println("ClassifierManager: in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
@@ -67,7 +67,8 @@ public class ClassifierManager implements ASCommon {
 				System.out.println("ClassifierManager: in learning");
 			}
 			if(dataset!=null) {
-				dataset.getDataset().addAll(dataManager.getDataSet().getDataset());
+				IDataSet data = dataManager.getDataSet();
+				dataset.getDataset().addAll(data.getDataset());
 			}
 			else {
 				dataset=dataManager.getDataSet();

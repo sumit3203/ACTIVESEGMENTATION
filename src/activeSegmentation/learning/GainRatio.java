@@ -17,6 +17,9 @@ public class GainRatio implements IFeatureSelection {
 	private AttributeSelection filter;
 	
 	private String selectionName="INFO";
+	
+	
+	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
 		//ASEvaluation asEvaluation=
@@ -31,6 +34,7 @@ public class GainRatio implements IFeatureSelection {
 		filter.setEvaluator(evaluator);
 		// Search strategy: best first (default values)
 		final Ranker search = new Ranker();
+		// what is this?
 		search.setNumToSelect(33);
 		filter.setSearch(search);
 		// Apply filter
@@ -45,6 +49,7 @@ public class GainRatio implements IFeatureSelection {
 		return new WekaDataSet(filteredIns);
 	}
 	
+	@Override
 	public IDataSet applyOnTestData(IDataSet data){
 		Instances filteredIns = null;
 		Instances testData= data.getDataset();
