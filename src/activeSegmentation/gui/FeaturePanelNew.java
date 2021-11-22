@@ -580,7 +580,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			if (classifiedImage==null) {
 				classifiedImage=featureManager.compute();
 			}
-			classifiedImage.show();
+			classifiedImage.duplicate().show();
 			 
 		} //end if
 		

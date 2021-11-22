@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import activeSegmentation.IClassifier;
 import activeSegmentation.ProjectType;
 import ijaux.datatype.Pair;
-import weka.classifiers.AbstractClassifier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
