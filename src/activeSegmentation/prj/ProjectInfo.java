@@ -65,17 +65,12 @@ public class ProjectInfo{
 	
 	private String groundtruth="";
 	
-	//private String featureSelection="";
-	
-	//@JsonIgnore
-	//private List<String> optionList = new ArrayList<>();
+	 
 	
 	/*
 	 * JSON ignore
 	 */
-	//@JsonIgnore
 	private LearningInfo learning = new LearningInfo();
-	//private Map<String, String> learning = new HashMap<>();
 	
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
@@ -85,7 +80,6 @@ public class ProjectInfo{
 	
 	@JsonIgnore
 	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
-	
 	
 	
 	@JsonIgnore
