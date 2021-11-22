@@ -205,10 +205,6 @@ public class OverlayedImageCanvas extends ImageCanvas {
 			super.paint(backBufferGraphics);								
 			for (Overlay overlay : overlays)			
 				overlay.paint(backBufferGraphics, src.x, src.y, magnification);	
-			
-			final Roi roi = super.imp.getRoi();
-			if(roi != null)
-				roi.draw(backBufferGraphics);
 		}
 
 		g.drawImage(backBufferImage,0,0,this);		

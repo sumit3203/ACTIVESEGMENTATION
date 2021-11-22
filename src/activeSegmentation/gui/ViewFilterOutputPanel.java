@@ -509,9 +509,12 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 	}
 	private void updateGui(){	
 		try{
-			drawExamples();
 			updateExampleLists();
+			drawExamples();
+			
 			//updateallExampleLists();
+			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+			ic.repaint();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -523,15 +526,19 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 	 * @param i list index
 	 */
 	private void showSelected(String classKey,int index ){
-		updateGui();
+		displayImage.killRoi();
+		
 		displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
 		//System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);		
 		//System.out.println(newRoi);
-		newRoi.setImage(displayImage);
+		//newRoi.setImage(displayImage);
+		if (newRoi!=null) {
 		displayImage.setRoi(newRoi);
-		displayImage.updateAndDraw();
+		//displayImage.updateAndDraw();
+		}
+		updateGui();
 	} 
 	
 	private void updateExampleLists()	{

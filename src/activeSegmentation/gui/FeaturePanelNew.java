@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -24,6 +25,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +179,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		imagePanel.setBackground(Color.GRAY);		
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
+				
+		
 		panel.add(imagePanel);
 		
 		/*
@@ -272,12 +277,33 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 * ROI panel
 		 */
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
+//		// mouse wheel listener to update the rois while scrolling
+//		roiPanel.addMouseWheelListener(new MouseWheelListener() {
+//
+//						@Override
+//						public void mouseWheelMoved(final MouseWheelEvent e) {
+//								//IJ.log("moving scroll");
+//									displayImage.killRoi();
+//									drawExamples();
+//									updateExampleLists();
+//									if(showColorOverlay)
+//									{
+//										updateResultOverlay(imp);
+//										displayImage.updateAndDraw();
+//									}
+//						}
+//
+//						 
+//						});
+				
 		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
 		scrollPane.setBounds(605,300,350,250);
 		panel.add(scrollPane);
 		frame.add(panel);
+		
+		
 		
 		/*
 		 *  frame code
@@ -328,9 +354,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			//System.out.println("roi draw"+ key);
 		}
 		//imp.setHideOverlay(false);
-		//getImagePlus().updateAndDraw();
-		imp.updateAndDraw();
+		
+		displayImage.updateAndDraw();
 	}
+	
+	
 	
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
@@ -344,6 +372,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		RoiListOverlay roiOverlay = new RoiListOverlay();
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
+		
+//		ic.addComponentListener(new ComponentAdapter() {
+//			public void componentResized(ComponentEvent ce) {
+//				Rectangle r = ic.getBounds();
+//				((SimpleCanvas) ic).setDstDimensions(r.width, r.height);
+//			}
+//		});	
+		
 		roiOverlayList.put(key,roiOverlay);
 		JPanel buttonPanel= new JPanel();
 		buttonPanel.setName(key);
@@ -397,7 +433,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	
 	private void loadImage(ImagePlus image){
 		this.displayImage=image;
-		this.activeRoi=displayImage.getRoi();
+		//this.activeRoi=displayImage.getRoi();
 		setImage(this.displayImage);
 		updateImage(this.displayImage);
 	}
@@ -681,8 +717,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	
 	private void updateGui(){
 		try{
-			drawExamples();
+			//displayImage.killRoi();
 			updateExampleLists();
+			drawExamples();
 			//updateallExampleLists();
 
 			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
@@ -721,6 +758,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	 */
 	
 	private  MouseListener mouseListener = new MouseAdapter() {
+		
+		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList<?>  theList = ( JList<?>) mouseEvent.getSource();
 			// what is this?
@@ -729,14 +768,15 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
+					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
 					String[] arr= item.split(" ");
 					//System.out.println("Class Id"+ arr[0].trim());
 					//int sliceNum=Integer.parseInt(arr[2].trim());
-					try {
+					//try {
 						showSelected( arr[0].trim(),index);
-					} catch (ArrayIndexOutOfBoundsException ex ) {
-						ex.printStackTrace();
-					}
+					//} catch (ArrayIndexOutOfBoundsException ex ) {
+					//	ex.printStackTrace();
+					//}
 				}
 			}
 
@@ -745,15 +785,16 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 				String type= learningType.getSelectedItem().toString();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
+					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
 					//System.out.println("ITEM : "+ item);
 					String[] arr= item.split(" ");
 					//int classId= featureManager.getclassKey(arr[0].trim())-1;
-					try {
+					//try {
 						featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
 						updateGui();
-					} catch (ArrayIndexOutOfBoundsException ex ) {
-						ex.printStackTrace();
-					}
+					//} catch (ArrayIndexOutOfBoundsException ex ) {
+					//	ex.printStackTrace();
+					//}
 				}
 			}
 		}
@@ -766,25 +807,21 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	 * @param i list index
 	 */
 	private void showSelected(String classKey,int index ){
-		updateGui();
-
-
-		displayImage.setColor(Color.YELLOW);
+		displayImage.killRoi();
+		//displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
 		//System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
 		System.out.println(newRoi);
 		if (newRoi!=null) {
-			newRoi.setImage(displayImage);
 			displayImage.setRoi(newRoi);
-			displayImage.draw();
-			//displayImage.updateAndDraw();
-			activeRoi=newRoi;
+			//activeRoi=newRoi;
 		}
+		updateGui();
 	}  
 	
 	// to eventually rescale
-	Roi activeRoi=null;
+	//Roi activeRoi=null;
 	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
