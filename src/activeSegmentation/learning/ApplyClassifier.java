@@ -30,6 +30,7 @@ public class ApplyClassifier {
 	 */
 	public List<double[]> applyClassifier(){
 		List<double[]> classificationList= new ArrayList<>();
+		System.out.println("applyClassifier: "+testDataSet.size());
 		for (IDataSet dataSet: testDataSet){
 			double[] classificationResult = new double[dataSet.getNumInstances()];
 			ApplyTask applyTask= new ApplyTask(dataSet, 0, dataSet.getNumInstances(), classificationResult, iclassifier);

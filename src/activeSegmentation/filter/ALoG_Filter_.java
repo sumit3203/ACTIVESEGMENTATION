@@ -88,7 +88,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "ALOG";
+	//private final  String FILTER_KEY = "ALOG";
 
 	/** The pretty name of the target detector. */
 	//private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
@@ -287,18 +287,19 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 				
 		}
+		final String key=getKey();
 
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_XX_diff"+sz, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"_YY_diff"+sz, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"_XY_diff"+sz, lap_xy);
-			imageStack.addSlice(FILTER_KEY+"_Amp"+sz, pamp);
-			imageStack.addSlice(FILTER_KEY+"_Phase"+sz, phase);
+			imageStack.addSlice(key+"_XX_diff"+sz, lap_xx);
+			imageStack.addSlice(key+"_YY_diff"+sz, lap_yy);
+			imageStack.addSlice(key+"_XY_diff"+sz, lap_xy);
+			imageStack.addSlice(key+"_Amp"+sz, pamp);
+			imageStack.addSlice(key+"_Phase"+sz, phase);
 		}
 		
-		imageStack.addSlice(FILTER_KEY+"_Lap_T"+sz, lap_t);
+		imageStack.addSlice(key+"_Lap_T"+sz, lap_t);
 		lap_o.resetMinAndMax();
-		imageStack.addSlice(FILTER_KEY+"_Lap_O"+sz, lap_o);
+		imageStack.addSlice(key+"_Lap_O"+sz, lap_o);
 
 		return imageStack;
 	}

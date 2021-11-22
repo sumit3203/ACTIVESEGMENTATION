@@ -70,7 +70,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="GAUSSIAN", value="G. Derivative", type=SEGM)
+@AFilter(key="GAUSSDER", value="G. Deriv.", type=SEGM)
 public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")
@@ -209,7 +209,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor ip=filter(image,  sp,sep, scnorm,nn,mm);			
-				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
+				String imageName=filterPath+fs+FILTER_KEY+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, ip),imageName );
 			}
 

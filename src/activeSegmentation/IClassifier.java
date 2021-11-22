@@ -90,6 +90,9 @@ public interface IClassifier {
     
     // Typing?
     public <T> T getClassifier();
+    
+    
+    public String[] getMetadata();
 
 
 }

@@ -110,7 +110,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "STRUCTURE";
+	//private final  String FILTER_KEY = "STRUCTURE";
 
 	/** The pretty name of the target detector. */
 //	private final String FILTER_NAME = "Structure components";
@@ -180,7 +180,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 				GScaleSpace sp2=new GScaleSpace(sigma);
 				imageStack=filter2(image, sp, sp2, imageStack, sigma);
 				for(int j=1;j<=imageStack.getSize();j++){
-					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
+					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 				}
 
@@ -301,16 +301,17 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 			coher.setf(i, (float) coh);
 		}
 
+		final String key=getKey();
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_X_diff_"+sigma, gradx);
-			imageStack.addSlice(FILTER_KEY+"_Y_diff_"+sigma, grady);
+			imageStack.addSlice(key+"_X_diff_"+sigma, gradx);
+			imageStack.addSlice(key+"_Y_diff_"+sigma, grady);
 		}
 
-		imageStack.addSlice(FILTER_KEY+"_Amp_"+sigma, pamp);
-		imageStack.addSlice(FILTER_KEY+"_Phase_"+sigma, phase);
-		imageStack.addSlice(FILTER_KEY+"_Coh_"+sigma, coher);
-		imageStack.addSlice(FILTER_KEY+"_E2_"+sigma, eigen2);
-		imageStack.addSlice(FILTER_KEY+"_E1_"+sigma, eigen1);
+		imageStack.addSlice(key+"_Amp_"+sigma, pamp);
+		imageStack.addSlice(key+"_Phase_"+sigma, phase);
+		imageStack.addSlice(key+"_Coh_"+sigma, coher);
+		imageStack.addSlice(key+"_E2_"+sigma, eigen2);
+		imageStack.addSlice(key+"_E1_"+sigma, eigen1);
  
 		eigen2.resetMinAndMax();
  

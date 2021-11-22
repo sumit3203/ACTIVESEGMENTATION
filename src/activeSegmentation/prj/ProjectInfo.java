@@ -13,6 +13,7 @@ import java.util.Set;
 import activeSegmentation.IClassifier;
 import activeSegmentation.ProjectType;
 import ijaux.datatype.Pair;
+import weka.classifiers.AbstractClassifier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -45,7 +46,7 @@ public class ProjectInfo{
 	private Date createdDate=new Date();
 	private Date modifyDate=new Date();
 	
-	private String version="1.0.0";
+	private String version="1.0.1";
 	
 	@JsonProperty(value="classes")
 	private int classes=-1;
@@ -64,25 +65,28 @@ public class ProjectInfo{
 	
 	private String groundtruth="";
 	
-	private String featureSelection="";
+	//private String featureSelection="";
+	
+	//@JsonIgnore
+	//private List<String> optionList = new ArrayList<>();
 	
 	/*
 	 * JSON ignore
 	 */
-	@JsonIgnore
-	private Map<String, String> learning = new HashMap<>();
+	//@JsonIgnore
+	private LearningInfo learning = new LearningInfo();
+	//private Map<String, String> learning = new HashMap<>();
 	
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
 	
-	@JsonIgnore
+	//@JsonIgnore
 	private Map<String, Set<String>> featureNames = new HashMap<>();
 	
 	@JsonIgnore
 	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
 	
-	@JsonIgnore
-	private IClassifier classifier;
+	
 	
 	@JsonIgnore
 	private int featureLength;
@@ -172,7 +176,7 @@ public class ProjectInfo{
 	 * 
 	 * @return
 	 */
-	public Map<String, String> getLearning()	{
+	public LearningInfo getLearning()	{
 		return this.learning;
 	}
 
@@ -180,9 +184,12 @@ public class ProjectInfo{
 	 * 
 	 * @param learning
 	 */
-	public void setLearning(Map<String, String> learning)	{
+	public void setLearning(LearningInfo learning)	{
 		this.learning = learning;
 	}
+	
+	
+	
 
 	/**
 	 * 
@@ -282,21 +289,7 @@ public class ProjectInfo{
 		return this.testingStack;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getFeatureSelection()	{
-		return this.featureSelection;
-	}
 	
-	/**
-	 * 
-	 * @param featureSelection
-	 */
-	public void setFeatureSelection(String featureSelection)	{
-		this.featureSelection = featureSelection;
-	}
 
 	/**
 	 * 
@@ -322,21 +315,7 @@ public class ProjectInfo{
 		this.classes = classes;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public IClassifier getClassifier()	{
-		return this.classifier;
-	}
-
-	/**
-	 * 
-	 * @param classifier
-	 */
-	public void setClassifier(IClassifier classifier)	{
-		this.classifier = classifier;
-	}
+	
 	
 	/**
 	 * 
@@ -407,7 +386,6 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<String> getPluginPath() {
-		//i think this will be null
 		return pluginPath;
 	}
 
@@ -418,6 +396,8 @@ public class ProjectInfo{
 	public void setPluginPath(List<String> pluginPath) {
 		this.pluginPath = pluginPath;
 	}
+	 
+	
 	
 }// END
 

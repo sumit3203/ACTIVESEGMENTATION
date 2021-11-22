@@ -67,8 +67,8 @@ public class SegmentationTester2 {
 	public void run(String trainingImage, String trainlabels, String[] labels, String testImageTiff, String testLabelTiff) throws Exception {
 
 		loadDataset(trainingImage, trainlabels);
-		String trainDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		String featuresDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
+		String trainDir=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String featuresDir=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		applyFilters(trainDir, featuresDir);
 		for(String cellType: labels) {
@@ -76,7 +76,7 @@ public class SegmentationTester2 {
 		}
 		ImagePlus traininglabels=new ImagePlus(trainlabels);	
 		List<Instance> instances=createTrainingInstance(traininglabels);
-		Collections.shuffle(instances);
+		//Collections.shuffle(instances);
 		List<Instance> subinstances=instances.subList(0, 50000);
 		List<Instance> trainInstances=subinstances.subList(0, subinstances.size()*4/5);
 		List<Instance> testInstances=subinstances.subList(subinstances.size()*4/5, subinstances.size() );
@@ -85,8 +85,8 @@ public class SegmentationTester2 {
 		saveResult(trainDir, traininglabels, featuresDir);
 		
 		//testing
-		String testImagesDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTIMAGESDIR);
-		String testFilterDir=this.projectInfo.getProjectDirectory().get(ASCommon.K_TESTFILTERDIR);
+		String testImagesDir=projectInfo.getProjectDirectory().get(ASCommon.K_TESTIMAGESDIR);
+		String testFilterDir=projectInfo.getProjectDirectory().get(ASCommon.K_TESTFILTERDIR);
 		ImagePlus testImage=new ImagePlus(testImageTiff);
 		createStackImage(testImage, ".tif", testImagesDir, testFilterDir);
 		applyFilters(testImagesDir, testFilterDir);
@@ -268,8 +268,8 @@ public class SegmentationTester2 {
 		for(int i=1; i<=image.getStackSize();i++) {
 			ImageProcessor processor= image.getStack().getProcessor(i);
 			String title= folder+i;
-			IJ.log(folder);
-			IJ.log(title);
+			///IJ.log(folder);
+			//IJ.log(title);
 			createDirectory(filterFolder+title);
 			IJ.saveAs(new ImagePlus(title, processor),format, testimagefolder+title);
 		}

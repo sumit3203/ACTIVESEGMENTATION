@@ -270,7 +270,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		//System.out.println("elapsed time: " + time +" us");
+		System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 		
 		return fpaux;
@@ -367,7 +367,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public Map<String, String> getDefaultSettings() {
 
 	   Field [] fields = BoG_Filter_.class.getFields();
-		System.out.println("fields "+fields.length);
+	//System.out.println("fields "+fields.length);
 		
 		for (Field field:fields)   {
 			if (field.isAnnotationPresent(AFilterField.class)) {

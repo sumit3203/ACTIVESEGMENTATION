@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -151,6 +152,12 @@ public class WekaClassifier implements IClassifier, Serializable {
 	@Override
 	public Classifier getClassifier() {
 		return this.classifier;
+	}
+
+	@Override
+	public String[] getMetadata() {
+		AbstractClassifier cls = (AbstractClassifier) classifier;
+		return cls.getOptions();
 	}
 
 }

@@ -97,18 +97,21 @@ public class ClassifierManager implements ASCommon {
 			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
 		}
 		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
-		learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
-		metaInfo.setLearning(learningMap);
+		//learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
+		//metaInfo.setLearning(learningMap);
+		metaInfo.getLearning().setFeatureSelection(selectedType);
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
 	// where do we call this method?
+	/*
 	public void loadLearningMetaData() {
 		if(metaInfo.getLearning()!=null){
 			dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
 			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
 		}
 	}
+	*/
 
 	public void setClassifier(Object classifier) {
 		//System.out.println(classifier.toString());

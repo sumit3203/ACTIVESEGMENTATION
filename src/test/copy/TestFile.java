@@ -98,7 +98,7 @@ public class TestFile {
 		learning.put("classifier", "classifier.model");
 		learning.put("arff", "data.arff");
 		learning.put("setting", "activelearning");
-		metaInfo.setLearning(learning);
+	//	metaInfo.setLearning(learning);
 		
 		return metaInfo;
 	}

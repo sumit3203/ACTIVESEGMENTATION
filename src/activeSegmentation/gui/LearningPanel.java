@@ -57,7 +57,7 @@ public class LearningPanel implements Runnable, ASCommon {
   public void doAction(ActionEvent event)  {
     if (event == this.SAVE_BUTTON_PRESSED)     {
       //System.out.println(this.featureSelList.getSelectedIndex());
-      this.projectInfo.setFeatureSelection((String)this.featureSelList.getSelectedValue());
+      this.projectInfo.getLearning().setFeatureSelection((String)this.featureSelList.getSelectedValue());
       
      // System.out.println("in set classifiler");
       AbstractClassifier testClassifier=setClassifier();
@@ -66,7 +66,7 @@ public class LearningPanel implements Runnable, ASCommon {
     	  IClassifier classifier = new WekaClassifier(testClassifier);
           
           learningManager.setClassifier(classifier);
-          learningManager.saveLearningMetaData();
+         // learningManager.saveLearningMetaData();
           projectManager.updateMetaInfo(this.projectInfo);
       }
      
@@ -134,8 +134,7 @@ public void run()  {
     this.frame.setVisible(true);
   }
   
-  private AbstractClassifier setClassifier()
-  {
+  private AbstractClassifier setClassifier()   {
     Object c = this.m_ClassifierEditor.getValue();
     String options = "";
     String[] optionsArray = ((OptionHandler)c).getOptions();
@@ -145,14 +144,13 @@ public void run()  {
     }
     if ((!this.originalClassifierName.equals(c.getClass().getName())) || 
       (!this.originalOptions.equals(options))) {
-      try
-      {
+      try {
         AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
         cls.setOptions(optionsArray);
+        projectInfo.getLearning().setClassifier( cls);
+        projectInfo.getLearning().setOptionList();
         return cls;
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex)    {
         ex.printStackTrace();
       }
     }
