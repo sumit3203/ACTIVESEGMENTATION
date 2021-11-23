@@ -44,7 +44,10 @@ public class Gui implements ASCommon {
 	private ProjectManager projectManager;
 	
 
-
+	/**
+	 * 
+	 * @param projectManager
+	 */
 	public Gui(ProjectManager projectManager)	{
 		this.projectManager = projectManager;
 		learningManager = new ClassifierManager(this.projectManager);
@@ -126,8 +129,9 @@ public class Gui implements ASCommon {
 		button.setForeground(Color.WHITE);
 		button.setBounds(x, y, width, height);
 		button.addActionListener(new ActionListener()		{
+			@Override
 			public void actionPerformed(ActionEvent e)			{
-				Gui.this.doAction(action);
+				 doAction(action);
 			}
 		});
 		return button;

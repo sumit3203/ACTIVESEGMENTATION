@@ -571,8 +571,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 
 			ImagePlus image=featureManager.stackedClassifiedImage();
 			image.show();
-			//FileSaver saver= new FileSaver(image);
-			//saver.saveAsTiff();
+			
 		} //end if
 		
 		if(event==MASKS_BUTTON_PRESSED){
@@ -580,7 +579,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			if (classifiedImage==null) {
 				classifiedImage=featureManager.getClassifiedImage();//compute();
 			}
-			classifiedImage.duplicate().show();
+			getMask();
 			 
 		} //end if
 		
@@ -622,6 +621,17 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		}
 
 
+	}
+
+
+	/**
+	 * 
+	 */
+	private void getMask() {
+		ImagePlus mask=classifiedImage.duplicate();
+		NamedLUT nlut=new NamedLUT( featureManager.getColors());
+		mask.setLut(nlut.getLUT());
+		mask.show();
 	}
 
 

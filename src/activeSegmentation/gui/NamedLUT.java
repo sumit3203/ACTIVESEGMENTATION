@@ -13,6 +13,19 @@ public class NamedLUT {
 	byte[] green = new byte[ 256 ];
 	byte[] blue = new byte[ 256 ];
 
+	/**
+	 * 
+	 * @param colors
+	 */
+	public NamedLUT(List<Color> colors) {
+		setLut(colors);
+	}
+	
+	/**
+	 * 
+	 * @param colors
+	 * @return
+	 */
 	public LUT setLut(List<Color> colors ){
 		int i=0;
 		for(Color color: colors){
@@ -29,8 +42,7 @@ public class NamedLUT {
 	 * Get current label lookup table (used to color the results)
 	 * @return current overlay LUT
 	 */
-	public LUT getOverlayLUT()
-	{
+	public LUT getLUT()	{
 		return overlayLUT;
 	}
 }

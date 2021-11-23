@@ -54,7 +54,7 @@ public class RandomLUT extends LookUpTable {
 	}
 	
 	public LUT getLut() {
-		return new LUT((IndexColorModel)getColorModel(), 0.0, 255.0) ;
+		return new LUT(getReds(), getGreens(), getBlues()) ;
 	}
 	
 	
