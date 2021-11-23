@@ -578,7 +578,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		if(event==MASKS_BUTTON_PRESSED){
 			System.out.println("masks ");
 			if (classifiedImage==null) {
-				classifiedImage=featureManager.compute();
+				classifiedImage=featureManager.getClassifiedImage();//compute();
 			}
 			classifiedImage.duplicate().show();
 			 

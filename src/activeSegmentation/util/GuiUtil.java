@@ -71,7 +71,7 @@ public class GuiUtil {
 		colors.add(Color.cyan);
 		colors.add(Color.magenta);
 		colors.add(Color.yellow);
-		colors.add(Color.black);
+		//colors.add(Color.black);
 		return colors;
 	}
 

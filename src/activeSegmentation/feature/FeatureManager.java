@@ -3,25 +3,27 @@ package activeSegmentation.feature;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.LookUpTable;
 import ij.gui.Roi;
 import ij.io.RoiDecoder;
 import ij.io.RoiEncoder;
 import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
+//import ij.process.ImageProcessor;
 import weka.core.Instance;
 
 import java.awt.*;
 import java.io.*;
 import java.util.*;
+//import java.awt.image.*;
 //import java.util.Arrays;
 //import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+//import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -33,6 +35,7 @@ import java.util.zip.ZipOutputStream;
 
 import activeSegmentation.*;
 import activeSegmentation.classif.RoiInstanceCreator;
+import activeSegmentation.gui.RandomLUT;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.*;
 import activeSegmentation.util.GuiUtil;
@@ -65,14 +68,14 @@ public class FeatureManager implements IUtil, ASCommon {
 
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
-	private Random rand = new Random();
+	//private Random rand = new Random();
 	private String projectString, featurePath;
 	private int sliceNum=0, totalSlices=0;
 	private List<String> imageList=new ArrayList<>();
 	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<>();
-	private List<Color> defaultColors;
+	private List<Color> defaultColors = GuiUtil.setDefaultColors();
 	private ClassifierManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
 
@@ -92,7 +95,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		final List<String> images=loadImages(projectString);
 		totalSlices = images.size();
 		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from "+ projectString);
-		defaultColors = GuiUtil.setDefaultColors();
+		
 		if (totalSlices > 0) {
 			sliceNum = 1;
 		}
@@ -101,7 +104,7 @@ public class FeatureManager implements IUtil, ASCommon {
 				addClass();
 			}
 		}
-	//	roiman.hide();
+		//roiman.hide();
 	
 		featureMap.put(ProjectType.SEGM, new PixelInstanceCreator(projectInfo));
 		featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
@@ -244,17 +247,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		}
 	}
 
-	/**
-	 * 
-	 * @param roi
-	 * @return
-	 */
-	private boolean processibleRoi(Roi roi) {
-		boolean ret = (roi != null && !(roi.getType() == Roi.LINE || roi.getType() == Roi.POLYLINE
-				|| roi.getType() == Roi.ANGLE || roi.getType() == Roi.FREELINE || roi.getType() == Roi.POINT));
-		return ret;
-	}
-
+	
 	/**
 	 * 
 	 * @param key
@@ -327,23 +320,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		return classes.get(index).getLabel();
 	}
 	
-	/**
-	 * 
-	 * @param key
-	 * @param learningType
-	 * @param sliceNum
-	 * @return
-	 */
-	/*
-	public int getRoiListSize(String key, String learningType, int sliceNum) {
-		String imageKey = imageList.get(sliceNum - 1);
-		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRoiSize(imageKey);
-		} else {
-			return classes.get(key).getTrainingRoiSize(imageKey);
-		}
-	}
-	*/
+
 	/**
 	 * 
 	 * @param key
@@ -400,30 +377,15 @@ public class FeatureManager implements IUtil, ASCommon {
 		if (!classes.containsKey(key)) {
 			Map<String, List<Roi>> trainingRois = new HashMap<>();
 			Map<String, List<Roi>> testingRois = new HashMap<>();
-			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getNextColor(classes.size()), trainingRois,
+			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), lut.getNextColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
 			
 		}
 	}
 
-	/**
-	 * 
-	 * @param number
-	 * @return
-	 */
-	private Color getNextColor(int number) {
-		if (number < defaultColors.size()) {
-			return defaultColors.get(number);
-		} else {
-			float r = rand.nextFloat();
-			float g = rand.nextFloat();
-			float b = rand.nextFloat();
-			Color randomColor = new Color(r, g, b);
-			return randomColor;
-		}
+	private RandomLUT lut = new RandomLUT(LookUpTable.createGrayscaleColorModel(false));
 
-	}
 
 	/**
 	 * 
@@ -711,7 +673,7 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @return
 	 */
 	public ImagePlus stackedClassifiedImage() {
-		File[] files=finder(featurePath);
+		File[] files=tiffilter(featurePath);
 		ImageStack imageStack=null;
 		
 		for(int i=0 ; i<files.length;i++) {
@@ -731,7 +693,7 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * @param dirName
 	 * @return
 	 */
-	public File[] finder( String dirName){
+	private File[] tiffilter( String dirName){
 	        File dir = new File(dirName);
 
 	        return dir.listFiles(new FilenameFilter() { 
@@ -832,11 +794,13 @@ public class FeatureManager implements IUtil, ASCommon {
 						.applyClassifier(featureMap.get(projectInfo.getProjectType()).createAllInstances(image));
 				
 				//now classificationResult has predictions for all pixels in one particular image
-				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
+				FloatProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
 						currentImage.getHeight(), classificationResult);
-				
+				ByteProcessor bp=(ByteProcessor) classifiedSliceProcessor.convertToByte(false);
+				//bp.setLut( lut.getLut());
 				//segmented image instance
-				ImagePlus classifiedImage = new ImagePlus(image, classifiedSliceProcessor);
+				ImagePlus classifiedImage = new ImagePlus(image, bp);
+				classifiedImage.setLut(lut.getLut());
 				classifiedImage.setCalibration(currentImage.getCalibration());
 				IJ.save(classifiedImage, featurePath + image);
 			}

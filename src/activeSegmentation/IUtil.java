@@ -100,5 +100,18 @@ public interface IUtil {
 			exampleList.get(key).setForeground(featureManager.getClassColor(key));
 		}
 	}	
+	
+	
+	/**
+	 * 
+	 * @param roi
+	 * @return
+	 */
+	default public boolean processibleRoi(Roi roi) {
+		boolean ret = (roi != null && !(roi.getType() == Roi.LINE || roi.getType() == Roi.POLYLINE
+				|| roi.getType() == Roi.ANGLE || roi.getType() == Roi.FREELINE || roi.getType() == Roi.POINT));
+		return ret;
+	}
+
 
 }

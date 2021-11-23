@@ -5,7 +5,7 @@ import java.util.List;
 
 import ij.process.LUT;
 
-public class LutSetting {
+public class NamedLUT {
 
 	LUT overlayLUT;
 	// Create overlay LUT
