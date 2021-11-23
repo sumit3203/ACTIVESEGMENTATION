@@ -1,8 +1,6 @@
 package activeSegmentation.gui;
 
 
-import java.awt.Checkbox;
-import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +14,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,9 +31,6 @@ import activeSegmentation.IClassifier;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
-import activeSegmentation.util.GuiUtil;
-
-
 import javax.swing.ImageIcon;
 
 
@@ -58,15 +52,12 @@ public class LearningPanel implements Runnable, ASCommon {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
-  //  this.classifierList = GuiUtil.model();
   }
   
   public void doAction(ActionEvent event)  {
     if (event == this.SAVE_BUTTON_PRESSED)     {
-      //System.out.println(this.featureSelList.getSelectedIndex());
-     //  System.out.println(this.featureSelList.getSelectedValue());
-     // this.projectInfo.getLearning().setFeatureSelection((String)this.featureSelList.getSelectedValue());
-      
+
+     
      // System.out.println("in set classifier");
       AbstractClassifier testClassifier=setClassifier();
     
@@ -133,11 +124,8 @@ public void run()  {
     
     JPanel options = new JPanel();
     options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
- //   CheckboxGroup checkboxGroup = new CheckboxGroup();
     options.setBounds(10, 120, 300, 80);
-    
-  //  JCheckBox pasiveLearning = new JCheckBox("Passive Learning", checkboxGroup, true);
-  //  JCheckBox activeLearning = new JCheckBox("Active Learning", checkboxGroup, true);
+
     JCheckBox pasiveLearning = new JCheckBox("Passive Learning" );
     JCheckBox activeLearning = new JCheckBox("Active Learning" );
     options.add(pasiveLearning);
