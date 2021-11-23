@@ -2,11 +2,15 @@ package activeSegmentation.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.GZIPOutputStream;
 
 import activeSegmentation.IDataSet;
 import activeSegmentation.learning.WekaDataSet;
@@ -14,9 +18,11 @@ import activeSegmentation.prj.ProjectInfo;
 import ij.IJ;
 import ij.ImageStack;
 import ijaux.datatype.ComplexArray;
+import weka.classifiers.AbstractClassifier;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import weka.core.DenseInstance;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 
 /**
  * 				
@@ -186,6 +192,88 @@ public class InstanceUtil {
 
 			return true;
 
+		}
+		
+		
+		/**
+		 * Load a Weka model (classifier) from a file
+		 * @param filename complete path and file name
+		 * @return classifier
+		 */
+		public static AbstractClassifier readClassifier(String filename)
+		{
+			AbstractClassifier cls = null;
+			// deserialize model
+			try {
+				cls = (AbstractClassifier) SerializationHelper.read(filename);
+			} catch (Exception e) {
+				System.out.println("Error when loading classifier from " + filename);
+				e.printStackTrace();
+			}
+			return cls;
+		}
+
+		 
+
+		/**
+		 * Write classifier into a file
+		 *  based on TWS saveClassifier
+		 *
+		 * @param classifier classifier
+		 * @param trainHeader train header containing attribute and class information
+		 * @param filename name (with complete path) of the destination file
+		 * @return false if error
+		 */
+		public static boolean saveClassifier(
+				AbstractClassifier classifier,
+				Instances trainHeader,
+				String filename)
+		{
+			File sFile = null;
+			boolean saveOK = true;
+ 		 
+
+			try {
+				sFile = new File(filename);
+				OutputStream os = new FileOutputStream(sFile);
+				if (sFile.getName().endsWith(".gz"))
+				{
+					os = new GZIPOutputStream(os);
+				}
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(os);
+				objectOutputStream.writeObject(classifier);
+				if (trainHeader != null)
+					objectOutputStream.writeObject(trainHeader);
+				objectOutputStream.flush();
+				objectOutputStream.close();
+			}
+			catch (Exception e)	{
+				System.out.println("Error saving classifier into a file");
+				saveOK = false;
+				e.printStackTrace();
+			}
+			if (saveOK)
+				System.out.println("Saved model into the file " + filename);
+
+			return saveOK;
+		}
+
+		/**
+		 * Write classifier into a file
+		 *  based on TWS saveClassifier
+		 * @param cls classifier
+		 * @param filename name (with complete path) of the destination file
+		 * @return false if error
+		 */
+		public static boolean writeClassifier(AbstractClassifier cls, String filename){
+			try {
+				SerializationHelper.write(filename, cls);
+			} catch (Exception e) {
+				System.out.println("Error while writing classifier into a file");
+				e.printStackTrace();
+				return false;
+			}
+			return true;
 		}
 
 
