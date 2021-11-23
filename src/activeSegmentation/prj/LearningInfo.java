@@ -29,9 +29,9 @@ public class LearningInfo {
 	
 	private String learningOption="";
 	
-	private String classifierfile="";
+	private String classifierfile="classifier.model";
 	
-	private String arff="";
+	private String arff="trainingdata.arff";
 	
 	public List<String> getOptionList(){
 		return optionList;

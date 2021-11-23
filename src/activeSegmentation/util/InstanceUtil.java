@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
 
+import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.learning.WekaDataSet;
 import activeSegmentation.prj.ProjectInfo;
@@ -49,7 +50,7 @@ import weka.core.SerializationHelper;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class InstanceUtil {
+public class InstanceUtil implements ASCommon {
 
 	/**
 	 * Create instance (feature vector) of a specific coordinate
@@ -164,7 +165,8 @@ public class InstanceUtil {
 		//@Override
 		public static boolean writeDataToARFF(Instances data, ProjectInfo projectInfo)	{
 			BufferedWriter out = null;
-			final String filename=projectInfo.getProjectPath()+projectInfo.projectName ;
+			final String filename=projectInfo.getProjectPath()+fs+
+					projectInfo.projectName +learnDir+"trainingdata.arff" ;
 			System.out.println("Saving "+filename);
 			try{
 				out = new BufferedWriter(

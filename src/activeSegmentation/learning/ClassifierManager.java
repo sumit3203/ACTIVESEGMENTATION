@@ -54,7 +54,7 @@ public class ClassifierManager implements ASCommon {
     	System.out.println("in training");
     	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
-		System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
+		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			System.out.println("ClassifierManager: in training");
 		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
@@ -90,16 +90,16 @@ public class ClassifierManager implements ASCommon {
 	
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
-		Map<String,String> learningMap = new HashMap<>();
+		//Map<String,String> learningMap = new HashMap<>();
 		if(dataset!=null){
-			learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
+			//learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
 			//dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);	
 			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
 		}
 		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
 		//learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
 		//metaInfo.setLearning(learningMap);
-		metaInfo.getLearning().setFeatureSelection(selectedType);
+		//metaInfo.getLearning().setFeatureSelection(selectedType);
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 

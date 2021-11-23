@@ -159,7 +159,7 @@ public void run()  {
   }
   
   private AbstractClassifier setClassifier()   {
-    Object c = this.wekaClassifierEditor.getValue();
+    Object c = wekaClassifierEditor.getValue();
     String options = "";
     String[] optionsArray = ((OptionHandler)c).getOptions();
     System.out.println(originalOptions);
