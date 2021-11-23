@@ -114,9 +114,8 @@ public class ClassifierManager implements ASCommon {
 	*/
 
 	public void setClassifier(Object classifier) {
-		//System.out.println(classifier.toString());
 		currentClassifier = (WekaClassifier)classifier;		 	
-		System.out.println(currentClassifier.toString());
+		//System.out.println(currentClassifier.toString());
 	}
 
 	public double[] applyClassifier(IDataSet dataSet){

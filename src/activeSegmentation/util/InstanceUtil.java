@@ -159,6 +159,7 @@ public class InstanceUtil {
 		public static boolean writeDataToARFF(Instances data, ProjectInfo projectInfo)	{
 			BufferedWriter out = null;
 			final String filename=projectInfo.getProjectPath()+projectInfo.projectName ;
+			System.out.println("Saving "+filename);
 			try{
 				out = new BufferedWriter(
 						new OutputStreamWriter(
@@ -166,7 +167,7 @@ public class InstanceUtil {
 
 				final Instances header = new Instances(data, 0);
 				out.write(header.toString());
-				System.out.println("Saving "+filename);
+				
 				for(int i = 0; i < data.numInstances(); i++)			{
 					out.write(data.get(i).toString()+"\n");
 				}

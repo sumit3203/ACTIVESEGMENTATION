@@ -42,7 +42,7 @@ public class ApplyTask extends RecursiveAction{
 
 	@Override
 	protected void compute() {
-		if (mLength < 512) {		
+		if (mLength < 1024) {		
 			classifyPixels();		 
 		} else {
 			System.out.println("ApplyTask: splitting workLoad: " + mLength);	

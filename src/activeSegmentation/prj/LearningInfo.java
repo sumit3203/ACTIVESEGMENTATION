@@ -25,11 +25,13 @@ public class LearningInfo {
 	
 	private List<String> optionList = new ArrayList<>();
 	
-	String featureSelection="";
+	private String featureSelection="";
 	
-	String classifierfile="";
+	private String learningOption="";
 	
-	String arff="";
+	private String classifierfile="";
+	
+	private String arff="";
 	
 	public List<String> getOptionList(){
 		return optionList;
@@ -48,7 +50,6 @@ public class LearningInfo {
 	 */
 	public String getFeatureSelection()	{
 		return featureSelection;
-		//return this.featureSelection;
 	}
 	
 	/**
@@ -56,7 +57,6 @@ public class LearningInfo {
 	 * @param featureSelection
 	 */
 	public void setFeatureSelection(String featureSelection)	{
-		//this.featureSelection = featureSelection;
 		this.featureSelection=featureSelection;
 	}
 
@@ -75,6 +75,30 @@ public class LearningInfo {
 	 */
 	public void setClassifier(AbstractClassifier cls)	{
 		this.classifier =  cls;
+	}
+
+	public String getClassifierFile() {
+		return classifierfile;
+	}
+
+	public void setClassifierFile(String classifierfile) {
+		this.classifierfile = classifierfile;
+	}
+
+	public String getArffFile() {
+		return arff;
+	}
+
+	public void setArffFile(String arff) {
+		this.arff = arff;
+	}
+
+	public String getLearningOption() {
+		return learningOption;
+	}
+
+	public void setLearningOption(String learningOption) {
+		this.learningOption = learningOption;
 	}
 	
 }

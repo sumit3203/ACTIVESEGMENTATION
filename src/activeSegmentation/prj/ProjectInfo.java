@@ -36,6 +36,8 @@ public class ProjectInfo{
 	
 	public String comment = "Default Comment";
 	
+	public final String version="1.0.5";
+	
 	////////////////////
 	// Private fields
 	////////////////////
@@ -44,7 +46,7 @@ public class ProjectInfo{
 	private Date createdDate=new Date();
 	private Date modifyDate=new Date();
 	
-	private String version="1.0.1";
+	
 	
 	@JsonProperty(value="classes")
 	private int classes=-1;
@@ -211,9 +213,9 @@ public class ProjectInfo{
 	 * 
 	 * @param version
 	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
+//	public void setVersion(String version) {
+//		this.version = version;
+//	}
 
 
 
