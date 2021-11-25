@@ -2,6 +2,7 @@ package activeSegmentation.gui;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.ImageCanvas;
 import ij.gui.Roi;
 import ij.gui.Toolbar;
 import ij.plugin.Zoom;
@@ -14,6 +15,10 @@ import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
+import activeSegmentation.util.GuiUtil;
+
+import java.awt.event.*;
 
 
 /**
@@ -89,6 +94,8 @@ public class SimpleCanvas extends OverlayedImageCanvas {
 		 super.mouseClicked(e);
 		
 	}
+
+	 
 
 
 	 

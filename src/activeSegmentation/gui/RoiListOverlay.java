@@ -42,11 +42,11 @@ import activeSegmentation.gui.OverlayedImageCanvas.Overlay;
  * @author Ignacio Arganda-Carreras
  *
  */
-public class RoiListOverlay implements Overlay 
-{
+public class RoiListOverlay implements Overlay {
 	ArrayList<Roi> roi = null;
 	Color color = Roi.getColor();
 	Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
+	
 	/**
 	 * Empty constructor
 	 */
@@ -58,21 +58,18 @@ public class RoiListOverlay implements Overlay
 	 * @param composite composite mode
 	 * @param color color to paint the RoiOverlay
 	 */
-	public RoiListOverlay(ArrayList<Roi> roi, Composite composite, Color color)
-	{
+	public RoiListOverlay(ArrayList<Roi> roi, Composite composite, Color color)	{
 		setRoi( roi );
 		setComposite( composite );
 		setColor( color );
 	}
 	
 	@Override
-	public void paint(Graphics g, int x, int y, double magnification) 
-	{
+	public void paint(Graphics g, int x, int y, double magnification) 	{
 		if ( null == this.roi )
 			return;
 		// Set ROI image to null to avoid repainting
-		for(Roi r : this.roi)
-		{			
+		for(Roi r : this.roi)		{			
 			r.setImage(null);
 			Shape shape = ShapeRoiHelper.getShape(new ShapeRoi(r));
 			final Rectangle roiBox = r.getBounds();
@@ -106,8 +103,7 @@ public class RoiListOverlay implements Overlay
 				
 	}
 	
-	public void setRoi(ArrayList<Roi> roi)
-	{
+	public void setRoi(ArrayList<Roi> roi){
 		this.roi = roi;
 	}
 	

@@ -1,9 +1,12 @@
 package activeSegmentation.gui;
 
 
+import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
+import ij.gui.Overlay;
 import ij.gui.Roi;
 
 import java.awt.AlphaComposite;
@@ -12,20 +15,14 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Rectangle;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -41,7 +38,6 @@ import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IUtil;
-//import activeSegmentation.IProjectManager;
 import activeSegmentation.LearningType;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
@@ -51,7 +47,7 @@ import activeSegmentation.util.GuiUtil;
 /*
  * Feature Inspector
  */
-public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
+public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommon  {
 
 	/**
 	 * 
@@ -67,7 +63,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 	/** array of ROI list overlays to paint the transparent ROIs of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
 
-	public static final Font FONT = new Font( "Arial", Font.BOLD, 10 );
+//	public static final Font FONT = new Font( "Arial", Font.BOLD, 10 );
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	private ActionEvent NEXT_BUTTON_PRESSED;
@@ -82,6 +78,9 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	private ActionEvent VIEW_BUTTON_PRESSED ;
+	
+	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	private ActionEvent SNAP_BUTTON_PRESSED ;
 	
 	private Map<String, JList<String>> exampleList;
 	private Map<String, JList<String>> allexampleList;
@@ -104,14 +103,15 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;
 		this.featureManager=featureManager;
-		this.featuresList=new ArrayList<String>();
+		this.featuresList=new ArrayList<>();
 		this.images=new ArrayList<>();
-		this.exampleList = new HashMap<String, JList<String>>();
-		this.allexampleList = new HashMap<String, JList<String>>();
-		this.roiOverlayList = new HashMap<String, RoiListOverlay>();
+		this.exampleList = new HashMap<>();
+		this.allexampleList = new HashMap<>();
+		this.roiOverlayList = new HashMap<>();
 		this.projectInfo=this.projectManager.getMetaInfo();
 		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		this.setVisible(false);
+
 		showPanel();
 	}
 
@@ -159,6 +159,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		}
 
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		//frame.addKeyListener(keyadapter);
 		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);
 		
@@ -172,7 +173,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		imagePanel.setLayout(new BorderLayout());
 		imagePanel.setBackground(Color.GRAY);
 		ic=new SimpleCanvas(featureManager.getCurrentImage());
-
+ 
 	    ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		if(totalFeatures>0){
 			featureNum=1;
@@ -223,6 +224,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		features.setBounds(pannel_offset, 120, component_width, 80);
 		features.setBorder(BorderFactory.createTitledBorder("FEATURES"));
 		addButton(new JButton(), "PREVIOUS",null , pannel_offset+5, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
+		
 		imageNumField= new JTextField();
 		imageNumField.setColumns(5);
 		imageNumField.setBounds( pannel_offset+20, 130, 10, 20 );
@@ -250,7 +252,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		frame.add(features);
 		
 		JPanel dataJPanel = new JPanel();
-		learningType = new JComboBox<LearningType>(LearningType.values());
+		learningType = new JComboBox<>(LearningType.values());
 		learningType.setVisible(true);
 		
 		// do we need that?
@@ -276,8 +278,8 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		imageName.setText("     ");
 		dataJPanel.add(imageName);
 		
-		addButton(new JButton(), "View", null , pannel_offset+190, 250, 80, 20,features,VIEW_BUTTON_PRESSED,null );
-
+		addButton(new JButton(), "View", null , pannel_offset+190, 250, 80, 20,features, VIEW_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Snapshot",null , pannel_offset+5, 370, 120, 20,features,SNAP_BUTTON_PRESSED,null );
 		
 		dataJPanel.setBackground(Color.GRAY);
 		panel.add(dataJPanel);
@@ -296,8 +298,10 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		frame.setSize(1000, 600);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		frame.setFocusable(true);
         refreshPanel();
-        updateGui();}
+        updateGui();
+        }
 	}
 
 	private void refreshPanel() {
@@ -319,10 +323,12 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		JList<String> all=GuiUtil.model();
 		all.setForeground(color);
 		allexampleList.put(key,all);	
+		
 		RoiListOverlay roiOverlay = new RoiListOverlay();
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
 		roiOverlayList.put(key,roiOverlay);
+		
 		JPanel buttonPanel= new JPanel();
 		buttonPanel.setName(key);
 		ActionEvent addbuttonAction= new ActionEvent(buttonPanel, 1,"AddButton");
@@ -343,7 +349,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 
 	private void loadImage(int sliceNum, int featureNum){
 
-		displayImage= new ImagePlus(filterString+images.get(sliceNum-1)+"/"+featuresList.get(featureNum-1));
+		displayImage= new ImagePlus(filterString+images.get(sliceNum-1)+fs+featuresList.get(featureNum-1));
 		displayImage.getProcessor().resetMinAndMax();
 		
 		setImage(displayImage);
@@ -364,13 +370,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 			//System.out.println("BUTTON PRESSED");
 			featureNum=featureNum-1;
 			imageNumField.setText(Integer.toString(featureNum));
-			loadImage(sliceNum, featureNum);
-			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
-				int x_centre = ic.getWidth()/2+ic.getX();
-				int y_centre = ic.getHeight()/2+ic.getY();
-				ic.zoomIn(x_centre,y_centre);
-			}	*/
-			
+			loadImage(sliceNum, featureNum);			
 			updateGui();
 
 		}
@@ -378,12 +378,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 			//	System.out.println("IN NEXT BUTTOn");
 			featureNum=featureNum+1;
 			imageNumField.setText(Integer.toString(featureNum));
-		
-			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
-				int x_centre = ic.getWidth()/2+ic.getX();
-				int y_centre = ic.getHeight()/2+ic.getY();
-				ic.zoomIn(x_centre,y_centre);
-			}*/
+
 			loadImage(sliceNum, featureNum);
 			//imagePanel.add(ic);
 			updateGui();
@@ -397,12 +392,6 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 			sliceField.setText(Integer.toString(sliceNum));
 			totalLabel.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
-			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
-				int x_centre = ic.getWidth()/2+ic.getX();
-				int y_centre = ic.getHeight()/2+ic.getY();
-				ic.zoomIn(x_centre,y_centre);
-			}*/
-			//imagePanel.add(ic);
 			updateGui();
 		}
 		if(event==SLICE_NEXT_BUTTON_PRESSED && sliceNum< totalSlices){
@@ -413,23 +402,25 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 			sliceField.setText(Integer.toString(sliceNum));
 			totalLabel.setText(Integer.toString(totalFeatures));
 			loadImage(sliceNum, featureNum);
-			/*if(ic.getWidth()>IMAGE_CANVAS_DIMENSION) {
-				int x_centre = ic.getWidth()/2+ic.getX();
-				int y_centre = ic.getHeight()/2+ic.getY();
-				ic.zoomIn(x_centre,y_centre);
-			}*/
-			//imagePanel.add(ic);
 			updateGui();
 
 		}
 		if (event==this.VIEW_BUTTON_PRESSED) {
 			displayImage.show();
+	 
+		}
+		
+		if (event==this.SNAP_BUTTON_PRESSED) {			 
+			GuiUtil.makeScreenshot(ic);
+
 		}
 
 	}
+//////////////////////////////////////////////////////////
 
+	 
 
-
+	
 
 	private  MouseListener mouseListener = new MouseAdapter() {
 		@Override
@@ -499,7 +490,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 	private void drawExamples(){
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getRoiList(key,learningType.getSelectedItem().toString(), sliceNum);
+					getRoiList(key, learningType.getSelectedItem().toString(), sliceNum);
 			this.roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			this.roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
@@ -507,12 +498,12 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 
 		getImagePlus().updateAndDraw();
 	}
+	
 	private void updateGui(){	
 		try{
 			updateExampleLists();
 			drawExamples();
 			
-			//updateallExampleLists();
 			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 			ic.repaint();
 		}catch(Exception e){
@@ -545,24 +536,30 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil  {
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		updateExampleLists(featureManager, type,  exampleList);
 	}
-	
+
 	/*
-	private void updateExampleLists()	{
-		LearningType type=(LearningType) learningType.getSelectedItem();
-		for(String key:featureManager.getClassKeys()){
-			exampleList.get(key).removeAll();
-			Vector<String> listModel = new Vector<>();
-			final String stype=type.toString();
-			final int n=featureManager.getRoiList(key, stype, sliceNum).size();
-			for(int j=0; j<n; j++){	
-				listModel.addElement(key+ " "+ j + " " +
-						featureManager.getCurrentSlice()+" "+type.getLearningType());
-			}
-			exampleList.get(key).setListData(listModel);
-			exampleList.get(key).setForeground(featureManager.getClassColor(key));
-		}
-	}		
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if ( e.getKeyCode() == KeyEvent.VK_U) {
+        	System.out.println(" U pressed");
+        	GuiUtil.makeScreenshot(ic );
+        } 
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 	*/
+
 	
 	/*public static void main(String[] args) {
 		new ImageJ();

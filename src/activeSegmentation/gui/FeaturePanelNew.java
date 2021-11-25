@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -115,8 +117,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	private ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
 	private ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	private ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
- 
+	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 9, "MASKS" );
+	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	private ActionEvent SNAP_BUTTON_PRESSED = new ActionEvent( this, 10, "Snap" );
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
@@ -152,7 +155,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		
 		frame.setResizable(false);
  		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
+ 
 		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);
 		
@@ -202,7 +205,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 * features
 		 */
 		JPanel features= new JPanel();
-		features.setBounds(605,120,350,100);
+		features.setBounds(605,120,350,120);
 		features.setBorder(BorderFactory.createTitledBorder("Learning"));
 		
 		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
@@ -229,12 +232,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 */
 		
 		JPanel computePanel = new JPanel();
-		addButton(new JButton(), "Next",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "Train",null, 550,550,350,100,computePanel, TRAIN_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Save",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Overlay",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, MASKS_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Train", null, 550, 550, 350,100,computePanel, TRAIN_BUTTON_PRESSED,null);
 		
+		addButton(new JButton(), "Next", null, 800, 130,  80, 20,features,NEXT_BUTTON_PRESSED,null );
+	
+		addButton(new JButton(), "Save",null,  550, 550, 350,100,computePanel, SAVE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Overlay",null,550,550, 350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Masks",null, 550, 550, 350,100,computePanel, MASKS_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Snap",null,  550, 650, 350,100,computePanel, SNAP_BUTTON_PRESSED,null);
 		features.add(computePanel);
 		frame.add(features);
 		
@@ -243,7 +248,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 */
 		
 		JPanel dataJPanel = new JPanel();
-		learningType = new JComboBox<LearningType>(LearningType.values());
+		learningType = new JComboBox<>(LearningType.values());
 		learningType.setVisible(true);
 		learningType.addItemListener( new ItemListener() {
 
@@ -313,6 +318,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		frame.setFocusable(true);
 		updateGui();
 
 	}
@@ -373,12 +379,6 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
 		
-//		ic.addComponentListener(new ComponentAdapter() {
-//			public void componentResized(ComponentEvent ce) {
-//				Rectangle r = ic.getBounds();
-//				((SimpleCanvas) ic).setDstDimensions(r.width, r.height);
-//			}
-//		});	
 		
 		roiOverlayList.put(key,roiOverlay);
 		JPanel buttonPanel= new JPanel();
@@ -433,7 +433,6 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 	
 	private void loadImage(ImagePlus image){
 		this.displayImage=image;
-		//this.activeRoi=displayImage.getRoi();
 		setImage(this.displayImage);
 		updateImage(this.displayImage);
 	}
@@ -582,6 +581,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			getMask();
 			 
 		} //end if
+		
+		if (event==SNAP_BUTTON_PRESSED) {			 
+			GuiUtil.makeScreenshot(ic);
+
+		}
 		
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
@@ -744,28 +748,10 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		updateExampleLists(featureManager, type,  exampleList);
 	}
 	
-	/*
-	public void updateExampleLists()	{
-		LearningType type=(LearningType) learningType.getSelectedItem();
-		
-		for(String key:featureManager.getClassKeys()){
-			exampleList.get(key).removeAll();
-			Vector<String> listModel = new Vector<>();
-			final int slicenum=featureManager.getCurrentSlice();
-			final String stype=type.toString();
-			final List<Roi> lst= featureManager.getRoiList(key, stype ,slicenum);
-			int n=0;
-			if (lst!=null)
-				n=lst.size();
-			for(int j=0; j<n; j++){	
-				listModel.addElement(key+ " "+ j + " " +
-						featureManager.getCurrentSlice()+" "+type.getLearningType());
-			}
-			exampleList.get(key).setListData(listModel);
-			exampleList.get(key).setForeground(featureManager.getClassColor(key));
-		}
-	}	
-	 */
+ 
+	
+	 
+	 
 	
 	private  MouseListener mouseListener = new MouseAdapter() {
 		
@@ -830,8 +816,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		updateGui();
 	}  
 	
-	// to eventually rescale
-	//Roi activeRoi=null;
+
 	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
@@ -851,8 +836,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		button.setBounds( x, y, width, height );
 		button.addActionListener( new ActionListener()	{
 			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
+			public void actionPerformed( final ActionEvent e )	{
 				//System.out.println(e.toString());
 				doAction(action);
 			}

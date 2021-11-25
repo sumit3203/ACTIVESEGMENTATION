@@ -1,17 +1,21 @@
 package activeSegmentation.util;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
+import ij.IJ;
+import ij.ImagePlus;
+import ij.gui.ImageCanvas;
 
 public class GuiUtil {
 
@@ -64,7 +68,7 @@ public class GuiUtil {
 	}
 
 	public static List<Color> setDefaultColors(){
-		List<Color> colors= new ArrayList<Color>();
+		List<Color> colors= new ArrayList<>();
 		colors.add(Color.blue);
 		colors.add(Color.green);
 		colors.add(Color.red);
@@ -74,5 +78,17 @@ public class GuiUtil {
 		//colors.add(Color.black);
 		return colors;
 	}
-
+	
+	/**
+	 * based on https://stackoverflow.com/questions/58305/
+	 * is-there-a-way-to-take-a-screenshot-using-java-and-save-it-to-some-sort-of-image
+	 * @param argFrame
+	 */
+	public static void makeScreenshot(ImageCanvas argFrame ) {
+	    Rectangle rec = argFrame.getBounds();
+	    BufferedImage bufferedImage = new BufferedImage(rec.width, rec.height, BufferedImage.TYPE_INT_ARGB);
+	    argFrame.paint(bufferedImage.getGraphics());
+	    ImagePlus imp=new ImagePlus("screenshot",  bufferedImage);
+	    imp.show();	   
+	}
 }

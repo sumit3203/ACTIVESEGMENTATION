@@ -25,6 +25,9 @@ public class RandomLUT extends LookUpTable {
 		counter=defaultColors.size();
 	}
 	
+	public void resetCounter() {
+		counter=defaultColors.size();
+	}
 	
 	public Color getNextColor(int number) {
 		number=number % 256;

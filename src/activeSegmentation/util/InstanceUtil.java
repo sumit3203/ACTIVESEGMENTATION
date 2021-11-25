@@ -168,6 +168,14 @@ public class InstanceUtil implements ASCommon {
 			final String filename=projectInfo.getProjectPath()+fs+
 					learnDir+"trainingdata.arff" ;
 			System.out.println("Saving "+filename);
+			File f=new File(filename);
+			if (!f.exists())
+				try {
+					f.createNewFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			try{
 				out = new BufferedWriter(
 						new OutputStreamWriter(
@@ -179,7 +187,7 @@ public class InstanceUtil implements ASCommon {
 				for(int i = 0; i < data.numInstances(); i++)			{
 					out.write(data.get(i).toString()+"\n");
 				}
-			}	catch(Exception e)		{
+			}	catch(IOException e)		{
 				IJ.log("Error: couldn't write instances into .ARFF file.");
 				IJ.showMessage("Exception while saving data as ARFF file");
 				e.printStackTrace();
