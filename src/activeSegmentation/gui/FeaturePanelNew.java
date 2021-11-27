@@ -123,7 +123,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
-	//private ImagePlus tempClassifiedImage;
+ 
 	private JPanel imagePanel,classPanel,roiPanel;
 	private JTextField imageNum;
 	private JLabel total;
@@ -143,8 +143,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		this.jTextList= new HashMap<>();
 		this.exampleList = new HashMap<>();
 		this.allexampleList = new HashMap<>();
-		roiOverlayList = new HashMap<>();
-		//tempClassifiedImage = new ImagePlus();		
+		roiOverlayList = new HashMap<>();		
 		this.setVisible(false);
 		showPanel();
 	}
@@ -174,7 +173,6 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 */
 		imagePanel.setLayout(new BorderLayout());
 		
-		//ic=new SimpleCanvas(featureManager.getCurrentImage());
 		ic=new SimpleCanvas(displayImage);
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
