@@ -581,7 +581,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		} //end if
 		
 		if (event==SNAP_BUTTON_PRESSED) {			 
-			GuiUtil.makeScreenshot(ic);
+			GuiUtil.grabWindow(ic);
 
 		}
 		

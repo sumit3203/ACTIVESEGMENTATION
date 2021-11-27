@@ -75,7 +75,7 @@ public class GuiUtil {
 		colors.add(Color.cyan);
 		colors.add(Color.magenta);
 		colors.add(Color.yellow);
-		//colors.add(Color.black);
+
 		return colors;
 	}
 	
@@ -84,7 +84,7 @@ public class GuiUtil {
 	 * is-there-a-way-to-take-a-screenshot-using-java-and-save-it-to-some-sort-of-image
 	 * @param argFrame
 	 */
-	public static void makeScreenshot(ImageCanvas argFrame ) {
+	public static void grabWindow(ImageCanvas argFrame ) {
 	    Rectangle rec = argFrame.getBounds();
 	    BufferedImage bufferedImage = new BufferedImage(rec.width, rec.height, BufferedImage.TYPE_INT_ARGB);
 	    argFrame.paint(bufferedImage.getGraphics());

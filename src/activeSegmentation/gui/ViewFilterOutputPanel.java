@@ -430,7 +430,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		}
 		
 		if (event==this.SNAP_BUTTON_PRESSED) {			 
-			GuiUtil.makeScreenshot(ic);
+			GuiUtil.grabWindow(ic);
 
 		}
 
