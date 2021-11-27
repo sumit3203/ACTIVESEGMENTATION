@@ -91,14 +91,14 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	@AFilterField(key=GN, value="order")
-	public static int nn = Prefs.getInt(GN, 1);
+	public static int nn = Prefs.getInt(GN, 3);
 	
 	/*
 	@AFilterField(key=GM, value="order y")
 	public static int mm = Prefs.getInt(GM, 0);
 	 */
 	@AFilterField(key=ISSEP, value="separable")
-	public static boolean sep=Prefs.getBoolean(ISSEP, false);
+	public static boolean sep=Prefs.getBoolean(ISSEP, true);
 	
 	@AFilterField(key=SCNORM, value="normalized")
 	public static boolean scnorm=Prefs.getBoolean(SCNORM, false);
@@ -121,9 +121,9 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
  */
 	
 	
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
@@ -148,9 +148,11 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	}
 
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
 	
 	@Override
 	public int setup(String arg, ImagePlus imp) {
@@ -179,7 +181,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 		GScaleSpace sp=new GScaleSpace(r, wnd);
 		
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		//imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		ImageStack fpaux=filter(ip, sp,  scnorm,nn);
 		//image=new ImagePlus("Convolved_"+nn+"_"+mm, fpaux);
 		image=new ImagePlus("Convolved_"+nn, fpaux);
@@ -207,7 +209,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 			//IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+Common.TIFFORMAT );
 			imageStack.addSlice( key+"_" + sigma, fs);		
 		}
-		initialseimageStack(imageStack);
+		//initialseimageStack(imageStack);
 		return new Pair<Integer,ImageStack>(index, imageStack);
 	}
 
@@ -416,7 +418,8 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	 * by convention we will plot the lowest order derivative in 1D
 	 */
 	private double gdKernel(double x){
-		return -x*exp(-x*x/2.0) / (2.0*sqrt(PI));
+		double x2=x*x;
+		return -x*(x2-3.)*exp(-x2/2.) / (2.*sqrt(PI));
 	}
 
 	
@@ -432,7 +435,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=70;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

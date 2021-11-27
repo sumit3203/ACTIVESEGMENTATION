@@ -92,7 +92,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public static boolean debug=IJ.debugMode;
 
 	@AFilterField(key=FULL_OUTPUT, value="full output")
-	public boolean fulloutput=false;
+	public boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
 
 	private boolean isFloat=false;
     @SuppressWarnings("unused")
@@ -106,7 +106,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -140,7 +140,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int r = (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		imageStack = filter(ip,sp, imageStack);
 		image=new ImagePlus("Hessian result hw="+(r),imageStack);
 		image.show();
@@ -400,6 +400,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	public void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
+		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 		// prefs.put(SIGMA, Float.toString(sigma));
 
 	}
@@ -452,7 +453,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=50;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

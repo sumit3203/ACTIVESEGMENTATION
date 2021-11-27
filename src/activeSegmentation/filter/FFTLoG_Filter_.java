@@ -103,7 +103,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private boolean isEnabled=true;
 
 	void showAbout() {
-		IJ.showMessage("FFT Gauss " + version, "The plugin applies a Gaussian kernel to the image");
+		IJ.showMessage("FFT LoG " + version, "The plugin applies a Fractional LoG kernel to the image");
 	}
 
 	@Override

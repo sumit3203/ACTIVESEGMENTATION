@@ -59,8 +59,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+			
 		JFrame mainFrame = new JFrame();
 		mainFrame.getContentPane().setBackground( Color.GRAY );
 		//mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -86,8 +85,7 @@ public class CreateProjectUI implements Runnable, ASCommon {
 		mainFrame.setVisible(true);  
 	}
 	
-	private void doAction( final ActionEvent event )
-	{ 
+	private void doAction( final ActionEvent event ){ 
 		if(event ==CREATE_BUTTON_PRESSED ){
 			createProject=createProject();
 		}
@@ -170,9 +168,11 @@ public class CreateProjectUI implements Runnable, ASCommon {
 			String projectDirectory=projectFField.getText();
 			String projectDescription=projectDField.getText();
 			String trainingImage=trainingImageP.getText();
-			//String pluginDir=pluginsDir.getText();
+			
 			String projectType=projectList.getSelectedItem().toString();
 			//System.out.println(projectName+"--"+ projectType);
+			
+			// TODO change the signaling mechanism
 			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
 					trainingImage);	
 			if("DONE".equalsIgnoreCase(message)) {

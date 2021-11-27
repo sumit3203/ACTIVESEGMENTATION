@@ -22,7 +22,11 @@ import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
 
-
+/**
+ * Selector GUI class
+ * @author prodanov
+ *
+ */
 public class Gui implements ASCommon {
 	
 	private JFrame mainFrame;

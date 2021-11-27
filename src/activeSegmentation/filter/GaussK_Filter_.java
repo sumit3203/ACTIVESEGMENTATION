@@ -117,7 +117,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private Map< String, String > settings= new HashMap<>();
 
 	/** It is the result stack*/
-	private ImageStack imageStack=null;
+	//private ImageStack imageStack=null;
 
 	/**
 	 * 
@@ -151,7 +151,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		GScaleSpace sp=new GScaleSpace(r);
 		//GScaleSpace sp=new GScaleSpace(sigma);
 
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		imageStack = filter(ip,sp,imageStack);
 

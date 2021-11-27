@@ -5,7 +5,12 @@ import java.util.List;
 
 import ij.ImageStack;
 import ijaux.datatype.ComplexArray;
-//import ijaux.moments.ZernikeMoment.ComplexWrapper;
+
+/**
+ * NOT used at present
+ * @author prodanov
+ *
+ */
 
 /*
  * This Class is used for storing Class level features and Pixel level features.

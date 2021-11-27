@@ -14,6 +14,7 @@ import static java.lang.Math.*;
 
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -68,16 +69,21 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
+	@AFilterField(key=LEN, value="initial scale")
 	private static int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
 	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public boolean fulloutput=false;	
+	
 	private boolean isEnabled=true;
 
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
-
-	public boolean fulloutput=false;
 
 	private boolean isFloat=false;
     @SuppressWarnings("unused")
@@ -99,7 +105,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -134,7 +140,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		GScaleSpace sp=new GScaleSpace(r);
 
 
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		imageStack = filter(ip,sp,sz,imageStack);
 

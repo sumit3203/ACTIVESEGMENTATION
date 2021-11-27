@@ -93,7 +93,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	@AFilterField(key=ISSEP, value="separable")
-	public static boolean sep= Prefs.getBoolean(ISSEP, false);
+	public static boolean sep= Prefs.getBoolean(ISSEP, true);
 	
 	@AFilterField(key=ISO, value="isotropic")
 	public static boolean isiso= Prefs.getBoolean(ISO, true);
@@ -423,7 +423,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=70;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

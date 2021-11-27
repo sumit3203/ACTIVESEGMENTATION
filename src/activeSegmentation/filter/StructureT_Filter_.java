@@ -120,7 +120,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -161,7 +161,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		int r2 = (sz2-1)/2;
 		GScaleSpace sp2=new GScaleSpace(r2);
 
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		imageStack = filter2(ip,sp, sp2, imageStack, 0);
 		// imageStack = filter(ip,sp, sp2, imageStack);

@@ -67,7 +67,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private int nPasses=1;
 	private int pass;
  
-	public final static String SIGMA="GK_sigma", LEN="GK_len", MAX_LEN="G_MAX";
+	public final static String SIGMA="GK_sigma", LEN="GK_len", MAX_LEN="G_MAX", FULL_OUTPUT="KFull_out";
  
 	@AFilterField(key=LEN, value="initial scale")
 	public static int sz= Prefs.getInt(LEN, 2);
@@ -81,7 +81,8 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private ImagePlus image=null;
 	public static boolean debug=true;//IJ.debugMode;
 
-	public static boolean fulloutput=false;
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public  boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
 
 	private boolean isFloat=false;
 	
@@ -102,7 +103,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private Map< String, String > settings= new HashMap<>();
 
 	/** It is the result stack*/
-	private ImageStack imageStack=null;
+	//private ImageStack imageStack=null;
 
 	
 	/**
@@ -137,7 +138,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		
 		GScaleSpace sp=new GScaleSpace(r);
 		//GScaleSpace sp=new GScaleSpace(sigma);
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		
 		long time=-System.nanoTime();	
 		
@@ -248,13 +249,14 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		this.nPasses = nPasses;
 	}
 	
-	  /* Saves the current settings of the plugin for further use
+	 /* Saves the current settings of the plugin for further use
      * 
      *
     * @param prefs
     */
-   public static void savePreferences(Properties prefs) {
+   public  void savePreferences(Properties prefs) {
 	   		prefs.put(LEN, Integer.toString(sz));
+	   		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
          // prefs.put(SIGMA, Float.toString(sigma));
 
    }

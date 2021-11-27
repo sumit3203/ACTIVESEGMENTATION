@@ -86,7 +86,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
  
 	private Map< String, String > settings= new HashMap<String, String>();
 
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
  
 	
 	@Override
