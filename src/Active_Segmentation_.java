@@ -12,18 +12,19 @@ import ij.plugin.PlugIn;
 
 public class Active_Segmentation_ implements PlugIn {
 
-	public static final String version="1.0";
+	public static final String version="1.0.5";
 
 
-	/** main GUI panel (containing the buttons panel on the left,
-	 *  the image in the center and the annotations panel on the right */
+	/**
+	 * 
+	 */
 	public Active_Segmentation_(){
 
 	}
 
 
 	/**
-	 * This method will be an entry point into the Plugin. 
+	 * This method is the main entry point into the Plugin. 
 	 * This method is written according to 
 	 * ImageJ plugin loading requirements
 	 * @param parameter for imageJ
@@ -59,7 +60,7 @@ public class Active_Segmentation_ implements PlugIn {
 				throw new IllegalArgumentException();
 			}
 		}	catch (Exception ex) {
-			IJ.log("plugins.dir misspecified\n"
+			IJ.error("plugins.dir misspecified\n"
 					+ "To run the platform in stand-alone mode specify plugins.dir"
 					+ "as a command line argument");
 			ex.printStackTrace();
