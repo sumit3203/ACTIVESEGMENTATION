@@ -153,7 +153,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		frame = new JFrame("Marking");	     
 		
 		frame.setResizable(false);
- 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+ 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
  
 		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);

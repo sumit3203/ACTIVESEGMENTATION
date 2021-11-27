@@ -121,6 +121,7 @@ public class Gui implements ASCommon {
 		this.controlPanel.setLocation(0, 0);
 		this.mainFrame.add(this.controlPanel);
 		this.mainFrame.setVisible(true);
+		this.mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 

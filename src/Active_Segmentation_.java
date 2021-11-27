@@ -3,7 +3,7 @@ import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-import activeSegmentation.gui.CreateProjectUI;
+import activeSegmentation.gui.CreateOpenProjectUI;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImageJ;
@@ -34,7 +34,7 @@ public class Active_Segmentation_ implements PlugIn {
 	public void run(String arg0) {
 	
 		ProjectManager dataManager= new ProjectManager();
-		CreateProjectUI creatProject= new CreateProjectUI(dataManager);
+		CreateOpenProjectUI creatProject= new CreateOpenProjectUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
 		IJ.log("AS version "+version);

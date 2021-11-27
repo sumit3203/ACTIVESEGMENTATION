@@ -10,7 +10,6 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import ijaux.datatype.Pair;
 import ijaux.scale.GScaleSpace;
 import ijaux.scale.SUtils;
 
@@ -33,25 +32,13 @@ import static java.lang.Math.*;
 
 /**
  * @version 	
- * 				
- * 				1.3.0 13 April 2020
- * 				- plotting mechanism moved to the interface
- * 
- * 				1.2.1 31 Oct 2019
- * 				 - kernel plot change
- * 				1.2 23 Aug 2016
- *              1.1	14 Oct 2013
- * 				- moved contratAdjust -> Conv
- * 				- changed brightness adjustment factor to sigma^2		
- * 				1.1 18 Jul 2013
- * 				- refactoring
- * 				1.0	05 Feb 2013 
- * 				Based on Mexican_Hat_Filter v 2.2
- * 				- common functionality is refactored in a library class
+ * 				1.0 27 Nov 2021
+ * 	
+ * 	based on LoG v1.3.0 13 April 2020
  * 				
  *   
  * 
- * @author Dimiter Prodanov IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov IMEC 
  *
  *
  * @contents
@@ -111,12 +98,6 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	
 
 	/* NEW VARIABLES*/
-
-	/** A string key identifying this factory. */
-	//private  String FILTER_KEY = "LOG";
-
-	/** The pretty name of the target detector. */
-	//private  String FILTER_NAME = "Laplacian of Gaussian";
 
 	private Map< String, String > settings= new HashMap<>();
 	
@@ -217,7 +198,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		//System.out.println("elapsed time: " + time +" us");
+		System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 
 		if (convert) {
@@ -343,7 +324,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
  
 	private double gKernel(double x){
 		final double x2=x*x;
-		return exp(-0.5*x2)/(2.0*sqrt(PI));
+		return exp(-.5*x2)/(2.*sqrt(PI));
 	}
 
 	@Override

@@ -99,6 +99,11 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 	private JComboBox<LearningType> learningType;
 	private ImagePlus displayImage;
 	
+	/**
+	 * 
+	 * @param projectManager
+	 * @param featureManager
+	 */
 	public ViewFilterOutputPanel(ProjectManager projectManager, FeatureManager featureManager) {
 		super(featureManager.getCurrentImage());
 		this.projectManager = projectManager;
@@ -115,6 +120,11 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		showPanel();
 	}
 
+	/**
+	 * 
+	 * @param directory
+	 * @return
+	 */
 	private int loadImages(String directory){
 		featuresList.clear();
 		File folder = new File(directory);
@@ -127,6 +137,11 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		return featuresList.size();
 	}
 
+	/**
+	 * 
+	 * @param directory
+	 * @return
+	 */
 	private int loadSlices(String directory){
 		int count=0;
 		File folder = new File(directory);
@@ -141,9 +156,15 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 	}
 
 
+	/**
+	 * 
+	 */
 	public void showPanel() {
 
 		frame = new JFrame("Feature Inspector");
+		frame.setResizable(false);
+ 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+ 		
 		roiPanel=new JPanel();
 		
 		NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "NEXT_F" );
@@ -158,8 +179,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 			this.totalFeatures=loadImages(filterString+images.get(0));
 		}
 
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		//frame.addKeyListener(keyadapter);
+	
 		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);
 		
@@ -307,7 +327,6 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 	private void refreshPanel() {
 		roiPanel.removeAll();
 		for(String key: featureManager.getClassKeys()){
-			//System.out.println();
 			String label=featureManager.getClassLabel(key);
 			Color color= featureManager.getClassColor(key);
 			addSidePanel(color,key,label);

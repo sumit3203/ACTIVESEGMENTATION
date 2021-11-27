@@ -19,6 +19,7 @@ import activeSegmentation.IFilter;
 import activeSegmentation.ProjectType;
 import activeSegmentation.filter.ALoG_Filter_;
 import activeSegmentation.filter.FilterManager;
+import activeSegmentation.filter.Gauss2D_Filter_;
 import activeSegmentation.filter.Hessian_Filter_;
 import activeSegmentation.filter.LoG_Filter_;
 import activeSegmentation.filter.StructureT_Filter_;
@@ -301,6 +302,8 @@ public class SegmentationTester2 {
 	}
 	
 	public void loadFilters() {
+		Gauss2D_Filter_ gauss_Filter_= new Gauss2D_Filter_();
+		gauss_Filter_.setEnabled(true);
 		Hessian_Filter_ hessian_Filter_= new Hessian_Filter_();
 		hessian_Filter_.setEnabled(true);
 		LoG_Filter_ logfilter= new LoG_Filter_();
@@ -308,6 +311,7 @@ public class SegmentationTester2 {
 		ALoG_Filter_ alogfilter= new ALoG_Filter_();
 		alogfilter.setEnabled(true);
 		StructureT_Filter_ structureT_Filter_= new StructureT_Filter_();
+		filtersMap.put(gauss_Filter_.getKey(), gauss_Filter_);
 		filtersMap.put(hessian_Filter_.getKey(), hessian_Filter_);
 		filtersMap.put(logfilter.getKey(), logfilter);
 		filtersMap.put(alogfilter.getKey(), alogfilter);
