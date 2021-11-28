@@ -130,11 +130,15 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public void run(ImageProcessor ip) {
 		int r = sz;//(sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
-		FloatProcessor fp=filter(ip,sp,sep,scnorm);
-		image.setProcessor(fp);
-		image.updateAndDraw();
+		FloatProcessor fp=filter(ip,sp, sep,scnorm);
+		//if (image==null) {
+			image=new ImagePlus("result hw="+r, fp);
+			image.show();
+//		} else {
+//			image.setProcessor(fp);
+//			image.updateAndDraw();
+//		}
 	}
-
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
@@ -144,6 +148,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
 				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
+				
 
 			}
 
@@ -346,7 +351,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		System.out.println(filter.getAnotatedFileds());
 		new ImageJ();
 		IJ.run("Blobs (25K)");
-		IJ.wait(500);
+		IJ.wait(200);
 		ImageProcessor ip=IJ.getProcessor();
 		filter.run(ip);
 	}

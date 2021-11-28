@@ -1,5 +1,6 @@
 package activeSegmentation.filter;
 import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
@@ -11,7 +12,6 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import ijaux.datatype.IComplexFArray;
 import ijaux.scale.*;
 
 import java.awt.*;
@@ -21,19 +21,13 @@ import java.util.List;
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
-import fftscale.FFTConvolver;
-import fftscale.filter.FFTKernelLoG;
+
 
 /**
  * @version 	27 Jun 2021
@@ -190,133 +184,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 
 
 	
-	/**
-	 * 
-	 * This method is helper function for both applyFilter and run method
-	 * @param ip input image
-	 * @param sp gaussian scale space
-	 * @param sigma filter sigma
-	 *  naive implementation equivalent to the gradient
-	 */
-	private ImageStack filter(ImageProcessor ip, GScaleSpace sp,  ImageStack imageStack){
-
-		ip.snapshot();
-
-		if (!isFloat) 
-			ip=ip.toFloat(0, null);
-
-		pass++;
-		//System.out.println(settings.get(LEN)+"MG");
-		//GScaleSpace sp=new GScaleSpace(sigma);
-		float[] kernx= sp.gauss1D();
-		//System.out.println("kernx :"+kernx.length);
-		GScaleSpace.flip(kernx);	
-
-		float[] kern_diff1=sp.diffGauss1D();
-		//System.out.println("kernx1:"+kern_diff1.length);
-		GScaleSpace.flip(kern_diff1);
-		
-		double sigma=sp.getSigma();
-
-		kernel=new float[4][];
-		kernel[0]=kernx;
- 
-		kernel[1]=kern_diff1;
-
- 
-
-		int sz= sp.getSize();
-		if (debug && pass==1) {
-			FloatProcessor fpkern2=new FloatProcessor(sz,sz);
-
-			float[][] disp= new float[2][];
-
-			disp[0]=GScaleSpace.joinXY(kernel, 0, 1);
-			disp[1]=GScaleSpace.joinXY(kernel, 1, 0);
-
-			for (int i=0; i<sz*sz; i++)
-				fpkern2.setf(i, disp[0][i]+ disp[1][i]);
-
-			new ImagePlus("kernel sep",fpkern2).show();
-
-
-		}
-
-		FloatProcessor fpaux= (FloatProcessor) ip;
-
-		Conv cnv=new Conv();
-
-		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
-		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
-		
- 
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
-
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
- 
-		int width=ip.getWidth();
-		int height=ip.getHeight();
-
- 
-		
-		FloatProcessor pamp=new FloatProcessor(width, height); // amplitude of gradient
-		FloatProcessor phase=new FloatProcessor(width, height); // phase of gradient
-		
-		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
-		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
-		FloatProcessor coher=new FloatProcessor(width, height); // coherence 
-
-		for (int i=0; i<width*height; i++) {
-			double gx=gradx.getf(i);
-			double gy=grady.getf(i);
-
-			/*
-			 *  components of the Structure Tensor
-			 */
-			double amp=(gx*gx+gy*gy);
-			if (amp==0) amp+=1e-6;
-			
-			final double trace=amp;
-			final double det=gx*gx*gy*gy- gx*gy*gx*gy;
-			final double disc= sqrt(abs(trace*trace-4.0*det));
-			final double ee1=0.5*(trace+disc);
-			final double ee2=0.5*(trace-disc);
-
-			final double l1=max(ee1, ee2);
-			final double l2=min(ee1, ee2);
-		    double coh=0;
-			if (l1+l2>0) 
-			   coh=(l1-l2)/(l1+l2);
 	 
-			pamp.setf(i, (float) sqrt(amp));
-			
-			double phase1=sqrt(gy/amp);
-				//	phase1=asin(phase1);
-			phase.setf(i, (float) phase1);
-
-			eigen1.setf(i, (float) l1);
-			eigen2.setf(i, (float) l2);
-			coher.setf(i, (float) coh);
-		}
-
-		final String key=getKey();
-		if (fulloutput) {
-			imageStack.addSlice(key+"_X_diff_"+sigma, gradx);
-			imageStack.addSlice(key+"_Y_diff_"+sigma, grady);
-		}
-
-		imageStack.addSlice(key+"_Amp_"+sigma, pamp);
-		imageStack.addSlice(key+"_Phase_"+sigma, phase);
-		imageStack.addSlice(key+"_Coh_"+sigma, coher);
-		imageStack.addSlice(key+"_E2_"+sigma, eigen2);
-		imageStack.addSlice(key+"_E1_"+sigma, eigen1);
- 
-		eigen2.resetMinAndMax();
- 
-		return imageStack;
-	}
 
 	/**
 	 * 
@@ -353,7 +221,7 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 		// double sigma=sp2.getSigma();
 
-		kernel=new float[4][];
+		kernel=new float[2][];
 		kernel[0]=kernx;
  
 		kernel[1]=kern_diff1;
@@ -665,7 +533,11 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		System.out.println("annotated fields");
 		System.out.println(filter.getAnotatedFileds());
 	
-		//new ImagePlus("convovled",output).show();
+		new ImageJ();
+		IJ.run("Blobs (25K)");
+		IJ.wait(500);
+		ImageProcessor ip=IJ.getProcessor();
+		filter.run(ip);
 	
 	}
 

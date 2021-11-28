@@ -48,7 +48,7 @@ import static java.lang.Math.*;
  * 				1.0	 8 Nov 2012
  *   
  * 
- * @author Dimiter Prodanov,IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra
  *
  *
  * @contents

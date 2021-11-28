@@ -407,8 +407,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public boolean reset() {
-		sz= Prefs.getInt(LEN, 2);
-		max_sz= Prefs.getInt(MAX_LEN, 8);
+		sz= Prefs.getInt(LEN, 5);
+		max_sz= Prefs.getInt(MAX_LEN, 17);
 		fulloutput= Prefs.getBoolean(FULL_OUTPUT, true);
 		return true;
 	}

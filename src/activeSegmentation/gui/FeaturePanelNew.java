@@ -3,6 +3,7 @@ package activeSegmentation.gui;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.WindowManager;
 import ij.gui.ImageWindow;
 import ij.gui.Overlay;
 import ij.gui.Roi;
@@ -317,6 +318,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setFocusable(true);
+		WindowManager.addWindow(this);
 		updateGui();
 
 	}

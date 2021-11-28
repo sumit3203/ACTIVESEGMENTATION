@@ -20,12 +20,6 @@ import java.util.List;
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
@@ -137,7 +131,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	@Override
 	public void run(ImageProcessor ip) {
-		int r = (sz-1)/2;
+		int r =sz; // (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 
 		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
@@ -285,10 +279,10 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			pamp.setf(i, (float)  (amp));
 			
 			double gsin= (gy/amp);
-				//	phase1=asin(phase1);
+				
 			sin_phase.setf(i, (float) gsin);
 			double gcos= (gx/amp);
-			//	phase1=asin(phase1);
+		
 			cos_phase.setf(i, (float) gcos);
 			eigen1.setf(i, (float) ee1);
 			eigen2.setf(i, (float) ee2);

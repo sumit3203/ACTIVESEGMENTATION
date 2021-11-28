@@ -4,6 +4,7 @@ package activeSegmentation.gui;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.WindowManager;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Overlay;
@@ -319,7 +320,8 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setFocusable(true);
-        refreshPanel();
+		WindowManager.addWindow(this);
+		refreshPanel();
         updateGui();
         }
 	}
