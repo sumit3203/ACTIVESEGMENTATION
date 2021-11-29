@@ -61,7 +61,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="Gauss", value="2D Gaussian", type=SEGM)
+@AFilter(key="GAUSS", value="2D Gaussian", type=SEGM)
 public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 

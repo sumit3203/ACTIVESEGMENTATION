@@ -70,10 +70,10 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
 	@AFilterField(key=LEN, value="initial scale")
-	private static int sz= Prefs.getInt(LEN, 2);
+	public static int sz= Prefs.getInt(LEN, 2);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	@AFilterField(key=FULL_OUTPUT, value="full output")
 	public boolean fulloutput=false;	
@@ -394,6 +394,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	 */
 	public static void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
+		prefs.put(MAX_LEN, Integer.toString(max_sz));
 	}
 
 	@Override

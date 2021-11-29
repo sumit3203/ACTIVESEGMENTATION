@@ -79,7 +79,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
-	public static boolean debug=true;//IJ.debugMode;
+	public static boolean debug=false;//IJ.debugMode;
 
 	@AFilterField(key=FULL_OUTPUT, value="full output")
 	public  boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
@@ -348,14 +348,14 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			ip=ip.toFloat(0, null);
 		
 		float[] kernx= sp.gauss1D();
-		System.out.println("kernx :"+kernx.length);
+		//System.out.println("kernx :"+kernx.length);
 		SUtils.flip(kernx);		
 		float[] kern_diff2= sp.diff2Gauss1D();
-		System.out.println("kern_diff2 :"+kern_diff2.length);
+		//System.out.println("kern_diff2 :"+kern_diff2.length);
 		SUtils.flip(kern_diff2);
 		
 		float[] kern_diff1=sp.diffGauss1D();
-		System.out.println("kern_diff1 :"+kern_diff1.length);
+		//System.out.println("kern_diff1 :"+kern_diff1.length);
 		SUtils.flip(kern_diff1);
 		
 		kernel=new float[4][];

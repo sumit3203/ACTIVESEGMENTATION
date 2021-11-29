@@ -190,7 +190,7 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
 		
-		double sigma=sp.getSigma();
+		//double sigma=sp.getSize();//sp.getSigma();
 
 		kernel=new float[2][];
 		kernel[0]=kernx;
@@ -260,13 +260,13 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 
 		final String key=getKey();
 		if (fulloutput) {
-			imageStack.addSlice(key+"_X_diff_"+sigma, gradx);
-			imageStack.addSlice(key+"_Y_diff_"+sigma, grady);
+			imageStack.addSlice(key+"_X_diff_"+sz, gradx);
+			imageStack.addSlice(key+"_Y_diff_"+sz, grady);
 		}
 		
-		imageStack.addSlice(key+"_Sin_"+sigma, sphase);
-		imageStack.addSlice(key+"_Cos_"+sigma, cphase);
-		imageStack.addSlice(key+"_Amp_"+sigma, pamp);
+		imageStack.addSlice(key+"_Sin_"+sz, sphase);
+		imageStack.addSlice(key+"_Cos_"+sz, cphase);
+		imageStack.addSlice(key+"_Amp_"+sz, pamp);
 
  
  
