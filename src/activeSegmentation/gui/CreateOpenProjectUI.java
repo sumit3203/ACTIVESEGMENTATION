@@ -25,7 +25,7 @@ import ij.WindowManager;
 //  to rename to CreateOpenProjectUI
 public class CreateOpenProjectUI implements Runnable, ASCommon {
 
-	public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
+	//public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent CREATE_BUTTON_PRESSED = new ActionEvent( this, 1, "create" );
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
@@ -69,7 +69,6 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 	public void run() {
  
 		mainFrame.getContentPane().setBackground( Color.GRAY );
-		//mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		mainFrame.setSize(frameWidth,frameHeight);
 		mainFrame.setLocationRelativeTo(null);
 		JPanel controlFrame= new JPanel();
@@ -80,13 +79,13 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 		//logo.setBounds( 10, 10, 450, 200 );
 		//controlFrame.add(logo);
 		JLabel label= new JLabel("Active Segmentation");
-		label.setFont(new Font( "Arial", Font.BOLD, 32 ));
+		label.setFont(largeFONT);
 		label.setBounds( 100, 150, 450, 100 );
 		label.setForeground(Color.ORANGE);
 		controlFrame.add(label);
 
-		controlFrame.add(addButton("Create Project",createImageIcon("addProject.png","add"), 30, 250, 220, 60, CREATE_BUTTON_PRESSED));
-		controlFrame.add(addButton("Open Project",createImageIcon("openProject.png","add"),270, 250, 200, 60, OPEN_BUTTON_PRESSED));
+		controlFrame.add(addButton("Create Project",createImageIcon("addProject.png","add"),  30, 250, 220, 60, CREATE_BUTTON_PRESSED));
+		controlFrame.add(addButton("Open Project",  createImageIcon("openProject.png","add"),270, 250, 200, 60, OPEN_BUTTON_PRESSED));
 		controlFrame.setLocation(0, 0);
 		mainFrame.add(controlFrame);
 		mainFrame.setVisible(true);  
@@ -114,7 +113,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 				currentDir=fileChooser.getSelectedFile();
 				String file=currentDir.toString();		
 				if (projectManager.loadProject(file))
-					new Gui(projectManager);
+					new GuiPanel(projectManager);
 				else 
 					IJ.error("Not a project file!");
 			}
@@ -162,10 +161,11 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 			// For Directory
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			fileChooser.setAcceptAllFileFilterUsed(false);
-			int rVal = fileChooser.showOpenDialog(null);
-			if (rVal == JFileChooser.APPROVE_OPTION) {
+			//TODO what do we do here?
+			//int rVal = fileChooser.showOpenDialog(null);
+			//if (rVal == JFileChooser.APPROVE_OPTION) {
 				//pluginsDir.setText(fileChooser.getSelectedFile().toString());
-			}
+			//}
 		}
 		
 		if(event== CANCEL_BUTTON_PRESSED){
@@ -176,7 +176,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 				newProjectFrame.dispose();
 			}
 		}
-		
+		// Creating project structure
 		if(event== FINISH_BUTTON_PRESSED){
 			String projectName=projectNField.getText();
 			String projectDirectory=projectFField.getText();
@@ -192,7 +192,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 			if("DONE".equalsIgnoreCase(message)) {
 				newProjectFrame.setVisible(false);
 				newProjectFrame.dispose();
-				new Gui(projectManager);
+				new GuiPanel(projectManager);
 			}
 			else {
 				errorText.setText(message);
@@ -204,27 +204,27 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 	private JFrame createProjectFrame(){
 		
 		JFrame mainFrame = new JFrame("Create Project");
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.getContentPane().setBackground( Color.GRAY );
+		mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		mainFrame.getContentPane().setBackground( panelColor );
 		mainFrame.setSize(600,500);
 		mainFrame.setLocationRelativeTo(null);
 		JPanel controlFrame= new JPanel();
 		controlFrame.setLayout(null);
-		controlFrame.setBackground(Color.GRAY );
+		controlFrame.setBackground( panelColor);
 		JLabel label= new JLabel("Create Project");
-		label.setFont(new Font( "Arial", Font.BOLD, 32 ));
+		label.setFont(largeFONT);
 		label.setBounds( 50, 0, 450, 100 );
 		label.setForeground(Color.ORANGE);
 		controlFrame.add(label);
 		JLabel projectName= new JLabel("Project Name *:");
-		projectName.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+		projectName.setFont(mediumFONT);
 		projectName.setBounds( 50, 100, 200, 30 );
 		controlFrame.add(projectName);
 		projectNField.setColumns(20);
 		projectNField.setBounds( 200, 100, 250, 30 );
 		controlFrame.add(projectNField);
 		JLabel projectDesc= new JLabel("Project Desc :");
-		projectDesc.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+		projectDesc.setFont(mediumFONT);
 		projectDesc.setBounds( 50, 140, 200, 30 );
 		controlFrame.add(projectDesc);
 
@@ -232,7 +232,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 		projectDField.setBounds( 200, 140, 250, 30 );
 		controlFrame.add(projectDField);
 		JLabel projectType= new JLabel("Project Type :");
-		projectType.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+		projectType.setFont(mediumFONT);
 		projectType.setBounds( 50, 180, 250, 30 );
 		controlFrame.add(projectType);
 
@@ -241,7 +241,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 		projectList.setBounds( 200, 180, 250, 30 );
 		controlFrame.add(projectList);
 		JLabel projectFolder= new JLabel("Project Folder *:");
-		projectFolder.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+		projectFolder.setFont(mediumFONT);
 		projectFolder.setBounds( 50, 220, 200, 30 );
 		controlFrame.add(projectFolder);		
 		projectFField.setColumns(200);
@@ -251,17 +251,17 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 		
 		if(null == WindowManager.getCurrentImage()) {
 			JLabel trainingImage= new JLabel("Training Image *:");
-			trainingImage.setFont(new Font( "Arial", Font.PLAIN, 20 ));
+			trainingImage.setFont(mediumFONT);
 			trainingImage.setBounds( 50, 260, 200, 30 );
 			controlFrame.add(trainingImage);		
 			trainingImageP.setColumns(200);
 			trainingImageP.setBounds( 200, 260, 250, 30 );
 			controlFrame.add(trainingImageP);	
-			controlFrame.add(addButton("Folder",null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
+			controlFrame.add(addButton("Folder",     null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
 			controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
 		}
 		
-		errorText.setFont(new Font( "Arial", Font.BOLD, 12 ));
+		errorText.setFont(labelFONT);
 		errorText.setBounds(30, 300, 600, 30 );
 		errorText.setForeground(Color.RED);
 		controlFrame.add(errorText);
@@ -280,18 +280,16 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 			final int y, final int width, final int height,final ActionEvent action)
 	{
 		final JButton button =  new JButton(label, icon);
-		button.setFont( FONT );
+		button.setFont( labelFONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
-		button.setBackground(new Color(192, 192, 192));
+		button.setBackground(buttonBGColor);
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
-		button.addActionListener( new ActionListener()
-		{
+		button.addActionListener( new ActionListener()		{
 			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
-				//System.out.println("CLICKED");
+			public void actionPerformed( final ActionEvent e )	{
+		
 				doAction(action);
 			}
 		} );

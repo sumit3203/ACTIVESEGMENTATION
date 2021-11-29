@@ -169,7 +169,7 @@ public class ProjectManager implements IUtil{
 		jars.add(activeSegJarPath);
 		projectInfo.setPluginPath(jars);
 		//DEFAULT 2 classes
-		projectInfo.setClasses(2);
+		projectInfo.setNClasses(2);
 		createProjectSpace(projectDirectory, projectName);
 		//CURRENT IMAGE
 		if (null !=WindowManager.getCurrentImage()) {
@@ -297,9 +297,9 @@ public class ProjectManager implements IUtil{
 	private void setProjectDir(String projectDirectory, String projectName) {
 		String projectString;
 		if(projectName!=null) {
-			projectString=projectDirectory+fs+projectName+fs+"training";
+			projectString=projectDirectory+fs+projectName+offsetDir;
 		}else {
-			projectString=projectDirectory+fs+"training";
+			projectString=projectDirectory+offsetDir;
 		}
 		
 		projectDir.put(ASCommon.K_PROJECTDIR,   projectString);

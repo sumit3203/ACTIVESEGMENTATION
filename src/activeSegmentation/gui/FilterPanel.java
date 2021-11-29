@@ -103,6 +103,13 @@ public class FilterPanel implements Runnable, ASCommon {
 	@Override
 	public void run() {
 
+		showPanel();
+	}
+
+	/**
+	 * 
+	 */
+	private void showPanel() {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);

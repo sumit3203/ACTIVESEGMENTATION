@@ -8,12 +8,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -77,7 +79,14 @@ public class LearningPanel implements Runnable, ASCommon {
   
   @Override
 public void run()  {
-    this.frame.setDefaultCloseOperation(1);
+    showPanel();
+  }
+
+/**
+ * 
+ */
+private void showPanel() {
+	this.frame.setDefaultCloseOperation(1);
     this.frame.getContentPane().setBackground(Color.GRAY);
     this.frame.setLocationRelativeTo(null);
     this.frame.setSize(600, 250);
@@ -101,6 +110,7 @@ public void run()  {
     learningJPanel.add(wekaCEPanel);
     learningJPanel.setBounds(10, 20, 300, 80);
     
+    /////////////////////////////
     JPanel featureSelection = new JPanel();
     featureSelection.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
     featureSelection.setBounds(370, 20, 200, 80);
@@ -125,12 +135,19 @@ public void run()  {
     
     featureSelection.add(this.featureSelList);
     
+    
+    ////////////////////////////////
     JPanel options = new JPanel();
     options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
     options.setBounds(10, 120, 300, 80);
 
-    JCheckBox pasiveLearning = new JCheckBox("Passive Learning" );
-    JCheckBox activeLearning = new JCheckBox("Active Learning" );
+   // JCheckBox pasiveLearning = new JCheckBox("Passive Learning" );
+   // JCheckBox activeLearning = new JCheckBox("Active Learning" );
+    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
+    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
+    ButtonGroup bg=new ButtonGroup(); 
+    bg.add(pasiveLearning);
+    bg.add(activeLearning);
     options.add(pasiveLearning);
     options.add(activeLearning);
     
@@ -160,7 +177,7 @@ public void run()  {
     
     this.frame.add(learningP);
     this.frame.setVisible(true);
-  }
+}
   
   private AbstractClassifier setClassifier()   {
     Object c = wekaClassifierEditor.getValue();
@@ -190,8 +207,8 @@ public void run()  {
     button.setFont(labelFONT);
     button.setBorderPainted(false);
     button.setFocusPainted(false);
-    button.setBackground(new Color(192, 192, 192));
-    button.setForeground(Color.WHITE);
+    button.setBackground(buttonBGColor);
+    button.setForeground(buttonColor);
     button.setBounds(x, y, width, height);
     button.addActionListener(new ActionListener()  {   	
 	    @Override

@@ -48,7 +48,7 @@ import activeSegmentation.util.GuiUtil;
 /*
  * Feature Inspector
  */
-public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommon  {
+public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUtil, ASCommon  {
 
 	/**
 	 * 
@@ -118,9 +118,15 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		this.setVisible(false);
 
-		showPanel();
+		//showPanel();
 	}
 
+	@Override
+	public void run() {
+		showPanel();
+		
+	}
+	
 	/**
 	 * 
 	 * @param directory
@@ -485,8 +491,8 @@ public class ViewFilterOutputPanel extends ImageWindow implements IUtil, ASCommo
 		button.setFont( FONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
-		button.setBackground(new Color(192, 192, 192));
-		button.setForeground(Color.WHITE);
+		button.setBackground(buttonBGColor);
+		button.setForeground(buttonColor);
 		if(color!=null){
 			button.setBackground(color);
 		}

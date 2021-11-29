@@ -67,7 +67,7 @@ import static  activeSegmentation.ProjectType.*;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
+public class FeaturePanelNew extends ImageWindow implements Runnable, ASCommon, IUtil {
 
 	/**
 	 * 
@@ -146,9 +146,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		this.allexampleList = new HashMap<>();
 		roiOverlayList = new HashMap<>();		
 		this.setVisible(false);
-		showPanel();
+		//showPanel();
 	}
 
+	@Override
+	public void run() {
+		showPanel();
+		
+	}
 
 	public void showPanel() {
 		frame = new JFrame("Marking");	     
@@ -231,14 +236,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		 */
 		
 		JPanel computePanel = new JPanel();
-		addButton(new JButton(), "Train", null, 550, 550, 350,100,computePanel, TRAIN_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Train", null, 550, 550, 350, 100, computePanel, TRAIN_BUTTON_PRESSED,null);
 		
-		addButton(new JButton(), "Next", null, 800, 130,  80, 20,features,NEXT_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Next", null,  800, 130,  80,  20, features,NEXT_BUTTON_PRESSED,null );
 	
-		addButton(new JButton(), "Save",null,  550, 550, 350,100,computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Overlay",null,550,550, 350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Masks",null, 550, 550, 350,100,computePanel, MASKS_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Snap",null,  550, 650, 350,100,computePanel, SNAP_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Save",null,   550, 550, 350, 100, computePanel, SAVE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Overlay",null,550, 550, 350, 100, computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Masks",null,  550, 550, 350, 100, computePanel, MASKS_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Snap",null,   550, 650, 350, 100, computePanel, SNAP_BUTTON_PRESSED,null);
 		features.add(computePanel);
 		frame.add(features);
 		
@@ -271,7 +276,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		learningType.setSelectedIndex(0);
 		learningType.setFont( panelFONT );
 		learningType.setBackground(Color.GRAY);
-		learningType.setForeground(Color.WHITE);
+		learningType.setForeground(Color.BLUE);
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
 		
@@ -828,8 +833,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 		button.setFont( panelFONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
-		button.setBackground(new Color(192, 192, 192));
-		button.setForeground(Color.WHITE);
+		button.setBackground(buttonBGColor);
+		button.setForeground(buttonColor);
 		if(color!=null){
 			button.setBackground(color);
 		}
@@ -877,6 +882,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon, IUtil {
 			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type, featureManager.getCurrentSlice());
 		}
 	}
+
+
+
 
 
 

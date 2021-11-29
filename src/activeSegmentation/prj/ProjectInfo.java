@@ -280,7 +280,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public String getTestingStack()	{
-		return this.testingStack;
+		return testingStack;
 	}
 
 	
@@ -298,14 +298,14 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public int getClasses()	{
-		return this.classes;
+		return classes;
 	}
 
 	/**
 	 * 
 	 * @param classes
 	 */
-	public void setClasses(int classes)	{
+	public void setNClasses(int classes)	{
 		this.classes = classes;
 	}
 

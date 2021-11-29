@@ -165,8 +165,9 @@ public class InstanceUtil implements ASCommon {
 		//@Override
 		public static boolean writeDataToARFF(Instances data, ProjectInfo projectInfo)	{
 			BufferedWriter out = null;
+			//projectInfo.getProjectType().toString();
 			final String filename=projectInfo.getProjectPath()+
-					fs+"training"+learnDir+"trainingdata.arff" ;
+					offsetDir+learnDir+"trainingdata.arff" ;
 			System.out.println("Saving "+filename);
 			File f=new File(filename);
 			if (!f.exists())
