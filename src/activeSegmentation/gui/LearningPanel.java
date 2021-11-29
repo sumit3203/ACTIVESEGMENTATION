@@ -27,7 +27,7 @@ import weka.gui.GenericObjectEditor;
 import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
-
+import activeSegmentation.IDataSet;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
@@ -66,6 +66,10 @@ public class LearningPanel implements Runnable, ASCommon {
           learningManager.setClassifier(classifier);
           learningManager.saveLearningMetaData();
           projectManager.updateMetaInfo(this.projectInfo);
+          // to avoid data creep beacuse we are changing the learning method.
+          IDataSet data = projectManager.getDataSet();
+          if (data!=null)
+        	  data.delete();
       }
      
     }

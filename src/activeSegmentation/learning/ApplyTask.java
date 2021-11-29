@@ -21,6 +21,8 @@ public class ApplyTask extends RecursiveAction{
 	private IClassifier iClassifier;
 	private int mStart=0;
 	private int mLength=512;
+	
+	private boolean debug=false;
 
 	/**
 	 * 
@@ -45,13 +47,8 @@ public class ApplyTask extends RecursiveAction{
 		if (mLength < 1024) {		
 			classifyPixels();		 
 		} else {
-			System.out.println("ApplyTask: splitting workLoad: " + mLength);	
-		/*
-		int split = mLength / 2;
-		
-		invokeAll(new ApplyTask(dataSet, mStart, split, classificationResult,iClassifier),
-				new ApplyTask(dataSet, mStart + split, mLength - split, classificationResult,iClassifier));
-				*/
+			if (debug)
+				System.out.println("ApplyTask: splitting workLoad: " + mLength);	
 			invokeAll(createSubtasks());
 		}
 	}

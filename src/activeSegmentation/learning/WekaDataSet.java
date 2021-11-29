@@ -135,7 +135,7 @@ public class WekaDataSet implements IDataSet {
     @Override
     public void delete() {
         dataset.delete();
-        dataset = null;
+        //dataset = null;
     }
 
 	@Override

@@ -42,7 +42,7 @@ public interface IClassifier {
      * @param instance The instance
      * @return the distribution for instance
      */
-    public double[] distributionForInstance(Instance instance);
+    public   double[] distributionForInstance(Instance instance);
     
     /**
     *
@@ -50,7 +50,7 @@ public interface IClassifier {
     * @return The predicted label for the classifier.
     * @throws Exception The exception that will be launched.
     */
-    public double classifyInstance(Instance instance) throws Exception;
+    public  double classifyInstance(Instance instance) ;
 
     //////////////////////////////////
     // potentially mixed code
@@ -69,7 +69,7 @@ public interface IClassifier {
       * @param instances The data provided to classify
       * @throws Exception The exception that will be launched.
       */
-     public void buildClassifier(IDataSet instances) throws Exception;
+     public void buildClassifier(IDataSet instances);
      
      //////////////////////////////////
      // Non Weka-specific code
@@ -79,7 +79,7 @@ public interface IClassifier {
       * Sets classifier
       * @param classifier
       */
-  	public void setClassifier(Classifier classifier);
+  	public  void setClassifier(Classifier classifier);
 
   	
     /**
@@ -88,8 +88,8 @@ public interface IClassifier {
      */
     public IClassifier makeCopy() throws Exception;
     
-    // Typing?
-    public <T> T getClassifier();
+
+    public Classifier getClassifier();
     
     
     public String[] getMetadata();

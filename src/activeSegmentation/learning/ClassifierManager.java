@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
+import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
+import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.ProjectInfo;
@@ -51,26 +54,24 @@ public class ClassifierManager implements ASCommon {
 
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
-    	System.out.println("in training");
-    	File folder = new File(this.metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
+    	System.out.println("Classifier Manager: in training");
+    	File folder = new File(metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
 		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
-			System.out.println("ClassifierManager: in training");
-		//	System.out.println(folder.getCanonicalPath()+this.metaInfo.getGroundtruth());
-			String filename=folder.getCanonicalPath()+fs+this.metaInfo.getGroundtruth();
-			IJ.log(filename);
-			if(this.metaInfo.getGroundtruth()!=null && !this.metaInfo.getGroundtruth().isEmpty())
-			{
-				System.out.println(filename);
+			//System.out.println("Classifier Manager: in training");
+	
+			String filename=folder.getCanonicalPath()+fs+metaInfo.getGroundtruth();
+			//IJ.log(filename);
+			if (metaInfo.getGroundtruth()!=null && !metaInfo.getGroundtruth().isEmpty()){
+				System.out.println("Classifier Manager: reading ground truth "+filename);
 				dataset=InstanceUtil.readDataFromARFF(filename);
-				System.out.println("ClassifierManager: in learning");
+				//System.out.println("ClassifierManager: in learning");
 			}
 			if(dataset!=null) {
 				IDataSet data = dataManager.getDataSet();
 				dataset.getDataset().addAll(data.getDataset());
-			}
-			else {
+			} else {
 				dataset=dataManager.getDataSet();
 			}
 			//System.out.println("writing file");
@@ -78,9 +79,15 @@ public class ClassifierManager implements ASCommon {
 
 			currentClassifier.buildClassifier(dataset);
 			//
-			IJ.log("Training Results");
-			IJ.log(currentClassifier.toString());
+			System.out.println("Classifier summary");
+			System.out.println(currentClassifier.toString());
 			//classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
+		
+			currentClassifier.testModel(dataset);
+			
+			// to avoid data creep
+			dataset.delete();
+		
 		} catch (Exception e) {
 		
 			e.printStackTrace();
