@@ -7,7 +7,7 @@ import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
-import ijaux.datatype.Pair;
+import ijaux.scale.Pair;
 
 import java.awt.*;
 import java.io.File;
@@ -219,8 +219,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		}
 
 	}
-
-
+	
 	@Override
 	public Set<String> getAllFilters(){
 		return filterMap.keySet();

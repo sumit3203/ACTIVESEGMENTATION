@@ -235,6 +235,7 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 
 	@Override
 	public Set<String> getFeatureNames() {
+		generateFeatures();
 		return this.features;
 	}
 

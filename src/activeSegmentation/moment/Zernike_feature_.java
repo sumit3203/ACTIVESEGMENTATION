@@ -225,6 +225,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 
 	@Override
 	public Set<String> getFeatureNames() {
+		generateFeatures();
 		return this.features;
 	}
 

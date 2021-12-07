@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import activeSegmentation.ProjectType;
-import ijaux.datatype.Pair;
+import ijaux.scale.Pair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

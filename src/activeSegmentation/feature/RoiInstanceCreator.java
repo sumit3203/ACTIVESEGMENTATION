@@ -19,7 +19,7 @@ import activeSegmentation.prj.ProjectInfo;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.util.ArrayUtil;
-import ijaux.datatype.Pair;
+import ijaux.scale.Pair;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -104,6 +104,7 @@ public class RoiInstanceCreator implements IFeature {
 		Map<String, Set<String>> featureNames=projectInfo.getFeatureNames();
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		int featureSIndex=0;
+		System.out.println(featureNames.keySet());
 		for(String key: featureNames.keySet()) {
 			//featureIndex.put(key, featureSIndex);
 			featureSIndex+=featureNames.get(key).size();
@@ -112,7 +113,7 @@ public class RoiInstanceCreator implements IFeature {
 			}
 
 		}
-		//System.out.println(attributes.toString());
+		System.out.println(attributes.toString());
 		numberOfFeatures=featureSIndex;
 		Map<String,List<Pair<String,double[]>>> featureList=projectInfo.getFeatures();
 		for(String featuresType: featureList.keySet()) {
@@ -144,6 +145,7 @@ public class RoiInstanceCreator implements IFeature {
 				if(classInfo.getTrainingRois(image)!=null) {
 					for(Roi roi:classInfo.getTrainingRois(image)) {
 						double vector[]=instanceMap.get(roi.getName());
+						System.out.println(Arrays.toString(vector));
 						double classIndex[]= {index};
 						double[] newFeature=combine(vector, classIndex);
 						//System.out.println(Arrays.toString(newFeature));

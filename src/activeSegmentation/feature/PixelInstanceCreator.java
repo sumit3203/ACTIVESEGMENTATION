@@ -84,9 +84,7 @@ public class PixelInstanceCreator implements IFeature {
 	}
 
 	private void updateFeatures() {
-		//System.out.println("pixel creator"+featurePath);
 		//File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
-
 		File[] featureImages=sortImages(new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles());
 
 		this.numberOfFeatures=featureImages.length;

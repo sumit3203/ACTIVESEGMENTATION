@@ -3,7 +3,7 @@ package activeSegmentation;
 
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.datatype.Pair;
+import ijaux.scale.Pair;
 
 import java.io.File;
 import java.lang.reflect.Field;
