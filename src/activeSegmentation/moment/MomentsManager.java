@@ -33,7 +33,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 
 

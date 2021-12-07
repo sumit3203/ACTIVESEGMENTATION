@@ -10,7 +10,7 @@ import ij.Prefs;
 import ij.gui.Roi;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import static activeSegmentation.FilterType.CLASSIF;
 
