@@ -104,27 +104,30 @@ public class InstanceUtil implements ASCommon {
 	 */
 	public DenseInstance createInstance(ComplexArray rv, int classValue) throws Exception{
 		int size=0;
+		int t=0;
+		
+		final double[] im=rv.Im();
+		final double[] re=rv.Re();
 		
 		for(int i=0;i<rv.length();i++){
 			size++;
-			if(rv.Im(i)!=0.0)
+			if(im[i]!=0.0)
 				size++;
 		}
 		double[] final_result = new double[size+1];
 
-		int t=0;
 		for(int i=0;i<rv.length();i++){
-			final_result[t++] = rv.Re(i);
-			if(rv.Im()[i]!=0){
-				final_result[t++] = rv.Im(i);
+			final_result[t++] = re[i];
+			if(im[i]!=0){
+				final_result[t++] = im[i];
 			}
 			
 		}
 		
 		//System.out.println("Zernike Values Checking:");
-		for(int i=0;i<final_result.length;i++){
-			System.out.println(final_result[i]);
-		}
+//		for(int i=0;i<final_result.length;i++){
+//			System.out.println(final_result[i]);
+//		}
 		
 		
 		// Assign class
@@ -174,7 +177,6 @@ public class InstanceUtil implements ASCommon {
 				try {
 					f.createNewFile();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			try{
