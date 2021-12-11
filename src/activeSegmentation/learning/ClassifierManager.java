@@ -87,7 +87,7 @@ public class ClassifierManager implements ASCommon {
 			
 			// print summary here
 
-			outputstr+= currentClassifier.testModel(dataset);
+			outputstr+= currentClassifier.evaluateModel(dataset);
 			 
 			
 			InstanceUtil.writeDataToTXT(outputstr, metaInfo);

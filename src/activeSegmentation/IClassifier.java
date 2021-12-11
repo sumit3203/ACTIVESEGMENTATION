@@ -66,7 +66,7 @@ public interface IClassifier {
      * @return Detailed human-readable output of the classifier
      */
  
-     public String testModel(IDataSet instances);
+     public String evaluateModel(IDataSet instances);
     
  	/**
       * @param instances The data provided to classify

@@ -61,7 +61,7 @@ public class InstanceUtil implements ASCommon {
 	 * @param classValue class value to be assigned
 	 * @return corresponding instance
 	 */
-	public DenseInstance createInstance(
+	public static DenseInstance createInstance(
 			int x, 
 			int y, 
 			int classValue,
@@ -99,7 +99,7 @@ public class InstanceUtil implements ASCommon {
 	 * @return corresponding instance
 	 * @throws Exception
 	 */
-	public DenseInstance createInstance(ComplexArray rv, int classValue) throws Exception{
+	public static DenseInstance createInstance(ComplexArray rv, int classValue) throws Exception{
 		int size=0;
 		int t=0;
 		
@@ -120,11 +120,7 @@ public class InstanceUtil implements ASCommon {
 			}
 			
 		}
-		
-		//System.out.println("Zernike Values Checking:");
-//		for(int i=0;i<final_result.length;i++){
-//			System.out.println(final_result[i]);
-//		}
+	
 		
 		
 		// Assign class

@@ -68,7 +68,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	private String[] labels;
 	private List<String> classLabels;
 	private int numberOfFeatures;
-	private InstanceUtil instanceUtil= new InstanceUtil();
+	///private InstanceUtil instanceUtil= new InstanceUtil();
 	private ProjectInfo projectInfo;
 	private String projectString;
 	
@@ -79,9 +79,9 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		this.images=new ArrayList<String>();
+		this.images=new ArrayList<>();
 		int sz=loadImages(this.projectString);
-		this.classLabels=new ArrayList<String>();
+		this.classLabels=new ArrayList<>();
 		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		if (sz>0) 
 			updateFeatures();
@@ -104,7 +104,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	
 	// merge with FeatureManager loadImages
 	private int loadImages(String directory){
-		this.images.clear();
+		images.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		if (images== null) return -1;
@@ -160,7 +160,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 
 	private List<String> getCLassLabels(Collection<ClassInfo>  classInfos) {
 
-		List<String> labels= new ArrayList<String>();
+		List<String> labels= new ArrayList<>();
 		for(ClassInfo classInfo:classInfos) {
 			labels.add(classInfo.getLabel());
 		}
@@ -254,7 +254,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 			{
 
 				if(poly.contains(new Point(x, y))){
-					trainingData.add( instanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );
+					trainingData.add( InstanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );
 				}				
 				// increase number of instances for this class
 				numInstances ++;
@@ -265,7 +265,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 
 
 	private  ArrayList<Attribute> createFeatureHeader(){
-		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		ArrayList<Attribute> attributes = new ArrayList<>();
 		for (int i=0; i<numberOfFeatures; i++){
 			//System.out.println(labels[i]);
 			attributes.add(new Attribute(labels[i]));
@@ -277,8 +277,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 
 
 	@Override
-	public IDataSet createAllInstances(String image)
-	{
+	public IDataSet createAllInstances(String image){
 		// Read all lists of examples
 		ImageStack stack=loadFeatureStack(image);
 		return new WekaDataSet(addRectangleRoiInstances(stack));
@@ -304,10 +303,9 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 		// Set the index of the class attribute
 		testingData.setClassIndex(numberOfFeatures);
 
-		for( int y = 0; y < featureStack.getHeight(); y++ )				
-		{
+		for( int y = 0; y < featureStack.getHeight(); y++ )	{
 			for( int x = 0; x < featureStack.getWidth(); x++ ){
-				testingData.add( instanceUtil.createInstance(x, y, 0,featureStack ,colorFeatures, oldColorFormat) );
+				testingData.add( InstanceUtil.createInstance(x, y, 0, featureStack, colorFeatures, oldColorFormat) );
 
 			}		
 		}
@@ -338,7 +336,6 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 
 	@Override
 	public Instance createInstance(Roi roi) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
