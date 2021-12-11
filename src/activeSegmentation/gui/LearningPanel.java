@@ -11,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -31,6 +30,7 @@ import weka.gui.PropertyPanel;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.learning.WekaClassifier;
+import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import javax.swing.ImageIcon;
@@ -62,15 +62,20 @@ public class LearningPanel implements Runnable, ASCommon {
     this.projectInfo = projectManager.getMetaInfo();
   }
   
+  /**
+   * 
+   * @param event
+   */
   public void doAction(ActionEvent event)  {
     if (event == SAVE_BUTTON_PRESSED)     {
-       AbstractClassifier testClassifier=setClassifier();    
+      AbstractClassifier testClassifier=getClassifier();    
       if(testClassifier!=null) {
     	  IClassifier classifier = new WekaClassifier(testClassifier);
           
           learningManager.setClassifier(classifier);
           learningManager.saveLearningMetaData();
-          projectManager.updateMetaInfo(this.projectInfo);
+          projectManager.updateMetaInfo(projectInfo);
+          
           // to avoid data creep because we are changing the learning method.
           IDataSet data = projectManager.getDataSet();
           if (data!=null)
@@ -79,12 +84,16 @@ public class LearningPanel implements Runnable, ASCommon {
      
     } // end SAVE
     if (event == LOAD_BUTTON_PRESSED)     {
-    	learningManager.loadLearningMetaData();
+    	LearningInfo li=learningManager.getLearningMetaData();
+    	String[] options= li.getOptionsArray();
+    	String optionsStr = Utils.joinOptions(options);
+    	System.out.println(optionsStr);
+    	
     } // end LOAD
   }
   
   @Override
-public void run()  {
+  public void run()  {
     showPanel();
   }
 
@@ -195,22 +204,27 @@ private void showPanel() {
     this.frame.setVisible(true);
 }
   
-  private AbstractClassifier setClassifier()   {
-	System.out.println("Learning panel: in setClassifier");
+/**
+ * 
+ * @return
+ */
+  public AbstractClassifier getClassifier()   {
+	System.out.println("Learning panel: in getClassifier");
     Object c = wekaClassifierEditor.getValue();
     String options = "";
     String[] optionsArray = ((OptionHandler)c).getOptions();
     System.out.println(originalOptions);
-    if ((c instanceof OptionHandler)) {
+    if (c instanceof OptionHandler) {
       options = Utils.joinOptions(optionsArray);
     }
-    if ((!this.originalClassifierName.equals(c.getClass().getName())) || 
-      (!this.originalOptions.equals(options))) {
+    if ((!originalClassifierName.equals(c.getClass().getName())) || (!originalOptions.equals(options))) {
       try {
-        AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
+        final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
         cls.setOptions(optionsArray);
-        projectInfo.getLearning().setClassifier( cls);
-        projectInfo.getLearning().setOptionList();
+        
+        final LearningInfo li=projectInfo.getLearning();
+        li.setClassifier( cls);
+        li.updateOptionList();
         return cls;
       } catch (Exception ex)    {
         ex.printStackTrace();

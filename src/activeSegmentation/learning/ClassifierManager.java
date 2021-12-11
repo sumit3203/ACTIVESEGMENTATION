@@ -107,8 +107,7 @@ public class ClassifierManager implements ASCommon {
 			// to avoid data creep
 			dataset.delete();
 		
-		} catch (Exception e) {
-		
+		} catch (Exception e) {		
 			e.printStackTrace();
 		}
 	}
@@ -116,28 +115,19 @@ public class ClassifierManager implements ASCommon {
 	
 	public void saveLearningMetaData(){	
 		projectInfo= dataManager.getMetaInfo();
-		/*
-		if(dataset!=null)
-			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
-		
-		if (currentClassifier!=null)
-			InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), metaInfo);
-		 */
-		
 		dataManager.writeMetaInfo(projectInfo);		
 	}
 
 	/**
 	 * 
 	 */
-	public void loadLearningMetaData() {
+	public LearningInfo getLearningMetaData() {
 		LearningInfo li=projectInfo.getLearning();
- 
-		if(li!=null){
-			System.out.println(li);
-			//dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
-			//selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
-		}
+		//debug info
+//		if (li!=null) {
+//			System.out.println(li);
+//	 	}
+		return li;
 	}
 
 
