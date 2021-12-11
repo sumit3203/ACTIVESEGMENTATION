@@ -5,20 +5,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
-import weka.classifiers.Evaluation;
+import weka.classifiers.AbstractClassifier;
+//import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-import weka.core.Instances;
+//import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
+import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
-import ij.IJ;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 
@@ -27,43 +27,47 @@ import activeSegmentation.IFeatureSelection;
 public class ClassifierManager implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
-	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
+	Map<String,IClassifier> classifierMap= new HashMap< >();
 	private ProjectManager dataManager;
-	private ProjectInfo metaInfo;
+	private ProjectInfo projectInfo;
 	private List<String> learningList;
-	private String selectedType=ASCommon.PASSIVELEARNING;
+
 	private IDataSet dataset;
-	private ForkJoinPool pool; 
+	private ForkJoinPool pool=  new ForkJoinPool();
 	private Map<String,IFeatureSelection> featureMap;
 	
 	
-	
+	/**
+	 * 
+	 * @param dataManager
+	 */
 	public ClassifierManager(ProjectManager dataManager){
-		learningList= new ArrayList<String>();
-		featureMap=new HashMap<String,IFeatureSelection>();
+		learningList= new ArrayList<>();
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
+		
+		featureMap=new HashMap<>();
 		featureMap.put("CFS", new CFS());
 		featureMap.put("PCA", new PCA());
 		this.dataManager= dataManager;
-		pool=  new ForkJoinPool();
-		//dataset= dataManager.readDataFromARFF("C:\\Users\\sumit\\Documents\\demo\\test-eigen\\Training\\learning\\training.arff");
-
+		projectInfo= dataManager.getMetaInfo();
 	}
 	
-
+	/**
+	 * 
+	 */
 	public void trainClassifier(){
-    	metaInfo= dataManager.getMetaInfo();
+    	projectInfo= dataManager.getMetaInfo();
     	System.out.println("Classifier Manager: in training");
-    	File folder = new File(metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
+    	File folder = new File(projectInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
 		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			//System.out.println("Classifier Manager: in training");
-	
-			String filename=folder.getCanonicalPath()+fs+metaInfo.getGroundtruth();
+			// do we need this?
+			String filename=folder.getCanonicalPath()+fs+projectInfo.getGroundtruth();
 			//IJ.log(filename);
-			if (metaInfo.getGroundtruth()!=null && !metaInfo.getGroundtruth().isEmpty()){
+			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
 				System.out.println("Classifier Manager: reading ground truth "+filename);
 				dataset=InstanceUtil.readDataFromARFF(filename);
 				//System.out.println("ClassifierManager: in learning");
@@ -74,51 +78,58 @@ public class ClassifierManager implements ASCommon {
 			} else {
 				dataset=dataManager.getDataSet();
 			}
-			//System.out.println("writing file");
-			//dataManager.writeDataToARFF(dataset.getDataset(), "\\test-eigen\\Training\\learning\\training1.arff");
-
-			currentClassifier.buildClassifier(dataset);
-			//
-			System.out.println("Classifier summary");
-			System.out.println(currentClassifier.toString());
-			//classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
 		
-			currentClassifier.testModel(dataset);
+	
+			currentClassifier.buildClassifier(dataset);
+			
+			if(dataset!=null)
+				InstanceUtil.writeDataToARFF(dataset.getDataset(), projectInfo);
+			
+			if (currentClassifier!=null)
+				InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), projectInfo);
+
+			dataManager.writeMetaInfo(projectInfo);		
+			
+			// move to evaluation;
+			System.out.println("Classifier summary");
+			
+			String outputstr=currentClassifier.toString();
+			System.out.println(outputstr);
+			
+			// print summary here
+
+			outputstr+= currentClassifier.evaluateModel(dataset);
+			 
+			//Wring output-> move to evaluation;
+			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
+			
 			
 			// to avoid data creep
 			dataset.delete();
 		
-		} catch (Exception e) {
-		
+		} catch (Exception e) {		
 			e.printStackTrace();
 		}
 	}
 	
 	
 	public void saveLearningMetaData(){	
-		metaInfo= dataManager.getMetaInfo();
-		//Map<String,String> learningMap = new HashMap<>();
-		if(dataset!=null){
-			//learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
-			//dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);	
-			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
-		}
-		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
-		//learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
-		//metaInfo.setLearning(learningMap);
-		//metaInfo.getLearning().setFeatureSelection(selectedType);
-		dataManager.writeMetaInfo(metaInfo);		
+		projectInfo= dataManager.getMetaInfo();
+		dataManager.writeMetaInfo(projectInfo);		
 	}
 
-	// where do we call this method?
-	/*
-	public void loadLearningMetaData() {
-		if(metaInfo.getLearning()!=null){
-			dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
-			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
-		}
+	/**
+	 * 
+	 */
+	public LearningInfo getLearningMetaData() {
+		LearningInfo li=projectInfo.getLearning();
+		//debug info
+//		if (li!=null) {
+//			System.out.println(li);
+//	 	}
+		return li;
 	}
-	*/
+
 
 	public void setClassifier(Object classifier) {
 		currentClassifier = (WekaClassifier)classifier;		 	
@@ -126,9 +137,6 @@ public class ClassifierManager implements ASCommon {
 	}
 
 	public double[] applyClassifier(IDataSet dataSet){
-		//System.out.println("Testing Results");
-		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
-		//	System.out.println("WORK LOAD : "+ Common.WORKLOAD);
 			final int ni=dataSet.getNumInstances();
 			double[] classificationResult = new double[ni];	
 			try {

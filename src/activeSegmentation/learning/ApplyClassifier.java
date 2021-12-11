@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
-import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 

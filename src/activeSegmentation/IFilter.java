@@ -3,17 +3,14 @@ package activeSegmentation;
 
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import activeSegmentation.filter.LoG_Filter_;
+ 
 
 /**
  * * 

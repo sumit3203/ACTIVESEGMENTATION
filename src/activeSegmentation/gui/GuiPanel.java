@@ -23,7 +23,7 @@ import activeSegmentation.prj.ProjectManager;
 
 /**
  * Selector GUI class
- * @author prodanov
+ * @author Sumit Vohra, Dimiter Prodanov
  *
  */
 public class GuiPanel implements ASCommon {

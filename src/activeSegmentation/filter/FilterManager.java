@@ -7,7 +7,7 @@ import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import java.awt.*;
 import java.io.File;

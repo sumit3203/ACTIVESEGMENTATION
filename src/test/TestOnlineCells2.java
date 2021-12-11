@@ -21,7 +21,7 @@ import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.trees.RandomForest;

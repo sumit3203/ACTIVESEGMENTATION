@@ -54,7 +54,7 @@ import ij.gui.Roi;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-public class PixelInstanceCreator implements IFeature {
+public class PixelInstanceCreator implements IFeature, ASCommon {
 
 
 
@@ -68,16 +68,20 @@ public class PixelInstanceCreator implements IFeature {
 	private String[] labels;
 	private List<String> classLabels;
 	private int numberOfFeatures;
-	private InstanceUtil instanceUtil= new InstanceUtil();
+	///private InstanceUtil instanceUtil= new InstanceUtil();
 	private ProjectInfo projectInfo;
 	private String projectString;
 	
+	
+	/*
+	 * 
+	 */
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		this.images=new ArrayList<String>();
+		this.images=new ArrayList<>();
 		int sz=loadImages(this.projectString);
-		this.classLabels=new ArrayList<String>();
+		this.classLabels=new ArrayList<>();
 		featurePath=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 		if (sz>0) 
 			updateFeatures();
@@ -100,7 +104,7 @@ public class PixelInstanceCreator implements IFeature {
 	
 	// merge with FeatureManager loadImages
 	private int loadImages(String directory){
-		this.images.clear();
+		images.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		if (images== null) return -1;
@@ -115,13 +119,12 @@ public class PixelInstanceCreator implements IFeature {
 	}
 
 	/**
-	 * Create training instances out of the user markings
+	 * Create training instances out of the user annotations
 	 * @return set of instances (feature vectors in Weka format)
 	 */
 	@Override
 	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
-		// TODO Auto-generated method stub
-		//IJ.debugMode=false;
+		
 		updateFeatures();
 		ArrayList<Attribute> attributes = createFeatureHeader();
 		attributes.add(new Attribute(ASCommon.CLASS, getCLassLabels(classInfos)));
@@ -150,14 +153,14 @@ public class PixelInstanceCreator implements IFeature {
 			}
 
 		}
-		IJ.log(trainingData.toSummaryString());
+		//IJ.log(trainingData.toSummaryString());
 		//System.out.println(trainingData);
 	}
 
 
 	private List<String> getCLassLabels(Collection<ClassInfo>  classInfos) {
 
-		List<String> labels= new ArrayList<String>();
+		List<String> labels= new ArrayList<>();
 		for(ClassInfo classInfo:classInfos) {
 			labels.add(classInfo.getLabel());
 		}
@@ -171,15 +174,18 @@ public class PixelInstanceCreator implements IFeature {
 		IJ.log(featurePath);
 		IJ.log(localPath);
 		File[] images=sortImages(new File(featurePath+localPath).listFiles());
-		
-		System.out.println("loadFeatureStack: "+featurePath+localPath+"/"+images[0].getName());
-		ImagePlus firstImage=IJ.openImage(featurePath+localPath+"/"+images[0].getName());
+		final String fname= featurePath+localPath+fs+images[0].getName();
+		System.out.println("PixelInstanceCreator: loadFeatureStack: "+fname);
+		ImagePlus firstImage=IJ.openImage(fname);
 		ImageStack featureStack = new ImageStack(firstImage.getWidth(), firstImage.getHeight());
 		for(File file : images){
+			//System.out.println(file.getName());
+				//IJ.log(file.getName());
+			final String fname2=featurePath+localPath+fs+file.getName();
+			
 			if (file.isFile()) {
-				//System.out.println(file.getName());
-				IJ.log(file.getName());
-				ImagePlus image=IJ.openImage(featurePath+localPath+"/"+file.getName());
+				
+				ImagePlus image=IJ.openImage(fname2);
 
 				featureStack.addSlice(image.getTitle(), image.getProcessor());
 
@@ -248,7 +254,7 @@ public class PixelInstanceCreator implements IFeature {
 			{
 
 				if(poly.contains(new Point(x, y))){
-					trainingData.add( instanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );
+					trainingData.add( InstanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );
 				}				
 				// increase number of instances for this class
 				numInstances ++;
@@ -259,7 +265,7 @@ public class PixelInstanceCreator implements IFeature {
 
 
 	private  ArrayList<Attribute> createFeatureHeader(){
-		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		ArrayList<Attribute> attributes = new ArrayList<>();
 		for (int i=0; i<numberOfFeatures; i++){
 			//System.out.println(labels[i]);
 			attributes.add(new Attribute(labels[i]));
@@ -271,8 +277,7 @@ public class PixelInstanceCreator implements IFeature {
 
 
 	@Override
-	public IDataSet createAllInstances(String image)
-	{
+	public IDataSet createAllInstances(String image){
 		// Read all lists of examples
 		ImageStack stack=loadFeatureStack(image);
 		return new WekaDataSet(addRectangleRoiInstances(stack));
@@ -298,10 +303,9 @@ public class PixelInstanceCreator implements IFeature {
 		// Set the index of the class attribute
 		testingData.setClassIndex(numberOfFeatures);
 
-		for( int y = 0; y < featureStack.getHeight(); y++ )				
-		{
+		for( int y = 0; y < featureStack.getHeight(); y++ )	{
 			for( int x = 0; x < featureStack.getWidth(); x++ ){
-				testingData.add( instanceUtil.createInstance(x, y, 0,featureStack ,colorFeatures, oldColorFormat) );
+				testingData.add( InstanceUtil.createInstance(x, y, 0, featureStack, colorFeatures, oldColorFormat) );
 
 			}		
 		}
@@ -332,7 +336,6 @@ public class PixelInstanceCreator implements IFeature {
 
 	@Override
 	public Instance createInstance(Roi roi) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

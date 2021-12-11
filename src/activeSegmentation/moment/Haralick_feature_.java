@@ -3,14 +3,13 @@ package activeSegmentation.moment;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
-import activeSegmentation.IFilter;
 import activeSegmentation.IMoment;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import static activeSegmentation.FilterType.*;
 

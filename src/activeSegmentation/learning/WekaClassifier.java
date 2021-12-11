@@ -16,16 +16,13 @@
 package activeSegmentation.learning;
 
 import java.io.Serializable;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
-
-
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
+//import activeSegmentation.prj.ProjectInfo;
+//import activeSegmentation.util.InstanceUtil;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -41,8 +38,22 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 * Classifier from Weka.
 	 */
 	private Classifier classifier;
+
+	/*
+	private ProjectInfo metaInfo=null;
 	
-   public WekaClassifier(Classifier iClassifier) {
+    @Override
+    public ProjectInfo getMetaInfo() {
+		return metaInfo;
+	}
+
+	@Override
+	public void setMetaInfo(ProjectInfo metaInfo) {
+		this.metaInfo = metaInfo;
+	}
+	*/
+	
+	public WekaClassifier(Classifier iClassifier) {
 	   this.classifier= iClassifier;
 	}
 
@@ -75,7 +86,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return ERR_CLASS;
 	}
 
 	/**
@@ -111,14 +122,13 @@ public class WekaClassifier implements IClassifier, Serializable {
 	/**
 	 * Set the classifier to use.
 	 *
-	 * @param classifier The weka classifier.
+	 * @param classifier The WEKA classifier.
 	 */
 	 
 	@Override
 	public void setClassifier(Classifier classifier) {
 		try {
-			this.classifier = weka.classifiers.AbstractClassifier
-					.makeCopy(classifier);
+			this.classifier = AbstractClassifier.makeCopy(classifier);
 		} catch (Exception e) {
 			Logger.getLogger(WekaClassifier.class.getName()).log(
 					Level.SEVERE, null, e);
@@ -133,23 +143,25 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 * @return The evaluation
 	 */
 	@Override
-	public double[] testModel(IDataSet iData) {
+	public String evaluateModel(IDataSet iData) {
 
 		try {
 
 			// test the current classifier with the test set
 			//Instances wekadata=new Instances(instances.getDataset(),0);
-			Instances wekadata=iData.getDataset();
-			Evaluation evaluator = new Evaluation(wekadata);
+			Instances wekainst=iData.getDataset();
+			Evaluation evaluator = new Evaluation(wekainst);
 			
-			double[] predict =evaluator.evaluateModel(classifier, wekadata);
+			evaluator.evaluateModel(classifier, wekainst);
 			 
 			// 10 fold cross-validation
 			//evaluator.crossValidateModel(classifier, wekadata, 10,  new Random(1));
-			System.out.println(evaluator.toSummaryString("\nSummary Results\n======\n", false));
-			System.out.println(evaluator.toClassDetailsString("\nDetailed Results\n======\n"));
+			String outputstr=evaluator.toSummaryString("\n\nSummary Results\n======\n", false);
+			//System.out.println(outputstr);
+			outputstr+=evaluator.toClassDetailsString("\nDetailed Results\n======\n");
+			//System.out.println(outputstr);
 			
-			return predict;
+			return outputstr;
 
 
 		} catch (Exception e) {
@@ -162,8 +174,13 @@ public class WekaClassifier implements IClassifier, Serializable {
 
 
 	@Override
-	public IClassifier makeCopy() throws Exception {
-		return (IClassifier) new SerializedObject(this).getObject();
+	public IClassifier makeCopy() {
+		try {
+			return (IClassifier) new SerializedObject(this).getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
  

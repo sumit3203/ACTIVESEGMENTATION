@@ -738,15 +738,16 @@ public class FeatureManager implements IUtil, ASCommon {
 			predictionResultClassification = new HashMap<>();
 		}		
 		// IJ.debugMode=true;
-		IJ.log("TRAINING STARTED");
+		IJ.log("Training started");
 		System.out.println("Training started");
+		
 		// extract features in weka format, returns IDataset object
 		extractFeatures(projectInfo.getProjectType());
 		
 		// trains as per the setting of learning manager, we now have a trained classifier
 		learningManager.trainClassifier();
 		
-		IJ.log("TRAINING DONE");
+		IJ.log("Training done");
 		System.out.println("Training done");
 		final ProjectType projtype=	projectInfo.getProjectType();	
 		

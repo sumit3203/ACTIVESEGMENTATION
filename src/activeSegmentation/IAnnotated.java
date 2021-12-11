@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 
 /*

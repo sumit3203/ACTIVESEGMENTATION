@@ -428,7 +428,6 @@ public class FilterPanel implements Runnable, ASCommon {
 		Vector<String> listModel = new Vector<>();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){
-
 				listModel.addElement(filter);
 			}
 		}

@@ -74,6 +74,10 @@ public class ProjectManager implements IUtil{
 				if (projectFile.getName().indexOf(".json") <0) return false;
 				
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
+		 
+				System.out.println(projectInfo.getLearning());
+		 
+				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				//System.out.println(projectInfo.toString());

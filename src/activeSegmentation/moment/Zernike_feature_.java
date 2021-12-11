@@ -27,7 +27,7 @@ import ij.process.ImageProcessor;
 import ijaux.datatype.ComplexArray;
 import ijaux.moments.zernike.ZernikeMoment;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 @AFilter(key="ZMC", value="Zernike Moments", type=CLASSIF)
 public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<ArrayList<?>> {

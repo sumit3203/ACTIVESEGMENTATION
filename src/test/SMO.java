@@ -1,3 +1,5 @@
+package test;
+
 /*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -13,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package activeSegmentation.learning;
+//package activeSegmentation.learning;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +23,7 @@ import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.core.Instance;
 
 /**
- * @author Oscar Gabriel Reyes Pupo
+ * @author Sumit Vohra, based on Oscar Gabriel Reyes Pupo
  */
 public class SMO extends weka.classifiers.functions.SMO {
 
@@ -34,12 +36,9 @@ public class SMO extends weka.classifiers.functions.SMO {
      * Empty constructor
      */
     public SMO() {
-
         super();
         setBuildCalibrationModels(true);
-        
-        //setBuildLogisticModels(true);
-
+          
         //To be linear kernel, equals to used in the related papers
         setC(1.0);
 
