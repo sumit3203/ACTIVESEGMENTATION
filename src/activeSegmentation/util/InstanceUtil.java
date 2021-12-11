@@ -277,8 +277,7 @@ public class InstanceUtil implements ASCommon {
 			try {
 				sFile = new File(filename);
 				OutputStream os = new FileOutputStream(sFile);
-				if (sFile.getName().endsWith(".gz"))
-				{
+				if (sFile.getName().endsWith(".gz")){
 					os = new GZIPOutputStream(os);
 				}
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(os);
@@ -289,7 +288,7 @@ public class InstanceUtil implements ASCommon {
 				objectOutputStream.close();
 			}
 			catch (Exception e)	{
-				System.out.println("Error saving classifier into a file");
+				System.out.println("Error saving classifier in "+ filename);
 				saveOK = false;
 				e.printStackTrace();
 			}

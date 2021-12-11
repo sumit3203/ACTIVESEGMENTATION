@@ -1,4 +1,6 @@
-package activeSegmentation.learning;
+package test;
+
+//package activeSegmentation.learning;
 
 /*
  *    This program is free software; you can redistribute it and/or modify
@@ -44,7 +46,8 @@ import weka.core.EuclideanDistance;
 <!-- globalinfo-start -->
  * A Clusterer that implements Learning Vector Quantization algorithm for
  * unsupervised clustering. <br/>
- * T. Kohonen, “Learning Vector Quantization”, The Handbook of Brain Theory and Neural Networks, 2nd Edition, MIT Press, 2003, pp. 631-634.
+ * T. Kohonen, "Learning Vector Quantization", 
+ * The Handbook of Brain Theory and Neural Networks, 2nd Edition, MIT Press, 2003, pp. 631-634.
  * <p/>
 <!-- globalinfo-end -->
  *
