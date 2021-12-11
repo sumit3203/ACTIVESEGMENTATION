@@ -101,4 +101,12 @@ public class LearningInfo {
 		this.learningOption = learningOption;
 	}
 	
+	@Override
+	public String toString( ) {
+		String ret= "options="+optionList.toString()+"\n";
+		ret+="featureSelection="+featureSelection+"\n";
+		ret+="learningOption="+learningOption+"\n";
+		return ret;
+	}
+	
 }

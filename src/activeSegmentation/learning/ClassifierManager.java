@@ -15,10 +15,10 @@ import weka.core.Instance;
 //import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
+import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
-//import ij.IJ;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 
@@ -29,11 +29,11 @@ public class ClassifierManager implements ASCommon {
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 	Map<String,IClassifier> classifierMap= new HashMap< >();
 	private ProjectManager dataManager;
-	private ProjectInfo metaInfo;
+	private ProjectInfo projectInfo;
 	private List<String> learningList;
-	//private String selectedType=ASCommon.PASSIVELEARNING;
+
 	private IDataSet dataset;
-	private ForkJoinPool pool; 
+	private ForkJoinPool pool=  new ForkJoinPool();
 	private Map<String,IFeatureSelection> featureMap;
 	
 	
@@ -43,30 +43,31 @@ public class ClassifierManager implements ASCommon {
 	 */
 	public ClassifierManager(ProjectManager dataManager){
 		learningList= new ArrayList<>();
-		featureMap=new HashMap<>();
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
+		
+		featureMap=new HashMap<>();
 		featureMap.put("CFS", new CFS());
 		featureMap.put("PCA", new PCA());
 		this.dataManager= dataManager;
-		pool=  new ForkJoinPool();
+		projectInfo= dataManager.getMetaInfo();
 	}
 	
 	/**
 	 * 
 	 */
 	public void trainClassifier(){
-    	metaInfo= dataManager.getMetaInfo();
+    	projectInfo= dataManager.getMetaInfo();
     	System.out.println("Classifier Manager: in training");
-    	File folder = new File(metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
+    	File folder = new File(projectInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
 		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			//System.out.println("Classifier Manager: in training");
 			// do we need this?
-			String filename=folder.getCanonicalPath()+fs+metaInfo.getGroundtruth();
+			String filename=folder.getCanonicalPath()+fs+projectInfo.getGroundtruth();
 			//IJ.log(filename);
-			if (metaInfo.getGroundtruth()!=null && !metaInfo.getGroundtruth().isEmpty()){
+			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
 				System.out.println("Classifier Manager: reading ground truth "+filename);
 				dataset=InstanceUtil.readDataFromARFF(filename);
 				//System.out.println("ClassifierManager: in learning");
@@ -82,12 +83,12 @@ public class ClassifierManager implements ASCommon {
 			currentClassifier.buildClassifier(dataset);
 			
 			if(dataset!=null)
-				InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
+				InstanceUtil.writeDataToARFF(dataset.getDataset(), projectInfo);
 			
 			if (currentClassifier!=null)
-				InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), metaInfo);
+				InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), projectInfo);
 
-			dataManager.writeMetaInfo(metaInfo);		
+			dataManager.writeMetaInfo(projectInfo);		
 			
 			// move to evaluation;
 			System.out.println("Classifier summary");
@@ -100,7 +101,7 @@ public class ClassifierManager implements ASCommon {
 			outputstr+= currentClassifier.evaluateModel(dataset);
 			 
 			//Wring output-> move to evaluation;
-			InstanceUtil.writeDataToTXT(outputstr, metaInfo);
+			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
 			
 			
 			// to avoid data creep
@@ -114,7 +115,7 @@ public class ClassifierManager implements ASCommon {
 	
 	
 	public void saveLearningMetaData(){	
-		metaInfo= dataManager.getMetaInfo();
+		projectInfo= dataManager.getMetaInfo();
 		/*
 		if(dataset!=null)
 			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
@@ -123,18 +124,22 @@ public class ClassifierManager implements ASCommon {
 			InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), metaInfo);
 		 */
 		
-		dataManager.writeMetaInfo(metaInfo);		
+		dataManager.writeMetaInfo(projectInfo);		
 	}
 
-	// where do we call this method?
-	/*
+	/**
+	 * 
+	 */
 	public void loadLearningMetaData() {
-		if(metaInfo.getLearning()!=null){
-			dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
-			selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
+		LearningInfo li=projectInfo.getLearning();
+ 
+		if(li!=null){
+			System.out.println(li);
+			//dataset= InstanceUtil.readDataFromARFF(metaInfo.getLearning().get(ASCommon.ARFF));
+			//selectedType=metaInfo.getLearning().get(ASCommon.LEARNINGTYPE);
 		}
 	}
-	*/
+
 
 	public void setClassifier(Object classifier) {
 		currentClassifier = (WekaClassifier)classifier;		 	

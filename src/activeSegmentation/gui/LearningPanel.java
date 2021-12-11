@@ -40,41 +40,47 @@ public class LearningPanel implements Runnable, ASCommon {
 
   private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
   private String originalOptions;
-  String originalClassifierName;
+  private String originalClassifierName;
   private ProjectManager projectManager;
   private ProjectInfo projectInfo;
-  final JFrame frame = new JFrame("Learning");
+ 
+  private final JFrame frame = new JFrame("Learning");
 
-  JList<String> featureSelList;
- // final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent(this, 1, "Compute");
-  final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
-  ClassifierManager learningManager;
+  private JList<String> featureSelList;
+  private final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 1, "Load");
+  private final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
+  private ClassifierManager learningManager;
   
-  public LearningPanel(ProjectManager projectManager,ClassifierManager learningManager )  {
+  /**
+   * 
+   * @param projectManager
+   * @param learningManager
+   */
+  public LearningPanel(ProjectManager projectManager, ClassifierManager learningManager )  {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
   }
   
   public void doAction(ActionEvent event)  {
-    if (event == this.SAVE_BUTTON_PRESSED)     {
-
-     // System.out.println("in set classifier");
-      AbstractClassifier testClassifier=setClassifier();
-    
+    if (event == SAVE_BUTTON_PRESSED)     {
+       AbstractClassifier testClassifier=setClassifier();    
       if(testClassifier!=null) {
     	  IClassifier classifier = new WekaClassifier(testClassifier);
           
           learningManager.setClassifier(classifier);
           learningManager.saveLearningMetaData();
           projectManager.updateMetaInfo(this.projectInfo);
-          // to avoid data creep beacuse we are changing the learning method.
+          // to avoid data creep because we are changing the learning method.
           IDataSet data = projectManager.getDataSet();
           if (data!=null)
         	  data.delete();
       }
      
-    }
+    } // end SAVE
+    if (event == LOAD_BUTTON_PRESSED)     {
+    	learningManager.loadLearningMetaData();
+    } // end LOAD
   }
   
   @Override
@@ -86,34 +92,68 @@ public void run()  {
  * 
  */
 private void showPanel() {
-	this.frame.setDefaultCloseOperation(1);
-    this.frame.getContentPane().setBackground(Color.GRAY);
-    this.frame.setLocationRelativeTo(null);
-    this.frame.setSize(600, 250);
-    JPanel learningP = new JPanel();
-    learningP.setLayout(null);
-    learningP.setBackground(Color.GRAY);
+	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.getContentPane().setBackground(Color.GRAY);
+    frame.setLocationRelativeTo(null);
+    frame.setSize(600, 250);
+    
+    
+    final int xOffsetCol1=10;
+    
+    JPanel aPanel = new JPanel();
+    aPanel.setLayout(null);
+    aPanel.setBackground(Color.GRAY);
     
     JPanel learningJPanel = new JPanel();
     learningJPanel.setBorder(BorderFactory.createTitledBorder("Learning"));
     
     PropertyPanel wekaCEPanel = new PropertyPanel(this.wekaClassifierEditor);
-    this.wekaClassifierEditor.setClassType(Classifier.class);
-    this.wekaClassifierEditor.setValue(this.learningManager.getClassifier());
+    wekaClassifierEditor.setClassType(Classifier.class);
+    wekaClassifierEditor.setValue(this.learningManager.getClassifier());
     Object c = this.wekaClassifierEditor.getValue();
     originalOptions = "";
-    this.originalClassifierName = c.getClass().getName();
+    originalClassifierName = c.getClass().getName();
     if ((c instanceof OptionHandler)) {
       originalOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
     }
+    
     wekaCEPanel.setBounds(30, 30, 250, 30);
     learningJPanel.add(wekaCEPanel);
-    learningJPanel.setBounds(10, 20, 300, 80);
+    learningJPanel.setBounds(xOffsetCol1, 20, 300, 80);
+    
+    ////////////////////////////////
+    JPanel options = new JPanel();
+    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
+    options.setBounds(xOffsetCol1, 120, 300, 80);
+
+    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
+    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
+    ButtonGroup bg=new ButtonGroup(); 
+    bg.add(pasiveLearning);
+    bg.add(activeLearning);
+    options.add(pasiveLearning);
+    options.add(activeLearning);
+    pasiveLearning.setSelected(false);
+    
+    pasiveLearning.addItemListener(new ItemListener() {  
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			projectInfo.getLearning().setFeatureSelection(PASSIVELEARNING);
+		}  
+     });  
+    activeLearning.addItemListener(new ItemListener() {  
+        @Override
+		public void itemStateChanged(ItemEvent e) {               
+        	projectInfo.getLearning().setFeatureSelection(ACTIVELEARNING);
+        }  
+     });  
+    
+    final int xOffsetCol2=370;
     
     /////////////////////////////
-    JPanel featureSelection = new JPanel();
-    featureSelection.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
-    featureSelection.setBounds(370, 20, 200, 80);
+    JPanel featurePanel = new JPanel();
+    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
+    featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
     DefaultListModel<String> model = new DefaultListModel<>();
     model.addElement("NONE");
     model.addElement("Principle Component Analysis");
@@ -133,53 +173,30 @@ private void showPanel() {
         }
       });
     
-    featureSelection.add(this.featureSelList);
+    featurePanel.add(this.featureSelList);
     
     
-    ////////////////////////////////
-    JPanel options = new JPanel();
-    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
-    options.setBounds(10, 120, 300, 80);
 
-   // JCheckBox pasiveLearning = new JCheckBox("Passive Learning" );
-   // JCheckBox activeLearning = new JCheckBox("Active Learning" );
-    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
-    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
-    ButtonGroup bg=new ButtonGroup(); 
-    bg.add(pasiveLearning);
-    bg.add(activeLearning);
-    options.add(pasiveLearning);
-    options.add(activeLearning);
     
-    pasiveLearning.addItemListener(new ItemListener() {  
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			projectInfo.getLearning().setFeatureSelection(PASSIVELEARNING);
-		}  
-     });  
-    activeLearning.addItemListener(new ItemListener() {  
-        @Override
-		public void itemStateChanged(ItemEvent e) {               
-        	projectInfo.getLearning().setFeatureSelection(ACTIVELEARNING);
-        }  
-     });  
+   ////////////////////////////
+    JPanel IOpanel = new JPanel();
+    IOpanel.setBackground(Color.GRAY);
+    IOpanel.setBounds(xOffsetCol2, 120, 200, 80);
+    IOpanel.add(addButton("Save", null, xOffsetCol2, 120, 200, 50, SAVE_BUTTON_PRESSED));
     
-   
-    JPanel resetJPanel = new JPanel();
-    resetJPanel.setBackground(Color.GRAY);
-    resetJPanel.setBounds(370, 120, 200, 80);
-    resetJPanel.add(addButton("SAVE", null, 370, 120, 200, 50, this.SAVE_BUTTON_PRESSED));
+    IOpanel.add(addButton("Load", null, xOffsetCol2+200+100, 120, 200, 50, LOAD_BUTTON_PRESSED));
     
-    learningP.add(learningJPanel);
-    learningP.add(featureSelection);
-    learningP.add(resetJPanel);
-    learningP.add(options);
+    aPanel.add(learningJPanel);
+    aPanel.add(featurePanel);
+    aPanel.add(IOpanel);
+    aPanel.add(options);
     
-    this.frame.add(learningP);
+    this.frame.add(aPanel);
     this.frame.setVisible(true);
 }
   
   private AbstractClassifier setClassifier()   {
+	System.out.println("Learning panel: in setClassifier");
     Object c = wekaClassifierEditor.getValue();
     String options = "";
     String[] optionsArray = ((OptionHandler)c).getOptions();

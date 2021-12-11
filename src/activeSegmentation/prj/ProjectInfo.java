@@ -65,17 +65,16 @@ public class ProjectInfo{
 	
 	private String groundtruth="";
 	
-	 
-	
+	@JsonProperty(value="learning") 
+	private LearningInfo learning = new LearningInfo();
 	/*
 	 * JSON ignore
 	 */
-	private LearningInfo learning = new LearningInfo();
 	
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
 	
-	//@JsonIgnore
+	@JsonIgnore
 	private Map<String, Set<String>> featureNames = new HashMap<>();
 	
 	@JsonIgnore
@@ -85,6 +84,7 @@ public class ProjectInfo{
 	@JsonIgnore
 	private int featureLength;
 	
+	private final	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	////////////////////////////////////////////
 	//  Methods
@@ -112,7 +112,7 @@ public class ProjectInfo{
 		}
 	}
 	
-	private	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
+
 
 	/**
 	 * 
@@ -139,7 +139,7 @@ public class ProjectInfo{
 	 * @return List<Map<String, String>>
 	 */
 	public List<Map<String, String>> getFilters()	{
-		return this.filters;
+		return filters;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<FeatureInfo> getFeatureList()	{
-		return this.featureList;
+		return featureList;
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public LearningInfo getLearning()	{
-		return this.learning;
+		return learning;
 	}
 
 	/**
