@@ -11,14 +11,12 @@ import weka.classifiers.AbstractClassifier;
 
 /**
  * 
- * @author prodanov
- *
+ * @author Dimiter Prodanov
+ *  This is metadata class for handling of learning options.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class LearningInfo {
-	
-
 	
 	@JsonIgnore
 	AbstractClassifier classifier;
@@ -33,9 +31,15 @@ public class LearningInfo {
 	
 	private String arff="trainingdata.arff";
 	
-	
+	/**
+	 * constructor
+	 */
 	public LearningInfo() {}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public List<String> getOptionList(){
 		return optionList;
 	}
@@ -46,13 +50,11 @@ public class LearningInfo {
 	 */
 	public String[] getOptionsArray() {
 		Object[] objarr=optionList.toArray();
-		String[] strar=new String[objarr.length];
-		
+		String[] strar=new String[objarr.length];	
 		for (int i=0;i<objarr.length;i++) {
 			 Object obj=objarr[i]; 
 			 strar[i]= (String) obj;
-		}
-		
+		}		
 		return strar;
 	}
 	
@@ -98,26 +100,50 @@ public class LearningInfo {
 		this.classifier =  cls;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getClassifierFile() {
 		return classifierfile;
 	}
 
+	/**
+	 * 
+	 * @param classifierfile
+	 */
 	public void setClassifierFile(String classifierfile) {
 		this.classifierfile = classifierfile;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getArffFile() {
 		return arff;
 	}
 
+	/**
+	 * 
+	 * @param arff
+	 */
 	public void setArffFile(String arff) {
 		this.arff = arff;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getLearningOption() {
 		return learningOption;
 	}
 
+	/**
+	 * 
+	 * @param learningOption
+	 */
 	public void setLearningOption(String learningOption) {
 		this.learningOption = learningOption;
 	}
