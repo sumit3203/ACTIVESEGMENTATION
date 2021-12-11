@@ -54,7 +54,7 @@ import ij.gui.Roi;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-public class PixelInstanceCreator implements IFeature {
+public class PixelInstanceCreator implements IFeature, ASCommon {
 
 
 
@@ -72,6 +72,10 @@ public class PixelInstanceCreator implements IFeature {
 	private ProjectInfo projectInfo;
 	private String projectString;
 	
+	
+	/*
+	 * 
+	 */
 	public PixelInstanceCreator( ProjectInfo projectInfo){
 		this.projectInfo=projectInfo;
 		this.projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
@@ -115,13 +119,12 @@ public class PixelInstanceCreator implements IFeature {
 	}
 
 	/**
-	 * Create training instances out of the user markings
+	 * Create training instances out of the user annotations
 	 * @return set of instances (feature vectors in Weka format)
 	 */
 	@Override
 	public void createTrainingInstance(Collection<ClassInfo> classInfos) {
-		// TODO Auto-generated method stub
-		//IJ.debugMode=false;
+		
 		updateFeatures();
 		ArrayList<Attribute> attributes = createFeatureHeader();
 		attributes.add(new Attribute(ASCommon.CLASS, getCLassLabels(classInfos)));
@@ -150,7 +153,7 @@ public class PixelInstanceCreator implements IFeature {
 			}
 
 		}
-		IJ.log(trainingData.toSummaryString());
+		//IJ.log(trainingData.toSummaryString());
 		//System.out.println(trainingData);
 	}
 
@@ -171,15 +174,18 @@ public class PixelInstanceCreator implements IFeature {
 		IJ.log(featurePath);
 		IJ.log(localPath);
 		File[] images=sortImages(new File(featurePath+localPath).listFiles());
-		
-		System.out.println("loadFeatureStack: "+featurePath+localPath+"/"+images[0].getName());
-		ImagePlus firstImage=IJ.openImage(featurePath+localPath+"/"+images[0].getName());
+		final String fname= featurePath+localPath+fs+images[0].getName();
+		System.out.println("PixelInstanceCreator: loadFeatureStack: "+fname);
+		ImagePlus firstImage=IJ.openImage(fname);
 		ImageStack featureStack = new ImageStack(firstImage.getWidth(), firstImage.getHeight());
 		for(File file : images){
+			//System.out.println(file.getName());
+				//IJ.log(file.getName());
+			final String fname2=featurePath+localPath+fs+file.getName();
+			
 			if (file.isFile()) {
-				//System.out.println(file.getName());
-				IJ.log(file.getName());
-				ImagePlus image=IJ.openImage(featurePath+localPath+"/"+file.getName());
+				
+				ImagePlus image=IJ.openImage(fname2);
 
 				featureStack.addSlice(image.getTitle(), image.getProcessor());
 

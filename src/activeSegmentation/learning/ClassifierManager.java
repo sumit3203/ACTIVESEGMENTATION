@@ -5,20 +5,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
-import weka.classifiers.Evaluation;
+//import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-import weka.core.Instances;
+//import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
-import ij.IJ;
+//import ij.IJ;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 
@@ -27,31 +26,34 @@ import activeSegmentation.IFeatureSelection;
 public class ClassifierManager implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
-	Map<String,IClassifier> classifierMap= new HashMap<String, IClassifier>();
+	Map<String,IClassifier> classifierMap= new HashMap< >();
 	private ProjectManager dataManager;
 	private ProjectInfo metaInfo;
 	private List<String> learningList;
-	private String selectedType=ASCommon.PASSIVELEARNING;
+	//private String selectedType=ASCommon.PASSIVELEARNING;
 	private IDataSet dataset;
 	private ForkJoinPool pool; 
 	private Map<String,IFeatureSelection> featureMap;
 	
 	
-	
+	/**
+	 * 
+	 * @param dataManager
+	 */
 	public ClassifierManager(ProjectManager dataManager){
-		learningList= new ArrayList<String>();
-		featureMap=new HashMap<String,IFeatureSelection>();
+		learningList= new ArrayList<>();
+		featureMap=new HashMap<>();
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
 		featureMap.put("CFS", new CFS());
 		featureMap.put("PCA", new PCA());
 		this.dataManager= dataManager;
 		pool=  new ForkJoinPool();
-		//dataset= dataManager.readDataFromARFF("C:\\Users\\sumit\\Documents\\demo\\test-eigen\\Training\\learning\\training.arff");
-
 	}
 	
-
+	/**
+	 * 
+	 */
 	public void trainClassifier(){
     	metaInfo= dataManager.getMetaInfo();
     	System.out.println("Classifier Manager: in training");
@@ -75,15 +77,21 @@ public class ClassifierManager implements ASCommon {
 				dataset=dataManager.getDataSet();
 			}
 			//System.out.println("writing file");
-			//dataManager.writeDataToARFF(dataset.getDataset(), "\\test-eigen\\Training\\learning\\training1.arff");
-
+	
 			currentClassifier.buildClassifier(dataset);
 			//
 			System.out.println("Classifier summary");
-			System.out.println(currentClassifier.toString());
-			//classifierMap.put(currentClassifier.getClass().getCanonicalName(), currentClassifier);
-		
-			currentClassifier.testModel(dataset);
+			
+			String outputstr=currentClassifier.toString();
+			System.out.println(outputstr);
+			
+			// print summary here
+
+			outputstr+= currentClassifier.testModel(dataset);
+			 
+			
+			InstanceUtil.writeDataToTXT(outputstr, metaInfo);
+			
 			
 			// to avoid data creep
 			dataset.delete();
@@ -97,16 +105,10 @@ public class ClassifierManager implements ASCommon {
 	
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
-		//Map<String,String> learningMap = new HashMap<>();
 		if(dataset!=null){
-			//learningMap.put(ASCommon.ARFF, ASCommon.ARFFFILENAME);
-			//dataManager.writeDataToARFF(dataset.getDataset(), ASCommon.ARFFFILENAME);	
 			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
 		}
-		//learningMap.put(Common.CLASSIFIER, Common.CLASSIFIERNAME);  
-		//learningMap.put(ASCommon.LEARNINGTYPE, selectedType);
-		//metaInfo.setLearning(learningMap);
-		//metaInfo.getLearning().setFeatureSelection(selectedType);
+
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
@@ -126,9 +128,6 @@ public class ClassifierManager implements ASCommon {
 	}
 
 	public double[] applyClassifier(IDataSet dataSet){
-		//System.out.println("Testing Results");
-		//	System.out.println("INSTANCE SIZE"+ dataSet.getNumInstances());
-		//	System.out.println("WORK LOAD : "+ Common.WORKLOAD);
 			final int ni=dataSet.getNumInstances();
 			double[] classificationResult = new double[ni];	
 			try {

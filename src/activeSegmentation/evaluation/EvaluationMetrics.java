@@ -1,5 +1,6 @@
 package activeSegmentation.evaluation;
 
+import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IEvaluation;
 import weka.classifiers.Evaluation;
@@ -7,11 +8,7 @@ import weka.classifiers.Evaluation;
 import java.util.List;
 
 public class EvaluationMetrics implements IEvaluation {
-	/*
-	public static void main(String args[]) {
-		//System.out.println(Evaluation.getAllEvaluationMetricNames().toString());
-	}
-	 */
+	
 	@Override
 	public List<String> getMetrics() {
 		// TODO Auto-generated method stub
@@ -19,10 +16,11 @@ public class EvaluationMetrics implements IEvaluation {
 	}
 
 	@Override
-	public String testModel(IDataSet instances, List<String> selection) {
+	public IEvaluation testModel(IClassifier classifier, IDataSet iData) {
 		// TODO Auto-generated method stub
 		return null;
-		
 	}
+
+	
 
 }

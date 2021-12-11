@@ -3,8 +3,6 @@ package activeSegmentation.learning;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
-
-import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import weka.core.Instances;
@@ -68,13 +66,13 @@ public class ApplyTask extends RecursiveAction{
 	 
 	private void classifyPixels(){
 		try {
-				IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
-				Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
-				for (int index = 0; index < testInstances.size(); index++){				
-						classificationResult[mStart+index]=classifierCopy.
-						classifyInstance(testInstances.get(index));
-				}
-			} catch (Exception e) {	
+			IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
+			Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
+			for (int index = 0; index < testInstances.size(); index++){				
+					classificationResult[mStart+index]=classifierCopy.
+					classifyInstance(testInstances.get(index));
+			}
+		} catch (Exception e) {	
 				e.printStackTrace();
 		}
 	}

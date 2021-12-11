@@ -740,6 +740,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		// IJ.debugMode=true;
 		IJ.log("Training started");
 		System.out.println("Training started");
+		
 		// extract features in weka format, returns IDataset object
 		extractFeatures(projectInfo.getProjectType());
 		

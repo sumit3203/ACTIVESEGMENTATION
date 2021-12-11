@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
 
 import activeSegmentation.ASCommon;
+import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.learning.WekaDataSet;
 import activeSegmentation.prj.ProjectInfo;
@@ -71,17 +72,13 @@ public class InstanceUtil implements ASCommon {
 		
 		final int size=stack.getSize();
 		final double[] values = new double[ size + 1 ];
-		int n = 0;
+		//int n = 0;
 
-		if( colorFeatures == false || oldColorFormat == true)
-		{
-			for (int z=0; z<size; z++, n++)		
+		if( colorFeatures == false || oldColorFormat == true){
+			for (int z=0; z<size; z++ )		
 				values[ z ] = stack.getVoxel( x, y, z );
-		}
-		else
-		{
-			for (int z=0; z <  size; z++, n++)		
-			{
+		} else {
+			for (int z=0; z <  size; z++ ){
 				int c  = (int) stack.getVoxel( x, y, z );
 				int r = (c&0xff0000)>>16;
 				int g = (c&0xff00)>>8;
@@ -145,8 +142,7 @@ public class InstanceUtil implements ASCommon {
 	@SuppressWarnings("unused")
 	public static IDataSet readDataFromARFF(String filename){
 		try{
-			BufferedReader reader = new BufferedReader(
-					new FileReader(filename));
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			try{
 				Instances data = new Instances(reader);
 				// setting class attribute
@@ -156,10 +152,11 @@ public class InstanceUtil implements ASCommon {
 			} catch(IOException e){
 				e.printStackTrace();
 				IJ.showMessage("IOException");
-				}
+			}
+			
 		} catch(FileNotFoundException e){
 			IJ.showMessage("Arff file not found!");
-			}
+		}
 		return null;
 	}
 	
@@ -178,6 +175,7 @@ public class InstanceUtil implements ASCommon {
 					f.createNewFile();
 				} catch (IOException e1) {
 					e1.printStackTrace();
+					return false;
 				}
 			try{
 				out = new BufferedWriter(
@@ -208,13 +206,52 @@ public class InstanceUtil implements ASCommon {
 		}
 		
 		
+		public static boolean writeDataToTXT(String outputstr, ProjectInfo projectInfo)	{
+
+			BufferedWriter out = null;
+			//projectInfo.getProjectType().toString();
+			final String filename=projectInfo.getProjectPath()+
+					offsetDir+learnDir+"trainingdata.txt" ;
+			System.out.println("Saving "+filename);
+			File f=new File(filename);
+			if (!f.exists())
+				try {
+					f.createNewFile();
+					System.out.println("Empty File Created:- " + f.length());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					return false;
+				}
+			try{
+				out = new BufferedWriter(
+						new OutputStreamWriter(
+								new FileOutputStream( filename ) ) );
+ 				out.write("Classifier summary\r\n");
+				out.write(outputstr);
+			}	catch(IOException e)		{
+				IJ.showMessage("Exception while saving data as TXT file");
+				e.printStackTrace();
+				return false;
+			}	finally{
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			return true;
+
+		}
+		
+		
+		
 		/**
 		 * Load a Weka model (classifier) from a file
 		 * @param filename complete path and file name
 		 * @return classifier
 		 */
-		public static AbstractClassifier readClassifier(String filename)
-		{
+		public static AbstractClassifier readClassifier(String filename){
 			AbstractClassifier cls = null;
 			// deserialize model
 			try {
@@ -237,15 +274,10 @@ public class InstanceUtil implements ASCommon {
 		 * @param filename name (with complete path) of the destination file
 		 * @return false if error
 		 */
-		public static boolean saveClassifier(
-				AbstractClassifier classifier,
-				Instances trainHeader,
-				String filename)
-		{
+		public static boolean saveClassifier(AbstractClassifier classifier,	Instances trainHeader,String filename){
 			File sFile = null;
 			boolean saveOK = true;
- 		 
-
+ 		
 			try {
 				sFile = new File(filename);
 				OutputStream os = new FileOutputStream(sFile);
@@ -282,7 +314,7 @@ public class InstanceUtil implements ASCommon {
 			try {
 				SerializationHelper.write(filename, cls);
 			} catch (Exception e) {
-				System.out.println("Error while writing classifier into a file");
+				System.out.println("Error while writing classifier into " +filename);
 				e.printStackTrace();
 				return false;
 			}
