@@ -62,7 +62,7 @@ public class ClassifierManager implements ASCommon {
 		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			//System.out.println("Classifier Manager: in training");
-	
+			// do we need this?
 			String filename=folder.getCanonicalPath()+fs+metaInfo.getGroundtruth();
 			//IJ.log(filename);
 			if (metaInfo.getGroundtruth()!=null && !metaInfo.getGroundtruth().isEmpty()){
@@ -76,10 +76,11 @@ public class ClassifierManager implements ASCommon {
 			} else {
 				dataset=dataManager.getDataSet();
 			}
-			//System.out.println("writing file");
+		
 	
 			currentClassifier.buildClassifier(dataset);
-			//
+			
+			// move to evaluation;
 			System.out.println("Classifier summary");
 			
 			String outputstr=currentClassifier.toString();
@@ -89,7 +90,7 @@ public class ClassifierManager implements ASCommon {
 
 			outputstr+= currentClassifier.evaluateModel(dataset);
 			 
-			
+			//Wring output-> move to evaluation;
 			InstanceUtil.writeDataToTXT(outputstr, metaInfo);
 			
 			

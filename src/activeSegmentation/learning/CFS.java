@@ -15,6 +15,11 @@ public class CFS implements IFeatureSelection {
 	private AttributeSelection filter;
 	
 	private String selectionName="CFS";
+	
+	/*
+	 * 
+	 */
+	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
 		//ASEvaluation asEvaluation=
@@ -33,7 +38,6 @@ public class CFS implements IFeatureSelection {
 		// Apply filter
 		try {
 			filter.setInputFormat(trainingData);
-
 			filteredIns = Filter.useFilter(trainingData, filter);
 		} catch (Exception e) {
 			
@@ -42,6 +46,7 @@ public class CFS implements IFeatureSelection {
 		return new WekaDataSet(filteredIns);
 	}
 	
+	@Override
 	public IDataSet applyOnTestData(IDataSet data){
 		Instances filteredIns = null;
 		Instances testData= data.getDataset();
@@ -56,7 +61,6 @@ public class CFS implements IFeatureSelection {
 
 	@Override
 	public String getName() {
-		
 		return this.selectionName;
 	}
 
