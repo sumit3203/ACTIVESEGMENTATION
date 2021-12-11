@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/pixlib-1-0.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/scale-1-0.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/weka.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/FastRandomForest_0.99.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
