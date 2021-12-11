@@ -161,7 +161,7 @@ public class InstanceUtil implements ASCommon {
 		//@Override
 		public static boolean writeDataToARFF(Instances data, ProjectInfo projectInfo)	{
 			BufferedWriter out = null;
-			//projectInfo.getProjectType().toString();
+			 
 			final String filename=projectInfo.getProjectPath()+
 					offsetDir+learnDir+"trainingdata.arff" ;
 			System.out.println("Saving "+filename);
@@ -205,7 +205,7 @@ public class InstanceUtil implements ASCommon {
 		public static boolean writeDataToTXT(String outputstr, ProjectInfo projectInfo)	{
 
 			BufferedWriter out = null;
-			//projectInfo.getProjectType().toString();
+	
 			final String filename=projectInfo.getProjectPath()+
 					offsetDir+learnDir+"trainingdata.txt" ;
 			System.out.println("Saving "+filename);
@@ -270,7 +270,7 @@ public class InstanceUtil implements ASCommon {
 		 * @param filename name (with complete path) of the destination file
 		 * @return false if error
 		 */
-		public static boolean saveClassifier(AbstractClassifier classifier,	Instances trainHeader,String filename){
+	/*	public static boolean saveClassifier(AbstractClassifier classifier,	Instances trainHeader,String filename){
 			File sFile = null;
 			boolean saveOK = true;
  		
@@ -297,7 +297,7 @@ public class InstanceUtil implements ASCommon {
 
 			return saveOK;
 		}
-
+*/
 		/**
 		 * Write classifier into a file
 		 *  based on TWS saveClassifier
@@ -305,7 +305,9 @@ public class InstanceUtil implements ASCommon {
 		 * @param filename name (with complete path) of the destination file
 		 * @return false if error
 		 */
-		public static boolean writeClassifier(AbstractClassifier cls, String filename){
+		public static boolean writeClassifier(AbstractClassifier cls, ProjectInfo projectInfo){
+			final String filename=projectInfo.getProjectPath()+
+					offsetDir+learnDir+"classifier.model" ;
 			try {
 				SerializationHelper.write(filename, cls);
 			} catch (Exception e) {

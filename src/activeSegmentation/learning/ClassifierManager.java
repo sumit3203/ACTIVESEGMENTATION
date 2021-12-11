@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
+import weka.classifiers.AbstractClassifier;
 //import weka.classifiers.Evaluation;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
@@ -80,6 +81,14 @@ public class ClassifierManager implements ASCommon {
 	
 			currentClassifier.buildClassifier(dataset);
 			
+			if(dataset!=null)
+				InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
+			
+			if (currentClassifier!=null)
+				InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), metaInfo);
+
+			dataManager.writeMetaInfo(metaInfo);		
+			
 			// move to evaluation;
 			System.out.println("Classifier summary");
 			
@@ -106,10 +115,14 @@ public class ClassifierManager implements ASCommon {
 	
 	public void saveLearningMetaData(){	
 		metaInfo= dataManager.getMetaInfo();
-		if(dataset!=null){
+		/*
+		if(dataset!=null)
 			InstanceUtil.writeDataToARFF(dataset.getDataset(), metaInfo);
-		}
-
+		
+		if (currentClassifier!=null)
+			InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), metaInfo);
+		 */
+		
 		dataManager.writeMetaInfo(metaInfo);		
 	}
 
