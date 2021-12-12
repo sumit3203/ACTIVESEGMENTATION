@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -23,6 +21,7 @@ import javax.swing.event.ListSelectionListener;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.learning.ClassifierManager;
+import activeSegmentation.learning.weka.WekaClassifier;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.core.OptionHandler;
@@ -33,32 +32,38 @@ import weka.gui.PropertyPanel;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import javax.swing.ImageIcon;
 
-
+/**
+ * This is Weka-specfic panel, so it is OK to expose Weka classes. 
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
 public class LearningPanel implements Runnable, ASCommon {
-
-  private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
-  private String defaultOptions;
-  private String defaultClassifierName;
-  private ProjectManager projectManager;
-  private ProjectInfo projectInfo;
  
+  //platform-level variables
+  private ProjectManager projectManager;
+  private ProjectInfo projectInfo;	
+  private JList<String> featureSelList;	
+  
+  // class-specific variables
+  private String defaultOptions="";
+  private String defaultClassifierName="";  
+  private boolean hasChanged=false;  
+  
+  //UI variables
   private final JFrame frame = new JFrame("Learning");
-
-  private JList<String> featureSelList;
   private final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 1, "Load");
   private final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
   private ClassifierManager learningManager;
   
-  private boolean hasChanged=false;
-  //Weka-specific class
-  AbstractClassifier acls=null;
-  
+  //Weka-specific variables
+  private AbstractClassifier acls=null;
+  private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
+   
   /**
    * 
    * @param projectManager

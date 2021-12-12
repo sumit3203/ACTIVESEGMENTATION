@@ -12,7 +12,7 @@ import java.util.Set;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
-import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.learning.weka.WekaDataSet;
 import activeSegmentation.prj.ClassInfo;
 import activeSegmentation.prj.ProjectInfo;
 import ij.gui.Roi;

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeature;
-import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.learning.weka.WekaDataSet;
 import activeSegmentation.prj.ClassInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.util.InstanceUtil;

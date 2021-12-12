@@ -21,6 +21,7 @@ import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.weka.WekaClassifier;
 
 
 

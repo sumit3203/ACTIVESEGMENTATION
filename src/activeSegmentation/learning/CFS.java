@@ -7,6 +7,7 @@ import static activeSegmentation.FilterType.FEATURE;
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.weka.WekaDataSet;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.core.Instances;

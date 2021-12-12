@@ -5,6 +5,7 @@ import static activeSegmentation.FilterType.FEATURE;
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.weka.WekaDataSet;
 import weka.filters.unsupervised.attribute.PrincipalComponents;
 import weka.core.Instances;
 import weka.filters.Filter;
