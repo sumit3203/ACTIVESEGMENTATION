@@ -34,6 +34,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import activeSegmentation.*;
+import activeSegmentation.feature.weka.PixelInstanceCreator;
+import activeSegmentation.feature.weka.RoiInstanceCreator;
 import activeSegmentation.gui.RandomLUT;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.*;
