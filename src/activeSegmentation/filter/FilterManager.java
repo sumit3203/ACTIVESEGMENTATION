@@ -78,11 +78,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			System.out.println("plugin path: "+jars);
 			if (jars!=null)
 				loadFilters(jars);
-			IJ.log("Filters Loaded");
+			IJ.log("Filters loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-			IJ.log("Filters NOT Loaded. Check pluginPath variable");
+			IJ.log("Filters NOT loaded. Check pluginPath variable");
 		}
 
 		//this.featureManager= featureManager;
@@ -278,8 +278,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 	public void enableFilter(String key) {
 		if(filterMap.get(key).isEnabled()){
 			filterMap.get(key).setEnabled(false);	
-		}
-		else{
+		}else{
 			filterMap.get(key).setEnabled(true);	
 		}
 	}
