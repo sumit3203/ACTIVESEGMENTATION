@@ -1,4 +1,4 @@
-package activeSegmentation.parallel;
+package ijaux.parallel;
 
 
 /*
