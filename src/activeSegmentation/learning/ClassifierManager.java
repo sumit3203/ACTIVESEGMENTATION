@@ -34,7 +34,7 @@ public class ClassifierManager implements ASCommon {
 
 	private IDataSet dataset;
 	private ForkJoinPool pool=  new ForkJoinPool();
-	private Map<String,IFeatureSelection> featureMap=new HashMap<>();
+	private ArrayList<IFeatureSelection> featureMap=new ArrayList<>();
 	
 	public static final int PREDERR=-1;
 	
@@ -47,8 +47,8 @@ public class ClassifierManager implements ASCommon {
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
 	 	
-		featureMap.put("CFS", new CFS());
-		featureMap.put("PCA", new PCA());
+		featureMap.add(new CFS());
+		featureMap.add(new PCA());
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 	}
@@ -162,8 +162,8 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 * @return
 	 */
-	public Set<String> getFeatureSelList() {
-		return featureMap.keySet();
+	public ArrayList<IFeatureSelection> getFeatureSelList() {
+		return featureMap;
 	}
 
 	/**

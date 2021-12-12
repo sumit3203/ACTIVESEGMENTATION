@@ -39,19 +39,6 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 */
 	private Classifier classifier;
 
-	/*
-	private ProjectInfo metaInfo=null;
-	
-    @Override
-    public ProjectInfo getMetaInfo() {
-		return metaInfo;
-	}
-
-	@Override
-	public void setMetaInfo(ProjectInfo metaInfo) {
-		this.metaInfo = metaInfo;
-	}
-	*/
 	
 	public WekaClassifier(Classifier iClassifier) {
 	   this.classifier= iClassifier;

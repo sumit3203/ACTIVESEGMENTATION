@@ -2,6 +2,9 @@ package activeSegmentation.learning;
 
 
 
+import static activeSegmentation.FilterType.FEATURE;
+
+import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import weka.attributeSelection.BestFirst;
@@ -10,11 +13,10 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 
+@AFilter(key="CFS", value="Correlation Feature Selection", type=FEATURE)
 public class CFS implements IFeatureSelection {
 
 	private AttributeSelection filter;
-	
-	private String selectionName="CFS";
 	
 	/*
 	 * 
@@ -22,7 +24,7 @@ public class CFS implements IFeatureSelection {
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-		//ASEvaluation asEvaluation=
+
 		Instances trainingData= data.getDataset();
 		trainingData.setClassIndex(trainingData.numAttributes()-1);
 		 filter = new AttributeSelection();
@@ -59,9 +61,5 @@ public class CFS implements IFeatureSelection {
 		return new WekaDataSet(filteredIns);
 	}
 
-	@Override
-	public String getName() {
-		return this.selectionName;
-	}
 
 }
