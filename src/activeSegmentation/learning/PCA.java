@@ -1,16 +1,20 @@
 package activeSegmentation.learning;
 
+import static activeSegmentation.FilterType.FEATURE;
+
+import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import weka.filters.unsupervised.attribute.PrincipalComponents;
 import weka.core.Instances;
 import weka.filters.Filter;
 
+@AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
 public class PCA implements IFeatureSelection {
 
 private PrincipalComponents filter;
 	
-	private String selectionName="PCA";
+	
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
@@ -44,12 +48,6 @@ private PrincipalComponents filter;
 			e.printStackTrace();
 		}
 		return new WekaDataSet(filteredIns);
-	}
-
-	@Override
-	public String getName() {
-		
-		return this.selectionName;
 	}
 
 }

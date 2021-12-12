@@ -51,17 +51,15 @@ import java.util.zip.ZipInputStream;
 public class FilterManager extends URLClassLoader implements IFilterManager, IUtil {
 
 	private Map<String, IFilter> filterMap= new HashMap<>();
-
-
-
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
-
 	private ProjectType projectType;
 
-	// what is the use?
-	//private FeatureManager  featureManager;
-
+	/**
+	 * 
+	 * @param projectManager
+	 * @param featureManager
+	 */
 	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 
@@ -78,24 +76,23 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			System.out.println("plugin path: "+jars);
 			if (jars!=null)
 				loadFilters(jars);
-			IJ.log("Filters Loaded");
+			IJ.log("Filters loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-			IJ.log("Filters NOT Loaded. Check pluginPath variable");
+			IJ.log("Filters NOT loaded. Check pluginPath variable");
 		}
-
-		//this.featureManager= featureManager;
+ 
 	}
 
-
+	/**
+	 * @param plugins
+	 */
 	@Override
-	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
-	IOException, ClassNotFoundException {
+	public  void loadFilters(List<String> plugins) throws 
+	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
-		//File f=new File(home);
-		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<>();
 		String cp=System.getProperty("java.class.path");
 		for(String plugin: plugins){
@@ -110,9 +107,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		System.out.println("setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
-
-
-
 
 		for(String plugin: classes){
 			System.out.println("checking "+ plugin);
@@ -146,7 +140,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 				} 
 
 			} // end for
-			} catch (ClassNotFoundException ex) {
+			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
 				System.out.println("error:" + plugin +"not found");
 			}
 
@@ -172,23 +166,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		}
 	}
 
-	/*
-	public List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<>();
-		File folder = new File(directory);
-		if (!folder.exists())
-			throw new RuntimeException(directory+" does not exist ");
-		File[] images = folder.listFiles();
-		if (images==null) 
-				throw new RuntimeException("no files found in "+directory);
-		for (File file : images) {
-			if (file.isFile()) {
-				imageList.add(file.getName());
-			}
-		}
-		return imageList;
-	}
-	*/
 
 	@Override
 	public void applyFilters(){
@@ -278,8 +255,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 	public void enableFilter(String key) {
 		if(filterMap.get(key).isEnabled()){
 			filterMap.get(key).setEnabled(false);	
-		}
-		else{
+		}else{
 			filterMap.get(key).setEnabled(true);	
 		}
 	}

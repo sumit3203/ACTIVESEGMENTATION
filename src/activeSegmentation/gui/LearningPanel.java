@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -29,6 +32,7 @@ import weka.gui.PropertyPanel;
 
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.WekaClassifier;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
@@ -39,8 +43,8 @@ import javax.swing.ImageIcon;
 public class LearningPanel implements Runnable, ASCommon {
 
   private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
-  private String originalOptions;
-  private String originalClassifierName;
+  private String defaultOptions;
+  private String defaultClassifierName;
   private ProjectManager projectManager;
   private ProjectInfo projectInfo;
  
@@ -50,6 +54,10 @@ public class LearningPanel implements Runnable, ASCommon {
   private final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 1, "Load");
   private final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
   private ClassifierManager learningManager;
+  
+  private boolean hasChanged=false;
+  //Weka-specific class
+  AbstractClassifier acls=null;
   
   /**
    * 
@@ -68,9 +76,9 @@ public class LearningPanel implements Runnable, ASCommon {
    */
   public void doAction(ActionEvent event)  {
     if (event == SAVE_BUTTON_PRESSED)     {
-      AbstractClassifier testClassifier=getClassifier();    
-      if(testClassifier!=null) {
-    	  IClassifier classifier = new WekaClassifier(testClassifier);
+      //updateClassifier(cls);    
+      if(acls!=null && hasChanged) {
+    	  IClassifier classifier = new WekaClassifier(acls);
           
           learningManager.setClassifier(classifier);
           learningManager.saveLearningMetaData();
@@ -86,8 +94,23 @@ public class LearningPanel implements Runnable, ASCommon {
     if (event == LOAD_BUTTON_PRESSED)     {
     	LearningInfo li=learningManager.getLearningMetaData();
     	String[] options= li.getOptionsArray();
-    	String optionsStr = Utils.joinOptions(options);
-    	System.out.println(optionsStr);
+  
+    	String cname=li.getClassifierName();
+    	System.out.println(cname);
+    	try {
+			acls = (AbstractClassifier) Class.forName(cname).newInstance();
+			//cls.setOptions(options);		
+			IClassifier classifier = new WekaClassifier(acls);
+	        learningManager.setClassifier(classifier);
+	        wekaClassifierEditor.setClassType(Classifier.class);
+	        wekaClassifierEditor.setValue(learningManager.getClassifier());
+	        defaultOptions = Utils.joinOptions(options);
+	        System.out.println(defaultOptions);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    
     	
     } // end LOAD
   }
@@ -104,7 +127,7 @@ private void showPanel() {
 	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.getContentPane().setBackground(Color.GRAY);
     frame.setLocationRelativeTo(null);
-    frame.setSize(600, 250);
+    frame.setSize(600, 300);
     
     
     final int xOffsetCol1=10;
@@ -116,14 +139,14 @@ private void showPanel() {
     JPanel learningJPanel = new JPanel();
     learningJPanel.setBorder(BorderFactory.createTitledBorder("Learning"));
     
-    PropertyPanel wekaCEPanel = new PropertyPanel(this.wekaClassifierEditor);
+    PropertyPanel wekaCEPanel = new PropertyPanel(wekaClassifierEditor);
     wekaClassifierEditor.setClassType(Classifier.class);
-    wekaClassifierEditor.setValue(this.learningManager.getClassifier());
-    Object c = this.wekaClassifierEditor.getValue();
-    originalOptions = "";
-    originalClassifierName = c.getClass().getName();
+    wekaClassifierEditor.setValue(learningManager.getClassifier());
+    Object c = wekaClassifierEditor.getValue();
+    defaultOptions = "";
+    defaultClassifierName = c.getClass().getName();
     if ((c instanceof OptionHandler)) {
-      originalOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
+      defaultOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
     }
     
     wekaCEPanel.setBounds(30, 30, 250, 30);
@@ -142,18 +165,22 @@ private void showPanel() {
     bg.add(activeLearning);
     options.add(pasiveLearning);
     options.add(activeLearning);
-    pasiveLearning.setSelected(false);
+    pasiveLearning.setSelected(true);
     
     pasiveLearning.addItemListener(new ItemListener() {  
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			projectInfo.getLearning().setFeatureSelection(PASSIVELEARNING);
+			hasChanged=true;
+			updateClassifier(); 
 		}  
      });  
     activeLearning.addItemListener(new ItemListener() {  
         @Override
 		public void itemStateChanged(ItemEvent e) {               
         	projectInfo.getLearning().setFeatureSelection(ACTIVELEARNING);
+        	hasChanged=true;
+        	updateClassifier(); 
         }  
      });  
     
@@ -164,25 +191,25 @@ private void showPanel() {
     featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
     featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
     DefaultListModel<String> model = new DefaultListModel<>();
-    model.addElement("NONE");
-    model.addElement("Principle Component Analysis");
-    model.addElement("Correlation Based Selection");
+    featureSelectionUI(model);
  
-    this.featureSelList = new JList<>(model);
-    this.featureSelList.setBackground(Color.WHITE);
-    this.featureSelList.setSelectedIndex(0);
+    featureSelList = new JList<>(model);
+    featureSelList.setBackground(Color.WHITE);
+    featureSelList.setSelectedIndex(0);
     featureSelList.addListSelectionListener(new ListSelectionListener() {
         @Override
 		public void valueChanged(ListSelectionEvent evt) {
         	if (!featureSelList.getValueIsAdjusting()) {
         		final String fv=featureSelList.getSelectedValue();
-        		System.out.println(fv);
+        		//System.out.println(fv);
         		projectInfo.getLearning().setLearningOption(fv);
+        		hasChanged=true;
+        		updateClassifier(); 
         	}
         }
       });
     
-    featurePanel.add(this.featureSelList);
+    featurePanel.add(featureSelList);
     
     
 
@@ -200,38 +227,51 @@ private void showPanel() {
     aPanel.add(IOpanel);
     aPanel.add(options);
     
-    this.frame.add(aPanel);
-    this.frame.setVisible(true);
+    frame.add(aPanel);
+    frame.setVisible(true);
+    frame.setResizable(false);
+}
+
+/**
+ * @param model
+ */
+private void featureSelectionUI(DefaultListModel<String> model) {
+	model.addElement("NONE");
+	ArrayList<IFeatureSelection> compset=this.learningManager.getFeatureSelList();
+	for (IFeatureSelection comp:compset) {
+		String s=comp.getName();
+		model.addElement(s);
+	}
 }
   
 /**
  * 
  * @return
  */
-  public AbstractClassifier getClassifier()   {
-	System.out.println("Learning panel: in getClassifier");
-    Object c = wekaClassifierEditor.getValue();
-    String options = "";
-    String[] optionsArray = ((OptionHandler)c).getOptions();
-    System.out.println(originalOptions);
-    if (c instanceof OptionHandler) {
-      options = Utils.joinOptions(optionsArray);
-    }
-    if ((!originalClassifierName.equals(c.getClass().getName())) || (!originalOptions.equals(options))) {
-      try {
-        final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
-        cls.setOptions(optionsArray);
-        
-        final LearningInfo li=projectInfo.getLearning();
-        li.setClassifier( cls);
-        li.updateOptionList();
-        return cls;
-      } catch (Exception ex)    {
-        ex.printStackTrace();
-      }
-    }
-    return null;
-  }
+private void updateClassifier()   {
+	System.out.println("Learning panel: in updateClassifier");
+	Object c = wekaClassifierEditor.getValue();
+	String options = "";
+	String[] optionsArray = ((OptionHandler)c).getOptions();
+	System.out.println(defaultOptions);
+	if (c instanceof OptionHandler) {
+		options = Utils.joinOptions(optionsArray);
+	}
+	if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
+		try {
+			final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
+			cls.setOptions(optionsArray);
+
+			final LearningInfo li=projectInfo.getLearning();
+			li.setClassifier( cls);
+			li.updateOptionList();
+			hasChanged=true;
+			acls= cls;
+		} catch (Exception ex)    {
+			ex.printStackTrace();
+		}
+	}
+}
   
   private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)  {
     JButton button = new JButton(label, icon);

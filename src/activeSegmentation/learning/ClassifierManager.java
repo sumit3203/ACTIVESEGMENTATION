@@ -27,15 +27,16 @@ import activeSegmentation.IFeatureSelection;
 public class ClassifierManager implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
-	Map<String,IClassifier> classifierMap= new HashMap< >();
-	private ProjectManager dataManager;
+	//private Map<String,IClassifier> classifierMap= new HashMap< >();
+	private ProjectManager projectMan;
 	private ProjectInfo projectInfo;
 	private List<String> learningList;
 
 	private IDataSet dataset;
 	private ForkJoinPool pool=  new ForkJoinPool();
-	private Map<String,IFeatureSelection> featureMap;
+	private ArrayList<IFeatureSelection> featureMap=new ArrayList<>();
 	
+	public static final int PREDERR=-1;
 	
 	/**
 	 * 
@@ -45,11 +46,10 @@ public class ClassifierManager implements ASCommon {
 		learningList= new ArrayList<>();
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
-		
-		featureMap=new HashMap<>();
-		featureMap.put("CFS", new CFS());
-		featureMap.put("PCA", new PCA());
-		this.dataManager= dataManager;
+	 	
+		featureMap.add(new CFS());
+		featureMap.add(new PCA());
+		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 	}
 	
@@ -57,7 +57,7 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 */
 	public void trainClassifier(){
-    	projectInfo= dataManager.getMetaInfo();
+    	projectInfo= projectMan.getMetaInfo();
     	System.out.println("Classifier Manager: in training");
     	File folder = new File(projectInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
@@ -73,10 +73,10 @@ public class ClassifierManager implements ASCommon {
 				//System.out.println("ClassifierManager: in learning");
 			}
 			if(dataset!=null) {
-				IDataSet data = dataManager.getDataSet();
+				IDataSet data = projectMan.getDataSet();
 				dataset.getDataset().addAll(data.getDataset());
 			} else {
-				dataset=dataManager.getDataSet();
+				dataset=projectMan.getDataSet();
 			}
 		
 	
@@ -88,7 +88,7 @@ public class ClassifierManager implements ASCommon {
 			if (currentClassifier!=null)
 				InstanceUtil.writeClassifier( (AbstractClassifier) currentClassifier.getClassifier(), projectInfo);
 
-			dataManager.writeMetaInfo(projectInfo);		
+			projectMan.writeMetaInfo(projectInfo);		
 			
 			// move to evaluation;
 			System.out.println("Classifier summary");
@@ -112,10 +112,12 @@ public class ClassifierManager implements ASCommon {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public void saveLearningMetaData(){	
-		projectInfo= dataManager.getMetaInfo();
-		dataManager.writeMetaInfo(projectInfo);		
+		projectInfo= projectMan.getMetaInfo();
+		projectMan.writeMetaInfo(projectInfo);		
 	}
 
 	/**
@@ -130,12 +132,20 @@ public class ClassifierManager implements ASCommon {
 		return li;
 	}
 
-
+	/**
+	 * 
+	 * @param classifier
+	 */
 	public void setClassifier(Object classifier) {
 		currentClassifier = (WekaClassifier)classifier;		 	
 		//System.out.println(currentClassifier.toString());
 	}
 
+	/**
+	 * 
+	 * @param dataSet
+	 * @return
+	 */
 	public double[] applyClassifier(IDataSet dataSet){
 			final int ni=dataSet.getNumInstances();
 			double[] classificationResult = new double[ni];	
@@ -148,11 +158,19 @@ public class ClassifierManager implements ASCommon {
 		return classificationResult;
 	}
 
-	public Set<String> getFeatureSelList() {
-		return featureMap.keySet();
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<IFeatureSelection> getFeatureSelList() {
+		return featureMap;
 	}
 
-
+	/**
+	 * 
+	 * @param instance
+	 * @return
+	 */
 	public double predict(Instance instance) {
 		try {
 			return currentClassifier.classifyInstance(instance);
@@ -162,10 +180,13 @@ public class ClassifierManager implements ASCommon {
 		return PREDERR;
 	}
 
-	public static final int PREDERR=-1;
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Object getClassifier() {
-		return this.currentClassifier.getClassifier();
+		return currentClassifier.getClassifier();
 	}
 
 }

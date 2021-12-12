@@ -19,11 +19,13 @@ import weka.classifiers.AbstractClassifier;
 public class LearningInfo {
 	
 	@JsonIgnore
-	AbstractClassifier classifier;
+	private AbstractClassifier classifier;
 	
 	private List<String> optionList = new ArrayList<>();
 	
 	private String featureSelection="";
+	
+	private String classifierName="";
 	
 	private String learningOption="";
 	
@@ -48,6 +50,7 @@ public class LearningInfo {
 	 *  to be used for loading
 	 * @return
 	 */
+	@JsonIgnore
 	public String[] getOptionsArray() {
 		Object[] objarr=optionList.toArray();
 		String[] strar=new String[objarr.length];	
@@ -89,7 +92,7 @@ public class LearningInfo {
 	 * @return
 	 */
 	public AbstractClassifier getClassifier()	{
-		return this.classifier;
+		return classifier;
 	}
 
 	/**
@@ -98,6 +101,7 @@ public class LearningInfo {
 	 */
 	public void setClassifier(AbstractClassifier cls)	{
 		this.classifier =  cls;
+		classifierName=cls.getClass().getName();
 	}
 
 	/**
@@ -154,9 +158,14 @@ public class LearningInfo {
 	@Override
 	public String toString( ) {
 		String ret= "options="+optionList.toString()+"\n";
+		ret+="classifier="+classifierName+"\n";
 		ret+="featureSelection="+featureSelection+"\n";
 		ret+="learningOption="+learningOption+"\n";
 		return ret;
+	}
+
+	public String getClassifierName() {
+		return classifierName;
 	}
 	
 }

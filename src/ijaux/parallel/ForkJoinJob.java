@@ -1,4 +1,4 @@
-package activeSegmentation.parallel;
+package ijaux.parallel;
 
 
 import java.util.concurrent.Callable;

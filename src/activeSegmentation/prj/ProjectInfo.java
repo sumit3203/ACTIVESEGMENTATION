@@ -30,7 +30,7 @@ public class ProjectInfo{
 	// Public fields
 	///////////////////
 	
-	public String projectName;
+	public String projectName="Project 1";
 	
 	public String projectDescription="Default description";
 	
@@ -45,8 +45,7 @@ public class ProjectInfo{
 	private ProjectType projectType=null;
 	private Date createdDate=new Date();
 	private Date modifyDate=new Date();
-	
-	
+		
 	
 	@JsonProperty(value="classes")
 	private int classes=-1;
@@ -67,10 +66,10 @@ public class ProjectInfo{
 	
 	@JsonProperty(value="learning") 
 	private LearningInfo learning = new LearningInfo();
-	/*
-	 * JSON ignore
-	 */
 	
+	/*
+	 * JSON ignore part
+	 */
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
 	
@@ -79,18 +78,16 @@ public class ProjectInfo{
 	
 	@JsonIgnore
 	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
-	
-	
+		
 	@JsonIgnore
 	private int featureLength;
 	
+	@JsonIgnore
 	private final	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	////////////////////////////////////////////
 	//  Methods
 	///////////////////////////////////////////
-  
-
 	/**
 	 * 
 	 * @return String
@@ -103,16 +100,13 @@ public class ProjectInfo{
 	 * 
 	 * @param createdDate
 	 */
-	public void setCreatedDate(String createdDate)	{
-	
+	public void setCreatedDate(String createdDate)	{	
 		try {
 			this.createdDate = sdf.parse(createdDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
 
 	/**
 	 * 
@@ -182,9 +176,6 @@ public class ProjectInfo{
 		this.learning = learning;
 	}
 	
-	
-	
-
 	/**
 	 * 
 	 * @param featureInfo
@@ -217,12 +208,14 @@ public class ProjectInfo{
 //		this.version = version;
 //	}
 
-
-
 	public ProjectType getProjectType() {
 		return projectType;
 	}
-
+	
+	/**
+	 * 
+	 * @param projectType
+	 */
 	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
 	}
@@ -283,8 +276,6 @@ public class ProjectInfo{
 		return testingStack;
 	}
 
-	
-
 	/**
 	 * 
 	 * @param testingStack
@@ -308,8 +299,6 @@ public class ProjectInfo{
 	public void setNClasses(int classes)	{
 		this.classes = classes;
 	}
-
-	
 	
 	/**
 	 * 

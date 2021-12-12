@@ -3,7 +3,7 @@ package ijaux.moments.zernike;
 import java.util.ArrayList;
 
 /*
- * This classes stores all Radial polynomial upto order m n for individual pixel.
+ * This classes stores all Radial polynomial up to order m n for individual pixel.
  */
 public class Zps {
 
