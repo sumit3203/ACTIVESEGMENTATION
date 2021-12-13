@@ -81,6 +81,11 @@ public class ClassifierManager implements ASCommon {
 			}
 		
 			//TODO select features here;
+			LearningInfo li= projectInfo.getLearning();
+			String cname= li.getLearningOption();
+			
+			if (cname!="") 
+				System.out.println(cname);
 			
 			
 			currentClassifier.buildClassifier(dataset);

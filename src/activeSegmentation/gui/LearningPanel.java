@@ -206,9 +206,15 @@ public class LearningPanel implements Runnable, ASCommon {
 	        @Override
 			public void valueChanged(ListSelectionEvent evt) {
 	        	if (!featureSelList.getValueIsAdjusting()) {
-	        		final String fv=featureSelList.getSelectedValue();
-	        		//System.out.println(fv);
-	        		projectInfo.getLearning().setLearningOption(fv);
+	        		String fv=featureSelList.getSelectedValue();
+	        		System.out.println("Feature selection: " + fv);
+	        		ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelList();
+	        		// NONE is the first choice
+	        		final int ind=featureSelList.getSelectedIndex()-1;
+	        		if (ind>0) {
+	        			fv=compset.get(ind).getClass().getName();
+	        			projectInfo.getLearning().setLearningOption(fv);
+	        		}
 	        		hasChanged=true;
 	        		updateClassifier(); 
 	        	}

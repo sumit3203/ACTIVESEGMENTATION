@@ -22,33 +22,32 @@ private PrincipalComponents filter;
 		Instances trainingData= data.getDataset();
 		trainingData.setClassIndex(trainingData.numAttributes()-1);
 		filter = new PrincipalComponents();
-		
-		Instances filteredIns = null;
-		
-		
+				
 		// Apply filter
 		try {
 			filter.setInputFormat(trainingData);
-
-			filteredIns = Filter.useFilter(trainingData, filter);
+			Instances filteredIns   = Filter.useFilter(trainingData, filter);
+			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
+		return null;
 	}
 	
+	// superfluous method?
 	@Override
 	public IDataSet applyOnTestData(IDataSet data){
-		Instances filteredIns = null;
+
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
-			filteredIns = Filter.useFilter(testData, filter);
+			Instances filteredIns  = Filter.useFilter(testData, filter);
+			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
+		return null;
 	}
 
 }
