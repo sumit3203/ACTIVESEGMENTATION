@@ -49,7 +49,7 @@ public class LearningPanel implements Runnable, ASCommon {
   private ProjectInfo projectInfo;	
   private JList<String> featureSelList;	
   
-  // class-specific variables
+  //class-specific variables
   private String defaultOptions="";
   private String defaultClassifierName="";  
   private boolean hasChanged=false;  
@@ -61,7 +61,7 @@ public class LearningPanel implements Runnable, ASCommon {
   private ClassifierManager learningManager;
   
   //Weka-specific variables
-  private AbstractClassifier acls=null;
+  private AbstractClassifier aclass=null;
   private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
    
   /**
@@ -82,8 +82,8 @@ public class LearningPanel implements Runnable, ASCommon {
   public void doAction(ActionEvent event)  {
     if (event == SAVE_BUTTON_PRESSED)     {
       //updateClassifier(cls);    
-      if(acls!=null && hasChanged) {
-    	  IClassifier classifier = new WekaClassifier(acls);
+      if(aclass!=null && hasChanged) {
+    	  IClassifier classifier = new WekaClassifier(aclass);
           
           learningManager.setClassifier(classifier);
           learningManager.saveLearningMetaData();
@@ -103,19 +103,19 @@ public class LearningPanel implements Runnable, ASCommon {
     	String cname=li.getClassifierName();
     	System.out.println(cname);
     	try {
-			acls = (AbstractClassifier) Class.forName(cname).newInstance();
+			aclass = (AbstractClassifier) Class.forName(cname).newInstance();
 			//cls.setOptions(options);		
-			IClassifier classifier = new WekaClassifier(acls);
+			IClassifier classifier = new WekaClassifier(aclass);
 	        learningManager.setClassifier(classifier);
 	        wekaClassifierEditor.setClassType(Classifier.class);
 	        wekaClassifierEditor.setValue(learningManager.getClassifier());
+	        //TODO pass properly the options onto the classifier
 	        defaultOptions = Utils.joinOptions(options);
 	        System.out.println(defaultOptions);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    
     	
     } // end LOAD
   }
@@ -125,158 +125,156 @@ public class LearningPanel implements Runnable, ASCommon {
     showPanel();
   }
 
-/**
- * 
- */
-private void showPanel() {
-	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    frame.getContentPane().setBackground(Color.GRAY);
-    frame.setLocationRelativeTo(null);
-    frame.setSize(600, 300);
-    
-    
-    final int xOffsetCol1=10;
-    
-    JPanel aPanel = new JPanel();
-    aPanel.setLayout(null);
-    aPanel.setBackground(Color.GRAY);
-    
-    JPanel learningJPanel = new JPanel();
-    learningJPanel.setBorder(BorderFactory.createTitledBorder("Learning"));
-    
-    PropertyPanel wekaCEPanel = new PropertyPanel(wekaClassifierEditor);
-    wekaClassifierEditor.setClassType(Classifier.class);
-    wekaClassifierEditor.setValue(learningManager.getClassifier());
-    Object c = wekaClassifierEditor.getValue();
-    defaultOptions = "";
-    defaultClassifierName = c.getClass().getName();
-    if ((c instanceof OptionHandler)) {
-      defaultOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
-    }
-    
-    wekaCEPanel.setBounds(30, 30, 250, 30);
-    learningJPanel.add(wekaCEPanel);
-    learningJPanel.setBounds(xOffsetCol1, 20, 300, 80);
-    
-    ////////////////////////////////
-    JPanel options = new JPanel();
-    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
-    options.setBounds(xOffsetCol1, 120, 300, 80);
-
-    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
-    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
-    ButtonGroup bg=new ButtonGroup(); 
-    bg.add(pasiveLearning);
-    bg.add(activeLearning);
-    options.add(pasiveLearning);
-    options.add(activeLearning);
-    pasiveLearning.setSelected(true);
-    
-    pasiveLearning.addItemListener(new ItemListener() {  
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			projectInfo.getLearning().setFeatureSelection(PASSIVELEARNING);
-			hasChanged=true;
-			updateClassifier(); 
-		}  
-     });  
-    activeLearning.addItemListener(new ItemListener() {  
-        @Override
-		public void itemStateChanged(ItemEvent e) {               
-        	projectInfo.getLearning().setFeatureSelection(ACTIVELEARNING);
-        	hasChanged=true;
-        	updateClassifier(); 
-        }  
-     });  
-    
-    final int xOffsetCol2=370;
-    
-    /////////////////////////////
-    JPanel featurePanel = new JPanel();
-    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
-    featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
-    DefaultListModel<String> model = new DefaultListModel<>();
-    featureSelectionUI(model);
- 
-    featureSelList = new JList<>(model);
-    featureSelList.setBackground(Color.WHITE);
-    featureSelList.setSelectedIndex(0);
-    featureSelList.addListSelectionListener(new ListSelectionListener() {
-        @Override
-		public void valueChanged(ListSelectionEvent evt) {
-        	if (!featureSelList.getValueIsAdjusting()) {
-        		final String fv=featureSelList.getSelectedValue();
-        		//System.out.println(fv);
-        		projectInfo.getLearning().setLearningOption(fv);
-        		hasChanged=true;
-        		updateClassifier(); 
-        	}
-        }
-      });
-    
-    featurePanel.add(featureSelList);
-    
-    
-
-    
-   ////////////////////////////
-    JPanel IOpanel = new JPanel();
-    IOpanel.setBackground(Color.GRAY);
-    IOpanel.setBounds(xOffsetCol2, 120, 200, 80);
-    IOpanel.add(addButton("Save", null, xOffsetCol2, 120, 200, 50, SAVE_BUTTON_PRESSED));
-    
-    IOpanel.add(addButton("Load", null, xOffsetCol2+200+100, 120, 200, 50, LOAD_BUTTON_PRESSED));
-    
-    aPanel.add(learningJPanel);
-    aPanel.add(featurePanel);
-    aPanel.add(IOpanel);
-    aPanel.add(options);
-    
-    frame.add(aPanel);
-    frame.setVisible(true);
-    frame.setResizable(false);
-}
-
-/**
- * @param model
- */
-private void featureSelectionUI(DefaultListModel<String> model) {
-	model.addElement("NONE");
-	ArrayList<IFeatureSelection> compset=this.learningManager.getFeatureSelList();
-	for (IFeatureSelection comp:compset) {
-		String s=comp.getName();
-		model.addElement(s);
+	/**
+	 * 
+	 */
+	private void showPanel() {
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    frame.getContentPane().setBackground(Color.GRAY);
+	    frame.setLocationRelativeTo(null);
+	    frame.setSize(600, 300);
+	    
+	    
+	    final int xOffsetCol1=10;
+	    
+	    JPanel aPanel = new JPanel();
+	    aPanel.setLayout(null);
+	    aPanel.setBackground(Color.GRAY);
+	    
+	    JPanel learningJPanel = new JPanel();
+	    learningJPanel.setBorder(BorderFactory.createTitledBorder("Learning"));
+	    
+	    PropertyPanel wekaCEPanel = new PropertyPanel(wekaClassifierEditor);
+	    wekaClassifierEditor.setClassType(Classifier.class);
+	    wekaClassifierEditor.setValue(learningManager.getClassifier());
+	    Object c = wekaClassifierEditor.getValue();
+	    defaultOptions = "";
+	    defaultClassifierName = c.getClass().getName();
+	    
+	    if ((c instanceof OptionHandler)) {
+	      defaultOptions = Utils.joinOptions(((OptionHandler)c).getOptions());
+	    }
+	    
+	    wekaCEPanel.setBounds(30, 30, 250, 30);
+	    learningJPanel.add(wekaCEPanel);
+	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 80);
+	    
+	    ////////////////////////////////
+	    JPanel options = new JPanel();
+	    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
+	    options.setBounds(xOffsetCol1, 120, 300, 80);
+	
+	    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
+	    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
+	    ButtonGroup bg=new ButtonGroup(); 
+	    bg.add(pasiveLearning);
+	    bg.add(activeLearning);
+	    options.add(pasiveLearning);
+	    options.add(activeLearning);
+	    pasiveLearning.setSelected(true);
+	    
+	    pasiveLearning.addItemListener(new ItemListener() {  
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				projectInfo.getLearning().setFeatureSelection(PASSIVELEARNING);
+				hasChanged=true;
+				updateClassifier(); 
+			}  
+	     });  
+	    activeLearning.addItemListener(new ItemListener() {  
+	        @Override
+			public void itemStateChanged(ItemEvent e) {               
+	        	projectInfo.getLearning().setFeatureSelection(ACTIVELEARNING);
+	        	hasChanged=true;
+	        	updateClassifier(); 
+	        }  
+	     });  
+	    
+	    final int xOffsetCol2=370;
+	    
+	    /////////////////////////////
+	    JPanel featurePanel = new JPanel();
+	    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
+	    featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
+	    DefaultListModel<String> model = new DefaultListModel<>();
+	    featureSelectionUI(model);
+	 
+	    featureSelList = new JList<>(model);
+	    featureSelList.setBackground(Color.WHITE);
+	    featureSelList.setSelectedIndex(0);
+	    featureSelList.addListSelectionListener(new ListSelectionListener() {
+	        @Override
+			public void valueChanged(ListSelectionEvent evt) {
+	        	if (!featureSelList.getValueIsAdjusting()) {
+	        		final String fv=featureSelList.getSelectedValue();
+	        		//System.out.println(fv);
+	        		projectInfo.getLearning().setLearningOption(fv);
+	        		hasChanged=true;
+	        		updateClassifier(); 
+	        	}
+	        }
+	      });
+	    
+	    featurePanel.add(featureSelList);
+	     
+	   ////////////////////////////
+	    JPanel IOpanel = new JPanel();
+	    IOpanel.setBackground(Color.GRAY);
+	    IOpanel.setBounds(xOffsetCol2, 120, 200, 80);
+	    IOpanel.add(addButton("Save", null, xOffsetCol2, 120, 200, 50, SAVE_BUTTON_PRESSED));
+	    
+	    IOpanel.add(addButton("Load", null, xOffsetCol2+200+100, 120, 200, 50, LOAD_BUTTON_PRESSED));
+	    
+	    aPanel.add(learningJPanel);
+	    aPanel.add(featurePanel);
+	    aPanel.add(IOpanel);
+	    aPanel.add(options);
+	    
+	    frame.add(aPanel);
+	    frame.setVisible(true);
+	    frame.setResizable(false);
 	}
-}
-  
-/**
- * 
- * @return
- */
-private void updateClassifier()   {
-	System.out.println("Learning panel: in updateClassifier");
-	Object c = wekaClassifierEditor.getValue();
-	String options = "";
-	String[] optionsArray = ((OptionHandler)c).getOptions();
-	System.out.println(defaultOptions);
-	if (c instanceof OptionHandler) {
-		options = Utils.joinOptions(optionsArray);
-	}
-	if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
-		try {
-			final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
-			cls.setOptions(optionsArray);
 
-			final LearningInfo li=projectInfo.getLearning();
-			li.setClassifier( cls);
-			li.updateOptionList();
-			hasChanged=true;
-			acls= cls;
-		} catch (Exception ex)    {
-			ex.printStackTrace();
+	/**
+	 * @param model
+	 */
+	private void featureSelectionUI(DefaultListModel<String> model) {
+		model.addElement("NONE");
+		ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelList();
+		for (IFeatureSelection comp:compset) {
+			String s=comp.getName();
+			model.addElement(s);
 		}
 	}
-}
+  
+	/**
+	 * 
+	 * @return
+	 */
+	private void updateClassifier()   {
+		System.out.println("Learning panel: in updateClassifier");
+		Object c = wekaClassifierEditor.getValue();
+		String options = "";
+		String[] optionsArray = ((OptionHandler)c).getOptions();
+		System.out.println(defaultOptions);
+		if (c instanceof OptionHandler) {
+			options = Utils.joinOptions(optionsArray);
+		}
+		if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
+			try {
+				final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
+				cls.setOptions(optionsArray);
+	
+				final LearningInfo li=projectInfo.getLearning();
+				li.setClassifier( cls);
+				li.updateOptionList();
+				hasChanged=true;
+				aclass= cls;
+			} catch (Exception ex)    {
+				ex.printStackTrace();
+			}
+		}
+	}
   
   private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)  {
     JButton button = new JButton(label, icon);

@@ -71,7 +71,7 @@ public class ClassifierManager implements ASCommon {
 			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
 				System.out.println("Classifier Manager: reading ground truth "+filename);
 				dataset=InstanceUtil.readDataFromARFF(filename);
-				//System.out.println("ClassifierManager: in learning");
+				//System.out.println("ClassifiegrManager: in learning");
 			}
 			if(dataset!=null) {
 				IDataSet data = projectMan.getDataSet();
@@ -80,7 +80,7 @@ public class ClassifierManager implements ASCommon {
 				dataset=projectMan.getDataSet();
 			}
 		
-			// select features here;
+			//TODO select features here;
 			
 			
 			currentClassifier.buildClassifier(dataset);
@@ -97,15 +97,13 @@ public class ClassifierManager implements ASCommon {
 			System.out.println("Classifier summary");
 			
 			String outputstr=currentClassifier.toString();
+			// print summary here
 			System.out.println(outputstr);
 			
-			// print summary here
-
 			outputstr+= currentClassifier.evaluateModel(dataset);
 			 
 			//Wring output-> move to evaluation;
 			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
-			
 			
 			// to avoid data creep
 			dataset.delete();
