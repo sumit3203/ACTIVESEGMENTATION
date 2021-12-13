@@ -15,7 +15,7 @@ import java.util.zip.GZIPOutputStream;
 import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
-import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.learning.weka.WekaDataSet;
 import activeSegmentation.prj.ProjectInfo;
 import ij.IJ;
 import ij.ImageStack;

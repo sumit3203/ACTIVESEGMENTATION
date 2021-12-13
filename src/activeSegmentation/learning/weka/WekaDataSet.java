@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package activeSegmentation.learning;
+package activeSegmentation.learning.weka;
 
 import java.io.FileReader;
 import java.io.IOException;

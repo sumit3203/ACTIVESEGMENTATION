@@ -21,6 +21,7 @@ import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.weka.WekaClassifier;
 
 
 
@@ -79,7 +80,9 @@ public class ClassifierManager implements ASCommon {
 				dataset=projectMan.getDataSet();
 			}
 		
-	
+			// select features here;
+			
+			
 			currentClassifier.buildClassifier(dataset);
 			
 			if(dataset!=null)

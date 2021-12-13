@@ -66,7 +66,7 @@ import ijaux.datatype.Pair;
 public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 
-	private Map<String, IMoment<?>> momentMap= new HashMap<String, IMoment<?>>();
+	private Map<String, IMoment<?>> momentMap= new HashMap<>();
 
 
 	private ProjectManager projectManager;
