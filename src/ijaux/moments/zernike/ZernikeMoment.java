@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.datatype.ComplexArray;
 import static java.lang.Math.*;
@@ -78,8 +77,8 @@ public class ZernikeMoment {
         		if(rv[index]==null)
         			rv[index] = new RadialValue(degree,degree);
         		
-        		real=new ArrayList<Double>();
-        		imag=new ArrayList<Double>();
+        		real=new ArrayList<>();
+        		imag=new ArrayList<>();
         		
         		for(int k=0;k<=degree;k++){
         			for(int l=0;l<=k;l++){

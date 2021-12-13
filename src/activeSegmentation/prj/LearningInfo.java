@@ -21,12 +21,16 @@ public class LearningInfo {
 	@JsonIgnore
 	private AbstractClassifier classifier;
 	
+	// options for the Weka engine
 	private List<String> optionList = new ArrayList<>();
 	
+	// feature selection method - class name
 	private String featureSelection="";
 	
+	// class name of the classifier
 	private String classifierName="";
 	
+	// Active or Passive
 	private String learningOption="";
 	
 	private String classifierfile="classifier.model";
@@ -164,6 +168,10 @@ public class LearningInfo {
 		return ret;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getClassifierName() {
 		return classifierName;
 	}

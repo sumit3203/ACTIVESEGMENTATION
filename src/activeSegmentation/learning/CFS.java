@@ -28,8 +28,8 @@ public class CFS implements IFeatureSelection {
 
 		Instances trainingData= data.getDataset();
 		trainingData.setClassIndex(trainingData.numAttributes()-1);
-		 filter = new AttributeSelection();
-		Instances filteredIns = null;
+		filter = new AttributeSelection();
+
 		// Evaluator
 		final CfsSubsetEval evaluator = new CfsSubsetEval();
 		evaluator.setMissingSeparate(true);
@@ -41,25 +41,27 @@ public class CFS implements IFeatureSelection {
 		// Apply filter
 		try {
 			filter.setInputFormat(trainingData);
-			filteredIns = Filter.useFilter(trainingData, filter);
+			Instances filteredIns = Filter.useFilter(trainingData, filter);
+			new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
+		return null;
 	}
 	
 	@Override
 	public IDataSet applyOnTestData(IDataSet data){
-		Instances filteredIns = null;
+
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
-			filteredIns = Filter.useFilter(testData, filter);
+			Instances filteredIns  = Filter.useFilter(testData, filter);
+			new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
+		return null;
 	}
 
 
