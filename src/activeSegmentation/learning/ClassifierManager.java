@@ -80,7 +80,9 @@ public class ClassifierManager implements ASCommon {
 				dataset=projectMan.getDataSet();
 			}
 		
-	
+			// select features here;
+			
+			
 			currentClassifier.buildClassifier(dataset);
 			
 			if(dataset!=null)

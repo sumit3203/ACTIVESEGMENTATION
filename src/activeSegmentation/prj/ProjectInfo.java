@@ -36,7 +36,7 @@ public class ProjectInfo{
 	
 	public String comment = "Default Comment";
 	
-	public final String version="1.0.5";
+	public final String version="1.0.6";
 	
 	////////////////////
 	// Private fields
