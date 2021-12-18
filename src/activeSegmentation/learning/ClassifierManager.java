@@ -2,10 +2,7 @@ package activeSegmentation.learning;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 import weka.classifiers.AbstractClassifier;
@@ -28,7 +25,7 @@ import activeSegmentation.learning.weka.WekaClassifier;
 public class ClassifierManager implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
-	//private Map<String,IClassifier> classifierMap= new HashMap< >();
+
 	private ProjectManager projectMan;
 	private ProjectInfo projectInfo;
 	private List<String> learningList;
@@ -130,12 +127,7 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 */
 	public LearningInfo getLearningMetaData() {
-		LearningInfo li=projectInfo.getLearning();
-		//debug info
-//		if (li!=null) {
-//			System.out.println(li);
-//	 	}
-		return li;
+		return projectInfo.getLearning();
 	}
 
 	/**
