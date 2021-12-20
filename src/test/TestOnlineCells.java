@@ -212,7 +212,7 @@ public class TestOnlineCells {
 		try {
 			trainingData2.addAll(testData);
 			Enumeration<Instance> enums=trainingData2.enumerateInstances();			
-			connStart("C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif2.db");		
+			connStart("C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif.db");		
 			insert(enums,trainInstances,testInstances,cells,randomforest);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
