@@ -55,17 +55,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 	private ProjectInfo projectInfo;
 	private ProjectType projectType;
 
-<<<<<<< Updated upstream
-	// what is the use?
-	//private FeatureManager  featureManager;
-
-=======
 	/**
 	 * 
 	 * @param projectManager
 	 * @param featureManager
 	 */
->>>>>>> Stashed changes
 	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 
@@ -86,16 +80,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-<<<<<<< Updated upstream
-			IJ.log("Filters NOT Loaded. Check pluginPath variable");
-		}
-
-		//this.featureManager= featureManager;
-=======
 			IJ.log("Filters NOT loaded. Check pluginPath variable");
 		}
  
->>>>>>> Stashed changes
 	}
 
 	/**
@@ -107,7 +94,6 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 		//System.out.println("home: "+home);
 		List<String> classes=new ArrayList<>();
-		System.setProperty("java.class.path","C:/PROGRA~4/ImageJ/ij.jar");
 		String cp=System.getProperty("java.class.path");
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
@@ -124,11 +110,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 		for(String plugin: classes){
 			System.out.println("checking "+ plugin);
-<<<<<<< Updated upstream
-			try{
-=======
 			try {
->>>>>>> Stashed changes
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 			for(Class<?> cs:classesList){
@@ -158,16 +140,10 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 				} 
 
 			} // end for
-<<<<<<< Updated upstream
-			} catch (ClassNotFoundException ex) {
-				System.out.println("error:" + plugin +"not found");
-			}
-=======
 			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
 				System.out.println("error:" + plugin +"not found");
 			}
 
->>>>>>> Stashed changes
 		} // end for
 
 		//System.out.println("filter list ");
@@ -246,15 +222,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			return filter.updateSettings(settingsMap);
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
-<<<<<<< Updated upstream
-			return false;}
-		}
-	
-=======
 			return false;
 		}
 	}
->>>>>>> Stashed changes
 
 
 
