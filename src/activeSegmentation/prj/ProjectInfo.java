@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import activeSegmentation.IClassifier;
 import activeSegmentation.ProjectType;
 import ijaux.datatype.Pair;
 
@@ -31,11 +30,13 @@ public class ProjectInfo{
 	// Public fields
 	///////////////////
 	
-	public String projectName;
+	public String projectName="Project 1";
 	
 	public String projectDescription="Default description";
 	
 	public String comment = "Default Comment";
+	
+	public final String version="1.0.6";
 	
 	////////////////////
 	// Private fields
@@ -44,8 +45,7 @@ public class ProjectInfo{
 	private ProjectType projectType=null;
 	private Date createdDate=new Date();
 	private Date modifyDate=new Date();
-	
-	private String version="1.0.0";
+		
 	
 	@JsonProperty(value="classes")
 	private int classes=-1;
@@ -64,14 +64,12 @@ public class ProjectInfo{
 	
 	private String groundtruth="";
 	
-	private String featureSelection="";
+	@JsonProperty(value="learning") 
+	private LearningInfo learning = new LearningInfo();
 	
 	/*
-	 * JSON ignore
+	 * JSON ignore part
 	 */
-	@JsonIgnore
-	private Map<String, String> learning = new HashMap<>();
-	
 	@JsonIgnore
 	private Map<String, String> projectDirectory = new HashMap<>();
 	
@@ -80,19 +78,16 @@ public class ProjectInfo{
 	
 	@JsonIgnore
 	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
-	
-	@JsonIgnore
-	private IClassifier classifier;
-	
+		
 	@JsonIgnore
 	private int featureLength;
 	
+	@JsonIgnore
+	private final	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	////////////////////////////////////////////
 	//  Methods
 	///////////////////////////////////////////
-  
-
 	/**
 	 * 
 	 * @return String
@@ -105,16 +100,13 @@ public class ProjectInfo{
 	 * 
 	 * @param createdDate
 	 */
-	public void setCreatedDate(String createdDate)	{
-	
+	public void setCreatedDate(String createdDate)	{	
 		try {
 			this.createdDate = sdf.parse(createdDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	/**
 	 * 
@@ -141,7 +133,7 @@ public class ProjectInfo{
 	 * @return List<Map<String, String>>
 	 */
 	public List<Map<String, String>> getFilters()	{
-		return this.filters;
+		return filters;
 	}
 
 	/**
@@ -157,7 +149,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<FeatureInfo> getFeatureList()	{
-		return this.featureList;
+		return featureList;
 	}
 
 	/**
@@ -172,18 +164,18 @@ public class ProjectInfo{
 	 * 
 	 * @return
 	 */
-	public Map<String, String> getLearning()	{
-		return this.learning;
+	public LearningInfo getLearning()	{
+		return learning;
 	}
 
 	/**
 	 * 
 	 * @param learning
 	 */
-	public void setLearning(Map<String, String> learning)	{
+	public void setLearning(LearningInfo learning)	{
 		this.learning = learning;
 	}
-
+	
 	/**
 	 * 
 	 * @param featureInfo
@@ -212,16 +204,18 @@ public class ProjectInfo{
 	 * 
 	 * @param version
 	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-
+//	public void setVersion(String version) {
+//		this.version = version;
+//	}
 
 	public ProjectType getProjectType() {
 		return projectType;
 	}
-
+	
+	/**
+	 * 
+	 * @param projectType
+	 */
 	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
 	}
@@ -279,23 +273,7 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public String getTestingStack()	{
-		return this.testingStack;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getFeatureSelection()	{
-		return this.featureSelection;
-	}
-	
-	/**
-	 * 
-	 * @param featureSelection
-	 */
-	public void setFeatureSelection(String featureSelection)	{
-		this.featureSelection = featureSelection;
+		return testingStack;
 	}
 
 	/**
@@ -311,31 +289,15 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public int getClasses()	{
-		return this.classes;
+		return classes;
 	}
 
 	/**
 	 * 
 	 * @param classes
 	 */
-	public void setClasses(int classes)	{
+	public void setNClasses(int classes)	{
 		this.classes = classes;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public IClassifier getClassifier()	{
-		return this.classifier;
-	}
-
-	/**
-	 * 
-	 * @param classifier
-	 */
-	public void setClassifier(IClassifier classifier)	{
-		this.classifier = classifier;
 	}
 	
 	/**
@@ -407,7 +369,6 @@ public class ProjectInfo{
 	 * @return
 	 */
 	public List<String> getPluginPath() {
-		//i think this will be null
 		return pluginPath;
 	}
 
@@ -418,6 +379,8 @@ public class ProjectInfo{
 	public void setPluginPath(List<String> pluginPath) {
 		this.pluginPath = pluginPath;
 	}
+	 
+	
 	
 }// END
 

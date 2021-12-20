@@ -1,5 +1,7 @@
 package activeSegmentation;
 
+import ijaux.datatype.Pair;
+
 /**
  * 				
  *   
@@ -25,7 +27,7 @@ package activeSegmentation;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-public interface IFeatureSelection {
+public interface IFeatureSelection extends IAnnotated {
 
 	
 	public IDataSet selectFeatures(IDataSet trainingData);
@@ -34,9 +36,21 @@ public interface IFeatureSelection {
 	public IDataSet applyOnTestData(IDataSet data);
 	
 	/**
-	 * Returns a Name of the filter
-	 * 
-	 * @return Integer
+	 * returns a unique key of filter
+	 * @return String containing the key
 	 */
-	public String getName();
+	public default String getKey() {
+		Pair<String,String> p=getKeyVal();
+		return p.first;
+	}
+	
+	/**
+	 * Returns the long name of the filter
+	 * @return String  
+	 */
+	public default String getName() {
+		Pair<String,String> p = getKeyVal();
+		return p.second;
+	}
+ 
 }

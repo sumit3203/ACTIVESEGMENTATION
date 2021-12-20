@@ -3,6 +3,7 @@ package activeSegmentation.gui;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.WindowManager;
 import ij.gui.ImageWindow;
 import ij.gui.Overlay;
 import ij.gui.Roi;
@@ -17,13 +18,18 @@ import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +55,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import activeSegmentation.ASCommon;
- 
+import activeSegmentation.IUtil;
 import activeSegmentation.LearningType;
 import activeSegmentation.ProjectType;
 import activeSegmentation.feature.FeatureManager;
@@ -61,7 +67,7 @@ import static  activeSegmentation.ProjectType.*;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class FeaturePanelNew extends ImageWindow implements ASCommon  {
+public class FeaturePanelNew extends ImageWindow implements Runnable, ASCommon, IUtil {
 
 	/**
 	 * 
@@ -77,7 +83,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	LUT overlayLUT;
 	/** flag to display the overlay image */
 	private boolean showColorOverlay=false;
-	ImagePlus classifiedImage;
+	ImagePlus classifiedImage=null;
 	// Create overlay LUT
 	byte[] red = new byte[ 256 ];
 	byte[] green = new byte[ 256 ];
@@ -112,12 +118,13 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	private ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
 	private ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	private ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
-	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 8, "MASKS" );
- 
+	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 9, "MASKS" );
+	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	private ActionEvent SNAP_BUTTON_PRESSED = new ActionEvent( this, 10, "Snap" );
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
-	//private ImagePlus tempClassifiedImage;
+ 
 	private JPanel imagePanel,classPanel,roiPanel;
 	private JTextField imageNum;
 	private JLabel total;
@@ -133,23 +140,27 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
-		this.jCheckBoxList= new ArrayList<JCheckBox>();
-		this.jTextList= new HashMap<String,JTextArea>();
-		this.exampleList = new HashMap<String, JList<String>>();
-		this.allexampleList = new HashMap<String, JList<String>>();
-		roiOverlayList = new HashMap<String, RoiListOverlay>();
-		//tempClassifiedImage = new ImagePlus();		
+		this.jCheckBoxList= new ArrayList<>();
+		this.jTextList= new HashMap<>();
+		this.exampleList = new HashMap<>();
+		this.allexampleList = new HashMap<>();
+		roiOverlayList = new HashMap<>();		
 		this.setVisible(false);
-		showPanel();
+		//showPanel();
 	}
 
+	@Override
+	public void run() {
+		showPanel();
+		
+	}
 
 	public void showPanel() {
 		frame = new JFrame("Marking");	     
 		
 		frame.setResizable(false);
- 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
+ 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+ 
 		JList<String> frameList= GuiUtil.model();
 		frameList.setForeground(Color.BLACK);
 		
@@ -168,13 +179,15 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 */
 		imagePanel.setLayout(new BorderLayout());
 		
-		ic=new SimpleCanvas(featureManager.getCurrentImage());
+		ic=new SimpleCanvas(displayImage);
 		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 		loadImage(displayImage);
 		setOverlay();
 		imagePanel.setBackground(Color.GRAY);		
 		imagePanel.add(ic,BorderLayout.CENTER);
 		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
+				
+		
 		panel.add(imagePanel);
 		
 		/*
@@ -196,7 +209,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 * features
 		 */
 		JPanel features= new JPanel();
-		features.setBounds(605,120,350,100);
+		features.setBounds(605,120,350,120);
 		features.setBorder(BorderFactory.createTitledBorder("Learning"));
 		
 		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
@@ -223,12 +236,14 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 */
 		
 		JPanel computePanel = new JPanel();
-		addButton(new JButton(), "Next",null , 800, 130, 80, 20,features,NEXT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "Train",null, 550,550,350,100,computePanel, TRAIN_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Save",null, 550,550,350,100,computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Overlay",null, 550,550,350,100,computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Masks",null, 550,550,350,100,computePanel, MASKS_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Train", null, 550, 550, 350, 100, computePanel, TRAIN_BUTTON_PRESSED,null);
 		
+		addButton(new JButton(), "Next", null,  800, 130,  80,  20, features,NEXT_BUTTON_PRESSED,null );
+	
+		addButton(new JButton(), "Save",null,   550, 550, 350, 100, computePanel, SAVE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Overlay",null,550, 550, 350, 100, computePanel, TOGGLE_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Masks",null,  550, 550, 350, 100, computePanel, MASKS_BUTTON_PRESSED,null);
+		addButton(new JButton(), "Snap",null,   550, 650, 350, 100, computePanel, SNAP_BUTTON_PRESSED,null);
 		features.add(computePanel);
 		frame.add(features);
 		
@@ -237,7 +252,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 */
 		
 		JPanel dataJPanel = new JPanel();
-		learningType = new JComboBox<LearningType>(LearningType.values());
+		learningType = new JComboBox<>(LearningType.values());
 		learningType.setVisible(true);
 		learningType.addItemListener( new ItemListener() {
 
@@ -261,7 +276,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		learningType.setSelectedIndex(0);
 		learningType.setFont( panelFONT );
 		learningType.setBackground(Color.GRAY);
-		learningType.setForeground(Color.WHITE);
+		learningType.setForeground(Color.BLUE);
 		dataJPanel.add(learningType);
 		dataJPanel.setBackground(Color.GRAY);
 		
@@ -271,12 +286,33 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		 * ROI panel
 		 */
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
+//		// mouse wheel listener to update the rois while scrolling
+//		roiPanel.addMouseWheelListener(new MouseWheelListener() {
+//
+//						@Override
+//						public void mouseWheelMoved(final MouseWheelEvent e) {
+//								//IJ.log("moving scroll");
+//									displayImage.killRoi();
+//									drawExamples();
+//									updateExampleLists();
+//									if(showColorOverlay)
+//									{
+//										updateResultOverlay(imp);
+//										displayImage.updateAndDraw();
+//									}
+//						}
+//
+//						 
+//						});
+				
 		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
 		scrollPane.setBounds(605,300,350,250);
 		panel.add(scrollPane);
 		frame.add(panel);
+		
+		
 		
 		/*
 		 *  frame code
@@ -286,6 +322,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		//frame.setSize(getMaximumSize());		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		frame.setFocusable(true);
+		WindowManager.addWindow(this);
 		updateGui();
 
 	}
@@ -317,16 +355,22 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 * Draw the painted traces on the display image
 	 */
 	private void drawExamples(){
+	//	imp.setHideOverlay(true);
+		final String type=learningType.getSelectedItem().toString();
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
-					getExamples(key,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
+					getRoiList(key, type, featureManager.getCurrentSlice());
 			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
 			roiOverlayList.get(key).setRoi(rois);
 			//System.out.println("roi draw"+ key);
 		}
-
-		getImagePlus().updateAndDraw();
+		//imp.setHideOverlay(false);
+		
+		displayImage.updateAndDraw();
 	}
+	
+	
+	
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
 		JList<String> current=GuiUtil.model();
@@ -339,6 +383,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		RoiListOverlay roiOverlay = new RoiListOverlay();
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
+		
+		
 		roiOverlayList.put(key,roiOverlay);
 		JPanel buttonPanel= new JPanel();
 		buttonPanel.setName(key);
@@ -434,7 +480,8 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 		if(event==SAVE_BUTTON_PRESSED){
 			featureManager.saveFeatureMetadata();
-			JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
+			IJ.log("Successfully saved regions of interest");
+			//JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		} //end if
 		
 		if(event==SAVECLASS_BUTTON_PRESSED){
@@ -494,6 +541,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		} // end if
 		
 		if(event==TRAIN_BUTTON_PRESSED){
+			//toggleOverlay();
 			if(featureManager.getProjectType()==ProjectType.CLASSIF) {
 				// it means new round of training, so set result setting to false
 				showColorOverlay = false;
@@ -512,10 +560,11 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			//segmentation setting
 			else {
 				classifiedImage=featureManager.compute();
+				toggleOverlay();
 			}
-			IJ.log("compute");
+			IJ.log("computing");
 
-			toggleOverlay();
+			
 		} //end if
 		
 		if(event==TOGGLE_BUTTON_PRESSED){
@@ -526,18 +575,22 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 			ImagePlus image=featureManager.stackedClassifiedImage();
 			image.show();
-			//FileSaver saver= new FileSaver(image);
-			//saver.saveAsTiff();
+			
 		} //end if
 		
 		if(event==MASKS_BUTTON_PRESSED){
 			System.out.println("masks ");
 			if (classifiedImage==null) {
-				classifiedImage=featureManager.compute();
+				classifiedImage=featureManager.getClassifiedImage();//compute();
 			}
-			classifiedImage.show();
+			getMask();
 			 
 		} //end if
+		
+		if (event==SNAP_BUTTON_PRESSED) {			 
+			GuiUtil.grabWindow(ic);
+
+		}
 		
 		if(event.getActionCommand()== "ColorButton"){	
 			String key=((Component)event.getSource()).getName();
@@ -560,7 +613,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
 				updateGui();
 			else 
-			    JOptionPane.showMessageDialog(null, "Other class already contain roi");	
+			    JOptionPane.showMessageDialog(null, "Other class already contains roi");	
 	
 			
 		} //end if
@@ -581,13 +634,24 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 
 	/**
+	 * 
+	 */
+	private void getMask() {
+		ImagePlus mask=classifiedImage.duplicate();
+		NamedLUT nlut=new NamedLUT( featureManager.getColors());
+		mask.setLut(nlut.getLUT());
+		mask.show();
+	}
+
+
+	/**
 	 * Toggle between overlay and original image with markings
 	 */
 	private void toggleOverlay()
 	{
 		if(featureManager.getProjectType()== ProjectType.SEGM) {
 			showColorOverlay = !showColorOverlay;			
-			if (showColorOverlay && (null != classifiedImage)){
+			if (showColorOverlay && ( classifiedImage!=null)){
 				updateResultOverlay(classifiedImage);
 			}
 			else{
@@ -640,7 +704,7 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			ArrayList<Roi> rois;
 			for(String classKey:featureManager.getClassKeys()) {
 				//returns rois of current image slice of given class, current slice is updated internally
-				rois = (ArrayList<Roi>) featureManager.getExamples(classKey,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
+				rois = (ArrayList<Roi>) featureManager.getRoiList(classKey,learningType.getSelectedItem().toString(), featureManager.getCurrentSlice());
 				if(rois!=null) {					
 					for (Roi roi:rois) {
 						int pred = predictionResultClassification.get(roi.getName());
@@ -672,32 +736,31 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	
 	private void updateGui(){
 		try{
-			drawExamples();
+			//displayImage.killRoi();
 			updateExampleLists();
+			drawExamples();
 			//updateallExampleLists();
+
 			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
 			ic.repaint();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
-		for(String key:featureManager.getClassKeys()){
-			exampleList.get(key).removeAll();
-			Vector<String> listModel = new Vector<String>();
-
-			for(int j=0; j<featureManager.getRoiListSize(key, learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()); j++){	
-				listModel.addElement(key+ " "+ j + " " +
-						featureManager.getCurrentSlice()+" "+type.getLearningType());
-			}
-			exampleList.get(key).setListData(listModel);
-			exampleList.get(key).setForeground(featureManager.getClassColor(key));
-		}
-	}	
-
+		updateExampleLists(featureManager, type,  exampleList);
+	}
+	
+ 
+	
+	 
+	 
+	
 	private  MouseListener mouseListener = new MouseAdapter() {
+		
+		@Override
 		public void mouseClicked(MouseEvent mouseEvent) {
 			JList<?>  theList = ( JList<?>) mouseEvent.getSource();
 			// what is this?
@@ -706,11 +769,15 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
+					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
 					String[] arr= item.split(" ");
 					//System.out.println("Class Id"+ arr[0].trim());
 					//int sliceNum=Integer.parseInt(arr[2].trim());
-					showSelected( arr[0].trim(),index);
-
+					//try {
+						showSelected( arr[0].trim(),index);
+					//} catch (ArrayIndexOutOfBoundsException ex ) {
+					//	ex.printStackTrace();
+					//}
 				}
 			}
 
@@ -719,11 +786,16 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 				String type= learningType.getSelectedItem().toString();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
+					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
 					//System.out.println("ITEM : "+ item);
 					String[] arr= item.split(" ");
 					//int classId= featureManager.getclassKey(arr[0].trim())-1;
-					featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
-					updateGui();
+					//try {
+						featureManager.deleteExample(arr[0], Integer.parseInt(arr[1].trim()), type);
+						updateGui();
+					//} catch (ArrayIndexOutOfBoundsException ex ) {
+					//	ex.printStackTrace();
+					//}
 				}
 			}
 		}
@@ -736,19 +808,20 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 	 * @param i list index
 	 */
 	private void showSelected(String classKey,int index ){
-		updateGui();
-
-
-		displayImage.setColor(Color.YELLOW);
+		displayImage.killRoi();
+		//displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
 		//System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
-		//System.out.println(newRoi);
-		newRoi.setImage(displayImage);
-		displayImage.setRoi(newRoi);
-		displayImage.updateAndDraw();
+		System.out.println(newRoi);
+		if (newRoi!=null) {
+			displayImage.setRoi(newRoi);
+			//activeRoi=newRoi;
+		}
+		updateGui();
 	}  
 	
+
 	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
@@ -760,17 +833,15 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 		button.setFont( panelFONT );
 		button.setBorderPainted(false); 
 		button.setFocusPainted(false); 
-		button.setBackground(new Color(192, 192, 192));
-		button.setForeground(Color.WHITE);
+		button.setBackground(buttonBGColor);
+		button.setForeground(buttonColor);
 		if(color!=null){
 			button.setBackground(color);
 		}
 		button.setBounds( x, y, width, height );
-		button.addActionListener( new ActionListener()
-		{
+		button.addActionListener( new ActionListener()	{
 			@Override
-			public void actionPerformed( final ActionEvent e )
-			{
+			public void actionPerformed( final ActionEvent e )	{
 				//System.out.println(e.toString());
 				doAction(action);
 			}
@@ -811,6 +882,9 @@ public class FeaturePanelNew extends ImageWindow implements ASCommon  {
 			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type, featureManager.getCurrentSlice());
 		}
 	}
+
+
+
 
 
 

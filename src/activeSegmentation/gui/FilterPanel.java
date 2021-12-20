@@ -62,7 +62,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> filerMap = new HashMap<>();
 	
-	private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
+	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
@@ -103,6 +103,13 @@ public class FilterPanel implements Runnable, ASCommon {
 	@Override
 	public void run() {
 
+		showPanel();
+	}
+
+	/**
+	 * 
+	 */
+	private void showPanel() {
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -120,9 +127,9 @@ public class FilterPanel implements Runnable, ASCommon {
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
 		updateFilterList();
-		addButton( new JButton(),"Compute",null , 20, 420, 100, 50,panel,COMPUTE_BUTTON_PRESSED,null );
-		addButton(new JButton(), "Default",null , 240, 420, 100, 50,panel,DEFAULT_BUTTON_PRESSED,null );
-		addButton(new JButton(), "Save",null , 350, 420, 100, 50,panel,SAVE_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Compute",null , 20,  420, 100, 50, panel, COMPUTE_BUTTON_PRESSED, null );
+		addButton(new JButton(), "Default",null , 240, 420, 100, 50, panel, DEFAULT_BUTTON_PRESSED, null );
+		addButton(new JButton(), "Save"   ,null , 350, 420, 100, 50, panel, SAVE_BUTTON_PRESSED,    null );
 
 		frame.add(pane);
 		frame.add(panel);
@@ -421,7 +428,6 @@ public class FilterPanel implements Runnable, ASCommon {
 		Vector<String> listModel = new Vector<>();
 		for(String filter : filters){
 			if(!filterManager.isFilterEnabled(filter)){
-
 				listModel.addElement(filter);
 			}
 		}

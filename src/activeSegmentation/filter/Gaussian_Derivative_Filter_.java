@@ -48,7 +48,7 @@ import static java.lang.Math.*;
  * 				1.0	 8 Nov 2012
  *   
  * 
- * @author Dimiter Prodanov,IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra
  *
  *
  * @contents
@@ -70,7 +70,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="GAUSSIAN", value="Gaussian", type=SEGM)
+@AFilter(key="GAUSSDER", value="G. Deriv.", type=SEGM)
 public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")
@@ -118,7 +118,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	private Map< String, String > settings= new HashMap<>();
 
 	// do we keep this variable?
-	private ImageStack imageStack=null;
+	//private ImageStack imageStack=null;
 
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
@@ -143,10 +143,11 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 
 	}
 
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
-	
+	*/
 	@Override
 	public int setup(String arg, ImagePlus imp) {
 		image=imp;
@@ -199,7 +200,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			//IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+Common.TIFFORMAT );
 			imageStack.addSlice( FILTER_KEY+"_" + sigma, fp);		
 		}
-		initialseimageStack(imageStack);
+		//initialseimageStack(imageStack);
 		return new Pair<>(index, imageStack);
 	}
 
@@ -209,7 +210,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor ip=filter(image,  sp,sep, scnorm,nn,mm);			
-				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
+				String imageName=filterPath+fs+FILTER_KEY+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, ip),imageName );
 			}
 

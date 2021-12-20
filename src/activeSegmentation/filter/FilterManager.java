@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IMEC
  *
  *
  * @contents
@@ -48,20 +48,24 @@ import java.util.zip.ZipInputStream;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class FilterManager extends URLClassLoader implements IFilterManager {
+public class FilterManager extends URLClassLoader implements IFilterManager, IUtil {
 
 	private Map<String, IFilter> filterMap= new HashMap<>();
-
-
-
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
-
 	private ProjectType projectType;
 
+<<<<<<< Updated upstream
 	// what is the use?
 	//private FeatureManager  featureManager;
 
+=======
+	/**
+	 * 
+	 * @param projectManager
+	 * @param featureManager
+	 */
+>>>>>>> Stashed changes
 	public FilterManager(ProjectManager projectManager, FeatureManager  featureManager){
 		super(new URL[0], IJ.class.getClassLoader());
 
@@ -78,24 +82,30 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			System.out.println("plugin path: "+jars);
 			if (jars!=null)
 				loadFilters(jars);
-			IJ.log("Filters Loaded");
+			IJ.log("Filters loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
+<<<<<<< Updated upstream
 			IJ.log("Filters NOT Loaded. Check pluginPath variable");
 		}
 
 		//this.featureManager= featureManager;
+=======
+			IJ.log("Filters NOT loaded. Check pluginPath variable");
+		}
+ 
+>>>>>>> Stashed changes
 	}
 
-
+	/**
+	 * @param plugins
+	 */
 	@Override
-	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
-	IOException, ClassNotFoundException {
+	public  void loadFilters(List<String> plugins) throws 
+	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
-		//File f=new File(home);
-		//String[] plugins = f.list();
 		List<String> classes=new ArrayList<>();
 		System.setProperty("java.class.path","C:/PROGRA~4/ImageJ/ij.jar");
 		String cp=System.getProperty("java.class.path");
@@ -112,12 +122,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 
-
-
-
 		for(String plugin: classes){
 			System.out.println("checking "+ plugin);
+<<<<<<< Updated upstream
 			try{
+=======
+			try {
+>>>>>>> Stashed changes
 			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 			for(Class<?> cs:classesList){
@@ -147,9 +158,16 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 				} 
 
 			} // end for
+<<<<<<< Updated upstream
 			} catch (ClassNotFoundException ex) {
 				System.out.println("error:" + plugin +"not found");
 			}
+=======
+			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
+				System.out.println("error:" + plugin +"not found");
+			}
+
+>>>>>>> Stashed changes
 		} // end for
 
 		//System.out.println("filter list ");
@@ -172,29 +190,18 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 	}
 
-	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<>();
-		File folder = new File(directory);
-		File[] images = folder.listFiles();
-		for (File file : images) {
-			if (file.isFile()) {
-				imageList.add(file.getName());
-			}
-		}
-		return imageList;
-	}
 
 	@Override
 	public void applyFilters(){
-		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
+		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
-		List<String>images= loadImages(projectString);
 		Map<String,Set<String>> features= new HashMap<>();
-
+			
+		List<String>images= loadImages(projectString, false);
 		for(IFilter filter: filterMap.values()){
-			//System.out.println("filter applied"+filter.getName());
+			System.out.println("FeatureManager: filter applied "+filter.getName());
 			if(filter.isEnabled()){
 				for(String image: images) {
 					//IJ.log(image);
@@ -213,8 +220,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 		}
 
 	}
-
-
+	
 	@Override
 	public Set<String> getAllFilters(){
 		return filterMap.keySet();
@@ -240,9 +246,15 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 			return filter.updateSettings(settingsMap);
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
+<<<<<<< Updated upstream
 			return false;}
 		}
 	
+=======
+			return false;
+		}
+	}
+>>>>>>> Stashed changes
 
 
 
@@ -273,8 +285,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager {
 	public void enableFilter(String key) {
 		if(filterMap.get(key).isEnabled()){
 			filterMap.get(key).setEnabled(false);	
-		}
-		else{
+		}else{
 			filterMap.get(key).setEnabled(true);	
 		}
 	}

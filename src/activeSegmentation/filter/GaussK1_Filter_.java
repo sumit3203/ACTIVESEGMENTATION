@@ -57,7 +57,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="CURVATURE1", value="Gaussian Jet", type=SEGM)
+@AFilter(key="CURVATURE1", value="Gaussian Curvature 1", type=SEGM)
 public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -67,21 +67,22 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private int nPasses=1;
 	private int pass;
  
-	public final static String SIGMA="GK_sigma", LEN="GK_len",MAX_LEN="G_MAX";
+	public final static String SIGMA="GK_sigma", LEN="GK_len", MAX_LEN="G_MAX", FULL_OUTPUT="KFull_out";
  
 	@AFilterField(key=LEN, value="initial scale")
-	private static int sz= Prefs.getInt(LEN, 2);
+	public static int sz= Prefs.getInt(LEN, 2);
 	//private static float sigma=(float) Prefs.getDouble(SIGMA, 2.0f);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
-	public static boolean debug=true;//IJ.debugMode;
+	public static boolean debug=false;//IJ.debugMode;
 
-	public static boolean fulloutput=false;
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public  boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
 
 	private boolean isFloat=false;
 	
@@ -102,7 +103,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private Map< String, String > settings= new HashMap<>();
 
 	/** It is the result stack*/
-	private ImageStack imageStack=null;
+	//private ImageStack imageStack=null;
 
 	
 	/**
@@ -137,7 +138,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		
 		GScaleSpace sp=new GScaleSpace(r);
 		//GScaleSpace sp=new GScaleSpace(sigma);
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		
 		long time=-System.nanoTime();	
 		
@@ -248,13 +249,14 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		this.nPasses = nPasses;
 	}
 	
-	  /* Saves the current settings of the plugin for further use
+	 /* Saves the current settings of the plugin for further use
      * 
      *
     * @param prefs
     */
-   public static void savePreferences(Properties prefs) {
+   public  void savePreferences(Properties prefs) {
 	   		prefs.put(LEN, Integer.toString(sz));
+	   		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
          // prefs.put(SIGMA, Float.toString(sigma));
 
    }
@@ -340,15 +342,20 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
  
 	
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
+		ip.snapshot();
+
+		if (!isFloat) 
+			ip=ip.toFloat(0, null);
+		
 		float[] kernx= sp.gauss1D();
-		System.out.println("kernx :"+kernx.length);
+		//System.out.println("kernx :"+kernx.length);
 		SUtils.flip(kernx);		
 		float[] kern_diff2= sp.diff2Gauss1D();
-		System.out.println("kern_diff2 :"+kern_diff2.length);
+		//System.out.println("kern_diff2 :"+kern_diff2.length);
 		SUtils.flip(kern_diff2);
 		
 		float[] kern_diff1=sp.diffGauss1D();
-		System.out.println("kern_diff1 :"+kern_diff1.length);
+		//System.out.println("kern_diff1 :"+kern_diff1.length);
 		SUtils.flip(kern_diff1);
 		
 		kernel=new float[4][];
@@ -405,7 +412,6 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
-		//FloatProcessor lap_k1k2=new FloatProcessor(width, height); // Log Gaussian component
 		FloatProcessor lap_kk=new FloatProcessor(width, height); // mean curvature component
 		FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
 		
@@ -445,21 +451,21 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			hesdet.setf(i, det);
 		}
 			
-		//ImageStack is=new ImageStack(width,height);
+
+		String fkey=this.getKey();
 		
 		if (fulloutput) {
-			is.addSlice("X diff", gradx);
-			is.addSlice("Y diff", grady);
-			is.addSlice("XX diff", lap_xx);
-			is.addSlice("YY diff", lap_yy);
-			is.addSlice("XY diff", lap_xy);
+			is.addSlice(fkey+"_X_diff_"+sz, gradx);
+			is.addSlice(fkey+"_Y_diff_"+sz, grady);
+			is.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
+			is.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
+			is.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
 			//apos=6;
 		}
 
-		//is.addSlice("Gauss  K1K2", lap_k1k2);
 		lap_kk.resetMinAndMax();
-		is.addSlice("Line curvature", lap_kk);
-		is.addSlice("Hess det", hesdet);
+		is.addSlice(fkey+"_Line_curvature_"+sz, lap_kk);
+		is.addSlice(fkey+"_Hess_det_"+sz, hesdet);
 		return is;
 	}
 

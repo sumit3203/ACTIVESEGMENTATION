@@ -20,12 +20,6 @@ import java.util.List;
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
@@ -34,6 +28,8 @@ import dsp.Conv;
 
 /**
  * @version 	
+ * 				1.2 21 Nov 2021
+ * 				- added determinant output
  * 				1.1 27 Jun 2021
  * 				1.0 24 Oct 2019
  * 				
@@ -89,7 +85,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
 
-	public boolean fulloutput=false;
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
 
 	private boolean isFloat=false;
     @SuppressWarnings("unused")
@@ -98,19 +95,12 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 
 	/* NEW VARIABLES*/
-
-	/** A string key identifying this factory. */
-	//private final String FILTER_KEY = "HESSIAN";
-
-	/** The pretty name of the target detector. */
-	//private final String FILTER_NAME = "Hessian components";
-	
-  	
+ 	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -134,11 +124,6 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	private Calibration cal=null;
 	
-	/*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
-	*/
 	
 	/*
 	 * (non-Javadoc)
@@ -146,15 +131,11 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	@Override
 	public void run(ImageProcessor ip) {
-		int r = (sz-1)/2;
+		int r =sz; // (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 
-
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
-
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		imageStack = filter(ip,sp, imageStack);
-
-
 		image=new ImagePlus("Hessian result hw="+(r),imageStack);
 		image.show();
 	}
@@ -169,7 +150,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 				GScaleSpace sp=new GScaleSpace(sigma);
 				imageStack=filter(image, sp,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
-					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
+					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 				}
 
@@ -267,6 +248,8 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		
 		FloatProcessor eigen1=new FloatProcessor(width, height); // eigenvalue 1
 		FloatProcessor eigen2=new FloatProcessor(width, height); // eigenvalue 2
+		
+		FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
 
 		for (int i=0; i<width*height; i++) {
 			double gx=gradx.getf(i);
@@ -296,14 +279,14 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			pamp.setf(i, (float)  (amp));
 			
 			double gsin= (gy/amp);
-				//	phase1=asin(phase1);
+				
 			sin_phase.setf(i, (float) gsin);
 			double gcos= (gx/amp);
-			//	phase1=asin(phase1);
+		
 			cos_phase.setf(i, (float) gcos);
 			eigen1.setf(i, (float) ee1);
 			eigen2.setf(i, (float) ee2);
-				
+			hesdet.setf(i, (float) det);	
 		}
 		String fkey=this.getKey();
 		
@@ -318,6 +301,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		imageStack.addSlice(fkey+"_Amp_"+sz, pamp);
 		imageStack.addSlice(fkey+"_Sin_"+sz, sin_phase);
 		imageStack.addSlice(fkey+"_Cos_"+sz, cos_phase);
+		imageStack.addSlice(fkey+"_Hess_det_"+sz, hesdet); 
 		imageStack.addSlice(fkey+"_E1_"+sz, eigen1);
 		imageStack.addSlice(fkey+"_E2_"+sz, eigen2);
  
@@ -410,6 +394,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	 */
 	public void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
+		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 		// prefs.put(SIGMA, Float.toString(sigma));
 
 	}
@@ -438,11 +423,16 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			sz=Integer.parseInt(settingsMap.get(LEN));
 			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 			fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
+<<<<<<< Updated upstream
 
+=======
+			
+>>>>>>> Stashed changes
 			return true;
 		} catch ( NumberFormatException ex) {
 			return false;
 		}
+<<<<<<< Updated upstream
 	}
 
 	/*
@@ -456,8 +446,9 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	@Override
 	public String getName() {
 		return this.FILTER_NAME;
+=======
+>>>>>>> Stashed changes
 	}
-		 */
 
 	@Override
 	public boolean isEnabled() {
@@ -476,7 +467,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=50;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

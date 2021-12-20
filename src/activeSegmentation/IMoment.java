@@ -3,6 +3,10 @@ package activeSegmentation;
 
 import java.util.Set;
 
+import ij.gui.Roi;
+import ij.process.ImageProcessor;
+import ijaux.datatype.Pair;
+
 public interface IMoment<T>  extends IAnnotated, IFilter {
 
 	/**
@@ -23,7 +27,7 @@ public interface IMoment<T>  extends IAnnotated, IFilter {
 	 */
 	public Set<String> getFeatureNames();
 	
-	
+	public Pair<String, double[]> apply(ImageProcessor imageProcessor, Roi roi);
 	
 	
 

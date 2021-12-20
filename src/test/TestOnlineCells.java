@@ -31,8 +31,12 @@ import ij.measure.Calibration;
 import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
 import ij.process.ImageProcessor;
+<<<<<<< Updated upstream
 import ijaux.TestUtil;
 import ijaux.scale.Pair;
+=======
+import ijaux.datatype.Pair;
+>>>>>>> Stashed changes
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.trees.RandomForest;
@@ -86,7 +90,11 @@ public class TestOnlineCells {
 		// TODO Auto-generated method stub
 		new ImageJ();
 		TestOnlineCells test= new TestOnlineCells();
+<<<<<<< Updated upstream
 		String directory="C:\\Users\\billa\\Documents\\hela_test2\\";
+=======
+		String directory="C:\\Users\\vohra\\Documents\\EM\\hela_test\\";
+>>>>>>> Stashed changes
 		test.run(directory);
 	}
 
@@ -94,6 +102,7 @@ public class TestOnlineCells {
 		Map<String,List<CellType>>cells=loadCells(directory);
 		List<Instance> trainInstances= new ArrayList<>();
 		List<Instance> testInstances= new ArrayList<>();
+		// cross-validation step
 		for(String key: cells.keySet()) {
 			//System.out.println(key);
 			List<CellType> cellsinside=cells.get(key);

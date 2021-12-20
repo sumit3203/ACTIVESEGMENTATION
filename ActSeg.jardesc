@@ -22,10 +22,8 @@
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.feature"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.prj"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.gui"/>
-        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.classif"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.evaluation"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.filter"/>
-        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.parallel"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;ijaux.moments.zernike"/>
     </selectedElements>
 </jardesc>

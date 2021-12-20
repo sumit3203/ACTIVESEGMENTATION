@@ -3,7 +3,7 @@ import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-import activeSegmentation.gui.CreateProjectUI;
+import activeSegmentation.gui.CreateOpenProjectUI;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImageJ;
@@ -12,18 +12,23 @@ import ij.plugin.PlugIn;
 
 public class Active_Segmentation_ implements PlugIn {
 
+<<<<<<< Updated upstream
 	public static final String version="1.0";
+=======
+	public static final String version="1.1.1";
 
+>>>>>>> Stashed changes
 
-	/** main GUI panel (containing the buttons panel on the left,
-	 *  the image in the center and the annotations panel on the right */
+	/**
+	 * 
+	 */
 	public Active_Segmentation_(){
 
 	}
 
 
 	/**
-	 * This method will be an entry point into the Plugin. 
+	 * This method is the main entry point into the Plugin. 
 	 * This method is written according to 
 	 * ImageJ plugin loading requirements
 	 * @param parameter for imageJ
@@ -33,10 +38,14 @@ public class Active_Segmentation_ implements PlugIn {
 	public void run(String arg0) {
 	
 		ProjectManager dataManager= new ProjectManager();
-		CreateProjectUI creatProject= new CreateProjectUI(dataManager);
+		CreateOpenProjectUI creatProject= new CreateOpenProjectUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
 		IJ.log("AS version "+version);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 	}
 
 
@@ -58,8 +67,9 @@ public class Active_Segmentation_ implements PlugIn {
 				throw new IllegalArgumentException();
 			}
 		}	catch (Exception ex) {
-			IJ.log("plugins.dir misspecified\n"
-					+ "To run the platform in stand-alone mode specify plugins.dir");
+			IJ.error("plugins.dir misspecified\n"
+					+ "To run the platform in stand-alone mode specify plugins.dir"
+					+ "as a command line argument");
 			ex.printStackTrace();
 		} 
 		

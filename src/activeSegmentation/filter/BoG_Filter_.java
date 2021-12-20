@@ -93,7 +93,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	@AFilterField(key=ISSEP, value="separable")
-	public static boolean sep= Prefs.getBoolean(ISSEP, false);
+	public static boolean sep= Prefs.getBoolean(ISSEP, true);
 	
 	@AFilterField(key=ISO, value="isotropic")
 	public static boolean isiso= Prefs.getBoolean(ISO, true);
@@ -174,7 +174,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			GScaleSpace sp=new GScaleSpace(sigma);
 			ImageProcessor fp=filter(image, sp, sep, isiso);
-			String imageName=filterPath+"/"+key+"_"+sigma+".tif" ;
+			String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 
 		}
@@ -270,7 +270,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	 
 		time+=System.nanoTime();
 		time/=1000.0f;
-		//System.out.println("elapsed time: " + time +" us");
+		System.out.println("elapsed time: " + time +" us");
 		fpaux.resetMinAndMax();	
 		
 		return fpaux;
@@ -367,7 +367,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	public Map<String, String> getDefaultSettings() {
 
 	   Field [] fields = BoG_Filter_.class.getFields();
-		System.out.println("fields "+fields.length);
+	//System.out.println("fields "+fields.length);
 		
 		for (Field field:fields)   {
 			if (field.isAnnotationPresent(AFilterField.class)) {
@@ -423,7 +423,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=70;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

@@ -14,6 +14,7 @@ import static java.lang.Math.*;
 
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -68,16 +69,21 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	public final static String SIGMA="LOG_sigma",MAX_LEN="G_MAX",FULL_OUTPUT="Full_out",LEN="G_len";
 
-	private static int sz= Prefs.getInt(LEN, 2);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	@AFilterField(key=LEN, value="initial scale")
+	public static int sz= Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public boolean fulloutput=false;	
+	
 	private boolean isEnabled=true;
 
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
 	public static boolean debug=IJ.debugMode;
-
-	public boolean fulloutput=false;
 
 	private boolean isFloat=false;
     @SuppressWarnings("unused")
@@ -88,7 +94,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "ALOG";
+	//private final  String FILTER_KEY = "ALOG";
 
 	/** The pretty name of the target detector. */
 	//private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
@@ -99,7 +105,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	private Map< String, String > settings= new HashMap<>();
 	
 	/** It is the result stack*/
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -134,7 +140,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		GScaleSpace sp=new GScaleSpace(r);
 
 
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		imageStack = filter(ip,sp,sz,imageStack);
 
@@ -147,18 +153,15 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-
-			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
-				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
-				GScaleSpace sp=new GScaleSpace(sigma);
-				imageStack=filter(image, sp,sigma, imageStack);
-				for(int j=1;j<=imageStack.getSize();j++){
-					String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
-					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
-				}
-
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+			ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
+			GScaleSpace sp=new GScaleSpace(sigma);
+			imageStack=filter(image, sp,sigma, imageStack);
+			for(int j=1;j<=imageStack.getSize();j++){
+				String imageName=filterPath+"/"+imageStack.getSliceLabel(j)+".tif" ;
+				IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 			}
-
+		}
 	}
 
 
@@ -290,20 +293,20 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 				
 		}
+		final String key=getKey();
 
 		if (fulloutput) {
-			imageStack.addSlice(FILTER_KEY+"_XX_diff"+sigma, lap_xx);
-			imageStack.addSlice(FILTER_KEY+"_YY_diff"+sigma, lap_yy);
-			imageStack.addSlice(FILTER_KEY+"_XY_diff"+sigma, lap_xy);
-			imageStack.addSlice(FILTER_KEY+"_Amp"+sigma, pamp);
-			imageStack.addSlice(FILTER_KEY+"_Phase"+sigma, phase);
+			imageStack.addSlice(key+"_XX_diff"+sz, lap_xx);
+			imageStack.addSlice(key+"_YY_diff"+sz, lap_yy);
+			imageStack.addSlice(key+"_XY_diff"+sz, lap_xy);
+			imageStack.addSlice(key+"_Amp"+sz, pamp);
+			imageStack.addSlice(key+"_Phase"+sz, phase);
 		}
-
 		
-		imageStack.addSlice(FILTER_KEY+"_Lap_T"+sigma, lap_t);
+		imageStack.addSlice(key+"_Lap_T"+sz, lap_t);
 		lap_o.resetMinAndMax();
-		imageStack.addSlice(FILTER_KEY+"_Lap_O"+sigma, lap_o);
-		//System.out.println("ALOG_FILTER");
+		imageStack.addSlice(key+"_Lap_O"+sz, lap_o);
+
 		return imageStack;
 	}
 
@@ -391,7 +394,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	 */
 	public static void savePreferences(Properties prefs) {
 		prefs.put(LEN, Integer.toString(sz));
-		// prefs.put(SIGMA, Float.toString(sigma));
+		prefs.put(MAX_LEN, Integer.toString(max_sz));
 	}
 
 	@Override
@@ -405,8 +408,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 	@Override
 	public boolean reset() {
-		sz= Prefs.getInt(LEN, 2);
-		max_sz= Prefs.getInt(MAX_LEN, 8);
+		sz= Prefs.getInt(LEN, 5);
+		max_sz= Prefs.getInt(MAX_LEN, 17);
 		fulloutput= Prefs.getBoolean(FULL_OUTPUT, true);
 		return true;
 	}
@@ -415,22 +418,11 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-		
+		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));	
 		return true;
 	}
 
-	/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-	 */
+ 
 	
 	private double logKernel(double x){
 		final double x2=x*x;

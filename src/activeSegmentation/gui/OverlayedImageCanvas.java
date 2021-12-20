@@ -6,7 +6,6 @@ import ij.ImagePlus;
 import ij.gui.GUI;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
-import ij.gui.Roi;
 
 import java.awt.Composite;
 import java.awt.Dimension;
@@ -14,12 +13,18 @@ import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+import java.awt.Color;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+
 
 import static activeSegmentation.ASCommon.*;
 
@@ -35,7 +40,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	
 	/** Generated serial version UID */
 	private static final long serialVersionUID = -9005735333215207618L;
-	protected Collection<Overlay> overlays;
+	protected ArrayList<Overlay> overlays;
 
 	private int backBufferWidth=-1;
 	private int backBufferHeight=-1;
@@ -56,6 +61,10 @@ public class OverlayedImageCanvas extends ImageCanvas {
 
 	public void addOverlay(Overlay overlay) {
 		overlays.add(overlay);
+	}
+	
+	public List<Overlay> getArray() {
+		return overlays;
 	}
 
 	/**
@@ -125,25 +134,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
             return  new Dimension(width, height);
         }
     }
-
- /*
-   protected void resetImage(final ImagePlus imp) {
-		this.imp = imp;
-		int width = imp.getWidth();
-		int height = imp.getHeight();
-		double ar=width/ (double) height;
-		if (width>height) {
-			imageWidth = IMAGE_CANVAS_DIMENSION;
-			imageHeight = (int) (imageWidth/ar);
-		} else {
-			imageHeight = IMAGE_CANVAS_DIMENSION;
-			imageWidth = (int) (imageHeight*ar);
-		}
-		srcRect = new Rectangle(0, 0, imageWidth, imageHeight);
-		setSize(imageWidth, imageHeight);
-		magnification = 1.0;
-	}
-   */
+ 
     
     // helper function, has only local variables
     Rectangle getMaxWindow(int xloc, int yloc) {
@@ -188,6 +179,13 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	public void clearOverlay() {
 		overlays.clear();
 	}
+	
+	public static BufferedImage deepCopy(BufferedImage bi) {
+	    final ColorModel cm = bi.getColorModel();
+	    final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+	    final WritableRaster raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster());
+	    return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
 
 	@Override
 	public void paint(Graphics g) {
@@ -205,10 +203,6 @@ public class OverlayedImageCanvas extends ImageCanvas {
 			super.paint(backBufferGraphics);								
 			for (Overlay overlay : overlays)			
 				overlay.paint(backBufferGraphics, src.x, src.y, magnification);	
-			
-			final Roi roi = super.imp.getRoi();
-			if(roi != null)
-				roi.draw(backBufferGraphics);
 		}
 
 		g.drawImage(backBufferImage,0,0,this);		

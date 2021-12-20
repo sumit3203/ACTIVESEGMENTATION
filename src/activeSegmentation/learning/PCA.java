@@ -1,60 +1,53 @@
 package activeSegmentation.learning;
 
+import static activeSegmentation.FilterType.FEATURE;
+
+import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.weka.WekaDataSet;
 import weka.filters.unsupervised.attribute.PrincipalComponents;
 import weka.core.Instances;
 import weka.filters.Filter;
 
+@AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
 public class PCA implements IFeatureSelection {
 
 private PrincipalComponents filter;
 	
-	private String selectionName="PCA";
+	
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-		//ASEvaluation asEvaluation=
 		Instances trainingData= data.getDataset();
 		trainingData.setClassIndex(trainingData.numAttributes()-1);
 		filter = new PrincipalComponents();
-		
-		Instances filteredIns = null;
-		// Evaluator
-		
-		// Assign evaluator to filter
-		//filter.setEvaluator(evaluator);
-		// Search strategy: best first (default values)
-		
+				
 		// Apply filter
 		try {
 			filter.setInputFormat(trainingData);
-
-			filteredIns = Filter.useFilter(trainingData, filter);
+			Instances filteredIns   = Filter.useFilter(trainingData, filter);
+			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
+		return null;
 	}
 	
+	// superfluous method?
 	@Override
 	public IDataSet applyOnTestData(IDataSet data){
-		Instances filteredIns = null;
+
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
-			filteredIns = Filter.useFilter(testData, filter);
+			Instances filteredIns  = Filter.useFilter(testData, filter);
+			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new WekaDataSet(filteredIns);
-	}
-
-	@Override
-	public String getName() {
-		
-		return this.selectionName;
+		return null;
 	}
 
 }

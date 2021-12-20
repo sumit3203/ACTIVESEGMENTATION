@@ -31,6 +31,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
+import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
@@ -40,7 +41,7 @@ import dsp.Conv;
  * 					- gaussian jet
  *   
  * 
- * @author Dimiter Prodanov,IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov,IMEC, Sumit Kumar Vohra
  *
  *
  * @contents
@@ -75,19 +76,33 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	   
 	@SuppressWarnings("unused")
 	private int pass=0;
-	public final static String SIGMA="LOG_sigma", LEN="G_len" ,MAX_LEN="G_MAX", 
-			ISSEP="G_SEP", GN="G_Xn", GM="G_Yn", SCNORM="G_SCNORM";
-
-	private static int sz = Prefs.getInt(LEN, 2);
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	
 	private float[][] kernel=null;
-	public static boolean debug=IJ.debugMode;
+	
+	public static boolean debug=IJ.debugMode;	
+	
+	public final static String SIGMA="JG_sigma", LEN="JG_len" ,MAX_LEN="JG_MAX", 
+			ISSEP="JG_SEP", GN="JG_Xn", GM="JG_Yn", SCNORM="JG_SCNORM"; //, ORDN="jord_x", ORDM="jord_y";
 
-	private static int nn = Prefs.getInt(GN, 1);
-	private static int mm = Prefs.getInt(GM, 0);
+	@AFilterField(key=LEN, value="initial scale")
+	public static int sz = Prefs.getInt(LEN, 2);
+	
+	@AFilterField(key=MAX_LEN, value="max scale")
+	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
 
-	private static boolean sep=Prefs.getBoolean(ISSEP, false);
-	private static boolean scnorm=Prefs.getBoolean(SCNORM, false);
+	@AFilterField(key=GN, value="order")
+	public static int nn = Prefs.getInt(GN, 3);
+	
+	/*
+	@AFilterField(key=GM, value="order y")
+	public static int mm = Prefs.getInt(GM, 0);
+	 */
+	@AFilterField(key=ISSEP, value="separable")
+	public static boolean sep=Prefs.getBoolean(ISSEP, true);
+	
+	@AFilterField(key=SCNORM, value="normalized")
+	public static boolean scnorm=Prefs.getBoolean(SCNORM, false);
+	
 	private ImagePlus image=null;	
 	private boolean isFloat=false;
 	private boolean isRGB=false;
@@ -98,17 +113,17 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	/* NEW VARIABLES*/
 
-	/** A string key identifying this factory. */
+	/** A string key identifying this factory.
 	private final  String FILTER_KEY = "GAUSSIAN Jet";
 
-	/** The pretty name of the target detector. */
+	/** The pretty name of the target detector. 
 	private final String FILTER_NAME = "Gaussian Jet";
-
+ */
 	
 	
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 
-	private ImageStack imageStack;
+	//private ImageStack imageStack;
 
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
@@ -133,9 +148,11 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	}
 
+	/*
 	public void initialseimageStack(ImageStack img){
 		this.imageStack = img;
 	}
+	*/
 	
 	@Override
 	public int setup(String arg, ImagePlus imp) {
@@ -164,10 +181,11 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 		GScaleSpace sp=new GScaleSpace(r, wnd);
 		
-		imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
+		//imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		ImageStack fpaux=filter(ip, sp,  scnorm,nn);
-		image=new ImagePlus("Convolved_"+nn+"_"+mm, fpaux);
-		//image.updateAndDraw();
+		//image=new ImagePlus("Convolved_"+nn+"_"+mm, fpaux);
+		image=new ImagePlus("Convolved_"+nn, fpaux);
+		image.updateAndDraw();
 		image.show();	
 	}
 
@@ -182,26 +200,27 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	 * @return false if error
 	 */
 	public Pair<Integer,ImageStack> applyFilter(ImageProcessor ip){
+		String key=getKey();	
 		int index = position_id;
 		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			GScaleSpace sp=new GScaleSpace(sigma);
 			ImageStack fs=filter(ip.duplicate(), sp, scnorm,nn);
 			//IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp), PATH+FILTER_KEY+"_"+index+"_"+sigma+Common.TIFFORMAT );
-			imageStack.addSlice( FILTER_KEY+"_" + sigma, fs);		
+			imageStack.addSlice( key+"_" + sigma, fs);		
 		}
-		initialseimageStack(imageStack);
+		//initialseimageStack(imageStack);
 		return new Pair<Integer,ImageStack>(index, imageStack);
 	}
 
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-
+		String key=getKey();	
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
-				ImageStack is=filter(image,  sp, scnorm,nn);			
-				String imageName=filterPath+"/"+FILTER_KEY+"_"+sigma+".tif" ;
-				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, is),imageName );
+				ImageStack is=filter(image,  sp, scnorm, nn);			
+				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
+				IJ.save(new ImagePlus(key+"_" + sigma, is),imageName );
 			}
 
 	}
@@ -280,7 +299,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	 */
 	public static void savePreferences(Properties prefs) {
 		prefs.put(GN, Integer.toString(nn));
-		prefs.put(GM, Integer.toString(mm));
+		//prefs.put(GM, Integer.toString(mm));
 		prefs.put(LEN, Integer.toString(sz));
 		prefs.put(ISSEP, Boolean.toString(sep));
 		prefs.put(SCNORM, Boolean.toString(scnorm));
@@ -301,7 +320,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		gd.addNumericField("span x sigma", wnd, 3);
 		gd.addNumericField("half width", r, 1);
 		gd.addNumericField("order in x", nn, 1);
-		gd.addNumericField("order in y", mm, 1);
+		//gd.addNumericField("order in y", mm, 1);
 		gd.addCheckbox("Show kernel", debug);
 		gd.addCheckbox("Separable", sep);
 		gd.addCheckbox("Scale nomalize", scnorm);
@@ -326,7 +345,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		wnd = (int)(gd.getNextNumber());
 		int r = (int)(gd.getNextNumber());
 		nn = (int)(gd.getNextNumber());
-		mm = (int)(gd.getNextNumber());
+		//mm = (int)(gd.getNextNumber());
 		debug = gd.getNextBoolean();
 		sep = gd.getNextBoolean();
 		scnorm = gd.getNextBoolean();
@@ -354,7 +373,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		sep= Prefs.getBoolean(ISSEP, true);
 		scnorm=Prefs.getBoolean(SCNORM, false);
 		nn = Prefs.getInt(GN, 1);
-		mm = Prefs.getInt(GM, 0);
+		//mm = Prefs.getInt(GM, 0);
 		return true;
 	}
 
@@ -366,7 +385,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		settings.put(ISSEP, Boolean.toString(sep));
 		settings.put(SCNORM, Boolean.toString(scnorm));
 		settings.put(GN, Integer.toString(nn));
-		settings.put(GM, Integer.toString(mm));
+		//settings.put(GM, Integer.toString(mm));
 
 		return this.settings;
 	}
@@ -378,12 +397,12 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		sep=Boolean.parseBoolean(settingsMap.get(ISSEP));
 		scnorm=Boolean.parseBoolean(settingsMap.get(SCNORM));
 		nn=Integer.parseInt(settingsMap.get(GN));
-		mm=Integer.parseInt(settingsMap.get(GM));
+		//mm=Integer.parseInt(settingsMap.get(GM));
 
 		return true;
 	}
 
-
+/*
 	@Override
 	public String getKey() {
 		return FILTER_KEY;
@@ -393,13 +412,14 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	public String getName() {
 		return FILTER_NAME;
 	}
-
+*/
 
 	/*
 	 * by convention we will plot the lowest order derivative in 1D
 	 */
 	private double gdKernel(double x){
-		return -x*exp(-x*x/2.0) / (2.0*sqrt(PI));
+		double x2=x*x;
+		return -x*(x2-3.)*exp(-x2/2.) / (2.*sqrt(PI));
 	}
 
 	
@@ -415,7 +435,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	@Override
 	public double[][] kernelData() {
-		final int n=40;
+		final int n=70;
 		double [][] data=new double[2][n];
 		data[0]=SUtils.linspace(-10.0, 10.0, n);
 		for(int i=0; i<n; i++){

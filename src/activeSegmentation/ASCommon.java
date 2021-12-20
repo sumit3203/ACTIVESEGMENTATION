@@ -1,6 +1,7 @@
 package activeSegmentation;
 
-import java.awt.Font;
+import java.awt.*;
+import java.io.*;
 
 /**
  * 				
@@ -29,7 +30,9 @@ import java.awt.Font;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 public interface ASCommon {
-
+	
+	public static final String version="1.1.1";
+	
    // to check the class 
 	public static final String CLASS="class";
 	 // to check the .jar extension
@@ -47,7 +50,7 @@ public interface ASCommon {
 	// to give common name to instance
 	public static final String INSTANCE_NAME="segment";
 	// to set the workload for worker thread
-	public static Integer WORKLOAD = 100000000;
+	public static Integer WORKLOAD = 256;
 	// initial number of classes
 	public static int DEFAULT_CLASSES=2;
 	// To name the segmentation result
@@ -67,7 +70,7 @@ public interface ASCommon {
 	public static final String ARFF="arff";
 	public static final String CLASSIFIER="classifier";
 	public static final String COMMENT="Comment";
-	public static final String DEFAULTCOMMENT=" DefaultComment";
+	public static final String DEFAULTCOMMENT="DefaultComment";
 	//public static final String CREATEDATE="CreateDate";
 	//public static final String MODIFYDATE="ModifyDate";
 	public static final String PATH="Path";
@@ -99,13 +102,18 @@ public interface ASCommon {
 	public static final String K_TESTIMAGESDIR="TESTIMAGESDIR";
 	public static final String K_TESTFILTERDIR="TESTFILTERSDIR";
 	/* default folders */
-	public static final String filterDir="/filters/";
-	public static final String testfilterDir="/testfilters/";
-	public static final String featureDir="/features/";
-	public static final String learnDir="/learning/";
-	public static final String evalDir="/evaluation/";
-	public static final String imagDir="/images/";
-	public static final String testimagDir="/testimages/";
+	
+	public static final String fs=File.separator;
+	
+	public static final String filterDir= fs+"filters"+fs;
+	public static final String testfilterDir=fs+"testfilters"+fs;
+	public static final String featureDir=fs+"features"+fs;
+	public static final String learnDir=fs+"learning"+fs;
+	public static final String evalDir=fs+"evaluation"+fs;
+	public static final String imagDir=fs+"images"+fs;
+	public static final String testimagDir=fs+"testimages"+fs;
+	
+	public static final String offsetDir=fs+"training";
 	
 	/*
 	 *  GUI constants
@@ -121,9 +129,17 @@ public interface ASCommon {
 	/*
 	 * Fonts
 	 */
-	public static final Font labelFONT = new Font("Arial", Font.BOLD, 13);
-	public static final Font panelFONT = new Font("Arial", Font.BOLD, 10);
-	// General font of plugin
-	public static final Font FONT = new Font("Arial", Font.PLAIN, 10);
+	public static final Font mediumFONT = new Font("Arial", Font.BOLD,  16);
+	public static final Font labelFONT = new Font("Arial", Font.BOLD,  13);
+	public static final Font panelFONT = new Font("Arial", Font.BOLD,  10);
+	// default font for plugin
+	public static final Font      FONT = new Font("Arial", Font.PLAIN, 10);
+	public static final Font largeFONT = new Font( "Arial", Font.BOLD, 32);
 	
+	/*
+	 *  Colors
+	 */
+	public static final Color buttonColor=Color.BLUE;
+	public static final Color buttonBGColor=new Color(192, 192, 192);
+	public static final Color panelColor=Color.GRAY;
 }

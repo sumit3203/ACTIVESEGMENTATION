@@ -45,5 +45,5 @@ public interface IEvaluation {
 	 * @param  selection
 	 * @return string
 	 */
-	public String testModel(IDataSet instances,List<String> selection);
+	public IEvaluation testModel(IClassifier classifier, IDataSet iData);
 }

@@ -1,6 +1,7 @@
 package activeSegmentation;
 
 
+//import activeSegmentation.prj.ProjectInfo;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
@@ -33,6 +34,8 @@ import weka.core.Instance;
  */
 public interface IClassifier {
 	
+	final int ERR_CLASS=-1;
+	
 	/*
      * It builds the classifier on the instances.
      * based on WEKA -> WekaClassifier
@@ -50,7 +53,7 @@ public interface IClassifier {
     * @return The predicted label for the classifier.
     * @throws Exception The exception that will be launched.
     */
-    public double classifyInstance(Instance instance) throws Exception;
+    public double classifyInstance(Instance instance) ;
 
     //////////////////////////////////
     // potentially mixed code
@@ -60,16 +63,16 @@ public interface IClassifier {
      * Evaluates the classifier using the test dataset and stores the evaluation.
      * Tests
      * @param instances The instances to test
-     * @return The evaluation (what exactly is evaluation here?)
+     * @return Detailed human-readable output of the classifier
      */
  
-     public double[] testModel(IDataSet instances);
+     public String evaluateModel(IDataSet instances);
     
  	/**
       * @param instances The data provided to classify
       * @throws Exception The exception that will be launched.
       */
-     public void buildClassifier(IDataSet instances) throws Exception;
+     public void buildClassifier(IDataSet instances);
      
      //////////////////////////////////
      // Non Weka-specific code
@@ -79,17 +82,28 @@ public interface IClassifier {
       * Sets classifier
       * @param classifier
       */
-  	public void setClassifier(Classifier classifier);
+  	public  void setClassifier(Classifier classifier);
 
   	
     /**
      * @return The copy of the IClassifier used.
      * @throws Exception The exception that will be launched.
      */
-    public IClassifier makeCopy() throws Exception;
+  	public IClassifier makeCopy() ;
     
-    // Typing?
-    public <T> T getClassifier();
+
+    public Classifier getClassifier();
+    
+    
+    public String[] getMetadata();
+
+	
+
+    
+    
+   // public ProjectInfo getMetaInfo() ;
+
+	//public void setMetaInfo(ProjectInfo metaInfo);
 
 
 }

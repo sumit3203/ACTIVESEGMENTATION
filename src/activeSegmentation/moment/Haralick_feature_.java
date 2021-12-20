@@ -3,14 +3,17 @@ package activeSegmentation.moment;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.FilterType;
+<<<<<<< Updated upstream
 import activeSegmentation.IFilterViz;
+=======
+>>>>>>> Stashed changes
 import activeSegmentation.IMoment;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
-import ijaux.scale.Pair;
+import ijaux.datatype.Pair;
 
 import static activeSegmentation.FilterType.*;
 
@@ -235,6 +238,7 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 
 	@Override
 	public Set<String> getFeatureNames() {
+		generateFeatures();
 		return this.features;
 	}
 

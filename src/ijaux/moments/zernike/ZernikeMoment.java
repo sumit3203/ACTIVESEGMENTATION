@@ -4,17 +4,18 @@ import java.util.ArrayList;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ijaux.datatype.ComplexArray;
+import static java.lang.Math.*;
 
 public class ZernikeMoment {
 	int degree;
 	int centerX;
 	int centerY;
 	double radius;
+	// eliminate RadialValue
+	//public RadialValue[] rv=null;
 	public RadialValue[] rv=null;
-	
 	public ZernikeMoment(int degree){
 		this.degree=degree;
 	}
@@ -33,11 +34,11 @@ public class ZernikeMoment {
 		if(rv!=null && rv.get(m, n)!=0)
 			return rv.get(m, n);
 		
-		if(n==0&&m==0)
+		if (n==0 && m==0)
 			return 1;
 		
-		if((n-m)%2==0)
-			return (r*(calculateRadial(r,Math.abs(m-1),n-1,rv)+calculateRadial(r,m+1,n-1,rv))-calculateRadial(r,m,n-2,rv));	
+		if ( (n-m)%2==0 )
+			return (r*(calculateRadial(r,abs(m-1),n-1,rv)+calculateRadial(r,m+1,n-1,rv))-calculateRadial(r,m,n-2,rv));	
 		
 		else
 			return 0;
@@ -46,8 +47,8 @@ public class ZernikeMoment {
 	public void calculateRadius(ImageProcessor ip){
 		centerX = ip.getWidth() / 2;
         centerY = ip.getHeight() / 2;
-        final int max = Math.max(centerX, centerY);
-        radius = Math.sqrt(2 * max * max);
+        final int max = max(centerX, centerY);
+        radius = sqrt(2 * max * max);
 	}
 
 	public ComplexArray  extractZernikeMoment(ImageProcessor ip){
@@ -60,9 +61,9 @@ public class ZernikeMoment {
     		rv = new RadialValue[ip.getHeight()*ip.getWidth()];
     
     	// TODO change into PixLib form
-    	Zps[] zps=new Zps[ip.getHeight()*ip.getWidth()];
-    	//final int sz=ip.getHeight()*ip.getWidth();
-    	//ComplexArray zps=ComplexArray.create(sz);
+    	final int sz=ip.getHeight()*ip.getWidth();
+    	Zps[] zps=new Zps[sz];
+    	//ComplexArray[] zps2=  new ComplexArray[sz];
     	int index=0;
         for(int i=0;i<ip.getHeight();i++){
         	for(int j=0;j<ip.getWidth();j++){
@@ -76,25 +77,26 @@ public class ZernikeMoment {
         		if(rv[index]==null)
         			rv[index] = new RadialValue(degree,degree);
         		
-        		real=new ArrayList<Double>();
-        		imag=new ArrayList<Double>();
+        		real=new ArrayList<>();
+        		imag=new ArrayList<>();
         		
         		for(int k=0;k<=degree;k++){
         			for(int l=0;l<=k;l++){
         				
         				if((k-l)%2==0){
         					//Calculate radial_value
-        					double radial_value = calculateRadial(r, l, k, rv[index]);
-        					final double ang = l * Math.atan2(y, x);
-        					double pixel = ip.getPixel(x, y);
-        	        		real.add(pixel * radial_value * Math.cos(ang)* (degree + 1));
-        	        		imag.add(pixel * radial_value * Math.sin(ang)* (degree + 1));
-        	        		rv[index].set(l, k, radial_value); 
+        					final double rr = calculateRadial(r, l, k, rv[index])* (degree + 1);
+        					final double angle = l * Math.atan2(y, x);
+        					final double pixel = ip.getPixel(x, y);
+        	        		real.add(pixel * rr * cos(angle));
+        	        		imag.add(pixel * rr * sin(angle));
+        	        		rv[index].set(l, k, rr); 
         				}
         			}
         		}
         		
         		zps[index].setComplex(real, imag);
+        		
         		index++;
         		
         		 	
@@ -103,14 +105,15 @@ public class ZernikeMoment {
         
         double[] real_result=new double[real.size()];
         double[] imag_result=new double[real.size()];
+        
         for(int i=0;i<zps.length;i++){
         	ArrayList<Double> temp=zps[i].getReal();
         	for(int j=0;j<temp.size();j++){
-        		real_result[j]+=(temp.get(j)) / Math.PI;
+        		real_result[j]+=(temp.get(j)) / PI;
         	}
         	temp=zps[i].getImaginary();
         	for(int j=0;j<temp.size();j++){
-        		imag_result[j]+=(temp.get(j)) / Math.PI;
+        		imag_result[j]+=(temp.get(j)) / PI;
         	}
         }
         /*for(int i=0;i<real_result.length;i++){
@@ -126,8 +129,8 @@ public class ZernikeMoment {
 		IJ.run("Blobs (25K)");
     	//ImagePlus imp=IJ.openImage(path);
 		ImagePlus imp=IJ.getImage();
-    	ImageConverter ic=new ImageConverter(imp);
-    	ic.convertToGray8();
+    	//ImageConverter ic=new ImageConverter(imp);
+    	//ic.convertToGray8();
     	
     	ImageProcessor ip=imp.getProcessor();
     	ZernikeMoment zm=new ZernikeMoment(8);
@@ -137,48 +140,5 @@ public class ZernikeMoment {
     	System.out.println(bb-aa);
 	}
 	
-	// TODO change into complex from PixLib
-	private class ComplexWrapper {
-        /** real part. */
-        private double[] m_real;
 
-        /** imaginary part. */
-        private double[] m_imaginary;
-
-        /**
-         * constructor for number with imaginary part = 0.
-         * 
-         * @param real the real part
-         */
-        public ComplexWrapper(final double[] real) {
-            m_real = real;
-            m_imaginary = null;
-        }
-
-        /**
-         * constructor.
-         * 
-         * @param real the real part
-         * @param imaginary the imaginary part
-         */
-        public ComplexWrapper(final double[] real, final double[] imaginary) {
-            m_real = real;
-            m_imaginary = imaginary;
-        }
-
-        /**
-         * @return the real part of the complex number.
-         */
-        public double[] getReal() {
-            return m_real;
-        }
-
-        /**
-         * @return the imaginary part of the complex number.
-         */
-        public double[] getImaginary() {
-            return m_imaginary;
-        }
-
-     }
 }

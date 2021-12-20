@@ -53,8 +53,8 @@ public class TestFile {
 		ProjectInfo metaInfo= new ProjectInfo();
 		//metaInfo.setComment("Dummy");
 		metaInfo.projectDescription="Dummy";
-		metaInfo.setCreatedDate("12/06/2016");
-		metaInfo.setModifyDate("12/07/2016");
+		metaInfo.setCreatedDate("2019/07/07 15:07:48");
+		metaInfo.setModifyDate("2019/07/07 15:07:48");
 		metaInfo.setProjectPath("C://Program Files//ImageJ//plugins//activeSegmentation//");
 		
 		List<Map<String,String>> filters= new ArrayList<Map<String,String>>();
@@ -95,10 +95,10 @@ public class TestFile {
 		metaInfo.setFeatureList(featureInfos);
 		
 		Map<String,String> learning= new HashMap<String, String>();
-		learning.put("classifier", "classifier.model");
+		learning.put("classifierfile", "classifier.model");
 		learning.put("arff", "data.arff");
-		learning.put("setting", "activelearning");
-		metaInfo.setLearning(learning);
+		learning.put("learningType", "activelearning");
+		//metaInfo.setLearning(learning);
 		
 		return metaInfo;
 	}

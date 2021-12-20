@@ -32,6 +32,7 @@ import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
+import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 
 
@@ -64,10 +65,15 @@ import ijaux.datatype.Pair;
  */
 public class MomentsManager extends URLClassLoader implements IFilterManager {
 
+<<<<<<< Updated upstream
 	
 	private Map<String, IMoment<?>> momentMap= new HashMap<>();
+=======
+>>>>>>> Stashed changes
 
-	
+	private Map<String, IMoment<?>> momentMap= new HashMap<>();
+
+
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
 
@@ -82,7 +88,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		this.projectInfo=projectManager.getMetaInfo();
 		this.projectType=this.projectInfo.getProjectType();
 
-		
+
 		IJ.log("Project Type: " +  (projectInfo.getProjectType()));
 		System.out.println("Project Type: "+projectType);
 		IJ.log("Loading Filters");
@@ -162,7 +168,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 		} // end for
 
-		
+
 		System.out.println("moments list ");
 		System.out.println(momentMap);
 		if ( momentMap.isEmpty()) 
@@ -201,30 +207,52 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
+<<<<<<< Updated upstream
 		Map<String,Set<String>> features= new HashMap<String,Set<String>>();
 		System.out.println(projectString);
 		System.out.println(filterString);
 		for(IMoment<?> filter: momentMap.values()){
+=======
+		Map<String,Set<String>> features= new HashMap<>();
+
+		for(IMoment filter: momentMap.values()){
+>>>>>>> Stashed changes
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
-					for(String image: images) {
-						for(String key: featureManager.getClassKeys()) {
-							List<Roi> rois=featureManager.getExamples(key, LearningType.TRAINING_TESTING.name(), image);
-							if(rois!=null && !rois.isEmpty()) {
-								filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),
-										filterString+image.substring(0, image.lastIndexOf(".")),
-										rois);
-							
-							}
-
-						}
-					}
-
-				
-
+				features.put(filter.getKey(), filter.getFeatureNames());
 			}
 
 		}
+		for(String image: images) {
+			for(String key: featureManager.getClassKeys()) {
+				List<Roi> rois=featureManager.getExamples(key, LearningType.TRAINING_TESTING.name(), image);
+				if(rois!=null && !rois.isEmpty()) {
+					ImagePlus imageT=new ImagePlus(projectString+image);
+					ImageProcessor imageTP=imageT.getProcessor();
+					for(Roi roi: rois) {
+
+						ImageProcessor imageProcessor=imageTP.duplicate();
+						imageProcessor.setRoi(roi);
+						ImageProcessor ip_roi = imageProcessor.crop();
+						List<Pair<String,double[]>> outPutList= new ArrayList<>();
+						for(IMoment filter: momentMap.values()){
+							//System.out.println("filter applied"+filter.getName());
+							if(filter.isEnabled()){
+								Pair<String,double[]> out= filter.apply(ip_roi, roi);
+								
+								outPutList.add(out);
+							}
+
+						}
+						featureList.put(roi.getName(), outPutList);
+
+					}
+
+				}
+			}
+		}
+		
+		
 		if(featureList!=null && featureList.size()>0) {
 
 			IJ.log("Features computed "+featureList.size());
@@ -355,7 +383,11 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 			
 			return null;
 		}
+<<<<<<< Updated upstream
 		*/
+=======
+		 */
+>>>>>>> Stashed changes
 		return null;
 	}
 

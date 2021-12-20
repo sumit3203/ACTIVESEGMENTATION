@@ -5,14 +5,12 @@ import ij.gui.Roi;
 import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 
-import java.lang.reflect.Field;
+import java.io.File;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import activeSegmentation.filter.LoG_Filter_;
+ 
 
 /**
  * * 
@@ -40,6 +38,7 @@ import activeSegmentation.filter.LoG_Filter_;
  */
 public interface IFilter extends IAnnotated {
 	
+	public static final String fs=File.separator;
 	
 	/**
 	 * Returns a new default settings map for the filter 

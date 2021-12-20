@@ -1,8 +1,8 @@
 package activeSegmentation.learning;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.RecursiveAction;
-
-import activeSegmentation.ASCommon;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import weka.core.Instances;
@@ -17,9 +17,19 @@ public class ApplyTask extends RecursiveAction{
 	private IDataSet dataSet;
 	private double[] classificationResult;
 	private IClassifier iClassifier;
-	private Integer mStart;
-	private int mLength;
+	private int mStart=0;
+	private int mLength=512;
+	
+	private boolean debug=false;
 
+	/**
+	 * 
+	 * @param dataSet
+	 * @param mStart
+	 * @param length
+	 * @param classificationResult
+	 * @param classifier
+	 */
 	public ApplyTask(IDataSet dataSet,Integer mStart,int length, double[] classificationResult, 
 			IClassifier classifier) {
 		this.dataSet = dataSet;
@@ -32,41 +42,38 @@ public class ApplyTask extends RecursiveAction{
 
 	@Override
 	protected void compute() {
-		// TODO Auto-generated method stub
-		if (mLength < ASCommon.WORKLOAD) {
-			classifyPixels();
-			return;
+		if (mLength < 1024) {		
+			classifyPixels();		 
+		} else {
+			if (debug)
+				System.out.println("ApplyTask: splitting workLoad: " + mLength);	
+			invokeAll(createSubtasks());
 		}
-		//System.out.println("mLength"+mLength);
-
-		Integer split = mLength / 2;
-
-		invokeAll(new ApplyTask(dataSet, mStart, split, classificationResult,iClassifier),
-				new ApplyTask(dataSet, mStart + split, mLength - split, 
-						classificationResult,iClassifier));
-
 	}
+	 
+	private List<ApplyTask> createSubtasks() {
+        List<ApplyTask> subtasks = new ArrayList<>();
+        final int split = mLength / 2;
+        //divide and conquer tree recursion
+        ApplyTask task1 = new ApplyTask(dataSet, mStart,         split,           classificationResult, iClassifier);
+        ApplyTask task2 = new ApplyTask(dataSet, mStart + split, mLength - split, classificationResult, iClassifier);
 
+        subtasks.add(task1);
+        subtasks.add(task2);
+
+        return subtasks;
+    }
+	 
 	private void classifyPixels(){
-		IClassifier classifierCopy=null;
 		try {
-			classifierCopy = (IClassifier) (iClassifier.makeCopy());
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-		Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
-		for (int index = 0; index < testInstances.size(); index++)
-		{
-			try {
-				
-				classificationResult[mStart+index]=classifierCopy.
-				classifyInstance(testInstances.get(index));
-			} catch (Exception e) {
-
-				e.printStackTrace();
+			IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
+			Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
+			for (int index = 0; index < testInstances.size(); index++){				
+					classificationResult[mStart+index]=classifierCopy.
+					classifyInstance(testInstances.get(index));
 			}
+		} catch (Exception e) {	
+				e.printStackTrace();
 		}
 	}
 

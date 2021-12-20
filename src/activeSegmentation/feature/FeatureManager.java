@@ -3,50 +3,51 @@ package activeSegmentation.feature;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.LookUpTable;
 import ij.gui.Roi;
-import ij.gui.TextRoi;
 import ij.io.RoiDecoder;
 import ij.io.RoiEncoder;
-import ij.plugin.filter.RankFilters;
 import ij.plugin.frame.RoiManager;
+import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
+//import ij.process.ImageProcessor;
 import weka.core.Instance;
 
 import java.awt.*;
 import java.io.*;
 import java.util.*;
-import java.util.Arrays;
-import java.util.Comparator;
+//import java.awt.image.*;
+//import java.util.Arrays;
+//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+//import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import activeSegmentation.*;
-import activeSegmentation.classif.RoiInstanceCreator;
+import activeSegmentation.feature.weka.PixelInstanceCreator;
+import activeSegmentation.feature.weka.RoiInstanceCreator;
+import activeSegmentation.gui.RandomLUT;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.*;
 import activeSegmentation.util.GuiUtil;
 
 /**
  * 
- * 
- * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra, ZIB, and Dimiter Prodanov, IMEC
  *
  *
- * @contents Feature Manager to store , update and delete Samples , It also
- *           consist of code to load from metafile
+ * @contents Feature Manager to store, update and delete ROIs. It also
+ *           contains code to load from the metafile
  * 
  * 
  * @license This library is free software; you can redistribute it and/or modify
@@ -64,54 +65,88 @@ import activeSegmentation.util.GuiUtil;
  *          Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  *          USA
  */
-public class FeatureManager  {
+public class FeatureManager implements IUtil, ASCommon {
 
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
-	private Random rand = new Random();
+	//private Random rand = new Random();
 	private String projectString, featurePath;
-	private int sliceNum, totalSlices;
-	private List<String> images;
+	private int sliceNum=0, totalSlices=0;
+	private List<String> imageList=new ArrayList<>();
 	private Map<ProjectType, IFeature> featureMap = new HashMap<>();
 	private static RoiManager roiman = new RoiManager();
 	private Map<String, ClassInfo> classes = new TreeMap<>();
-	private List<Color> defaultColors;
-	ClassifierManager learningManager;
+	private List<Color> defaultColors = GuiUtil.setDefaultColors();
+	private ClassifierManager learningManager;
 	private Map<String,Integer> predictionResultClassification;
 
+	/**
+	 * 
+	 * @param projectManager
+	 * @param learningManager
+	 */
 	public FeatureManager(ProjectManager projectManager, ClassifierManager learningManager) {
 		this.projectManager = projectManager;
 		this.learningManager=learningManager;
 		this.projectInfo = this.projectManager.getMetaInfo();
-		this.images = new ArrayList<>();
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
+<<<<<<< Updated upstream
 		IJ.log("loading images from"+this.projectString);
 		this.totalSlices = loadImages(this.projectString);
 		this.defaultColors = GuiUtil.setDefaultColors();
 		if (this.totalSlices > 0) {
 			this.sliceNum = 1;
+=======
+		//IJ.log("loading images from "+this.projectString);
+		final List<String> images=loadImages(projectString);
+		totalSlices = images.size();
+		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from "+ projectString);
+		
+		if (totalSlices > 0) {
+			sliceNum = 1;
+>>>>>>> Stashed changes
 		}
 		if (!setFeatureMetadata()) {
 			for (int i = 1; i <= projectInfo.getClasses(); i++) {
 				addClass();
 			}
 		}
-	//	roiman.hide();
+		//roiman.hide();
 	
 		featureMap.put(ProjectType.SEGM, new PixelInstanceCreator(projectInfo));
 		featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
 	}
 
+	/**
+	 * 
+	 * @param directory
+	 * @return
+	 */
+	public List<String> loadImages(String directory) {
+		imageList.clear();
+		imageList= loadImages( directory, true);
+		return imageList;
+	}
+	/*
 	private int loadImages(String directory) {
-		this.images.clear();
+		imageList.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
+<<<<<<< Updated upstream
 		if (images==null) return -1;
 		final Pattern p = Pattern.compile("\\d+");
 				Arrays.sort(images, new  Comparator<File>(){
 		    @Override public int compare(File o1, File o2) {
+=======
+		if (images== null) return -1;
+		
+		final Pattern p = Pattern.compile("\\d+");
+		Comparator<File> comp= new  Comparator<File>(){
+		    @Override 
+		    public int compare(File o1, File o2) {
+>>>>>>> Stashed changes
 		    	   Matcher m = p.matcher(o1.getName());
 		           Integer number1 = null;
 		           if (!m.find()) {
@@ -135,22 +170,30 @@ public class FeatureManager  {
 		                   }
 		               }
 		           }
-		    }}
-		);
+		    }
+	    };
+		Arrays.sort(images, comp);
 		for (File file : images) {
 			//System.out.println(file.getName());
 			if (file.isFile()) {
-				this.images.add(file.getName());
+				imageList.add(file.getName());
 			}
 		}
-		return this.images.size();
+		return imageList.size();
 	}
-
-	//@Override
+*/
+	/**
+	 * 
+	 * @param key
+	 * @param roi
+	 * @param type
+	 * @param sliceNum
+	 * @return
+	 */
 	public boolean addExample(String key, Roi roi, String type, int sliceNum) {
 		
-		   if(!isAlreadyContains(key, roi, type, sliceNum)) {
-			String imageKey = this.images.get(sliceNum - 1);
+		if(!contains(key, roi, type, sliceNum)) {
+			String imageKey = imageList.get(sliceNum - 1);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 				classes.get(key).addTestingRois(imageKey, roi);
 			} else {
@@ -159,15 +202,15 @@ public class FeatureManager  {
 			roiman.addRoi(roi);
 			return true;
 		   }
-			return false;
+		return false;
 		
 	}
 	
 	/*
 	 * improve
 	 */
-	public boolean isAlreadyContains(String key, Roi roi,String type, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
+	public boolean contains(String key, Roi roi, String type, int sliceNum) {
+		String imageKey = imageList.get(sliceNum - 1);
 		for(String classKey: classes.keySet()) {
 			
 				if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
@@ -188,6 +231,7 @@ public class FeatureManager  {
 		return false;
 	}
 	
+	// slow. we should compute the boundaries
 	public boolean intersect(List<Roi> roiList, Roi roi) {
 		//Polygon p = roi.getPolygon();
 		Point[] points=roi.getContainedPoints();
@@ -204,6 +248,13 @@ public class FeatureManager  {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param classNum
+	 * @param roiList
+	 * @param type
+	 * @param sliceNum
+	 */
 	public void addExampleList(String classNum, List<Roi> roiList, String type, int sliceNum) {
 		for (Roi roi : roiList) {
 			if (processibleRoi(roi)) {
@@ -212,14 +263,15 @@ public class FeatureManager  {
 		}
 	}
 
-	private boolean processibleRoi(Roi roi) {
-		boolean ret = (roi != null && !(roi.getType() == Roi.LINE || roi.getType() == Roi.POLYLINE
-				|| roi.getType() == Roi.ANGLE || roi.getType() == Roi.FREELINE || roi.getType() == Roi.POINT));
-		return ret;
-	}
-
+	
+	/**
+	 * 
+	 * @param key
+	 * @param index
+	 * @param type
+	 */
 	public void deleteExample(String key, int index, String type) {
-		String imageKey = this.images.get(sliceNum - 1);
+		String imageKey = imageList.get(sliceNum - 1);
 		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
 			classes.get(key).deleteTestingRoi(imageKey, index);
 		} else {
@@ -228,44 +280,70 @@ public class FeatureManager  {
 
 	}
 
-	public List<Roi> getExamples(String key, String type, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
-		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRois(imageKey);
-		} else {
-			return classes.get(key).getTrainingRois(imageKey);
-		}
-
+	/**
+	 * 
+	 * @param key
+	 * @param type
+	 * @param sliceNum
+	 * @return
+	 */
+	public List<Roi> getRoiList(String key, String type, int sliceNum) {
+		if (imageList.size()>0) {
+			String imageKey = imageList.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				return classes.get(key).getTestingRois(imageKey);
+			} else {
+				return classes.get(key).getTrainingRois(imageKey);
+			}
+		} else 
+			return new  ArrayList<>();
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @param index
+	 * @param type
+	 * @return
+	 */
 	public Roi getRoi(String key, int index, String type) {
-		String imageKey = this.images.get(sliceNum - 1);
-		if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRoi(imageKey, index);
-		} else {
-			return classes.get(key).getTrainingRoi(imageKey, index);
-		}
+		System.out.println("getRoi "+index+ " "+imageList.size() );
+		if (imageList.size()>0 ) {
+			String imageKey = imageList.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				return classes.get(key).getTestingRoi(imageKey, index);
+			} else {
+				return classes.get(key).getTrainingRoi(imageKey, index);
+			}
+		} else 
+			return null;
 	}
 
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<String> getClassKeys() {
 		return classes.keySet();
 	}
 
-	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
 	public String getClassLabel(String index) {
 		return classes.get(index).getLabel();
 	}
-
-	public int getRoiListSize(String key, String learningType, int sliceNum) {
-		String imageKey = this.images.get(sliceNum - 1);
-		if (LearningType.valueOf(learningType).equals(LearningType.TESTING)) {
-			return classes.get(key).getTestingRoiSize(imageKey);
-		} else {
-			return classes.get(key).getTrainingRoiSize(imageKey);
-		}
-	}
 	
+
+	/**
+	 * 
+	 * @param key
+	 * @param type
+	 * @param imageKey
+	 * @return
+	 */
 	public List<Roi> getExamples(String key, String type, String imageKey) {
 		//System.out.println(key +"----"+type+"----"+imageKey);
 		if(LearningType.valueOf(type).equals(LearningType.TRAINING_TESTING)){
@@ -287,53 +365,64 @@ public class FeatureManager  {
 		}
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @param label
+	 */
 	public void setClassLabel(String key, String label) {
-
 		ClassInfo info = classes.get(key);
 		info.setLabel(label);
 		classes.put(key, info);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getNumOfClasses() {
 		return classes.size();
 	}
 
 
+	/**
+	 * 
+	 */
 	public void addClass() {
 		String key = UUID.randomUUID().toString();
 		if (!classes.containsKey(key)) {
 			Map<String, List<Roi>> trainingRois = new HashMap<>();
 			Map<String, List<Roi>> testingRois = new HashMap<>();
-			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), getColor(classes.size()), trainingRois,
+			ClassInfo classInfo = new ClassInfo(key, "label" + classes.size(), lut.getNextColor(classes.size()), trainingRois,
 					testingRois);
 			classes.put(key, classInfo);
 			
 		}
 	}
 
-	private Color getColor(int number) {
-		if (number < defaultColors.size()) {
-			return defaultColors.get(number);
-		} else {
-			float r = rand.nextFloat();
-			float g = rand.nextFloat();
-			float b = rand.nextFloat();
-			Color randomColor = new Color(r, g, b);
-			return randomColor;
-		}
+	private RandomLUT lut = new RandomLUT(LookUpTable.createGrayscaleColorModel(false));
 
-	}
 
+	/**
+	 * 
+	 * @param key
+	 */
 	public void deleteClass(String key) {
 		classes.remove(key);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean setFeatureMetadata() {
 		boolean alreadysetClass = false;
 		projectInfo = projectManager.getMetaInfo();
 		for (FeatureInfo featureInfo : projectInfo.getFeatureList()) {
 			alreadysetClass = true;
+			System.out.println("loading training ROIs");
 			Map<String, List<Roi>> trainingRois = loadRois(featureInfo.getZipFile(), featureInfo.getTrainingList());
+			System.out.println("loading testing ROIs");
 			Map<String, List<Roi>> testingRois = loadRois(featureInfo.getZipFile(), featureInfo.getTestingList());
 			ClassInfo classInfo = new ClassInfo(featureInfo.getKey(), featureInfo.getLabel(),
 					new Color(featureInfo.getColor()), trainingRois, testingRois);
@@ -342,9 +431,16 @@ public class FeatureManager  {
 		return alreadysetClass;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param roiMapper
+	 * @return
+	 */
 	private Map<String, List<Roi>> loadRois(String filename, Map<String, List<String>> roiMapper) {
 		Map<String, List<Roi>> roiMap = new HashMap<>();
 		List<Roi> classRoiList = openZip(featurePath + filename);
+		System.out.println("loading ROIs from "+featurePath + filename);
 		for (String imageKey : roiMapper.keySet()) {
 			roiMap.put(imageKey, getRois(classRoiList, roiMapper.get(imageKey)));
 		}
@@ -352,6 +448,12 @@ public class FeatureManager  {
 		return roiMap;
 	}
 
+	/**
+	 * 
+	 * @param classRoiList
+	 * @param roiNames
+	 * @return
+	 */
 	private List<Roi> getRois(List<Roi> classRoiList, List<String> roiNames) {
 		List<Roi> roiList = new ArrayList<>();
 		for (String name : roiNames) {			
@@ -366,6 +468,9 @@ public class FeatureManager  {
 		return roiList;
 	}
 
+	/**
+	 * 
+	 */
 	public void saveFeatureMetadata() {
 		projectInfo = projectManager.getMetaInfo();
 		projectInfo.resetFeatureInfo();
@@ -375,6 +480,7 @@ public class FeatureManager  {
 			featureInfo.setKey(classInfo.getKey());
 			featureInfo.setLabel(classInfo.getLabel());
 			featureInfo.setColor(classInfo.getColor().getRGB());
+			
 			for (String imageKey : classInfo.getTrainingRoiSlices()) {
 				List<String> trainingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTrainingRois(imageKey)) {
@@ -383,6 +489,7 @@ public class FeatureManager  {
 				featureInfo.addTrainingRois(imageKey, trainingRois);
 				classRois.addAll(classInfo.getTrainingRois(imageKey));
 			}
+			
 			for (String imageKey : classInfo.getTestingRoiSlices()) {
 				List<String> testingRois = new ArrayList<>();
 				for (Roi roi : classInfo.getTestingRois(imageKey)) {
@@ -393,8 +500,10 @@ public class FeatureManager  {
 			}
 
 			String fileName = ASCommon.ROISET + classInfo.getKey() + ASCommon.FORMAT;
-			if (classRois != null & classRois.size() > 0) {				
-				saveRois(featurePath + "/" + fileName, classRois);
+			if (classRois != null & classRois.size() > 0) {	
+				final String roipath=featurePath + fileName;
+				System.out.println("Saving ROIs in " +roipath);
+				saveRois(roipath, classRois);
 				featureInfo.setZipFile(fileName);
 			}
 			projectInfo.addFeature(featureInfo);
@@ -403,6 +512,11 @@ public class FeatureManager  {
 		projectManager.writeMetaInfo(projectInfo);
 	}
 
+	/**
+	 * 
+	 * @param featureType
+	 * @return
+	 */
 	public IDataSet extractFeatures(ProjectType featureType) {
        // System.out.println(featureType);
 		featureMap.get(featureType).createTrainingInstance(classes.values());
@@ -411,22 +525,44 @@ public class FeatureManager  {
 		return dataset;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<String> getFeatures() {
 		return null;
 	}
 
-	
-	public List<IDataSet> extractAll(String featureType) {
-		return null;
-	}
+	/**
+	 * 
+	 * @param featureType
+	 * @return
+	 */
+//	public List<IDataSet> extractAll(String featureType) {
+//		return null;
+//	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param classKey
+	 * @param type
+	 * @param sliceNum
+	 * @return
+	 */
 	public boolean saveExamples(String filename, String classKey, String type, int sliceNum) {
 		//System.out.println(classKey + type);
-		List<Roi> rois = getExamples(classKey, type, sliceNum);
+		List<Roi> rois = getRoiList(classKey, type, sliceNum);
 		//System.out.println(rois.size());
 		return saveRois(filename, rois);
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param rois
+	 * @return
+	 */
 	@SuppressWarnings("unused")
 	private boolean saveRois(String filename, List<Roi> rois) {
 		DataOutputStream out = null;
@@ -442,7 +578,6 @@ public class FeatureManager  {
 			}
 			out.close();
 		} catch (IOException e) {
-
 			return false;
 		} finally {
 			if (out != null)
@@ -454,11 +589,23 @@ public class FeatureManager  {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 * @param classKey
+	 * @param type
+	 * @param sliceNum
+	 */
 	public void uploadExamples(String fileName, String classKey, String type, int sliceNum) {
 		addExampleList(classKey, openZip(fileName), type, sliceNum);
 
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 */
 	@SuppressWarnings("unused")
 	private List<Roi> openZip(String fileName) {
 		Hashtable<String, Roi> rois = new Hashtable<>();
@@ -507,12 +654,18 @@ public class FeatureManager  {
 				}
 		}
 		if (nRois == 0)
-			System.out.println("ERROR OCCURED");
+			System.out.println("openZip error");
 			
 		return roiList;
 		
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param rois
+	 * @return
+	 */
 	private String getUniqueName(String name, Hashtable<?,?> rois) {
 		String name2 = name;
 		int n = 1;
@@ -531,9 +684,12 @@ public class FeatureManager  {
 		return name2;
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus stackedClassifiedImage() {
-		File[] files=finder(featurePath);
+		File[] files=tiffilter(featurePath);
 		ImageStack imageStack=null;
 		
 		for(int i=0 ; i<files.length;i++) {
@@ -548,7 +704,12 @@ public class FeatureManager  {
 		return new ImagePlus("Segmented Image", imageStack);
 	}
 	
-	 public File[] finder( String dirName){
+	/**
+	 * 
+	 * @param dirName
+	 * @return
+	 */
+	private File[] tiffilter( String dirName){
 	        File dir = new File(dirName);
 
 	        return dir.listFiles(new FilenameFilter() { 
@@ -557,8 +718,13 @@ public class FeatureManager  {
 	                      {return filename.toLowerCase().endsWith(".tif"); }
 	        } );
 
-	 }
-	 
+	}
+	
+	/**
+	 * 
+	 * @param roi
+	 * @return
+	 */
 	private int getRoiPredictionForClassification(Roi roi) {
 		//actually have to use learningManager.predict(roi-- here we should have instance of roi);
 		//System.out.println(roi.getName());
@@ -568,6 +734,10 @@ public class FeatureManager  {
 		//return getDummyPrediction();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Map<String,Integer> getClassificationResultMap(){
 		if (predictionResultClassification==null) {
 			compute();
@@ -575,34 +745,40 @@ public class FeatureManager  {
 		return predictionResultClassification;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus compute() {
 		
 		if(projectInfo.getProjectType()==ProjectType.CLASSIF) {
 			predictionResultClassification = new HashMap<>();
 		}		
 		// IJ.debugMode=true;
-		IJ.log("TRAINING STARTED");
-		System.out.println("TRAINING STARTED");
+		IJ.log("Training started");
+		System.out.println("Training started");
+		
 		// extract features in weka format, returns IDataset object
 		extractFeatures(projectInfo.getProjectType());
 		
 		// trains as per the setting of learning manager, we now have a trained classifier
 		learningManager.trainClassifier();
 		
-		IJ.log("TRAINING DONE");
-		System.out.println("TRAINING DONE");
+		IJ.log("Training done");
+		System.out.println("Training done");
+		final ProjectType projtype=	projectInfo.getProjectType();	
 		
-		for (String image : images) {
+		for (String image : imageList) {
 			//System.out.println(image +" image");
-																	
+			
 			//classification setting
-			if(projectInfo.getProjectType()==ProjectType.CLASSIF) {															
+			if (projtype==ProjectType.CLASSIF) {															
 							
 				//list of rois to make classified image instance				
 				List<Roi> training_roi_list;
 				List<Roi> testing_roi_list;
 																		
-				// iterate over all training rois (of all the classes) and predict their output
+				// iterate over all training ROIs (of all the classes) and predict their output
 				for(String key: getClassKeys()){										
 					training_roi_list = classes.get(key).getTrainingRois(image);
 					if(training_roi_list!=null) {
@@ -626,7 +802,7 @@ public class FeatureManager  {
 			} else {//segmentation setting
 		 		//get the current image
 				ImagePlus currentImage = getCurrentImage();
-		 		//classificationResult would have no of terms as number of pixels in particular image, 
+		 		//classificationResult would have number of terms as number of pixels in particular image, 
 				//expects createAllinstance would provide instances of all pixels of the particular image
 				
 				//String key= ProjectType.valueOf(projectInfo.getProjectType()).toString();
@@ -634,80 +810,136 @@ public class FeatureManager  {
 				double[] classificationResult = learningManager
 						.applyClassifier(featureMap.get(projectInfo.getProjectType()).createAllInstances(image));
 				
-				//now classificationResult has predictions of all pixels of one particular image
-				ImageProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
+				//now classificationResult has predictions for all pixels in one particular image
+				FloatProcessor classifiedSliceProcessor = new FloatProcessor(currentImage.getWidth(),
 						currentImage.getHeight(), classificationResult);
-				
+				ByteProcessor bp=(ByteProcessor) classifiedSliceProcessor.convertToByte(false);
+				//bp.setLut( lut.getLut());
 				//segmented image instance
-				ImagePlus classifiedImage = new ImagePlus(image, classifiedSliceProcessor);
+				ImagePlus classifiedImage = new ImagePlus(image, bp);
+				classifiedImage.setLut(lut.getLut());
 				classifiedImage.setCalibration(currentImage.getCalibration());
 				IJ.save(classifiedImage, featurePath + image);
 			}
 												
 		}
 		
-		if(projectInfo.getProjectType()==ProjectType.CLASSIF) {
+		if(projtype==ProjectType.CLASSIF) {
 			return null;
 		}
 		return getClassifiedImage();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public ProjectType getProjectType() {
-		return this.projectInfo.getProjectType();
+		return projectInfo.getProjectType();
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public Color getClassColor(String key) {
 		return classes.get(key).getColor();
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @param color
+	 */
 	public void updateColor(String key, Color color) {
 		classes.get(key).setColor(color);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getTotalSlice() {
-		return this.images.size();
+		return imageList.size();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus getCurrentImage() {
-		if (sliceNum == 0) {
-			return createImageIcon("no-image.jpg");
+		ImagePlus ret=null;
+		System.out.println("imageList size "+imageList.size());
+		if ( imageList.size()==0) {
+			ret= createImageIcon("./no-image.jpg");
+		} else {
+			if (sliceNum==0) sliceNum++;
+			String url=projectString + imageList.get(sliceNum-1 );
+			IJ.log("url "+url);
+			ret=new ImagePlus(url);
 		}
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		return ret; 
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getCurrentSlice() {
-		return this.sliceNum;
+		return sliceNum;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus getClassifiedImage() {
-		return new ImagePlus(featurePath + this.images.get(sliceNum - 1));
+		return new ImagePlus(featurePath + imageList.get(sliceNum - 1));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus getNextImage() {
 		if (this.sliceNum < totalSlices) {
 			this.sliceNum += 1;
 		}
 		//System.out.println("next slice"+sliceNum);
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		return new ImagePlus(projectString + imageList.get(sliceNum - 1));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ImagePlus getPreviousImage() {
 		if (this.sliceNum > 1) {
 			this.sliceNum -= 1;
 		}
-		return new ImagePlus(projectString + this.images.get(sliceNum - 1));
+		return new ImagePlus(projectString + imageList.get(sliceNum - 1));
 	}
 
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 */
 	private ImagePlus createImageIcon(String path) {
-		java.net.URL imgURL = FeatureManager.class.getResource(path);
+		java.net.URL imgURL = FeatureManager.class.getClassLoader().getResource(path);
 		if (imgURL != null) {
 			return new ImagePlus(imgURL.getPath());
 		} else {
-			return null;
+			ByteProcessor bp=new ByteProcessor(256,256);
+			return new ImagePlus("no image", bp);
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Color> getColors() {
 		List<Color> colors = new ArrayList<>();
 		for (ClassInfo classInfo : classes.values()) {

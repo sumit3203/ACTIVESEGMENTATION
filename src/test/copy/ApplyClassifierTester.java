@@ -4,8 +4,7 @@ import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 
 import activeSegmentation.IClassifier;
-//import activeSegmentation.IProjectManager;
-import activeSegmentation.learning.WekaDataSet;
+import activeSegmentation.learning.weka.WekaDataSet;
 import activeSegmentation.prj.ProjectManager;
 import weka.classifiers.functions.SMO;
 import weka.core.Instances;

@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+//import java.util.Arrays;
+//import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -26,22 +26,31 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import activeSegmentation.ASCommon;
+import static activeSegmentation.ASCommon.*;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IUtil;
 import activeSegmentation.ProjectType;
 
-public class ProjectManager {
+public class ProjectManager implements IUtil{
 
 	private IDataSet dataSet;
 	private static ProjectInfo projectInfo;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	private String activeSegDir;
+	private String activeSegJarPath;
 	private Map<String,String> projectDir=new HashMap<>();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public IDataSet getDataSet() {
 		return  dataSet;
 	}
 
-
+	/**
+	 * 
+	 * @param data
+	 */
 	public void setData(IDataSet data) {
 		dataSet = data.copy();
 	}
@@ -53,33 +62,43 @@ public class ProjectManager {
 	 * @return
 	 */
 	public boolean loadProject(String fileName) {
-		//System.out.println("IN LOAD PROJCT");
-		IJ.log("loading project");
+		IJ.log(System.getProperty("plugins.dir"));
+		IJ.log("loading project ...");
 		setDirectory();
-		//IJ.log(System.getProperty("plugins.dir"));
 		if(projectInfo==null){
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				//System.out.println(fileName);
 				File projectFile=new File(fileName);
-				//System.out.println(projectFile.getParent());
+				// elementary check if the file is a project file
+				if (projectFile.getName().indexOf(".json") <0) return false;
+				
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
-				//projectInfo.setPluginPath(activeSegDir);
-				//metaInfo.setPath(path);
-				//System.out.println("done");
-				//System.out.println( projectInfo.getProjectName());
+		 
+				System.out.println(projectInfo.getLearning());
+		 
+				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				//System.out.println(projectInfo.toString());
+				IJ.log("project type "+projectInfo.getProjectType() );
 				
 			} catch (UnrecognizedPropertyException e) {
+				IJ.log("Error: Wrong version");
 				e.printStackTrace();
+				return false;
 			} catch (JsonGenerationException e) {
+				IJ.log("Error: Not a JSON file!");
 				e.printStackTrace();
+				return false;
 			} catch (JsonMappingException e) {
+				IJ.log("Error: Wrong version mapping");
 				e.printStackTrace();
+				return false;
 			} catch (IOException e) {
+				IJ.log("Error: IO");
 				e.printStackTrace();
+				return false;
 			}			
 
 
@@ -101,13 +120,22 @@ public class ProjectManager {
 			if(projectInfo.getCreatedDate()==null){
 				projectInfo.setCreatedDate(dateFormat.format(new Date()));
 			}
+<<<<<<< Updated upstream
 			System.out.println("SAVING");
 			mapper.writeValue(new File(projectInfo.getProjectPath()+
 					"/"+projectInfo.projectName+
 					"/"+projectInfo.projectName+".json"), projectInfo);
 
 			System.out.println("DONE");
+=======
+		
+			final String projectFile=projectInfo.getProjectPath()+fs+
+					 projectInfo.projectName+".json";
+			mapper.writeValue(new File(projectFile), projectInfo);
+>>>>>>> Stashed changes
 
+			System.out.println("ProjectManager: saving project file "+projectFile);
+			
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -122,7 +150,6 @@ public class ProjectManager {
 	 * @return
 	 */
 	public ProjectInfo getMetaInfo() {
-
 		return projectInfo;
 	}
 
@@ -130,7 +157,7 @@ public class ProjectManager {
 	 * 
 	 * @param projectName
 	 * @param projectType
-	 * @param projectDirectory
+	 * @param projectDirectory+ 
 	 * @param projectDescription
 	 * @param trainingImage
 	 * @return
@@ -145,20 +172,20 @@ public class ProjectManager {
 		}
 		setDirectory();
 		projectInfo= new ProjectInfo();
-		projectInfo.setProjectPath(projectDirectory);
+		projectInfo.setProjectPath(projectDirectory+ fs+projectName);
 	
 		projectInfo.projectName=projectName;
 		projectInfo.setProjectType(ProjectType.valueOf(projectType));
 
 		projectInfo.projectDescription=projectDescription;
 		List<String> jars= new ArrayList<>();
-		jars.add(activeSegDir);
+		jars.add(activeSegJarPath);
 		projectInfo.setPluginPath(jars);
 		//DEFAULT 2 classes
-		projectInfo.setClasses(2);
-		createProjectSpace(projectDirectory,projectName);
+		projectInfo.setNClasses(2);
+		createProjectSpace(projectDirectory, projectName);
 		//CURRENT IMAGE
-		if(null !=WindowManager.getCurrentImage()) {
+		if (null !=WindowManager.getCurrentImage()) {
 			ImagePlus image= WindowManager.getCurrentImage();
 			IJ.log(Integer.toString(image.getStackSize()));
 			IJ.log(image.getTitle());
@@ -171,9 +198,9 @@ public class ProjectManager {
 			
 			}else {
 				// TRAINING IMAGE FOLDER
-				List<String> images=loadImages(trainingImage);
+				List<String> images=loadImages(trainingImage, true);
 				for(String image: images) {
-					ImagePlus currentImage=IJ.openImage(trainingImage+"/"+image);
+					ImagePlus currentImage=IJ.openImage(trainingImage+fs+image);
 					createImages(image, currentImage);
 				}
 			}
@@ -195,8 +222,14 @@ public class ProjectManager {
 	 * @param currentImage
 	 */
 	private void createImages(String image, ImagePlus currentImage) {
-		String format=image.substring(image.lastIndexOf("."));
-		String folder=image.substring(0, image.lastIndexOf("."));	
+		
+		final int dotindex=image.lastIndexOf(".");
+		String format="tif";
+		String folder=image;
+		if (dotindex>0) {
+		  format=image.substring(dotindex);
+		  folder=image.substring(0, dotindex);	
+		}
 		if(currentImage.getStackSize()>0) {
 			createStackImage(currentImage,format,folder);
 		}else {
@@ -226,7 +259,7 @@ public class ProjectManager {
 			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+title);
 			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+title);
 		}
-		IJ.log("createStackdone");
+		IJ.log("createStack done");
 	}
 	
 	/**
@@ -240,14 +273,13 @@ public class ProjectManager {
 			String trainingImage) {
 		String message="done";
 		if(projectName==null|| projectName.isEmpty()) {
-			return " Project Name cannot be Empty";
+			return "Project name cannot be empty";
 
 		} else if(projectDirectory==null|| projectDirectory.isEmpty() || projectDirectory.equalsIgnoreCase(trainingImage)) {
-			return "Project Directory cannot be Empty and Should not be same as training image directory";
+			return "Project directory cannot be empty and should not be the same as training image directory";
 		}
 		else if (null == WindowManager.getCurrentImage() &&(trainingImage==null|| trainingImage.isEmpty())) {
-			return "Training cannot be Empty and should be either tif file or folder with tiff images are"
-					+ "located";
+			return "Training folder cannot be empty and should contain either a tif file or folder with tiff images";
 		}
 		return message;
 	}
@@ -256,6 +288,7 @@ public class ProjectManager {
 	 * 
 	 */
 	private void setDirectory() {
+<<<<<<< Updated upstream
 		//IJ.debugMode=true;
 		String OS = System.getProperty("os.name").toLowerCase();
 		IJ.log(OS);
@@ -272,6 +305,22 @@ public class ProjectManager {
 			activeSegDir=plugindir+"plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
 		IJ.log(activeSegDir);
+=======
+		//String OS = System.getProperty("os.name").toLowerCase();
+		//IJ.log(OS);
+		String plugindir=IJ.getDir("imagej");
+		IJ.log(plugindir);
+		/*
+		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
+			activeSegJarPath=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
+		}
+		else {
+			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+		}
+		*/
+		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
+		IJ.log(activeSegJarPath);
+>>>>>>> Stashed changes
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
@@ -283,21 +332,12 @@ public class ProjectManager {
 	private void setProjectDir(String projectDirectory, String projectName) {
 		String projectString;
 		if(projectName!=null) {
-			projectString=projectDirectory+"/"+projectName+"/"+"training";
+			projectString=projectDirectory+fs+projectName+offsetDir;
 		}else {
-			projectString=projectDirectory+"/"+"Training";
+			projectString=projectDirectory+offsetDir;
 		}
 		
-		projectDir.put(ASCommon.K_PROJECTDIR, projectString);
-		/*
-		projectDir.put(ASCommon.K_FILTERSDIR, projectString+"/filters/");
-		projectDir.put(ASCommon.K_FEATURESDIR, projectString+"/features/");
-		projectDir.put(ASCommon.K_LEARNINGDIR, projectString+"/learning/");
-		projectDir.put(ASCommon.K_EVALUATIONDIR,projectString+"/evaluation/");
-		projectDir.put(ASCommon.K_IMAGESDIR,projectString+"/images/");
-		projectDir.put(ASCommon.K_TESTIMAGESDIR,projectString+"/testimages/");
-		projectDir.put(ASCommon.K_TESTFILTERDIR,projectString+"/testfilters/");
-		*/
+		projectDir.put(ASCommon.K_PROJECTDIR,   projectString);
 		projectDir.put(ASCommon.K_FILTERSDIR,   projectString + ASCommon.filterDir);
 		projectDir.put(ASCommon.K_FEATURESDIR,  projectString + ASCommon.featureDir);
 		projectDir.put(ASCommon.K_LEARNINGDIR,  projectString + ASCommon.learnDir);
@@ -321,8 +361,8 @@ public class ProjectManager {
 		createDirectory(projectDir.get(ASCommon.K_TESTFILTERDIR));
 		IJ.log("Project folders created");
 	}
-	
-	private File[] sortImages(File[] images) {
+/*	
+	private File[] sortFiles(File[] images) {
 		final Pattern p = Pattern.compile("\\d+");
 		Arrays.sort(images, new  Comparator<File>(){
 			@Override public int compare(File o1, File o2) {
@@ -353,11 +393,18 @@ public class ProjectManager {
 				);
 		return images;
 	}
+<<<<<<< Updated upstream
 	
 	private List<String> loadImages(String directory){
+=======
+	*/
+/*
+	@Override
+	public List<String> loadImages(String directory){
+>>>>>>> Stashed changes
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
-		File[] images = sortImages(folder.listFiles());
+		File[] images = sortFiles(folder.listFiles());
 		
 		for (File file : images) {
 			if (file.isFile()) {
@@ -367,6 +414,7 @@ public class ProjectManager {
 		
 		return imageList;
 	}
+*/
 	
 	private boolean createDirectory(String project){
 		File file=new File(project);
