@@ -92,13 +92,6 @@ public class FeatureManager implements IUtil, ASCommon {
 		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		//System.out.println(this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
-<<<<<<< Updated upstream
-		IJ.log("loading images from"+this.projectString);
-		this.totalSlices = loadImages(this.projectString);
-		this.defaultColors = GuiUtil.setDefaultColors();
-		if (this.totalSlices > 0) {
-			this.sliceNum = 1;
-=======
 		//IJ.log("loading images from "+this.projectString);
 		final List<String> images=loadImages(projectString);
 		totalSlices = images.size();
@@ -106,7 +99,6 @@ public class FeatureManager implements IUtil, ASCommon {
 		
 		if (totalSlices > 0) {
 			sliceNum = 1;
->>>>>>> Stashed changes
 		}
 		if (!setFeatureMetadata()) {
 			for (int i = 1; i <= projectInfo.getClasses(); i++) {
@@ -134,19 +126,12 @@ public class FeatureManager implements IUtil, ASCommon {
 		imageList.clear();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
-<<<<<<< Updated upstream
-		if (images==null) return -1;
-		final Pattern p = Pattern.compile("\\d+");
-				Arrays.sort(images, new  Comparator<File>(){
-		    @Override public int compare(File o1, File o2) {
-=======
 		if (images== null) return -1;
 		
 		final Pattern p = Pattern.compile("\\d+");
 		Comparator<File> comp= new  Comparator<File>(){
 		    @Override 
 		    public int compare(File o1, File o2) {
->>>>>>> Stashed changes
 		    	   Matcher m = p.matcher(o1.getName());
 		           Integer number1 = null;
 		           if (!m.find()) {
