@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="C:/Program Files (x64)/ImageJ/plugins/activeSegmentation/ACTIVE_SEG.jar"/>
+    <jar path="C:/Applications/ImageJ/plugins/activeSegmentation/ACTIVE_SEG.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/ACTIVE_SEGMENTATION/ActSeg.jardesc" exportErrors="false" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
