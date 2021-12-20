@@ -477,13 +477,8 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		try {
-<<<<<<< Updated upstream
-	 		sz=Integer.parseInt(settingsMap.get(LEN));
-			sz2=Integer.parseInt(settingsMap.get(SLEN));
-=======
  		sz=Integer.parseInt(settingsMap.get(LEN));
 		sz2=Integer.parseInt(settingsMap.get(SLEN));
->>>>>>> Stashed changes
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
 		
