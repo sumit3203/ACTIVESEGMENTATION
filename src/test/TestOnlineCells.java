@@ -190,6 +190,7 @@ public class TestOnlineCells {
 	int c=0;
 
 	boolean connStart(String dbName) {
+		//creates connection with the database
     	String dbUrl="jdbc:sqlite:"+ dbName;
         try {
             //Class.forName("org.gjt.mm.mysql.Driver");
@@ -210,6 +211,7 @@ public class TestOnlineCells {
 	
 	private void startDB(Instances trainingData2, Instances testData,List<Instance> trainInstances,List<Instance> testInstances,Map<String,List<CellType>> cells,SMO randomforest) {
 		try {
+			//starts the implementation process
 			trainingData2.addAll(testData);
 			Enumeration<Instance> enums=trainingData2.enumerateInstances();			
 			connStart("C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif.db");		
@@ -222,18 +224,21 @@ public class TestOnlineCells {
 
 	
 	public List<String> shuffle4same(List<Instance> trainInstances,List<String> tifs,List<String> ct,List<String> toi){
+		//shuffle 4 arrays the same way
 		double random_number = Math.floor(Math.random() * 10);
 		Collections.shuffle(trainInstances,new Random((int)random_number));
 		Collections.shuffle(tifs.subList(0,tifs.size()*4/5),new Random((int)random_number));
 		Collections.shuffle(ct.subList(0,ct.size()*4/5),new Random((int)random_number));
 		Collections.shuffle(toi.subList(0,toi.size()*4/5),new Random((int)random_number));
 		List<String> all = new ArrayList<>();
+		//gets a final array that contains tif images,cell types, type of instances
 		for(int i = 0; i < tifs.size(); i++)
 		{
 		    all.add(tifs.get(i));
 		    all.add(ct.get(i));
 		    all.add(toi.get(i));
 		}	
+		//it is like [tif1,ct1,toi1,tif2,ct2,toi2,...]
 		return all;
 	}
 	
@@ -256,8 +261,9 @@ public class TestOnlineCells {
 			}
 		}
 		List<String> all=shuffle4same(trainInstances,tifs,ct,toi);
-		double [][][] w=randomforest.sparseWeights();
-		String [][][] nm=randomforest.attributeNames();
+		//shuffle them the same way for training
+		double [][][] w=randomforest.sparseWeights();//contains the attribute weights
+		String [][][] nm=randomforest.attributeNames();//contains the attribute names
 		while (enums.hasMoreElements()) {
 			Instance currentList=enums.nextElement();//trainingData.instance(0);
 			try {
@@ -268,9 +274,9 @@ public class TestOnlineCells {
 			for (double s: probv) {
 				ss+=s;
 			}
-			System.out.println("\n"+ ss);
+			System.out.println("\n"+ ss); //prints out that the sum of the probability values are 1
 	        
-	        	
+	        	//insert to image_list the name of the image,the instance type,the cell type and the id of the vector
 	        	String update="INSERT INTO image_list (image_name, instance_type, cell_type,v_id) "
 	            		+ 				"VALUES  ( ?, ?,?,?)";
 	        	
@@ -280,13 +286,14 @@ public class TestOnlineCells {
 	        	ips.setString(2,all.get(c+2));
 	        	ips.setInt(4, vid);
 	        	ips.executeUpdate();
+	        	//inserts to vectors list the image names
 	        	update="INSERT INTO vectors ( image_name) "
 	            		+ 				"VALUES  (  ?)";
 	        		        
 		        PreparedStatement  vps = con.prepareStatement(update);       
 			    vps.setString(1, all.get(c));
 			    vps.executeUpdate();
-			
+			    //inserts to the vector_list the vector id and the probability values for this vector id(10 for each)
 			    update="INSERT INTO vector_list ( v_id, value) VALUES ( ?, ?)";
 			    // for looping into the prob vectors
 			    PreparedStatement vlps = con.prepareStatement(update);
@@ -304,7 +311,9 @@ public class TestOnlineCells {
 			    vlps.close();
 			    vid++;
 			    c=c+3;
+			    //do it once
 			    if(c==3) {
+			    	//inserts in the class list the class names
 				    update="INSERT INTO class_list (cl_name) "
 			        		+ 				"VALUES  (?)";	    	
 					PreparedStatement clps=con.prepareStatement(update);
@@ -314,11 +323,12 @@ public class TestOnlineCells {
 				    }
 					clps.clearParameters();
 				    clps.close();
-				    
+				    //inserts into the features_names list the names of each feature
 				    update="INSERT INTO features_names (f_name) "
 			        		+ 				"VALUES  (?)";
 				    PreparedStatement fnps=con.prepareStatement(update);
 				    String[] max={""};
+				    //below we get the max features that may be presented for each vector
 				    for(String [][] array2d : nm){
 			             for(String[] array : array2d){
 			            	 if(array!=null) {
@@ -334,7 +344,8 @@ public class TestOnlineCells {
 				    }
 					fnps.clearParameters();
 				    fnps.close();
-				    
+				    //insterts into the features_values the value of each feature along with 
+				    // the feature name id and the class id
 				    update="INSERT INTO features_values (f_value,fn_id,cl_id) "
 			        		+ 				"VALUES  (?,?,?)";
 				    PreparedStatement fps=con.prepareStatement(update);
