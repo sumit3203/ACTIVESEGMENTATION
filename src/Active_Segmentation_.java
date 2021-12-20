@@ -12,12 +12,8 @@ import ij.plugin.PlugIn;
 
 public class Active_Segmentation_ implements PlugIn {
 
-<<<<<<< Updated upstream
-	public static final String version="1.0";
-=======
 	public static final String version="1.1.1";
 
->>>>>>> Stashed changes
 
 	/**
 	 * 
@@ -42,10 +38,7 @@ public class Active_Segmentation_ implements PlugIn {
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
 		IJ.log("AS version "+version);
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 	}
 
 
