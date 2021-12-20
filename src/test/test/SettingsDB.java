@@ -1,9 +1,9 @@
 package test.test;
-<<<<<<< Updated upstream
-=======
+//<<<<<<< Updated upstream/
+//=======
 
 
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
 import java.util.HashMap;
 
