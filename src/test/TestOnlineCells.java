@@ -271,7 +271,7 @@ public class TestOnlineCells {
 			System.out.println("\n"+ ss);
 	        
 	        	
-	        	String update="INSERT INTO IMAGE_LIST (image_name, instance_type, cell_type,v_id) "
+	        	String update="INSERT INTO image_list (image_name, instance_type, cell_type,v_id) "
 	            		+ 				"VALUES  ( ?, ?,?,?)";
 	        	
 	        	PreparedStatement ips=con.prepareStatement(update);
@@ -280,14 +280,14 @@ public class TestOnlineCells {
 	        	ips.setString(2,all.get(c+2));
 	        	ips.setInt(4, vid);
 	        	ips.executeUpdate();
-	        	update="INSERT INTO VECTORS ( image_name) "
+	        	update="INSERT INTO vectors ( image_name) "
 	            		+ 				"VALUES  (  ?)";
 	        		        
 		        PreparedStatement  vps = con.prepareStatement(update);       
 			    vps.setString(1, all.get(c));
 			    vps.executeUpdate();
 			
-			    update="INSERT INTO VECTOR_LIST ( v_id, value) VALUES ( ?, ?)";
+			    update="INSERT INTO vector_list ( v_id, value) VALUES ( ?, ?)";
 			    // for looping into the prob vectors
 			    PreparedStatement vlps = con.prepareStatement(update);
 			    
@@ -305,7 +305,7 @@ public class TestOnlineCells {
 			    vid++;
 			    c=c+3;
 			    if(c==3) {
-				    update="INSERT INTO CLASS_LIST (cl_name) "
+				    update="INSERT INTO class_list (cl_name) "
 			        		+ 				"VALUES  (?)";	    	
 					PreparedStatement clps=con.prepareStatement(update);
 					for(int cl = 0; cl < classlabels.size(); cl++) {
@@ -315,7 +315,7 @@ public class TestOnlineCells {
 					clps.clearParameters();
 				    clps.close();
 				    
-				    update="INSERT INTO FEATURES_NAMES (f_name) "
+				    update="INSERT INTO features_names (f_name) "
 			        		+ 				"VALUES  (?)";
 				    PreparedStatement fnps=con.prepareStatement(update);
 				    String[] max={""};
@@ -335,7 +335,7 @@ public class TestOnlineCells {
 					fnps.clearParameters();
 				    fnps.close();
 				    
-				    update="INSERT INTO FEATURES_VALUES (f_value,fn_id,cl_id) "
+				    update="INSERT INTO features_values (f_value,fn_id,cl_id) "
 			        		+ 				"VALUES  (?,?,?)";
 				    PreparedStatement fps=con.prepareStatement(update);
 				    int cl=1;
