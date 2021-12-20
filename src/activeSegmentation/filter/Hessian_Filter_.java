@@ -423,31 +423,11 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			sz=Integer.parseInt(settingsMap.get(LEN));
 			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 			fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-<<<<<<< Updated upstream
-
-=======
 			
->>>>>>> Stashed changes
 			return true;
 		} catch ( NumberFormatException ex) {
 			return false;
 		}
-<<<<<<< Updated upstream
-	}
-
-	/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-	*/
-
-		/*
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-=======
->>>>>>> Stashed changes
 	}
 
 	@Override
