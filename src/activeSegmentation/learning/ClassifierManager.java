@@ -2,7 +2,9 @@ package activeSegmentation.learning;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 import weka.attributeSelection.AttributeSelection;
@@ -37,7 +39,7 @@ public class ClassifierManager implements ASCommon {
 
 	private IDataSet dataset;
 	private ForkJoinPool pool=  new ForkJoinPool();
-	private ArrayList<IFeatureSelection> featureMap=new ArrayList<>();
+	private HashMap<String,IFeatureSelection> featureMap=new HashMap<>();
 	
 	public static final int PREDERR=-1;
 	
@@ -50,8 +52,8 @@ public class ClassifierManager implements ASCommon {
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
 	 	
-		featureMap.add(new CFS());
-		featureMap.add(new PCA());
+		featureMap.put("activeSegmentation.learning.CFS",new CFS());
+		featureMap.put("activeSegmentation.learning.PCA",new PCA());
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 	}
@@ -89,12 +91,9 @@ public class ClassifierManager implements ASCommon {
 			String cname= li.getLearningOption();
 			if (cname!="")  {
 				System.out.println(cname);
-				ClassLoader classLoader= ClassifierManager.class.getClassLoader();			
-				IFeatureSelection	cclass =(IFeatureSelection) (classLoader.loadClass(cname)).newInstance(); 
-				//TODO select features here;
-				//currentClassifier.buildClassifier(dataset, cclass);
-				currentClassifier.buildClassifier(dataset);
-			
+			 	IFeatureSelection cclass =featureMap.get(cname);
+				currentClassifier.buildClassifier(dataset, cclass);
+				//currentClassifier.buildClassifier(dataset);			
 			} else
 				currentClassifier.buildClassifier(dataset);
 			
@@ -171,10 +170,19 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 * @return
 	 */
-	public ArrayList<IFeatureSelection> getFeatureSelList() {
-		return featureMap;
+	public Set<String> getFeatureSelSet() {
+			
+		return featureMap.keySet();
 	}
 
+
+	/**
+	 * 
+	 * @return
+	 */
+	public HashMap<String,IFeatureSelection> getFeatureSelMap() {
+		return featureMap;
+	}
 	/**
 	 * 
 	 * @param instance

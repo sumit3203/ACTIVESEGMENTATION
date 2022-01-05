@@ -10,7 +10,7 @@ import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
-import weka.attributeSelection.Ranker;
+//import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;

@@ -186,11 +186,15 @@ public class WekaClassifier implements IClassifier, Serializable {
 	@Override
 	public void buildClassifier(IDataSet instances, IFeatureSelection selection) {
 		try {
+			/*
+			// Temporarily disabled
 			IDataSet selected=selection.selectFeatures(instances);
 			Instances newData=selected.getDataset();
 			
 			
-			classifier.buildClassifier(newData);
+			classifier.buildClassifier(newData);*/
+			
+			classifier.buildClassifier(instances.getDataset());
 		} catch (Exception e) {
 			e.printStackTrace();
 			new RuntimeException ();

@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -208,11 +210,12 @@ public class LearningPanel implements Runnable, ASCommon {
 	        	if (!featureSelList.getValueIsAdjusting()) {
 	        		String fv=featureSelList.getSelectedValue();
 	        		System.out.println("Feature selection: " + fv);
-	        		ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelList();
+	        		Object[] compset=learningManager.getFeatureSelSet().toArray();
 	        		// NONE is the first choice
 	        		final int ind=featureSelList.getSelectedIndex()-1;
 	        		if (ind>0) {
-	        			fv=compset.get(ind).getClass().getName();
+	        			//fv=compset.get(ind).getClass().getName();
+	        			fv=(String) compset[ind];
 	        			projectInfo.getLearning().setLearningOption(fv);
 	        		}
 	        		hasChanged=true;
@@ -246,10 +249,13 @@ public class LearningPanel implements Runnable, ASCommon {
 	 */
 	private void featureSelectionUI(DefaultListModel<String> model) {
 		model.addElement("NONE");
-		ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelList();
-		for (IFeatureSelection comp:compset) {
-			String s=comp.getName();
-			model.addElement(s);
+		//ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelSet();
+		HashMap<String, IFeatureSelection> compset=learningManager.getFeatureSelMap();
+		Set<String> set=compset.keySet();
+		
+		for (String s:set) {
+			final String s2=compset.get(s).getName();
+			model.addElement(s2);
 		}
 	}
   
