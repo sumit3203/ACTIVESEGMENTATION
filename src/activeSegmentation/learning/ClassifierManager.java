@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
-import weka.attributeSelection.AttributeSelection;
-import weka.attributeSelection.BestFirst;
-import weka.attributeSelection.CfsSubsetEval;
+
 import weka.classifiers.AbstractClassifier;
-//import weka.classifiers.Evaluation;
+
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-//import weka.core.Instances;
+
 import activeSegmentation.ASCommon;
-import activeSegmentation.IAnnotated;
+
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
@@ -24,7 +22,7 @@ import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-import activeSegmentation.filter.FilterManager;
+
 import activeSegmentation.learning.weka.WekaClassifier;
 
 
