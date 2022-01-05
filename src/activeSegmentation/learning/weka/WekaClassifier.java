@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IFeatureSelection;
 //import activeSegmentation.prj.ProjectInfo;
 //import activeSegmentation.util.InstanceUtil;
 import weka.classifiers.AbstractClassifier;
@@ -180,6 +181,21 @@ public class WekaClassifier implements IClassifier, Serializable {
 	public String[] getMetadata() {
 		AbstractClassifier cls = (AbstractClassifier) classifier;
 		return cls.getOptions();
+	}
+
+	@Override
+	public void buildClassifier(IDataSet instances, IFeatureSelection selection) {
+		try {
+			IDataSet selected=selection.selectFeatures(instances);
+			Instances newData=selected.getDataset();
+			
+			
+			classifier.buildClassifier(newData);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new RuntimeException ();
+		}
+		
 	}
 
  

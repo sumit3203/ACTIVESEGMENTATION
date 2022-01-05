@@ -74,6 +74,8 @@ public interface IClassifier {
       */
      public void buildClassifier(IDataSet instances);
      
+     public void buildClassifier(IDataSet instances,  IFeatureSelection selection);
+     
      //////////////////////////////////
      // Non Weka-specific code
      ////////////////////////////////
@@ -84,6 +86,7 @@ public interface IClassifier {
       */
   	public  void setClassifier(Classifier classifier);
 
+  //	public void select
   	
     /**
      * @return The copy of the IClassifier used.

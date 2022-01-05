@@ -15,6 +15,7 @@ public class PCA implements IFeatureSelection {
 
 private PrincipalComponents filter;
 	
+	public PCA() {}
 	
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
