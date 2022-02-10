@@ -154,6 +154,13 @@ public class ClassifierManager implements ASCommon {
 	 */
 	public double[] applyClassifier(IDataSet dataSet){
 			final int ni=dataSet.getNumInstances();
+			LearningInfo li= projectInfo.getLearning();
+			String cname= li.getLearningOption();
+			if (cname!="")  {
+				IFeatureSelection cclass =featureMap.get(cname);
+			     dataSet=cclass.applyOnTestData(dataSet);
+			}
+			
 			double[] classificationResult = new double[ni];	
 			try {
 				ApplyTask applyTask= new ApplyTask(dataSet, 0, ni, classificationResult, currentClassifier);
