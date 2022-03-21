@@ -40,7 +40,10 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 */
 	private Classifier classifier;
 
-	
+	/**
+	 * 
+	 * @param iClassifier
+	 */
 	public WekaClassifier(Classifier iClassifier) {
 	   this.classifier= iClassifier;
 	}
