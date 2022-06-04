@@ -39,7 +39,6 @@ import static java.lang.Math.*;
  *
  * @contents
  * The plugin performs curvature filtering
- * 	The gaussian curvature is log-transformed
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
