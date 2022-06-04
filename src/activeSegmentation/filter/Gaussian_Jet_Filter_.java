@@ -93,10 +93,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	@AFilterField(key=GN, value="order")
 	public static int nn = Prefs.getInt(GN, 3);
 	
-	/*
-	@AFilterField(key=GM, value="order y")
-	public static int mm = Prefs.getInt(GM, 0);
-	 */
+ 
 	@AFilterField(key=ISSEP, value="separable")
 	public static boolean sep=Prefs.getBoolean(ISSEP, true);
 	
@@ -113,13 +110,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 
 	/* NEW VARIABLES*/
 
-	/** A string key identifying this factory.
-	private final  String FILTER_KEY = "GAUSSIAN Jet";
-
-	/** The pretty name of the target detector. 
-	private final String FILTER_NAME = "Gaussian Jet";
- */
-	
+ 
 	
 	private Map< String, String > settings= new HashMap<>();
 

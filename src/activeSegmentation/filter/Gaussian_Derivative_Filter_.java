@@ -117,9 +117,7 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	
 	private Map< String, String > settings= new HashMap<>();
 
-	// do we keep this variable?
-	//private ImageStack imageStack=null;
-
+  
 	/*
 	 * @param args - args[0] should point to the folder where the plugins are installed 
 	 */

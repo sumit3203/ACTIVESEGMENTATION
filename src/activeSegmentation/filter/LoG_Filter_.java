@@ -109,11 +109,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 	/* NEW VARIABLES*/
 
-	/** A string key identifying this factory. */
-	//private  String FILTER_KEY = "LOG";
-
-	/** The pretty name of the target detector. */
-	//private  String FILTER_NAME = "Laplacian of Gaussian";
+ 
 
 	private Map< String, String > settings= new HashMap<>();
 	

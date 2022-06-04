@@ -131,13 +131,8 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		int r = sz;//(sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 		FloatProcessor fp=filter(ip,sp, sep,scnorm);
-		//if (image==null) {
-			image=new ImagePlus("result hw="+r, fp);
-			image.show();
-//		} else {
-//			image.setProcessor(fp);
-//			image.updateAndDraw();
-//		}
+		image=new ImagePlus("result hw="+r, fp);
+		image.show();
 	}
 	
 	@Override

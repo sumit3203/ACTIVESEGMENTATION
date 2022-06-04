@@ -98,12 +98,10 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	private boolean isEnabled=true;
 
-
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 
-	/** It is the result stack*/
-	//private ImageStack imageStack=null;
+
 
 	
 	/**

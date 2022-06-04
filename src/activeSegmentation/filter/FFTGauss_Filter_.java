@@ -84,10 +84,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final String FILTER_NAME = "FFT Gaussian";
 
  
-	private Map< String, String > settings= new HashMap<String, String>();
-
-	//private ImageStack imageStack;
- 
+	private Map< String, String > settings= new HashMap<>();
 	
 	@Override
 	public int setup(String arg, ImagePlus imp) {

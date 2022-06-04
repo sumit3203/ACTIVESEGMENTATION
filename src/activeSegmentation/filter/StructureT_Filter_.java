@@ -102,20 +102,10 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	public static int max_sz= Prefs.getInt(MAX_LEN, 8);
 
 	/* NEW VARIABLES*/
-
-	/** A string key identifying this factory. */
-	//private final  String FILTER_KEY = "STRUCTURE";
-
-	/** The pretty name of the target detector. */
-//	private final String FILTER_NAME = "Structure components";
-	
-  	
+   	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
-	
-	/** It is the result stack*/
-	//private ImageStack imageStack;
-
+ 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
 	 * and arguments of filter
@@ -138,11 +128,6 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	 */
 	private Calibration cal=null;
 	
-	/*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
-	*/
 	
 	/*
 	 * (non-Javadoc)

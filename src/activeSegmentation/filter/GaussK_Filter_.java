@@ -92,13 +92,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 
 	private boolean isFloat=false;
 
-	//private boolean hasRoi=false;
 
 	final int Ox=0, Oy=1, Oz=2;
 
 	private boolean doCalib = false;
 	private Calibration cal=null;
-	//private final int TYPE=1;
 	
 	
 	/* NEW VARIABLES*/
@@ -106,18 +104,9 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private boolean isEnabled=true;
 
 
-	/** A string key identifying this factory. */
-	//private final  String FILTER_KEY = "CURVATURE";
-
-	/** The pretty name of the target detector. */
-	//private final String FILTER_NAME = "CURVATURE";
-	
-
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 
-	/** It is the result stack*/
-	//private ImageStack imageStack=null;
 
 	/**
 	 * 

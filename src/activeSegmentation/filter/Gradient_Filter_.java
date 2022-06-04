@@ -121,11 +121,7 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 	 */
 	private Calibration cal=null;
 	
-	/*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
-	*/
+ 
 	
 	/*
 	 * (non-Javadoc)

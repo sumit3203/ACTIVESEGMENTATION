@@ -118,15 +118,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	private Object pixundo;
 	 
-	/* NEW VARIABLES*/
 
-	/** A string key identifying this factory. */
-	//private final  String FILTER_KEY = "BOG";
-
-	/** The pretty name of the target detector. */
- 	//private final String FILTER_NAME = "Bi-Laplacian of Gaussian";
-	
-	private Map< String, String > settings= new HashMap<String, String>();
+	private Map< String, String > settings= new HashMap<>();
 	
 	private boolean isEnabled=true;
 	 

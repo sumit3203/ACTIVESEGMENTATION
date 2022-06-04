@@ -89,18 +89,14 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, true);
 
 	private boolean isFloat=false;
-    @SuppressWarnings("unused")
-
-	private boolean hasRoi=false;
-
+ 
 
 	/* NEW VARIABLES*/
  	
 	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 	
-	/** It is the result stack*/
-	//private ImageStack imageStack;
+  
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
@@ -110,7 +106,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public int setup(String arg, ImagePlus imp) {
 		image=imp;
 		isFloat= (image.getType()==ImagePlus.GRAY32);
-		hasRoi=imp.getRoi()!=null;
+  
 		cal=image.getCalibration();
 		return  flags;
 	}

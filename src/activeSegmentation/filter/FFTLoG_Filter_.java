@@ -185,21 +185,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	 */
 	public static void main(String[] args) {
 
-		/*
-		try {
-			File f = new File(args[0]);
-			if (f.exists() && f.isDirectory() ) {
-				System.setProperty("plugins.dir", args[0]);
-				new ImageJ();
-			} else {
-				throw new IllegalArgumentException();
-			}
-		}
-		catch (Exception ex) {
-			IJ.log("plugins.dir misspecified\n");
-			ex.printStackTrace();
-		}*/
-		
+ 
 		
 		new ImageJ();
 		IJ.run("Blobs (25K)");
@@ -273,18 +259,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	}
 	
-	/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-	 */
-	/*
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-	 */
+
 	
 	private double logKernel(double x){
 		final double x2=x*x;

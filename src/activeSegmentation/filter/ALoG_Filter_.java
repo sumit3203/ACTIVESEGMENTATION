@@ -92,20 +92,9 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 
 	/* NEW VARIABLES*/
-
-	/** A string key identifying this factory. */
-	//private final  String FILTER_KEY = "ALOG";
-
-	/** The pretty name of the target detector. */
-	//private final String FILTER_NAME = "Anisotropic Laplacian of Gaussian";
-	
-	
-	
-	/** It stores the settings of the Filter. */
+  	/** It stores the settings of the Filter. */
 	private Map< String, String > settings= new HashMap<>();
 	
-	/** It is the result stack*/
-	//private ImageStack imageStack;
 
 	/**
 	 * This method is to setup the PlugInFilter using image stored in ImagePlus 
