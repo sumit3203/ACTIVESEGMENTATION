@@ -296,11 +296,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		return true;
 	}
 
-   /*
-	public void initialseimageStack(ImageStack img){
-		this.imageStack = img;
-	}
- */
+ 
 
 
 	@Override
@@ -322,9 +318,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp,  ImageStack imageStack) {
 		if (!isFloat) 
 			ip=ip.convertToFloat();
-//		if(ip instanceof ColorProcessor) {
-//			ip=ip.convertToFloat();
-//		}
+
 		
 		int r=sp.getSize();
 		//System.out.println("IN REEAL CODE");
@@ -454,27 +448,11 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 		time+=System.nanoTime();
 		time/=1000.0f;
 		System.out.println("elapsed time: " + time +" us");
-		/*System.out.println("sigma: " + sp.getSigma() + 
-				" scale: " + sp.getScale() + 
-				" kernel size: "+ sp.getSize()
-				);*/
-		//ImagePlus iamge=new ImagePlus("imafe", imageStack);
-		//image.show();
+
 		return imageStack;
 	}
 
-/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
 
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-*/
 
 	@Override
 	public boolean isEnabled() {
