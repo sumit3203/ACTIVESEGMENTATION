@@ -20,6 +20,7 @@ import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
+import ij.IJ;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 
@@ -87,14 +88,17 @@ public class ClassifierManager implements ASCommon {
 		
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
-			if (cname!="")  {
-				System.out.println(cname);
+			//System.out.println("cname "+ cname);
+			if (cname!="")  {			
 			 	IFeatureSelection cclass =featureMap.get(cname);
-				currentClassifier.buildClassifier(dataset, cclass);
-				//currentClassifier.buildClassifier(dataset);			
+			 	if (dataset==null) {
+			 		IJ.log("Classifier Manager: error in training:"+ cclass.getName() +" is null");
+			 	}
+				currentClassifier.buildClassifier(dataset, cclass);							
 			} else
 				currentClassifier.buildClassifier(dataset);
 			
+			//currentClassifier.buildClassifier(dataset);
 			if(dataset!=null)
 				InstanceUtil.writeDataToARFF(dataset.getDataset(), projectInfo);
 			
@@ -112,7 +116,7 @@ public class ClassifierManager implements ASCommon {
 			
 			outputstr+= currentClassifier.evaluateModel(dataset);
 			 
-			//Wring output-> move to evaluation;
+			//Write output-> move to evaluation;
 			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
 			
 			// to avoid data creep
@@ -156,17 +160,32 @@ public class ClassifierManager implements ASCommon {
 			final int ni=dataSet.getNumInstances();
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
+			System.out.print("learning option "+ cname);
+			IDataSet fdata=null;
 			if (cname!="")  {
 				IFeatureSelection cclass =featureMap.get(cname);
-			     dataSet=cclass.applyOnTestData(dataSet);
+				System.out.print("Classifier Manager: selecting feature " +cclass. getName()+ " "+cname);
+				fdata=cclass.applyOnTestData(dataSet);
 			}
 			
 			double[] classificationResult = new double[ni];	
-			try {
-				ApplyTask applyTask= new ApplyTask(dataSet, 0, ni, classificationResult, currentClassifier);
-				pool.invoke(applyTask);
-			} catch (@SuppressWarnings("unused") Exception ex) {
-				System.out.println("Exception in applyClassifier ");
+			if (fdata!=null) {
+				try {
+					ApplyTask applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier);
+					pool.invoke(applyTask);
+				} catch ( Exception ex) {
+					System.out.println("Exception in applyClassifier ");
+					ex.printStackTrace();
+				}
+			} else {
+				System.out.println("Classifier Manager: applyClassifier: fdata set is null"); 
+				try {
+					ApplyTask applyTask= new ApplyTask(dataSet, 0, ni, classificationResult, currentClassifier);
+					pool.invoke(applyTask);
+				} catch ( Exception ex) {
+					System.out.println("Exception in applyClassifier ");
+					ex.printStackTrace();
+				}
 			}
 		return classificationResult;
 	}

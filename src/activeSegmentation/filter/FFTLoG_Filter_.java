@@ -129,7 +129,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		int kw=frame[2];
 		int kh=frame[3];
 		FFTKernelLoG fgauss=new FFTKernelLoG (kw, kh, order, sigma,  even);
-		imp=filter(ip, fgauss);
+		imp=convolve(ip, fgauss);
 		imp.show();
 		if (showkernel) {
 			ComplexFProcessor ckern= new ComplexFProcessor(kw,kh, fgauss.getKernelComplexF());
@@ -143,7 +143,7 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	 * @param ip
 	 * @param fgauss
 	 */
-	private ImagePlus filter(ImageProcessor ip, FFTKernelLoG fgauss) {
+	private ImagePlus convolve(ImageProcessor ip, FFTKernelLoG fgauss) {
 		FFTConvolver proc = new FFTConvolver(ip, fgauss, true);
 		FloatProcessor output=proc.convolve();
 		ImagePlus imp=new ImagePlus("LoG sigma="+sigma+" order "+order,output);
@@ -236,10 +236,11 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
 		String key=getKey();
 		// re-prarametrization by sz
+		final int sord=(int) (order*10);
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 			ImageProcessor fp=filter(image, order, sigma);
-			String imageName=path+"/"+key+"_"+order+"_"+sigma+".tif" ;
-			IJ.save(new ImagePlus(key+"_"+order+"_" + sigma, fp),imageName );
+			String imageName=path+"/"+key+"_"+sord+"_"+sigma+".tif" ;
+			IJ.save(new ImagePlus(key+"_"+sord+"_" + sigma, fp),imageName );
 		}
 	}
 

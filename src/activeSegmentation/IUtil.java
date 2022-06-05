@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import javax.swing.JList;
 
 import activeSegmentation.feature.FeatureManager;
+import ij.IJ;
 import ij.gui.Roi;
 
 /**
@@ -33,13 +34,18 @@ public interface IUtil {
 	default public List<String> loadImages(String directory, boolean sortFiles){
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
-		if (!folder.exists())
+		if (!folder.exists()) {
+			IJ.log(directory+" does not exist ");
 			throw new RuntimeException(directory+" does not exist ");
+		
+		}
 		File[] images = folder.listFiles();
 		if (sortFiles) 
 			images=sortFiles(images);
-		if (images==null) 
+		if (images==null) {
+				IJ.log("no files found in "+directory);
 				throw new RuntimeException("no files found in "+directory);
+		}
 		for (File file : images) {
 			if (file.isFile()) {
 				imageList.add(file.getName());

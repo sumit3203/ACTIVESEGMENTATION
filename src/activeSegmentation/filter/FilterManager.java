@@ -221,6 +221,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			IFilter filter=filterMap.get(key);
 			return filter.updateSettings(settingsMap);
 		} catch (NumberFormatException ex) {
+			System.out.println("Exception for filter: " + key);
 			ex.printStackTrace();
 			return false;
 		}

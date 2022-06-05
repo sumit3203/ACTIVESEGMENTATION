@@ -56,7 +56,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-@AFilter(key="CURVATURE2", value="Curvature 2", type=SEGM)
+@AFilter(key="CURVATURE2", value="Curvature 2D", type=SEGM)
 public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -66,20 +66,20 @@ public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFi
 	private int nPasses=1;
 	private int pass;
  
-	public final static String SIGMA="GK_sigma", LEN="GK_len",  MAX_LEN="G_MAX",  FULL_OUTPUT="KFull_out";
+	public final static String SIGMA="GK_sigma", LEN="GK_len",  MAX_LEN="GK_MAX",  FULL_OUTPUT="KFull_out";
  
 	@AFilterField(key=LEN, value="initial scale")
-	private static int sz= Prefs.getInt(LEN, 9);
+	public  int sz= Prefs.getInt(LEN, 2);
 
 	@AFilterField(key=MAX_LEN, value="max scale")
-	private  int max_sz= Prefs.getInt(MAX_LEN, 8);
+	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 
-	private float[][] kernel=null;
 
 	private ImagePlus image=null;
-	public static boolean debug=true;//IJ.debugMode;
+	public static boolean debug=false;//IJ.debugMode;
 
-	public static boolean fulloutput=false;
+	@AFilterField(key=FULL_OUTPUT, value="full output")
+	public  boolean fulloutput=Prefs.getBoolean(FULL_OUTPUT, false);
 
 	private boolean isFloat=false;
 	
@@ -156,6 +156,7 @@ public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFi
  * @return
  */
 private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
+	float[][] kernel=null;
 	ip.snapshot();
 	if (!isFloat) 
 		ip=ip.toFloat(0, null);
@@ -264,36 +265,28 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 		lap_norm.setf(i, gk);
 		hesdet.setf(i, det);
 	}
-		
- 
+	
+	String fkey=this.getKey();
+	
 	if (fulloutput) {
-		is.addSlice("X diff", gradx);
-		is.addSlice("Y diff", grady);
-		is.addSlice("XX diff", lap_xx);
-		is.addSlice("YY diff", lap_yy);
-		is.addSlice("XY diff", lap_xy);
-	//	apos=6;
+		is.addSlice(fkey+"_X_diff_"+sz, gradx);
+		is.addSlice(fkey+"_Y_diff_"+sz, grady);
+		is.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
+		is.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
+		is.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
 	}
 
-	//is.addSlice("Gauss  K1K2", lap_k1k2);
-	lap_norm.resetMinAndMax();
-	is.addSlice("K_iso", lap_norm);
-	is.addSlice("K_stream", lap_tan);
-	is.addSlice("Hess det", hesdet);
-
+	is.addSlice(fkey+"_K_n_"+sz, lap_norm);
+	 
+	is.addSlice(fkey+"_K_t_"+sz, lap_tan);
+	is.addSlice(fkey+"_Hess_det_"+sz, hesdet);
+ 
 	return is;
 }
 
 	
 	
  	
-	/**
-	 * @param i
-	 * @return
-	 */
-	public float[] getKernel(int i) {
-		return kernel[i];
-	}
 
 	/* (non-Javadoc)
 	 * @see ij.plugin.filter.ExtendedPlugInFilter#showDialog(ij.ImagePlus, java.lang.String, ij.plugin.filter.PlugInFilterRunner)
@@ -333,6 +326,7 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
 		//sigma = (float) (gd.getNextNumber());
@@ -367,8 +361,10 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
      *
     * @param prefs
     */
-   public static void savePreferences(Properties prefs) {
+   public  void savePreferences(Properties prefs) {
 	   		prefs.put(LEN, Integer.toString(sz));
+	   		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
+	   		prefs.put(MAX_LEN, Integer.toString(max_sz));
          // prefs.put(SIGMA, Float.toString(sigma));
 
    }
@@ -384,7 +380,8 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 			
 		GaussK3_Filter_ mf=new GaussK3_Filter_();
 	 	 
-		sz=21;
+		mf.sz=21;
+
 		mf.run(ip);
 		
 
@@ -395,7 +392,7 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 	public Map<String, String> getDefaultSettings() {
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
-		//settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
+		settings.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 
 		return this.settings;
 	}
@@ -403,9 +400,14 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		sz=Integer.parseInt(settingsMap.get(LEN));
-		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		//fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
+		try {
+			sz=Integer.parseInt(settingsMap.get(LEN));
+			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+			fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 
@@ -439,11 +441,25 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 	public boolean reset() {
 		sz= Prefs.getInt(LEN, 2);
 		max_sz= Prefs.getInt(MAX_LEN, 8);
+		fulloutput=Prefs.getBoolean(FULL_OUTPUT, false);
 		return true;
 	}
 
+	private double logKernel(double x){
+		final double x2=x*x;
+		return (x2-2)* exp(-0.5*x2)/(2.0*sqrt(PI));
+	}
 
- 
+	@Override
+	public double[][] kernelData() {
+		final int n=40;
+		double [][] data=new double[2][n];
+		data[0]=SUtils.linspace(-10.0, 10.0, n);
+		for(int i=0; i<n; i++){
+			data[1][i]=logKernel(data[0][i]);
+		}
+		return data;
+	}
 	 
 
 }

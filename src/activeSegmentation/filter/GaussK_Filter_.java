@@ -87,7 +87,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	private ImagePlus image=null;
 	public static boolean debug=true;//IJ.debugMode;
 
-	public static boolean fulloutput=false;
+	public  boolean fulloutput=false;
 
 	private boolean isFloat=false;
 

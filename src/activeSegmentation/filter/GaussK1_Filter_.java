@@ -69,7 +69,7 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	public final static String SIGMA="GK_sigma", LEN="GK_len", MAX_LEN="G_MAX", FULL_OUTPUT="KFull_out";
  
 	@AFilterField(key=LEN, value="initial scale")
-	public static int sz= Prefs.getInt(LEN, 2);
+	public  int sz= Prefs.getInt(LEN, 2);
 	//private static float sigma=(float) Prefs.getDouble(SIGMA, 2.0f);
 	
 	@AFilterField(key=MAX_LEN, value="max scale")
@@ -314,10 +314,15 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		sz=Integer.parseInt(settingsMap.get(LEN));
-		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		//fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-		return false;
+		try {
+			sz=Integer.parseInt(settingsMap.get(LEN));
+			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+			//fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 

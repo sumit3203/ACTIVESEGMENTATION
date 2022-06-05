@@ -8,6 +8,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -40,7 +42,7 @@ import activeSegmentation.prj.ProjectManager;
 import javax.swing.ImageIcon;
 
 /**
- * This is Weka-specfic panel, so it is OK to expose Weka classes. 
+ * This is a Weka-specfic panel, so it is OK to expose Weka classes. 
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
@@ -84,7 +86,7 @@ public class LearningPanel implements Runnable, ASCommon {
   public void doAction(ActionEvent event)  {
     if (event == SAVE_BUTTON_PRESSED)     {
       //updateClassifier(cls);    
-      if(aclass!=null && hasChanged) {
+      if(aclass!=null ) {
     	  IClassifier classifier = new WekaClassifier(aclass);
           
           learningManager.setClassifier(classifier);
@@ -110,7 +112,9 @@ public class LearningPanel implements Runnable, ASCommon {
 			IClassifier classifier = new WekaClassifier(aclass);
 	        learningManager.setClassifier(classifier);
 	        wekaClassifierEditor.setClassType(Classifier.class);
-	        wekaClassifierEditor.setValue(learningManager.getClassifier());
+	        Object obj =learningManager.getClassifier();
+	        System.out.println(obj);
+	        wekaClassifierEditor.setValue(obj);
 	        //TODO pass properly the options onto the classifier
 	        defaultOptions = Utils.joinOptions(options);
 	        System.out.println(defaultOptions);
@@ -208,14 +212,24 @@ public class LearningPanel implements Runnable, ASCommon {
 	        @Override
 			public void valueChanged(ListSelectionEvent evt) {
 	        	if (!featureSelList.getValueIsAdjusting()) {
-	        		String fv=featureSelList.getSelectedValue();
-	        		System.out.println("Feature selection: " + fv);
-	        		Object[] compset=learningManager.getFeatureSelSet().toArray();
+	        		//String fv=featureSelList.getSelectedValue();
+	        		String fv="";
+	        		System.out.println("Learning: Feature selection: " + fv);
+	        		//Object[] compset=learningManager.getFeatureSelSet().toArray();
 	        		// NONE is the first choice
-	        		final int ind=featureSelList.getSelectedIndex()-1;
+	        		 int ind=featureSelList.getSelectedIndex()-1;
+	        		 System.out.println(ind);
 	        		if (ind>0) {
 	        			//fv=compset.get(ind).getClass().getName();
-	        			fv=(String) compset[ind];
+	        			HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
+	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();
+	        			Entry<String, IFeatureSelection> ee=null;
+	        			while (ind>=0) {
+	        				ee=iter.next();
+	        				//System.out.println(ee);
+	        				ind--;
+	        			}
+	        			fv=ee.getKey();
 	        			projectInfo.getLearning().setLearningOption(fv);
 	        		}
 	        		hasChanged=true;

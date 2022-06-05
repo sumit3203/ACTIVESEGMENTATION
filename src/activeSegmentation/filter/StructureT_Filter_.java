@@ -462,23 +462,16 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		try {
- 		sz=Integer.parseInt(settingsMap.get(LEN));
-		sz2=Integer.parseInt(settingsMap.get(SLEN));
-		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
-		fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));
-		
-		return true;
+	 		sz=Integer.parseInt(settingsMap.get(LEN));
+			sz2=Integer.parseInt(settingsMap.get(SLEN));
+			max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
+			fulloutput= Boolean.parseBoolean(settingsMap.get(FULL_OUTPUT));					
 		} catch (NumberFormatException ex) {
 			return false;
 		}
+		return true;
 	}
 
-	/*
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-	 */
 
 	@Override
 	public boolean isEnabled() {
@@ -490,12 +483,6 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		this.isEnabled= isEnabled;
 	}
 	
-	/*
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
-	*/
 
 	private double logKernel(double x){
 		final double x2=x*x;

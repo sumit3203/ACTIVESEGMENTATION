@@ -22,14 +22,11 @@ import java.util.logging.Logger;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-//import activeSegmentation.prj.ProjectInfo;
-//import activeSegmentation.util.InstanceUtil;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.SerializedObject;
 
 public class WekaClassifier implements IClassifier, Serializable {
 
@@ -163,7 +160,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 		return null;
 	}
 
-
+	/*
 	@Override
 	public IClassifier makeCopy() {
 		try {
@@ -173,7 +170,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 		}
 		return null;
 	}
-
+	 */
  
 	@Override
 	public Classifier getClassifier() {

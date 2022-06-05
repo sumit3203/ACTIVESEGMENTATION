@@ -1,6 +1,7 @@
 package activeSegmentation;
 
 import ijaux.datatype.Pair;
+import weka.core.SerializedObject;
 
 /**
  * 				
@@ -51,6 +52,19 @@ public interface IFeatureSelection extends IAnnotated {
 	public default String getName() {
 		Pair<String,String> p = getKeyVal();
 		return p.second;
+	}
+	
+	/**
+     * @return The copy of the IClassifier used.
+     * @throws Exception The exception that will be launched.
+     */
+	default IFeatureSelection makeCopy() {
+		try {
+			return (IFeatureSelection) new SerializedObject(this).getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
  
 }

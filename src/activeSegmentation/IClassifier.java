@@ -4,6 +4,7 @@ package activeSegmentation;
 //import activeSegmentation.prj.ProjectInfo;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
+import weka.core.SerializedObject;
 
 /**
  * 				
@@ -92,7 +93,14 @@ public interface IClassifier {
      * @return The copy of the IClassifier used.
      * @throws Exception The exception that will be launched.
      */
-  	public IClassifier makeCopy() ;
+	default IClassifier makeCopy() {
+		try {
+			return (IClassifier) new SerializedObject(this).getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
     
 
     public Classifier getClassifier();

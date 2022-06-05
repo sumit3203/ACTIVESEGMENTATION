@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.concurrent.RecursiveAction;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IFeatureSelection;
 import weka.core.Instances;
+import weka.core.SerializedObject;
 
 public class ApplyTask extends RecursiveAction{
 
@@ -17,10 +19,15 @@ public class ApplyTask extends RecursiveAction{
 	private IDataSet dataSet;
 	private double[] classificationResult;
 	private IClassifier iClassifier;
+	private IFeatureSelection filter;
 	private int mStart=0;
 	private int mLength=512;
 	
 	private boolean debug=false;
+	
+	public void setFilter(IFeatureSelection selection) {
+		filter=selection;
+	}
 
 	/**
 	 * 
@@ -65,16 +72,19 @@ public class ApplyTask extends RecursiveAction{
     }
 	 
 	private void classifyPixels(){
-		try {
+		//try {
 			IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
 			Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
+			// 
+			// new SerializedObject(this).getObject();
+			//applyOnTestData (testInstances);
 			for (int index = 0; index < testInstances.size(); index++){				
 					classificationResult[mStart+index]=classifierCopy.
 					classifyInstance(testInstances.get(index));
 			}
-		} catch (Exception e) {	
-				e.printStackTrace();
-		}
+		//} catch (Exception e) {	
+		//		e.printStackTrace();
+		//}
 	}
 
 }
