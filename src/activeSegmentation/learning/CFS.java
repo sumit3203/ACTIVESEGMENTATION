@@ -1,7 +1,5 @@
 package activeSegmentation.learning;
 
-
-
 import static activeSegmentation.FilterType.FEATURE;
 
 import activeSegmentation.AFilter;
@@ -18,10 +16,9 @@ import weka.filters.supervised.attribute.AttributeSelection;
 @AFilter(key="CFS", value="Correlation Feature Selection", type=FEATURE)
 public class CFS implements IFeatureSelection {
 
-	private AttributeSelection filter;
+	private AttributeSelection filter = new AttributeSelection();
 	
-	public CFS( ) {
-		
+	public CFS() {
 	}
 	
 	/*
@@ -30,11 +27,9 @@ public class CFS implements IFeatureSelection {
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-
 		Instances trainingData= data.getDataset();
 		trainingData.setClassIndex(trainingData.numAttributes()-1);
-		filter = new AttributeSelection();
-
+		
 		// Evaluator
 		final CfsSubsetEval evaluator = new CfsSubsetEval();
 		evaluator.setMissingSeparate(true);
@@ -46,17 +41,11 @@ public class CFS implements IFeatureSelection {
 		// Apply filter
 		try {
 			filter.setInputFormat(trainingData);
-			 BestFirst search1 = new BestFirst();
-
+			BestFirst search1 = new BestFirst();
 			filter.setEvaluator(evaluator);
 			filter.setSearch(search1);
-			Instances filteredIns = Filter.useFilter(trainingData, filter);
-			
+			Instances filteredIns = Filter.useFilter(trainingData, filter);		
 			filteredIns.deleteWithMissingClass();
-	
-			// int numattr = filter.numberAttributesSelected();
-			//filter.SelectAttributes(trainingData);
-			
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
@@ -66,13 +55,13 @@ public class CFS implements IFeatureSelection {
 	}
 	
 	@Override
-	public IDataSet applyOnTestData(IDataSet data){
+	public IDataSet filterTestData(IDataSet data){
 
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
 			Instances filteredIns  = Filter.useFilter(testData, filter);
-			new WekaDataSet(filteredIns);
+			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

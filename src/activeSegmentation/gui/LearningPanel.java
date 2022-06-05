@@ -77,6 +77,10 @@ public class LearningPanel implements Runnable, ASCommon {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
+    
+    DefaultListModel<String> model = new DefaultListModel<>();
+    featureSelectionUI(model);
+    featureSelList = new JList<>(model);
   }
   
   /**
@@ -202,34 +206,34 @@ public class LearningPanel implements Runnable, ASCommon {
 	    JPanel featurePanel = new JPanel();
 	    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
 	    featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
-	    DefaultListModel<String> model = new DefaultListModel<>();
-	    featureSelectionUI(model);
-	 
-	    featureSelList = new JList<>(model);
+	    
+
+	    
 	    featureSelList.setBackground(Color.WHITE);
 	    featureSelList.setSelectedIndex(0);
 	    featureSelList.addListSelectionListener(new ListSelectionListener() {
 	        @Override
 			public void valueChanged(ListSelectionEvent evt) {
 	        	if (!featureSelList.getValueIsAdjusting()) {
-	        		//String fv=featureSelList.getSelectedValue();
+	        
 	        		String fv="";
 	        		System.out.println("Learning: Feature selection: " + fv);
-	        		//Object[] compset=learningManager.getFeatureSelSet().toArray();
+	        		HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
+	        		//final int sz=hm.size();
 	        		// NONE is the first choice
 	        		 int ind=featureSelList.getSelectedIndex()-1;
+	        		 int cc=0;
 	        		 System.out.println(ind);
 	        		if (ind>0) {
-	        			//fv=compset.get(ind).getClass().getName();
-	        			HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
-	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();
+ 	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();
 	        			Entry<String, IFeatureSelection> ee=null;
-	        			while (ind>=0) {
+	        			while (cc<ind) {
 	        				ee=iter.next();
 	        				//System.out.println(ee);
-	        				ind--;
+	        				cc++;
 	        			}
 	        			fv=ee.getKey();
+	        			System.out.println("fv  "+ fv);
 	        			projectInfo.getLearning().setLearningOption(fv);
 	        		}
 	        		hasChanged=true;

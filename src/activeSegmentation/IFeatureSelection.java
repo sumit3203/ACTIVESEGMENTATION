@@ -34,7 +34,7 @@ public interface IFeatureSelection extends IAnnotated {
 	public IDataSet selectFeatures(IDataSet trainingData);
 	
 	
-	public IDataSet applyOnTestData(IDataSet data);
+	public IDataSet filterTestData(IDataSet data);
 	
 	/**
 	 * returns a unique key of filter

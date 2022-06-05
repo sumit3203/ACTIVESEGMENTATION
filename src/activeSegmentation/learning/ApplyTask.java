@@ -19,12 +19,13 @@ public class ApplyTask extends RecursiveAction{
 	private IDataSet dataSet;
 	private double[] classificationResult;
 	private IClassifier iClassifier;
-	private IFeatureSelection filter;
+
 	private int mStart=0;
 	private int mLength=512;
 	
 	private boolean debug=false;
-	
+
+	private IFeatureSelection filter;
 	public void setFilter(IFeatureSelection selection) {
 		filter=selection;
 	}

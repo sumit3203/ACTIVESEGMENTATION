@@ -13,24 +13,22 @@ import weka.filters.Filter;
 @AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
 public class PCA implements IFeatureSelection {
 
-private PrincipalComponents filter;
+private PrincipalComponents filter = new PrincipalComponents();
 	
-	public PCA() {}
+	public PCA() {
+	}
 	
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-		Instances trainingData= data.getDataset();
-		trainingData.setClassIndex(trainingData.numAttributes()-1);
-		filter = new PrincipalComponents();
-				
+		Instances data1= data.getDataset();
+		data1.setClassIndex(data1.numAttributes()-1);				
 		// Apply filter
 		try {
-			filter.setInputFormat(trainingData);
-			Instances filteredIns   = Filter.useFilter(trainingData, filter);
+			filter.setInputFormat(data1);
+			Instances filteredIns   = Filter.useFilter(data1, filter);
 			return new WekaDataSet(filteredIns);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {	
 			e.printStackTrace();
 		}
 		return null;
@@ -38,12 +36,13 @@ private PrincipalComponents filter;
 	
 	// superfluous method?
 	@Override
-	public IDataSet applyOnTestData(IDataSet data){
+	public IDataSet filterTestData(IDataSet data){
 
-		Instances testData= data.getDataset();
-		testData.setClassIndex(testData.numAttributes()-1);
+		Instances data1= data.getDataset();
+		data1.setClassIndex(data1.numAttributes()-1);
 		try {
-			Instances filteredIns  = Filter.useFilter(testData, filter);
+			//filter.setInputFormat(data1);
+			Instances filteredIns  = Filter.useFilter(data1, filter);
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -60,7 +60,7 @@ public class ClassifierManager implements ASCommon {
 	
 	
 	/**
-	 * 
+	 * trains the classifier
 	 */
 	public void trainClassifier(){
     	projectInfo= projectMan.getMetaInfo();
@@ -126,7 +126,7 @@ public class ClassifierManager implements ASCommon {
 	}
 	
 	/**
-	 * 
+	 * saves the learning metadata
 	 */
 	public void saveLearningMetaData(){	
 		projectInfo= projectMan.getMetaInfo();
@@ -134,7 +134,7 @@ public class ClassifierManager implements ASCommon {
 	}
 
 	/**
-	 * 
+	 * gets the learning metadata
 	 */
 	public LearningInfo getLearningMetaData() {
 		return projectInfo.getLearning();
@@ -146,7 +146,6 @@ public class ClassifierManager implements ASCommon {
 	 */
 	public void setClassifier(Object classifier) {
 		currentClassifier = (WekaClassifier)classifier;		 	
-		//System.out.println(currentClassifier.toString());
 	}
 
 	/**
@@ -161,9 +160,9 @@ public class ClassifierManager implements ASCommon {
 			System.out.print("learning option "+ cname);
 			IDataSet fdata=null;
 			if (cname!="")  {
-				IFeatureSelection cclass =featureMap.get(cname);
-				System.out.print("Classifier Manager: selecting feature " +cclass. getName()+ " "+cname);
-				fdata=cclass.applyOnTestData(dataSet);
+				IFeatureSelection filter =featureMap.get(cname);
+				//System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
+				fdata=filter.filterTestData(dataSet);
 			}
 			
 			double[] classificationResult = new double[ni];	
@@ -171,8 +170,8 @@ public class ClassifierManager implements ASCommon {
 				try {
 					ApplyTask applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier);
 					//System.out.println("cname "+ cname);			 	
-					IFeatureSelection sel =featureMap.get(cname);			 	
-					applyTask.setFilter(sel);
+					IFeatureSelection filter =featureMap.get(cname);			 	
+					applyTask.setFilter(filter);
 					pool.invoke(applyTask);
 				} catch ( Exception ex) {
 					System.out.println("Exception in applyClassifier ");
@@ -195,8 +194,7 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 * @return
 	 */
-	public Set<String> getFeatureSelSet() {
-			
+	public Set<String> getFeatureSelSet() {			
 		return featureMap.keySet();
 	}
 
