@@ -160,17 +160,6 @@ public class WekaClassifier implements IClassifier, Serializable {
 		return null;
 	}
 
-	/*
-	@Override
-	public IClassifier makeCopy() {
-		try {
-			return (IClassifier) new SerializedObject(this).getObject();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	 */
  
 	@Override
 	public Classifier getClassifier() {

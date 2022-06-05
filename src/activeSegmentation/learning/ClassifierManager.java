@@ -67,10 +67,8 @@ public class ClassifierManager implements ASCommon {
     	System.out.println("Classifier Manager: in training");
     	File folder = new File(projectInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
-		//System.out.println("ground truth "+metaInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR)+metaInfo.getGroundtruth());
 		try {
 			//System.out.println("Classifier Manager: in training");
-			// do we need this?
 			String filename=folder.getCanonicalPath()+fs+projectInfo.getGroundtruth();
 			//IJ.log(filename);
 			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
@@ -172,6 +170,9 @@ public class ClassifierManager implements ASCommon {
 			if (fdata!=null) {
 				try {
 					ApplyTask applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier);
+					//System.out.println("cname "+ cname);			 	
+					IFeatureSelection sel =featureMap.get(cname);			 	
+					applyTask.setFilter(sel);
 					pool.invoke(applyTask);
 				} catch ( Exception ex) {
 					System.out.println("Exception in applyClassifier ");
