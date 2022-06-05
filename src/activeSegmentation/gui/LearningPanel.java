@@ -169,11 +169,13 @@ public class LearningPanel implements Runnable, ASCommon {
 	    learningJPanel.add(wekaCEPanel);
 	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 80);
 	    
-	    ////////////////////////////////
+	    ////////////////////////////////Will be enabled in the future
+	    
 	    JPanel options = new JPanel();
 	    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
 	    options.setBounds(xOffsetCol1, 120, 300, 80);
 	
+	    
 	    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
 	    JRadioButton  activeLearning = new JRadioButton ("Active Learning" );
 	    ButtonGroup bg=new ButtonGroup(); 
@@ -221,12 +223,12 @@ public class LearningPanel implements Runnable, ASCommon {
 	        		HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
 	        		//final int sz=hm.size();
 	        		// NONE is the first choice
-	        		 int ind=featureSelList.getSelectedIndex()-1;
-	        		 int cc=0;
-	        		 System.out.println(ind);
+	        		int ind=featureSelList.getSelectedIndex()-1;
+	        		System.out.println(ind);
 	        		if (ind>0) {
+	        			int cc=0;
  	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();
-	        			Entry<String, IFeatureSelection> ee=null;
+	        			Entry<String, IFeatureSelection> ee=null;	        			
 	        			while (cc<ind) {
 	        				ee=iter.next();
 	        				//System.out.println(ee);
@@ -255,7 +257,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	    aPanel.add(learningJPanel);
 	    aPanel.add(featurePanel);
 	    aPanel.add(IOpanel);
-	    aPanel.add(options);
+	   // aPanel.add(options);
 	    
 	    frame.add(aPanel);
 	    frame.setVisible(true);
@@ -267,10 +269,8 @@ public class LearningPanel implements Runnable, ASCommon {
 	 */
 	private void featureSelectionUI(DefaultListModel<String> model) {
 		model.addElement("NONE");
-		//ArrayList<IFeatureSelection> compset=learningManager.getFeatureSelSet();
 		HashMap<String, IFeatureSelection> compset=learningManager.getFeatureSelMap();
 		Set<String> set=compset.keySet();
-		
 		for (String s:set) {
 			final String s2=compset.get(s).getName();
 			model.addElement(s2);

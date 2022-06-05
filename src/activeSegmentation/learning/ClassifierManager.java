@@ -155,17 +155,17 @@ public class ClassifierManager implements ASCommon {
 	 */
 	public double[] applyClassifier(IDataSet dataSet){
 			final int ni=dataSet.getNumInstances();
+			double[] classificationResult = new double[ni];
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
 			System.out.print("learning option "+ cname);
+			
 			IDataSet fdata=null;
 			if (cname!="")  {
 				IFeatureSelection filter =featureMap.get(cname);
 				//System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
 				fdata=filter.filterTestData(dataSet);
 			}
-			
-			double[] classificationResult = new double[ni];	
 			if (fdata!=null) {
 				try {
 					ApplyTask applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier);

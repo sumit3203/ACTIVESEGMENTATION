@@ -41,7 +41,7 @@ private PrincipalComponents filter = new PrincipalComponents();
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
-			//filter.setInputFormat(data1);
+			filter.setInputFormat(data1);
 			Instances filteredIns  = Filter.useFilter(data1, filter);
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {

@@ -27,8 +27,8 @@ public class CFS implements IFeatureSelection {
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-		Instances trainingData= data.getDataset();
-		trainingData.setClassIndex(trainingData.numAttributes()-1);
+		Instances data1= data.getDataset();
+		data1.setClassIndex(data1.numAttributes()-1);
 		
 		// Evaluator
 		final CfsSubsetEval evaluator = new CfsSubsetEval();
@@ -40,11 +40,11 @@ public class CFS implements IFeatureSelection {
 		filter.setSearch(search);
 		// Apply filter
 		try {
-			filter.setInputFormat(trainingData);
+			filter.setInputFormat(data1);
 			BestFirst search1 = new BestFirst();
 			filter.setEvaluator(evaluator);
 			filter.setSearch(search1);
-			Instances filteredIns = Filter.useFilter(trainingData, filter);		
+			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
