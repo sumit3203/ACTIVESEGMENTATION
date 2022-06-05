@@ -69,13 +69,13 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 */
  
 	@Override
-	public double classifyInstance(Instance instance)  {
-		try {
+	public double classifyInstance(Instance instance) throws Exception  {
+	//	try {
 			return classifier.classifyInstance(instance);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ERR_CLASS;
+	//	} catch (Exception e) {
+	//		e.printStackTrace();
+	//	}
+	//	return ERR_CLASS;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 	public void buildClassifier(IDataSet instances, IFeatureSelection selection) {
 		try {
 			// Enabled for testing
-			IDataSet selected=selection.selectFeatures(instances);
+			final IDataSet selected=selection.selectFeatures(instances);
 			Instances newData=selected.getDataset();			
 			classifier.buildClassifier(newData);			
 		} catch (Exception e) {

@@ -54,7 +54,7 @@ public interface IClassifier {
     * @return The predicted label for the classifier.
     * @throws Exception The exception that will be launched.
     */
-    public double classifyInstance(Instance instance) ;
+    public double classifyInstance(Instance instance) throws Exception ;
 
     //////////////////////////////////
     // potentially mixed code
