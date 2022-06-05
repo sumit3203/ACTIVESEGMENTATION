@@ -31,7 +31,7 @@ import weka.core.SerializedObject;
 public interface IFeatureSelection extends IAnnotated {
 
 	
-	public IDataSet selectFeatures(IDataSet trainingData);
+	public IDataSet selectFeatures(IDataSet data);
 	
 	
 	public IDataSet filterTestData(IDataSet data);

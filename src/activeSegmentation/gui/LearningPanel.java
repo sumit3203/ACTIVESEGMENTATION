@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -226,15 +227,21 @@ public class LearningPanel implements Runnable, ASCommon {
 	        		int ind=featureSelList.getSelectedIndex()-1;
 	        		System.out.println(ind);
 	        		if (ind>0) {
-	        			int cc=0;
- 	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();
-	        			Entry<String, IFeatureSelection> ee=null;	        			
-	        			while (cc<ind) {
-	        				ee=iter.next();
-	        				//System.out.println(ee);
-	        				cc++;
-	        			}
-	        			fv=ee.getKey();
+ 	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();	        			
+//	        			int counter=0;
+//	        			Entry<String, IFeatureSelection> ee=null;	        			
+//	        			while (counter<ind) {
+//	        				ee=iter.next();
+//	        				//System.out.println(ee);
+//	        				counter++;
+//	        			}
+	        			 
+ 	        			List<Entry<String, IFeatureSelection>> result = new ArrayList<>();
+ 	        			while (iter.hasNext()){
+ 	        			    result.add(iter.next());
+ 	        			}
+ 	        			Entry<String, IFeatureSelection> ee=result.get(ind);
+ 	        			fv=ee.getKey();
 	        			System.out.println("fv  "+ fv);
 	        			projectInfo.getLearning().setLearningOption(fv);
 	        		}

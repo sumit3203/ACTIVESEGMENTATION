@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import ij.IJ;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -145,10 +146,10 @@ public class WekaClassifier implements IClassifier, Serializable {
 			// 10 fold cross-validation
 			//evaluator.crossValidateModel(classifier, wekadata, 10,  new Random(1));
 			String outputstr=evaluator.toSummaryString("\n\nSummary Results\n======\n", false);
-			//System.out.println(outputstr);
+			System.out.println(outputstr);
 			outputstr+=evaluator.toClassDetailsString("\nDetailed Results\n======\n");
-			//System.out.println(outputstr);
-			
+			System.out.println(outputstr);
+			IJ.log(outputstr);
 			return outputstr;
 
 

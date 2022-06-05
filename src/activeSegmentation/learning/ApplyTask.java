@@ -26,6 +26,7 @@ public class ApplyTask extends RecursiveAction{
 	private boolean debug=false;
 
 	private IFeatureSelection filter;
+	
 	public void setFilter(IFeatureSelection selection) {
 		filter=selection;
 	}
@@ -77,7 +78,6 @@ public class ApplyTask extends RecursiveAction{
 			IClassifier classifierCopy = (IClassifier) (iClassifier.makeCopy()); 
 			Instances testInstances= new Instances(dataSet.getDataset(), mStart, mLength);
 			// 
-			// new SerializedObject(this).getObject();
 			//applyOnTestData (testInstances);
 			for (int index = 0; index < testInstances.size(); index++){				
 					classificationResult[mStart+index]=classifierCopy.
