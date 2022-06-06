@@ -76,7 +76,7 @@ public class InfoGain implements IFeatureSelection {
 	}
 	
 	@Override
-	public IDataSet filterTestData(IDataSet data){
+	public IDataSet filterData(IDataSet data){
 
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);

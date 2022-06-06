@@ -75,7 +75,7 @@ PrincipalComponents pca = new PrincipalComponents();
 	
  
 	@Override
-	public IDataSet filterTestData(IDataSet data){
+	public IDataSet filterData(IDataSet data){
 
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);

@@ -67,7 +67,7 @@ public interface IClassifier {
      * @return Detailed human-readable output of the classifier
      */
  
-     public String evaluateModel(IDataSet instances);
+     public String evaluateModel(IDataSet instances, IFeatureSelection filter);
     
  	/**
       * @param instances The data provided to classify

@@ -15,7 +15,7 @@ public class ID implements IFeatureSelection {
 	}
 
 	@Override
-	public IDataSet filterTestData(IDataSet data) {
+	public IDataSet filterData(IDataSet data) {
 		return data.copy();
 	}
 

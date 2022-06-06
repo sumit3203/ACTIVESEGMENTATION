@@ -114,7 +114,8 @@ public class ClassifierManager implements ASCommon {
 			// print summary here
 			System.out.println(outputstr);
 			
-			outputstr+= currentClassifier.evaluateModel(dataset);
+			IFeatureSelection cclass =featureMap.get(cname);
+			outputstr+= currentClassifier.evaluateModel(dataset, cclass);
 			 
 			//Write output-> move to evaluation;
 			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
@@ -167,7 +168,7 @@ public class ClassifierManager implements ASCommon {
 				IFeatureSelection filter =featureMap.get(cname);
 				//System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
 				//fdata=filter.selectFeatures(dataSet);
-				fdata=filter.filterTestData(dataSet);
+				fdata=filter.filterData(dataSet);
 			}
 			if (fdata!=null) {
 				try {

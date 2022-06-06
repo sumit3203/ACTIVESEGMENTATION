@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import activeSegmentation.IClassifier;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
+import activeSegmentation.learning.ApplyTask;
+import activeSegmentation.prj.LearningInfo;
 import ij.IJ;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
@@ -132,13 +134,16 @@ public class WekaClassifier implements IClassifier, Serializable {
 	 * @return The evaluation
 	 */
 	@Override
-	public String evaluateModel(IDataSet iData) {
+	public String evaluateModel(IDataSet iData, IFeatureSelection filter) {
 
 		try {
 
 			// test the current classifier with the test set
-			//Instances wekadata=new Instances(instances.getDataset(),0);
-			Instances wekainst=iData.getDataset();
+		 	 
+			IDataSet fdata=filter.filterData(iData);
+			 
+		 
+			Instances wekainst=fdata.getDataset();
 			Evaluation evaluator = new Evaluation(wekainst);
 			
 			evaluator.evaluateModel(classifier, wekainst);

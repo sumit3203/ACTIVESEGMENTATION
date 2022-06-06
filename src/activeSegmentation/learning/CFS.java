@@ -53,7 +53,7 @@ public class CFS implements IFeatureSelection {
 			for (Attribute aa=en.nextElement(); en.hasMoreElements();) {
 				System.out.println(aa.name());
 			}*/
-			evaluator.clean();
+			//evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
@@ -63,7 +63,7 @@ public class CFS implements IFeatureSelection {
 	}
 	
 	@Override
-	public IDataSet filterTestData(IDataSet data){
+	public IDataSet filterData(IDataSet data){
 
 		Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
