@@ -17,18 +17,23 @@ import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
+import weka.filters.unsupervised.attribute.Normalize;
+import weka.filters.unsupervised.attribute.RemoveUseless;
+import weka.filters.unsupervised.attribute.Standardize;
 
 @AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
 public class PCA implements IFeatureSelection {
 
-private PrincipalComponents pca = new PrincipalComponents();
+  
 
 private AttributeSelection filter = new AttributeSelection();
+
+PrincipalComponents pca = new PrincipalComponents();
 	
 	public PCA() {
 	}
 	
-	 
+ 
 
 	 
 		  
@@ -39,14 +44,24 @@ private AttributeSelection filter = new AttributeSelection();
 		data1.setClassIndex(data1.numAttributes()-1);				
 		// Apply filter
 		try {
-			//filter.setInputFormat(data1);
-			//Instances filteredIns   = Filter.useFilter(data1, filter);
-			
+			/*
+			 Standardize norm = new Standardize();
+			 norm.setInputFormat(data1);
+ 			 Instances normeddata1 = Standardize.useFilter(data1, filter);
+			*/
 			 Ranker ranker = new Ranker();
 			 
+			 pca.initializeAndComputeMatrix(data1);
+	
+			// pca.setMaximumAttributeNames(25);
+			  pca.buildEvaluator(data1);
+ 
+			 pca.setVarianceCovered(0.9);
+			 	 
 			 filter.setInputFormat(data1);
 		     filter.setEvaluator(pca);
 		     filter.setSearch(ranker);
+		     
 			  
 		     Instances filteredIns = Filter.useFilter(data1, filter);
 			
@@ -65,12 +80,7 @@ private AttributeSelection filter = new AttributeSelection();
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
-			//filter.setInputFormat(data1);
-			//Instances filteredIns  = Filter.useFilter(data1, filter);
-			Ranker ranker = new Ranker();			 
-			 filter.setInputFormat(data1);
-		     filter.setEvaluator(pca);
-		     filter.setSearch(ranker);
+ 
 			  
 		     Instances filteredIns = Filter.useFilter(data1, filter);
 			  

@@ -2,13 +2,16 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
+//import java.util.Enumeration;
+
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
-//import weka.attributeSelection.Ranker;
+//import weka.core.Attribute;
+//import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
@@ -18,8 +21,7 @@ public class CFS implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();
 	
-	public CFS() {
-	}
+	public CFS() {}
 	
 	/*
 	 * 
@@ -35,17 +37,23 @@ public class CFS implements IFeatureSelection {
 		evaluator.setMissingSeparate(true);
 		// Assign evaluator to filter
 		filter.setEvaluator(evaluator);
-		// Search strategy: best first (default values)
-		//final BestFirst search = new BestFirst();
-		//filter.setSearch(search);
+		
 		// Apply filter
 		try {
 			filter.setInputFormat(data1);
 			BestFirst search1 = new BestFirst();
 			filter.setEvaluator(evaluator);
+			// Search strategy: best first (default values)
 			filter.setSearch(search1);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
+ 
+			/*
+			Enumeration<Attribute> en=filteredIns.enumerateAttributes();
+			for (Attribute aa=en.nextElement(); en.hasMoreElements();) {
+				System.out.println(aa.name());
+			}*/
+			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			

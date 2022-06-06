@@ -212,7 +212,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	        }  
 	     });  
 	    
-	    final int xOffsetCol2=400;
+	    final int xOffsetCol2=370;
 	    
 	    /////////////////////////////
 	    JPanel featurePanel = new JPanel();
@@ -255,10 +255,11 @@ public class LearningPanel implements Runnable, ASCommon {
 	   ////////////////////////////
 	    JPanel IOpanel = new JPanel();
 	    IOpanel.setBackground(Color.GRAY);
-	    IOpanel.setBounds(xOffsetCol2, 120, 200, 80);
+	    IOpanel.setBounds(xOffsetCol2, 200, 200, 80);
+	    
 	    IOpanel.add(addButton("Save", null, xOffsetCol2, 120, 200, 50, SAVE_BUTTON_PRESSED));
 	    
-	    IOpanel.add(addButton("Load", null, xOffsetCol2+200+100, 120, 200, 50, LOAD_BUTTON_PRESSED));
+	    IOpanel.add(addButton("Load", null, xOffsetCol2+200+100, 200, 450, 50, LOAD_BUTTON_PRESSED));
 	    
 	    aPanel.add(learningJPanel);
 	    aPanel.add(featurePanel);

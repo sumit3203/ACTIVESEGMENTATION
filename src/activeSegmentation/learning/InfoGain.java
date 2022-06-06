@@ -29,8 +29,7 @@ public class InfoGain implements IFeatureSelection {
 	/**
 	 * 
 	 */
-	public InfoGain() {
-	}
+	public InfoGain() {}
 
 	
 	/*
@@ -60,13 +59,14 @@ public class InfoGain implements IFeatureSelection {
 			Ranker ranker = new Ranker();
 			filter.setSearch(ranker);
 			// Apply filter
-		
+			 
 			filter.setInputFormat(data1);
 			//BestFirst search1 = new BestFirst();
 			filter.setEvaluator(evaluator);
 			filter.setSearch(ranker);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
+			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			
