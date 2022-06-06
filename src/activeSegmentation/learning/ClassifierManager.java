@@ -51,6 +51,7 @@ public class ClassifierManager implements ASCommon {
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
 	 	
+		featureMap.put("activeSegmentation.learning.ID",new ID());
 		featureMap.put("activeSegmentation.learning.CFS",new CFS());
 		featureMap.put("activeSegmentation.learning.PCA",new PCA());
 		projectMan = dataManager;

@@ -217,16 +217,17 @@ public class LearningPanel implements Runnable, ASCommon {
 	    featureSelList.addListSelectionListener(new ListSelectionListener() {
 	        @Override
 			public void valueChanged(ListSelectionEvent evt) {
-	        	if (!featureSelList.getValueIsAdjusting()) {
+	        	//if (!featureSelList.getValueIsAdjusting()) {
 	        
 	        		String fv="";
-	        		System.out.println("Learning: Feature selection: " + fv);
+	        		//System.out.println("Learning: Feature selection: " + fv);
 	        		HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
 	        		//final int sz=hm.size();
 	        		// NONE is the first choice
-	        		int ind=featureSelList.getSelectedIndex()-1;
+	        		//int ind=featureSelList.getSelectedIndex()-1;
+	        		int ind=featureSelList.getSelectedIndex();
 	        		System.out.println(ind);
-	        		if (ind>=0) {
+	        		//if (ind>=0) {
  	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();	        			
  	        			List<Entry<String, IFeatureSelection>> result = new ArrayList<>();
  	        			while (iter.hasNext()){
@@ -234,12 +235,12 @@ public class LearningPanel implements Runnable, ASCommon {
  	        			}
  	        			Entry<String, IFeatureSelection> ee=result.get(ind);
  	        			fv=ee.getKey();
-	        			System.out.println("fv  "+ fv);
+ 	        			System.out.println("Learning: Feature selection: " + fv);
 	        			projectInfo.getLearning().setLearningOption(fv);
-	        		}
+	        		//}
 	        		hasChanged=true;
 	        		updateClassifier(); 
-	        	}
+	        	//}
 	        }
 	      });
 	    
@@ -267,7 +268,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	 * @param model
 	 */
 	private void featureSelectionUI(DefaultListModel<String> model) {
-		model.addElement("NONE");
+		//model.addElement("NONE");
 		HashMap<String, IFeatureSelection> compset=learningManager.getFeatureSelMap();
 		Set<String> set=compset.keySet();
 		for (String s:set) {
