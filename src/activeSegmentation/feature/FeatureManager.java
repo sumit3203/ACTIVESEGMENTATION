@@ -383,6 +383,8 @@ public class FeatureManager implements IUtil, ASCommon {
 			classes.put(key, classInfo);
 			
 		}
+		final int cn=classes.size();
+		projectInfo.setNClasses(cn);
 	}
 
 	private RandomLUT lut = new RandomLUT(LookUpTable.createGrayscaleColorModel(false));
@@ -394,6 +396,8 @@ public class FeatureManager implements IUtil, ASCommon {
 	 */
 	public void deleteClass(String key) {
 		classes.remove(key);
+		final int cn=classes.size();
+		projectInfo.setNClasses(cn);
 	}
 
 	/**
@@ -459,6 +463,8 @@ public class FeatureManager implements IUtil, ASCommon {
 	public void saveFeatureMetadata() {
 		projectInfo = projectManager.getMetaInfo();
 		projectInfo.resetFeatureInfo();
+		final int cn=classes.size();
+		projectInfo.setNClasses(cn);
 		for (ClassInfo classInfo : classes.values()) {
 			List<Roi> classRois = new ArrayList<>();
 			FeatureInfo featureInfo = new FeatureInfo();
@@ -518,14 +524,6 @@ public class FeatureManager implements IUtil, ASCommon {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param featureType
-	 * @return
-	 */
-//	public List<IDataSet> extractAll(String featureType) {
-//		return null;
-//	}
 
 	/**
 	 * 

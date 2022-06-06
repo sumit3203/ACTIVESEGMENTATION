@@ -83,7 +83,7 @@ public class ProjectInfo{
 	private int featureLength;
 	
 	@JsonIgnore
-	private final	SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
+	private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");	
 
 	////////////////////////////////////////////
 	//  Methods

@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.ImageIcon;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.learning.ClassifierManager;
@@ -40,7 +41,9 @@ import activeSegmentation.IFeatureSelection;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
-import javax.swing.ImageIcon;
+import activeSegmentation.util.GuiUtil;
+import ijaux.Util;
+
 
 /**
  * This is a Weka-specfic panel, so it is OK to expose Weka classes. 
@@ -90,8 +93,8 @@ public class LearningPanel implements Runnable, ASCommon {
    */
   public void doAction(ActionEvent event)  {
     if (event == SAVE_BUTTON_PRESSED)     {
-      //updateClassifier(cls);    
-      if(aclass!=null ) {
+      updateClassifier();    
+      if (aclass!=null ) {
     	  IClassifier classifier = new WekaClassifier(aclass);
           
           learningManager.setClassifier(classifier);
@@ -110,19 +113,25 @@ public class LearningPanel implements Runnable, ASCommon {
     	String[] options= li.getOptionsArray();
   
     	String cname=li.getClassifierName();
-    	System.out.println(cname);
+    	System.out.println("loading "+cname);
+    	//GuiUtil.printStringArray(options);
     	try {
-			aclass = (AbstractClassifier) Class.forName(cname).newInstance();
-			//cls.setOptions(options);		
-			IClassifier classifier = new WekaClassifier(aclass);
-	        learningManager.setClassifier(classifier);
-	        wekaClassifierEditor.setClassType(Classifier.class);
-	        Object obj =learningManager.getClassifier();
-	        System.out.println(obj);
-	        wekaClassifierEditor.setValue(obj);
-	        //TODO pass properly the options onto the classifier
-	        defaultOptions = Utils.joinOptions(options);
-	        System.out.println(defaultOptions);
+    		if (cname!="") {
+				aclass = (AbstractClassifier) Class.forName(cname).newInstance();
+				//cls.setOptions(options);		
+				IClassifier classifier = new WekaClassifier(aclass);
+		        learningManager.setClassifier(classifier);
+		        wekaClassifierEditor.setClassType(Classifier.class);
+		        Object obj =learningManager.getClassifier();
+		        System.out.println(obj);
+		    
+		        aclass.setOptions(options);
+		        wekaClassifierEditor.setValue(aclass);
+		        
+		        
+		        defaultOptions = Utils.joinOptions(options);
+		        System.out.println(defaultOptions);
+    		}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,30 +226,27 @@ public class LearningPanel implements Runnable, ASCommon {
 	    featureSelList.addListSelectionListener(new ListSelectionListener() {
 	        @Override
 			public void valueChanged(ListSelectionEvent evt) {
-	        	//if (!featureSelList.getValueIsAdjusting()) {
-	        
+	     
 	        		String fv="";
 	        		//System.out.println("Learning: Feature selection: " + fv);
 	        		HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
-	        		//final int sz=hm.size();
-	        		// NONE is the first choice
-	        		//int ind=featureSelList.getSelectedIndex()-1;
+	        	
 	        		int ind=featureSelList.getSelectedIndex();
-	        		System.out.println(ind);
-	        		//if (ind>=0) {
- 	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();	        			
- 	        			List<Entry<String, IFeatureSelection>> result = new ArrayList<>();
- 	        			while (iter.hasNext()){
- 	        			    result.add(iter.next());
- 	        			}
- 	        			Entry<String, IFeatureSelection> ee=result.get(ind);
- 	        			fv=ee.getKey();
- 	        			System.out.println("Learning: Feature selection: " + fv);
-	        			projectInfo.getLearning().setLearningOption(fv);
-	        		//}
+	        		//System.out.println(ind);
+	        	
+        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();	        			
+        			List<Entry<String, IFeatureSelection>> result = new ArrayList<>();
+        			while (iter.hasNext()){
+        			    result.add(iter.next());
+        			}
+        			Entry<String, IFeatureSelection> ee=result.get(ind);
+        			fv=ee.getKey();
+        			System.out.println("Learning: Feature selection: " + fv);
+        			projectInfo.getLearning().setLearningOption(fv);
+	        	
 	        		hasChanged=true;
 	        		updateClassifier(); 
-	        	//}
+	
 	        }
 	      });
 	    
@@ -284,26 +290,27 @@ public class LearningPanel implements Runnable, ASCommon {
 	private void updateClassifier()   {
 		System.out.println("Learning panel: in updateClassifier");
 		Object c = wekaClassifierEditor.getValue();
-		String options = "";
+		//String options = "updateClassifier: default options ";
 		String[] optionsArray = ((OptionHandler)c).getOptions();
-		System.out.println(defaultOptions);
-		if (c instanceof OptionHandler) {
-			options = Utils.joinOptions(optionsArray);
-		}
-		if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
+		System.out.println(""+defaultOptions);
+		//GuiUtil.printStringArray(optionsArray);
+		//if (c instanceof OptionHandler) {
+		//	options = Utils.joinOptions(optionsArray);
+		//}
+		//if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
 			try {
 				final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
 				cls.setOptions(optionsArray);
 	
 				final LearningInfo li=projectInfo.getLearning();
-				li.setClassifier( cls);
+				li.setClassifier(cls);
 				li.updateOptionList();
 				hasChanged=true;
 				aclass= cls;
 			} catch (Exception ex)    {
 				ex.printStackTrace();
 			}
-		}
+		//}
 	}
   
   private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)  {

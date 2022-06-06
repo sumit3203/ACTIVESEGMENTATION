@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import weka.classifiers.AbstractClassifier;
 
@@ -22,17 +23,21 @@ public class LearningInfo {
 	private AbstractClassifier classifier;
 	
 	// options for the Weka engine
+	@JsonProperty(value="optionList")
 	private List<String> optionList = new ArrayList<>();
 	
 	// feature selection method - class name
+	@JsonProperty(value="featureSelection")
 	private String featureSelection="";
 	
 	// class name of the classifier
+	@JsonProperty(value="classifierName")
 	private String classifierName="";
 	
 	// Active or Passive
 	private String learningOption="";
 	
+	@JsonProperty(value="classifierFile")
 	private String classifierfile="classifier.model";
 	
 	private String arff="trainingdata.arff";
@@ -165,6 +170,7 @@ public class LearningInfo {
 		ret+="classifier="+classifierName+"\n";
 		ret+="featureSelection="+featureSelection+"\n";
 		ret+="learningOption="+learningOption+"\n";
+		ret+="classifierFile="+classifierfile+"\n";
 		return ret;
 	}
 

@@ -91,4 +91,10 @@ public class GuiUtil {
 	    ImagePlus imp=new ImagePlus("screenshot",  bufferedImage);
 	    imp.show();	   
 	}
+	
+	public static void printStringArray(String[] arr) {
+		for (String s:arr)
+			System.out.println(s);
+		
+	}
 }

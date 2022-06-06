@@ -62,7 +62,7 @@ public class ProjectManager implements IUtil{
 	 * @return
 	 */
 	public boolean loadProject(String fileName) {
-		IJ.log(System.getProperty("plugins.dir"));
+		//IJ.log(System.getProperty("plugins.dir"));
 		IJ.log("loading project ...");
 		setDirectory();
 		if(projectInfo==null){
@@ -75,6 +75,7 @@ public class ProjectManager implements IUtil{
 				
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
 		 
+				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
 				

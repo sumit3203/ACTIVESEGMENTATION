@@ -274,7 +274,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			for(String setting: filtersetting.keySet()){
 				filters.put(setting, filtersetting.get(setting));		
 			}
-			filters.put("enabled","false" );
+			filters.put("enabled", "false" );
 			if(isFilterEnabled(key)){
 				filters.put("enabled","true" );	
 			}
