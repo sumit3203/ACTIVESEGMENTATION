@@ -159,7 +159,7 @@ public class ClassifierManager implements ASCommon {
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
 			System.out.println("learning option "+ cname);
-			
+			ApplyTask applyTask=null;
 			IDataSet fdata=null;
 			if (cname!="")  {
 				IFeatureSelection filter =featureMap.get(cname);
@@ -169,8 +169,9 @@ public class ClassifierManager implements ASCommon {
 			}
 			if (fdata!=null) {
 				try {
-					IFeatureSelection filter =featureMap.get(cname);	
-					applyTask applyTask= new applyTask(fdata, 0, ni, classificationResult, currentClassifier, filter);
+					//IFeatureSelection filter =featureMap.get(cname);	
+					//applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier, filter);
+					applyTask= new ApplyTask(fdata, 0, ni, classificationResult, currentClassifier);
 					//System.out.println("cname "+ cname);			 								 	
 					//applyTask.setFilter(filter);
 					pool.invoke(applyTask);
@@ -181,7 +182,7 @@ public class ClassifierManager implements ASCommon {
 			} else {
 				System.out.println("Classifier Manager: applyClassifier: fdata set is null"); 
 				try {
-					applyTask applyTask= new applyTask(dataSet, 0, ni, classificationResult, currentClassifier);
+					applyTask= new ApplyTask(dataSet, 0, ni, classificationResult, currentClassifier);
 					pool.invoke(applyTask);
 				} catch ( Exception ex) {
 					System.out.println("Exception in applyClassifier ");
