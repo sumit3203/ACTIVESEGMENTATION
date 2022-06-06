@@ -226,16 +226,8 @@ public class LearningPanel implements Runnable, ASCommon {
 	        		// NONE is the first choice
 	        		int ind=featureSelList.getSelectedIndex()-1;
 	        		System.out.println(ind);
-	        		if (ind>0) {
+	        		if (ind>=0) {
  	        			Iterator<Entry<String, IFeatureSelection>> iter=hm.entrySet().iterator();	        			
-//	        			int counter=0;
-//	        			Entry<String, IFeatureSelection> ee=null;	        			
-//	        			while (counter<ind) {
-//	        				ee=iter.next();
-//	        				//System.out.println(ee);
-//	        				counter++;
-//	        			}
-	        			 
  	        			List<Entry<String, IFeatureSelection>> result = new ArrayList<>();
  	        			while (iter.hasNext()){
  	        			    result.add(iter.next());
