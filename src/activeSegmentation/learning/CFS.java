@@ -36,8 +36,8 @@ public class CFS implements IFeatureSelection {
 		// Assign evaluator to filter
 		filter.setEvaluator(evaluator);
 		// Search strategy: best first (default values)
-		final BestFirst search = new BestFirst();
-		filter.setSearch(search);
+		//final BestFirst search = new BestFirst();
+		//filter.setSearch(search);
 		// Apply filter
 		try {
 			filter.setInputFormat(data1);

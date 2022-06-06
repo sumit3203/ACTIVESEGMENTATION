@@ -177,13 +177,13 @@ public class LearningPanel implements Runnable, ASCommon {
 	    
 	    wekaCEPanel.setBounds(30, 30, 250, 30);
 	    learningJPanel.add(wekaCEPanel);
-	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 80);
+	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 120);
 	    
 	    ////////////////////////////////Will be enabled in the future
 	    
 	    JPanel options = new JPanel();
 	    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
-	    options.setBounds(xOffsetCol1, 120, 300, 80);
+	    options.setBounds(xOffsetCol1, 120, 300, 120);
 	
 	    
 	    JRadioButton  pasiveLearning = new JRadioButton ("Passive Learning" );
@@ -212,12 +212,12 @@ public class LearningPanel implements Runnable, ASCommon {
 	        }  
 	     });  
 	    
-	    final int xOffsetCol2=370;
+	    final int xOffsetCol2=400;
 	    
 	    /////////////////////////////
 	    JPanel featurePanel = new JPanel();
 	    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
-	    featurePanel.setBounds(xOffsetCol2, 20, 200, 80);
+	    featurePanel.setBounds(xOffsetCol2, 20, 200, 120);
 	    
 
 	    
