@@ -88,15 +88,10 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	@AFilterField(key=MAX_LEN, value="max scale")
 	public  int max_sz= Prefs.getInt(MAX_LEN, 9);
 
-	//private ImageStack imageStack;
+
 	
 	/* NEW VARIABLES*/
 
-	/** A string key identifying this factory. */
-	//private final  String FILTER_KEY = "FLOG";
-
-	/** The pretty name of the target detector. */
-	//private final String FILTER_NAME = "FFT Laplacian of Gaussian";
 
 	private Map< String, String > settings= new HashMap<>();
 

@@ -306,6 +306,7 @@ public class SegmentationTester {
 		ALoG_Filter_ alogfilter= new ALoG_Filter_();
 		alogfilter.setEnabled(true);
 		StructureT_Filter_ structureT_Filter_= new StructureT_Filter_();
+		structureT_Filter_.setEnabled(true);
 		filtersMap.put(hessian_Filter_.getKey(), hessian_Filter_);
 		filtersMap.put(logfilter.getKey(), logfilter);
 		filtersMap.put(alogfilter.getKey(), alogfilter);
