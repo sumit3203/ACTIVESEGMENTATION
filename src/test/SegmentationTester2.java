@@ -45,7 +45,7 @@ public class SegmentationTester2 {
 	int numberOfFeatures=0;
 	ArrayList<Attribute> attributes = new ArrayList<>();
 	List<String> classlabels=new LinkedList<>();
-	private InstanceUtil instanceUtil= new InstanceUtil();
+	//private InstanceUtil instanceUtil= new InstanceUtil();
 	ProjectManager pm;
 	FilterManager fm;
 	ProjectInfo projectInfo;
@@ -53,6 +53,8 @@ public class SegmentationTester2 {
 	//RandomForest randomForest= new RandomForest();
 	//training Data
 	Instances trainingData;
+	
+	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
@@ -115,7 +117,7 @@ public class SegmentationTester2 {
 			{
 				for( int x = 0; x < testImage.getWidth(); x++ ){
 
-					Instance ins=instanceUtil.createInstance(x, y, 0,featureStack ,false, false);
+					Instance ins=InstanceUtil.createInstance(x, y, 0,featureStack ,false, false);
 					ins.setDataset(trainingData);
 					double [] pred=randomForest.distributionForInstance(ins);
 					classificationResult[k]=pred[0];
@@ -151,7 +153,6 @@ public class SegmentationTester2 {
 		//	randomForest.setNumIterations(100);
 		//randomForest.setNumExecutionSlots(4);
 		try {
-			;
 			Instances newdata = trainingData;
 			System.out.println("training started");
 			randomForest.buildClassifier(newdata);
@@ -163,7 +164,6 @@ public class SegmentationTester2 {
 			System.out.println(eval.toClassDetailsString());
 
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -193,9 +193,8 @@ public class SegmentationTester2 {
 
 		return instances;
 	}
-	private List<Instance> createInstanceList(
-			ImageStack featureStack, ImageProcessor classLabels) 
-	{		
+	
+	private List<Instance> createInstanceList(ImageStack featureStack, ImageProcessor classLabels) 	{		
 
 		List<Instance> instances= new ArrayList<>();
 
@@ -207,12 +206,11 @@ public class SegmentationTester2 {
 				if(pixel==255) {
 					classLabel=1;
 				}
-				instances.add( instanceUtil.createInstance(x, y, classLabel,featureStack ,false, false) );
+				instances.add( InstanceUtil.createInstance(x, y, classLabel,featureStack ,false, false) );
 
 			}		
 		}
-		// increase number of instances for this class
-		//System.out.println(testingData.get(1).toString());
+	
 		return instances;		
 	}
 
@@ -222,10 +220,10 @@ public class SegmentationTester2 {
 		//System.out.println(projectString);
 		List<String>images= loadImages(imagesDir);
 		System.out.println(images);
-		for(IFilter filter: filtersMap.values()){
-			System.out.println("filter applied"+filter.getName());
+		for(IFilter filter: filtersMap.values()){			
 			System.out.println(filter.isEnabled());
 			if(filter.isEnabled()){
+				System.out.println("filter applied"+filter.getName());
 				for(String image: images) {
 					//IJ.log(image);
 					filter.applyFilter(new ImagePlus(imagesDir+image).getProcessor(),outDir+image.substring(0, image.lastIndexOf(".")), null);
@@ -381,7 +379,7 @@ public class SegmentationTester2 {
 	}
 
 	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		for (File file : images) {

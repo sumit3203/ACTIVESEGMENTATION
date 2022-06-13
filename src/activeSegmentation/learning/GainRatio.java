@@ -6,6 +6,9 @@ import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
+import weka.attributeSelection.BestFirst;
+import weka.attributeSelection.CfsSubsetEval;
+import weka.attributeSelection.GainRatioAttributeEval;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
@@ -15,7 +18,7 @@ import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.RemoveUseless;
 
 @AFilter(key="InfoGain", value="InfoGain Feature Selection", type=FEATURE)
-public class InfoGain implements IFeatureSelection {
+public class GainRatio implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();
 		
@@ -26,7 +29,7 @@ public class InfoGain implements IFeatureSelection {
 	/**
 	 * 
 	 */
-	public InfoGain() {}
+	public GainRatio() {}
 
 	
 	/*
@@ -47,7 +50,7 @@ public class InfoGain implements IFeatureSelection {
 			
 		
 			// Evaluator
-			InfoGainAttributeEval evaluator = new InfoGainAttributeEval();
+			GainRatioAttributeEval evaluator = new GainRatioAttributeEval();
 			evaluator.buildEvaluator(normeddata1);
 	  
 			// Assign evaluator to filter
