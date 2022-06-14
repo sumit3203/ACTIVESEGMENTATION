@@ -6,6 +6,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
+import ij.IJ;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
@@ -63,6 +64,7 @@ public class InfoGain implements IFeatureSelection {
 			filter.setSearch(ranker);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
+			IJ.log(ranker.toString());
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {

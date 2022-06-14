@@ -55,6 +55,7 @@ public class ClassifierManager implements ASCommon {
 		featureMap.put("activeSegmentation.learning.CFS",new CFS());
 		featureMap.put("activeSegmentation.learning.PCA",new PCA());
 		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
+		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 	}

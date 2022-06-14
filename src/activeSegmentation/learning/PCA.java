@@ -2,24 +2,21 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
-import java.util.Arrays;
+
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
- 
-import weka.attributeSelection.ASEvaluation;
-import weka.attributeSelection.ASSearch;
-import weka.attributeSelection.InfoGainAttributeEval;
+import ij.IJ;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
-import weka.filters.unsupervised.attribute.Normalize;
-import weka.filters.unsupervised.attribute.RemoveUseless;
-import weka.filters.unsupervised.attribute.Standardize;
+//import weka.filters.unsupervised.attribute.Normalize;
+//import weka.filters.unsupervised.attribute.RemoveUseless;
+//import weka.filters.unsupervised.attribute.Standardize;
 
 @AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
 public class PCA implements IFeatureSelection {
@@ -64,7 +61,7 @@ PrincipalComponents pca = new PrincipalComponents();
 		     
 			  
 		     Instances filteredIns = Filter.useFilter(data1, filter);
-			
+		     IJ.log(ranker.toString());
 			 
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {	

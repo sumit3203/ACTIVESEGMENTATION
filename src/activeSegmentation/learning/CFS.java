@@ -8,6 +8,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
+import ij.IJ;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 //import weka.core.Attribute;
@@ -47,13 +48,11 @@ public class CFS implements IFeatureSelection {
 			filter.setSearch(search1);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
- 
-			/*
-			Enumeration<Attribute> en=filteredIns.enumerateAttributes();
-			for (Attribute aa=en.nextElement(); en.hasMoreElements();) {
-				System.out.println(aa.name());
-			}*/
-			//evaluator.clean();
+			//System.out.println(filter.toString());
+			//System.out.println(search1.globalInfo());
+			IJ.log(search1.toString());
+			 
+			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			

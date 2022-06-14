@@ -6,10 +6,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
-import weka.attributeSelection.BestFirst;
-import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.GainRatioAttributeEval;
-import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -17,7 +14,7 @@ import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.RemoveUseless;
 
-@AFilter(key="InfoGain", value="InfoGain Feature Selection", type=FEATURE)
+@AFilter(key="GainRatio", value="GainRatio Feature Selection", type=FEATURE)
 public class GainRatio implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();
