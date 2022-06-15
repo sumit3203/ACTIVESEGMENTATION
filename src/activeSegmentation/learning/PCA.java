@@ -2,7 +2,11 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
-
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.Map.Entry;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
@@ -11,6 +15,7 @@ import activeSegmentation.learning.weka.WekaDataSet;
 import ij.IJ;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
@@ -50,8 +55,7 @@ PrincipalComponents pca = new PrincipalComponents();
 			 
 			 pca.initializeAndComputeMatrix(data1);
 	
-			// pca.setMaximumAttributeNames(25);
-			  pca.buildEvaluator(data1);
+			 pca.buildEvaluator(data1);
  
 			 pca.setVarianceCovered(0.9);
 			 	 
@@ -59,16 +63,51 @@ PrincipalComponents pca = new PrincipalComponents();
 		     filter.setEvaluator(pca);
 		     filter.setSearch(ranker);
 		     
-			  
+	
 		     Instances filteredIns = Filter.useFilter(data1, filter);
-		     IJ.log(ranker.toString());
-			 
+		    // IJ.log(ranker.toString());
+		
+		     Enumeration<Attribute> attributes=filteredIns.enumerateAttributes();
+			 IJ.log("Selected features:");
+			 while (attributes.hasMoreElements()) {
+				IJ.log(attributes.nextElement().name());
+			 }
+				
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {	
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	/**
+	 * @param instances
+	 * @param evaluator
+	 * @return
+	 * @throws Exception
+	 *
+	private SortedSet<Entry<Attribute, Double>> selectedFeatures(Instances instances, PrincipalComponents evaluator){
+		try {
+			Map<Attribute, Double> scores=new HashMap<>();
+			
+			for (int i=0;i<instances.numAttributes(); i++) {
+				Attribute t_attr=instances.attribute(i);
+				
+				if (! t_attr.name().equalsIgnoreCase("class")) {
+					double infogain=evaluator.evaluateAttribute(i);
+					scores.put(t_attr, infogain);
+				}
+			}
+			
+			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
+			return sortedscores;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	*/
 	
  
 	@Override

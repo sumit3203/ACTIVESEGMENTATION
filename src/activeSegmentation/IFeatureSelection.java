@@ -1,5 +1,7 @@
 package activeSegmentation;
 
+import java.util.*;
+
 import ijaux.datatype.Pair;
 import weka.core.SerializedObject;
 
@@ -66,5 +68,42 @@ public interface IFeatureSelection extends IAnnotated {
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param order
+	 * @return
+	 */
+	static <K,V extends Comparable<? super V>> SortedSet<Map.Entry<K,V>> sortByVal(Map<K,V> map, int order) {
+		SortedSet<Map.Entry<K,V>> sortedentries =new TreeSet<> (
+				new Comparator<Map.Entry<K,V>>() {
+					@Override
+					public int compare( Map.Entry<K,V> e1, Map.Entry<K,V> e2 ) {
+						return (order>0)? compareToReturnDuplicates(e1.getValue(), e2.getValue()): compareToReturnDuplicates(e2.getValue(), e1.getValue()) ;
+					}
+					
+				}
+				
+				);
+		sortedentries.addAll(map.entrySet());
+		return sortedentries;
+				
+	}
+	
+	
+	/**
+	 * 
+	 * @param <V>
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
+	static <V extends Comparable<? super V>> int compareToReturnDuplicates(V v1, V v2) {
+		return (v1.compareTo(v2)==-1)?-1:1;
+	}
+	
  
 }

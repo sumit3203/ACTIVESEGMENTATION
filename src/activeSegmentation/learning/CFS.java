@@ -2,6 +2,12 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.Map.Entry;
+
 //import java.util.Enumeration;
 
 import activeSegmentation.AFilter;
@@ -11,6 +17,8 @@ import activeSegmentation.learning.weka.WekaDataSet;
 import ij.IJ;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
+import weka.attributeSelection.InfoGainAttributeEval;
+import weka.core.Attribute;
 //import weka.core.Attribute;
 //import weka.core.Instance;
 import weka.core.Instances;
@@ -51,7 +59,18 @@ public class CFS implements IFeatureSelection {
 			//System.out.println(filter.toString());
 			//System.out.println(search1.globalInfo());
 			IJ.log(search1.toString());
-			 
+			System.out.println(evaluator.toString());
+			
+			Enumeration<Attribute> attributes=filteredIns.enumerateAttributes();
+			IJ.log("Selected features:");
+			int c=0;
+			while (attributes.hasMoreElements()) {
+				IJ.log(attributes.nextElement().name());
+				c++;
+			}
+			IJ.log("Selected "+c);
+			
+			
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
@@ -60,6 +79,8 @@ public class CFS implements IFeatureSelection {
 		}
 		return null;
 	}
+	
+	
 	
 	@Override
 	public IDataSet filterData(IDataSet data){
