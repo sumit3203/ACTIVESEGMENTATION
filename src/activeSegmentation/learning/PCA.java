@@ -116,11 +116,7 @@ PrincipalComponents pca = new PrincipalComponents();
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
- 
-			  
-		     Instances filteredIns = Filter.useFilter(data1, filter);
-			  
-		  
+		    Instances filteredIns = Filter.useFilter(data1, filter); 	  
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
 			e.printStackTrace();
