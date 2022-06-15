@@ -30,7 +30,7 @@ public class PCA implements IFeatureSelection {
 
 private AttributeSelection filter = new AttributeSelection();
 
-PrincipalComponents pca = new PrincipalComponents();
+private PrincipalComponents pca = new PrincipalComponents();
 	
 	public PCA() {
 	}
@@ -102,7 +102,6 @@ PrincipalComponents pca = new PrincipalComponents();
 			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
 			return sortedscores;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
