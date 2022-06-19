@@ -41,12 +41,12 @@ import activeSegmentation.IFeatureSelection;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
-import activeSegmentation.util.GuiUtil;
-import ijaux.Util;
+//import activeSegmentation.util.GuiUtil;
+//import ijaux.Util;
 
 
 /**
- * This is a Weka-specfic panel, so it is OK to expose Weka classes. 
+ * This is a Weka-specific panel, so it is OK to expose Weka classes. 
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
@@ -126,8 +126,7 @@ public class LearningPanel implements Runnable, ASCommon {
 		        System.out.println(obj);
 		    
 		        aclass.setOptions(options);
-		        wekaClassifierEditor.setValue(aclass);
-		        
+		        wekaClassifierEditor.setValue(aclass);		        
 		        
 		        defaultOptions = Utils.joinOptions(options);
 		        System.out.println(defaultOptions);
@@ -203,6 +202,7 @@ public class LearningPanel implements Runnable, ASCommon {
 				updateClassifier(); 
 			}  
 	     });  
+	    
 	    activeLearning.addItemListener(new ItemListener() {  
 	        @Override
 			public void itemStateChanged(ItemEvent e) {               
@@ -252,7 +252,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	    
 	    featurePanel.add(featureSelList);
 	     
-	   ////////////////////////////
+	    ////////////////////////////
 	    JPanel IOpanel = new JPanel();
 	    IOpanel.setBackground(Color.GRAY);
 	    IOpanel.setBounds(xOffsetCol2, 200, 200, 80);
@@ -264,7 +264,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	    aPanel.add(learningJPanel);
 	    aPanel.add(featurePanel);
 	    aPanel.add(IOpanel);
-	   // aPanel.add(options);
+	    // aPanel.add(options);
 	    
 	    frame.add(aPanel);
 	    frame.setVisible(true);
@@ -294,24 +294,20 @@ public class LearningPanel implements Runnable, ASCommon {
 		//String options = "updateClassifier: default options ";
 		String[] optionsArray = ((OptionHandler)c).getOptions();
 		System.out.println(""+defaultOptions);
-		//GuiUtil.printStringArray(optionsArray);
-		//if (c instanceof OptionHandler) {
-		//	options = Utils.joinOptions(optionsArray);
-		//}
-		//if ((!defaultClassifierName.equals(c.getClass().getName())) || (!defaultOptions.equals(options))) {
-			try {
-				final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
-				cls.setOptions(optionsArray);
 	
-				final LearningInfo li=projectInfo.getLearning();
-				li.setClassifier(cls);
-				li.updateOptionList();
-				hasChanged=true;
-				aclass= cls;
-			} catch (Exception ex)    {
-				ex.printStackTrace();
-			}
-		//}
+		try {
+			final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
+			cls.setOptions(optionsArray);
+
+			final LearningInfo li=projectInfo.getLearning();
+			li.setClassifier(cls);
+			li.updateOptionList();
+			hasChanged=true;
+			aclass= cls;
+		} catch (Exception ex)  {
+			ex.printStackTrace();
+		}
+		
 	}
   
   private JButton addButton(String label, ImageIcon icon, int x, int y, int width, int height, final ActionEvent action)  {

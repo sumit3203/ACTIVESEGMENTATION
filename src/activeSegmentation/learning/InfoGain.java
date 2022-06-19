@@ -2,13 +2,13 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
-import java.util.Comparator;
+// import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedSet;
-import java.util.TreeSet;
+// import java.util.TreeSet;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
@@ -46,7 +46,7 @@ public class InfoGain implements IFeatureSelection {
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
 		
-		Instances data1= data.getDataset();
+		final Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
 			Normalize norm = new Normalize();
@@ -64,7 +64,7 @@ public class InfoGain implements IFeatureSelection {
 			// Assign evaluator to filter
 			filter.setEvaluator(evaluator);
 		 
-			Ranker ranker = new Ranker();
+			final Ranker ranker = new Ranker();
 			ranker.setGenerateRanking(true);
 			ranker.setThreshold(0.1);
 			filter.setSearch(ranker);
@@ -78,7 +78,7 @@ public class InfoGain implements IFeatureSelection {
 			filteredIns.deleteWithMissingClass();
 			IJ.log(ranker.toString());
 			
-			if  (debug) {
+			if (debug) {
 				SortedSet<Entry<Attribute, Double>> sortedscores = selectedFeatures(normeddata1, evaluator);
 				IJ.log("Ranking of features:");
 				for (Entry<Attribute, Double> c:sortedscores) {
@@ -99,7 +99,6 @@ public class InfoGain implements IFeatureSelection {
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 		}
 		return null;
@@ -123,7 +122,7 @@ public class InfoGain implements IFeatureSelection {
 					scores.put(t_attr, infogain);
 			}
 			
-			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
+			SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
 			return sortedscores;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,7 +134,7 @@ public class InfoGain implements IFeatureSelection {
 	@Override
 	public IDataSet filterData(IDataSet data){
 
-		Instances testData= data.getDataset();
+		final Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
 			Instances filteredIns  = Filter.useFilter(testData, filter);

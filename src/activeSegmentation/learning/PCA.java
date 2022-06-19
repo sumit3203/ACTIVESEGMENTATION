@@ -27,17 +27,13 @@ import weka.filters.supervised.attribute.AttributeSelection;
 public class PCA implements IFeatureSelection {
 
   
-
-private AttributeSelection filter = new AttributeSelection();
-
-private PrincipalComponents pca = new PrincipalComponents();
+	private AttributeSelection filter = new AttributeSelection();
+	
+	private PrincipalComponents pca = new PrincipalComponents();
 	
 	public PCA() {
 	}
 	
- 
-
-	 
 		  
 	@Override
 	public IDataSet selectFeatures(IDataSet data){
@@ -51,7 +47,7 @@ private PrincipalComponents pca = new PrincipalComponents();
 			 norm.setInputFormat(data1);
  			 Instances normeddata1 = Standardize.useFilter(data1, filter);
 			*/
-			 Ranker ranker = new Ranker();
+			 final Ranker ranker = new Ranker();
 			 
 			 pca.initializeAndComputeMatrix(data1);
 	
@@ -112,7 +108,7 @@ private PrincipalComponents pca = new PrincipalComponents();
 	@Override
 	public IDataSet filterData(IDataSet data){
 
-		Instances data1= data.getDataset();
+		final Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
 		    Instances filteredIns = Filter.useFilter(data1, filter); 	  

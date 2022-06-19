@@ -51,8 +51,7 @@ public class GainRatio implements IFeatureSelection {
 		
 			RemoveUseless ru = new RemoveUseless();
 			ru.setInputFormat(data1);
-			Instances normeddata1 = Filter.useFilter(data1, ru);
-			
+			final Instances normeddata1 = Filter.useFilter(data1, ru);
 		
 			// Evaluator
 			GainRatioAttributeEval evaluator = new GainRatioAttributeEval();
@@ -61,7 +60,7 @@ public class GainRatio implements IFeatureSelection {
 			// Assign evaluator to filter
 			filter.setEvaluator(evaluator);
 		 
-			Ranker ranker = new Ranker();
+			final Ranker ranker = new Ranker();
 			ranker.setGenerateRanking(true);
 			ranker.setThreshold(0.1);
 			
@@ -92,8 +91,7 @@ public class GainRatio implements IFeatureSelection {
 			
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {		
 			e.printStackTrace();
 		}
 		return null;
@@ -122,7 +120,6 @@ public class GainRatio implements IFeatureSelection {
 			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
 			return sortedscores;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -132,7 +129,7 @@ public class GainRatio implements IFeatureSelection {
 	@Override
 	public IDataSet filterData(IDataSet data){
 
-		Instances testData= data.getDataset();
+		final Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
 			Instances filteredIns  = Filter.useFilter(testData, filter);

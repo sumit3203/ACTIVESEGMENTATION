@@ -74,7 +74,6 @@ public class CFS implements IFeatureSelection {
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 		}
 		return null;
@@ -85,7 +84,7 @@ public class CFS implements IFeatureSelection {
 	@Override
 	public IDataSet filterData(IDataSet data){
 
-		Instances testData= data.getDataset();
+		final Instances testData= data.getDataset();
 		testData.setClassIndex(testData.numAttributes()-1);
 		try {
 			Instances filteredIns  = Filter.useFilter(testData, filter);
