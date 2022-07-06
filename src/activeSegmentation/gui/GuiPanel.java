@@ -21,6 +21,7 @@ import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
 import weka.gui.GUIChooser;
+import weka.gui.explorer.Explorer;
 
 /**
  * Selector GUI class
@@ -91,21 +92,23 @@ public class GuiPanel implements ASCommon {
 			}
 			SwingUtilities.invokeLater(this.learningPanel);
 		}
+		
 		if (event == this.EVALUATION_BUTTON_PRESSED) {
-			/*
-			IEvaluation evaluation = new EvaluationMetrics();
-			EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
-			SwingUtilities.invokeLater(evaluationPanel);
-			*/
-			
-			 GUIChooser.main(null);;
-			
+		
+			//IEvaluation evaluation = new EvaluationMetrics();
+			//EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
+			EvaluationPanel evaluationPanel = new EvaluationPanel();
+			SwingUtilities.invokeLater(evaluationPanel);	
+			//GUIChooser.main(null);;
+	
 		}
 		
 	}
 	
 	
-
+	/**
+	 * 
+	 */
 	private void initGUI()	{
 		this.mainFrame = new JFrame("Active Segmentation v." + version);
 		this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
