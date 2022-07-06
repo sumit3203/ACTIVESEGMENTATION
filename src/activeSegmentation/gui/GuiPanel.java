@@ -20,6 +20,7 @@ import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
+import weka.gui.GUIChooser;
 
 /**
  * Selector GUI class
@@ -91,10 +92,16 @@ public class GuiPanel implements ASCommon {
 			SwingUtilities.invokeLater(this.learningPanel);
 		}
 		if (event == this.EVALUATION_BUTTON_PRESSED) {
+			/*
 			IEvaluation evaluation = new EvaluationMetrics();
 			EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
 			SwingUtilities.invokeLater(evaluationPanel);
+			*/
+			
+			 GUIChooser.main(null);;
+			
 		}
+		
 	}
 	
 	
@@ -118,7 +125,7 @@ public class GuiPanel implements ASCommon {
 		this.controlPanel.add(addButton("Filter Visualization", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Feature Extraction",   null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Model Learning",       null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		//this.controlPanel.add(addButton("EVALUATION", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Evaluation", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
 
 		this.controlPanel.setLocation(0, 0);
 		this.mainFrame.add(this.controlPanel);
