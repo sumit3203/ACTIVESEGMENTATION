@@ -1,7 +1,6 @@
 package activeSegmentation.gui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,15 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.IEvaluation;
+//import activeSegmentation.IEvaluation;
 //import activeSegmentation.ILearningManager;
 //import activeSegmentation.IProjectManager;
-import activeSegmentation.evaluation.EvaluationMetrics;
+//import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
-import weka.gui.GUIChooser;
-import weka.gui.explorer.Explorer;
+//import weka.gui.GUIChooser;
+//import weka.gui.explorer.Explorer;
 
 /**
  * Selector GUI class
@@ -34,20 +33,21 @@ public class GuiPanel implements ASCommon {
 	private JPanel controlPanel;
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
-	private FeaturePanelNew featurePanel;
+	private FeaturePanel featurePanel;
 	private ViewFilterOutputPanel filterOutputPanel;
 	 
 	
-	final ActionEvent FEATURE_BUTTON_PRESSED = new ActionEvent(this, 0, "Feature");
-	final ActionEvent FILTER_BUTTON_PRESSED = new ActionEvent(this, 1, "Filter");
-	final ActionEvent LEARNING_BUTTON_PRESSED = new ActionEvent(this, 2, "Learning");
+	final ActionEvent FEATURE_BUTTON_PRESSED    = new ActionEvent(this, 0, "Feature"   );
+	final ActionEvent FILTER_BUTTON_PRESSED     = new ActionEvent(this, 1, "Filter"    );
+	final ActionEvent LEARNING_BUTTON_PRESSED   = new ActionEvent(this, 2, "Learning"  );
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
-	final ActionEvent FILTERVIS_BUTTON_PRESSED = new ActionEvent(this, 4, "FilterVis");
+	final ActionEvent FILTERVIS_BUTTON_PRESSED  = new ActionEvent(this, 4, "FilterVis" );
 
 	
 	private FeatureManager featureManager;
 	private ClassifierManager learningManager;
 	private ProjectManager projectManager;
+	private EvaluationPanel evaluationPanel;
 	
 
 	/**
@@ -81,7 +81,7 @@ public class GuiPanel implements ASCommon {
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
 			if (this.featurePanel == null) {
-				featurePanel=new FeaturePanelNew(featureManager);
+				featurePanel=new FeaturePanel(featureManager);
 			}	
 			SwingUtilities.invokeLater(this.featurePanel);
 		}
@@ -92,15 +92,13 @@ public class GuiPanel implements ASCommon {
 			}
 			SwingUtilities.invokeLater(this.learningPanel);
 		}
-		
+
 		if (event == this.EVALUATION_BUTTON_PRESSED) {
-		
-			//IEvaluation evaluation = new EvaluationMetrics();
-			//EvaluationPanel evaluationPanel = new EvaluationPanel(this.projectManager, evaluation);
-			EvaluationPanel evaluationPanel = new EvaluationPanel();
+			if (evaluationPanel==null) {
+				evaluationPanel = new EvaluationPanel();
+			}
 			SwingUtilities.invokeLater(evaluationPanel);	
-			//GUIChooser.main(null);;
-	
+
 		}
 		
 	}

@@ -67,7 +67,7 @@ import static  activeSegmentation.ProjectType.*;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class FeaturePanelNew extends ImageWindow implements Runnable, ASCommon, IUtil {
+public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUtil {
 
 	/**
 	 * 
@@ -103,8 +103,8 @@ public class FeaturePanelNew extends ImageWindow implements Runnable, ASCommon, 
 	/*
 	 *  the files must be in the resources/feature folder
 	 */
-	private static final Icon uploadIcon = new ImageIcon(FeaturePanelNew.class.getResource("upload.png"));
-	private static final Icon downloadIcon = new ImageIcon(FeaturePanelNew.class.getResource("download.png"));
+	private static final Icon uploadIcon = new ImageIcon(FeaturePanel.class.getResource("upload.png"));
+	private static final Icon downloadIcon = new ImageIcon(FeaturePanel.class.getResource("download.png"));
  
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
@@ -136,7 +136,7 @@ public class FeaturePanelNew extends ImageWindow implements Runnable, ASCommon, 
 	/*
 	 * constructor 
 	 */
-	public FeaturePanelNew(FeatureManager featureManager) {		
+	public FeaturePanel(FeatureManager featureManager) {		
 		super(featureManager.getCurrentImage());
 		this.featureManager = featureManager;
 		this.displayImage= featureManager.getCurrentImage();
