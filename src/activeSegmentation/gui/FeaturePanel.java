@@ -146,7 +146,6 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		this.allexampleList = new HashMap<>();
 		roiOverlayList = new HashMap<>();		
 		this.setVisible(false);
-		//showPanel();
 	}
 
 	@Override
@@ -681,8 +680,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		}		
 	}
 
-	public void updateResultOverlay(ImagePlus classifiedImage)
-	{
+	public void updateResultOverlay(ImagePlus classifiedImage)	{
 		if(featureManager.getProjectType()==ProjectType.SEGM) {
 			ImageProcessor overlay = classifiedImage.getProcessor().duplicate();
 			overlay = overlay.convertToByte(false);
@@ -753,11 +751,6 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		updateExampleLists(featureManager, type,  exampleList);
 	}
 	
- 
-	
-	 
-	 
-	
 	private  MouseListener mouseListener = new MouseAdapter() {
 		
 		@Override
@@ -825,8 +818,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	
 	private JButton addButton(final JButton button ,final String label, final Icon icon, final int x,
 			final int y, final int width, final int height,
-			JComponent panel, final ActionEvent action,final Color color )
-	{
+			JComponent panel, final ActionEvent action,final Color color )	{
 		panel.add(button);
 		button.setText( label );
 		button.setIcon( icon );
@@ -882,10 +874,6 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			featureManager.uploadExamples(fileChooser.getSelectedFile().toString(),key,type, featureManager.getCurrentSlice());
 		}
 	}
-
-
-
-
 
 
 }
