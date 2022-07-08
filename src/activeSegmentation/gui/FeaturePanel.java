@@ -76,18 +76,18 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	
 	private FeatureManager featureManager;
 	/** opacity (in %) of the result overlay image */
-	int overlayOpacity = 33;
+	private int overlayOpacity = 33;
 	/** alpha composite for the result overlay image */
 	Composite overlayAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, overlayOpacity / 100f);
 	private ImageOverlay resultOverlay;
-	LUT overlayLUT;
+	private LUT overlayLUT;
 	/** flag to display the overlay image */
 	private boolean showColorOverlay=false;
-	ImagePlus classifiedImage=null;
+	private ImagePlus classifiedImage=null;
 	// Create overlay LUT
-	byte[] red = new byte[ 256 ];
-	byte[] green = new byte[ 256 ];
-	byte[] blue = new byte[ 256 ];
+	private byte[] red = new byte[ 256 ];
+	private byte[] green = new byte[ 256 ];
+	private byte[] blue = new byte[ 256 ];
 
 	private Map<String, JList<String>> exampleList;
 	private Map<String, JList<String>> allexampleList;
@@ -98,7 +98,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	/** Used only during classification setting*/
 	private Map<String,Integer> predictionResultClassification;
 
-	final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
+	private final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
 	
 	/*
 	 *  the files must be in the resources/feature folder
@@ -109,6 +109,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 	/** This {@link ActionEvent} is fired when the 'next' button is pressed. */
 	private ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent( this, 0, "Next" );
+	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	private ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
 	private ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
@@ -119,6 +120,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	private ActionEvent TOGGLE_BUTTON_PRESSED = new ActionEvent( this, 7, "TOGGLE" );
 	private ActionEvent DOWNLOAD_BUTTON_PRESSED = new ActionEvent( this, 8, "DOWNLOAD" );
 	private ActionEvent MASKS_BUTTON_PRESSED = new ActionEvent( this, 9, "MASKS" );
+	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	private ActionEvent SNAP_BUTTON_PRESSED = new ActionEvent( this, 10, "Snap" );
 
@@ -150,8 +152,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 	@Override
 	public void run() {
-		showPanel();
-		
+		showPanel();		
 	}
 
 	public void showPanel() {

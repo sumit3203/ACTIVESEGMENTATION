@@ -1,7 +1,6 @@
 package activeSegmentation.evaluation;
 
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.util.List;
 
 import org.jfree.chart.ChartFactory;
@@ -18,8 +17,7 @@ import ijaux.scale.Pair;
 
 public class EvaluationCurve {
 
-	public  ChartPanel  createChart(String title, String xLabel, String ylabel, List<Pair<double[], double[]>> tandFRateList)
-	{
+	public  ChartPanel  createChart(String title, String xLabel, String ylabel, List<Pair<double[], double[]>> tandFRateList){
 		XYDataset dataset=createRealDataset(tandFRateList);
 		JFreeChart xylineChart = ChartFactory.createXYLineChart(
 				title, 
@@ -40,8 +38,7 @@ public class EvaluationCurve {
 		return chartPanel;
 	}
 
-	private static XYDataset createRealDataset(List<Pair<double[], double[]>> tandFRateList)
-	{
+	private static XYDataset createRealDataset(List<Pair<double[], double[]>> tandFRateList){
 		XYSeriesCollection dataset = new XYSeriesCollection();
 		int iter = 0;
 		for (Pair<double[], double[]> tandFRate : tandFRateList)
