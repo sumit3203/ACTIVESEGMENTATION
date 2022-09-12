@@ -2,6 +2,7 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
+import java.util.ArrayList;
 // import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -91,7 +92,9 @@ public class InfoGain implements IFeatureSelection {
 			IJ.log("Selected features:");
 			int c=0;
 			while (attributes.hasMoreElements()) {
-				IJ.log(attributes.nextElement().name());
+				String fname= attributes.nextElement().name();
+				flist.add(fname);
+				IJ.log(fname);
 				c++;
 			}
 			IJ.log("Selected "+c);
@@ -104,6 +107,7 @@ public class InfoGain implements IFeatureSelection {
 		return null;
 	}
 
+	private ArrayList<String> flist=new ArrayList<>();
 
 	/**
 	 * @param instances
@@ -131,6 +135,7 @@ public class InfoGain implements IFeatureSelection {
 	}
 	
 
+
 	@Override
 	public IDataSet filterData(IDataSet data){
 
@@ -145,5 +150,10 @@ public class InfoGain implements IFeatureSelection {
 		return null;
 	}
 
+	@Override
+	public String[] getFeatureList() {
+		String[] str= {""};
+		return flist.toArray(str);
+	}
 
 }

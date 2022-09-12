@@ -38,6 +38,12 @@ public interface IFeatureSelection extends IAnnotated {
 	
 	public IDataSet filterData(IDataSet data);
 	
+	
+	public default String[] getFeatureList() {	 
+		String[] str= {""};
+		return str;
+	}
+	
 	/**
 	 * returns a unique key of filter
 	 * @return String containing the key

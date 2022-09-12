@@ -212,7 +212,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		features.setBounds(605,120,350,120);
 		features.setBorder(BorderFactory.createTitledBorder("Learning"));
 		
-		addButton(new JButton(), "PREVIOUS",null , 610, 130, 120, 20,features,PREVIOUS_BUTTON_PRESSED,null );
+		addButton(new JButton(), "PREVIOUS", null, 610, 130, 120, 20, features, PREVIOUS_BUTTON_PRESSED, null );
 		
 		imageNum= new JTextField();
 		imageNum.setColumns(5);

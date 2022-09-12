@@ -2,13 +2,8 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.Map.Entry;
-
-//import java.util.Enumeration;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
@@ -17,10 +12,7 @@ import activeSegmentation.learning.weka.WekaDataSet;
 import ij.IJ;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
-import weka.attributeSelection.InfoGainAttributeEval;
 import weka.core.Attribute;
-//import weka.core.Attribute;
-//import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
@@ -65,7 +57,9 @@ public class CFS implements IFeatureSelection {
 			IJ.log("Selected features:");
 			int c=0;
 			while (attributes.hasMoreElements()) {
-				IJ.log(attributes.nextElement().name());
+				String fname= attributes.nextElement().name();
+				flist.add(fname);
+				IJ.log(fname);
 				c++;
 			}
 			IJ.log("Selected "+c);
@@ -79,6 +73,7 @@ public class CFS implements IFeatureSelection {
 		return null;
 	}
 	
+	private ArrayList<String> flist=new ArrayList<>();
 	
 	
 	@Override
@@ -93,6 +88,13 @@ public class CFS implements IFeatureSelection {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	@Override
+	public String[] getFeatureList() {
+		String[] str= {""};
+		return flist.toArray(str);
 	}
 
 

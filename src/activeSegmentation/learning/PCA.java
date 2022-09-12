@@ -2,11 +2,8 @@ package activeSegmentation.learning;
 
 import static activeSegmentation.FilterType.FEATURE;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.Map.Entry;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
@@ -66,7 +63,10 @@ public class PCA implements IFeatureSelection {
 		     Enumeration<Attribute> attributes=filteredIns.enumerateAttributes();
 			 IJ.log("Selected features:");
 			 while (attributes.hasMoreElements()) {
-				IJ.log(attributes.nextElement().name());
+				 String fname= attributes.nextElement().name();
+				 flist.add(fname);
+				  IJ.log(fname);
+				
 			 }
 				
 			return new WekaDataSet(filteredIns);
@@ -76,33 +76,7 @@ public class PCA implements IFeatureSelection {
 		return null;
 	}
 	
-	/**
-	 * @param instances
-	 * @param evaluator
-	 * @return
-	 * @throws Exception
-	 *
-	private SortedSet<Entry<Attribute, Double>> selectedFeatures(Instances instances, PrincipalComponents evaluator){
-		try {
-			Map<Attribute, Double> scores=new HashMap<>();
-			
-			for (int i=0;i<instances.numAttributes(); i++) {
-				Attribute t_attr=instances.attribute(i);
-				
-				if (! t_attr.name().equalsIgnoreCase("class")) {
-					double infogain=evaluator.evaluateAttribute(i);
-					scores.put(t_attr, infogain);
-				}
-			}
-			
-			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
-			return sortedscores;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	*/
+	private ArrayList<String> flist=new ArrayList<>();
 	
  
 	@Override
@@ -117,6 +91,12 @@ public class PCA implements IFeatureSelection {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public String[] getFeatureList() {
+		String[] str= {""};
+		return flist.toArray(str);
 	}
 
 }
