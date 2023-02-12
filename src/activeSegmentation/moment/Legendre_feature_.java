@@ -21,7 +21,7 @@ import java.util.List;
 /**
  */
 
-@AFilter(key="LM", value="Legendre Moments", type=CLASSIF)
+@AFilter(key="LM", value="Legendre Moments", type=CLASSIF, help = "")
 public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 
 	public static boolean debug=IJ.debugMode;

@@ -47,7 +47,7 @@ public interface IFilterViz {
 	}
 	
 	/**
-	 * provides the data points to be visualized
+	 * outputs the data points to be visualized
 	 * double[0][] - x points
 	 * double[1][] - y points
 	 * @return double[][]

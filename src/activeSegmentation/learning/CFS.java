@@ -17,7 +17,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 
-@AFilter(key="CFS", value="Correlation Feature Selection", type=FEATURE)
+@AFilter(key="CFS", value="Correlation Feature Selection", type=FEATURE, help = "")
 public class CFS implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();

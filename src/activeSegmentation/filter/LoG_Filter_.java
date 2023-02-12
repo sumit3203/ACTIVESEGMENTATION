@@ -71,7 +71,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM)
+@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM, help = "")
 public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 

@@ -6,7 +6,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 
-@AFilter(key="NONE", value="No Selection", type=FEATURE)
+@AFilter(key="NONE", value="No Selection", type=FEATURE, help = "")
 public class ID implements IFeatureSelection {
 
 	@Override

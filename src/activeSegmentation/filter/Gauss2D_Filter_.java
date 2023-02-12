@@ -42,7 +42,7 @@ import static java.lang.Math.*;
  *
  *
  * @contents
- * This plugin convolves an image with a Gassian filter in 2D
+ * This plugin convolves an image with a Gaussian filter in 2D
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="GAUSS", value="2D Gaussian", type=SEGM)
+@AFilter(key="GAUSS", value="2D Gaussian", type=SEGM, help = "")
 public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 

@@ -20,7 +20,7 @@ import weka.filters.supervised.attribute.AttributeSelection;
 //import weka.filters.unsupervised.attribute.RemoveUseless;
 //import weka.filters.unsupervised.attribute.Standardize;
 
-@AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE)
+@AFilter(key="PCA", value="Principal Component Analysis", type=FEATURE, help = "")
 public class PCA implements IFeatureSelection {
 
   

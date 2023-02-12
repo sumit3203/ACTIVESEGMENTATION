@@ -29,7 +29,7 @@ import ijaux.moments.zernike.ZernikeMoment;
 //import ijaux.moments.ZernikeMoment.ComplexWrapper;
 import ijaux.datatype.Pair;
 
-@AFilter(key="ZMC", value="Zernike Moments", type=CLASSIF)
+@AFilter(key="ZMC", value="Zernike Moments", type=CLASSIF, help = "")
 public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<ArrayList<?>> {
 
 	final int flags=DOES_ALL+ NO_CHANGES;

@@ -15,7 +15,7 @@ import ij.plugin.filter.Analyzer;
 import ij.process.ImageProcessor;
 
 
-@AFilter(key="imagej_features", value="IJ ROI statistics", type=CLASSIF)
+@AFilter(key="imagej_features", value="IJ ROI statistics", type=CLASSIF, help = "")
 public class IJstat_feature_ {
 
 	Map<String, Integer > featureMap=new HashMap<>();

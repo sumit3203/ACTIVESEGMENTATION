@@ -23,7 +23,7 @@ import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.RemoveUseless;
 
-@AFilter(key="GainRatio", value="GainRatio Feature Selection", type=FEATURE)
+@AFilter(key="GainRatio", value="GainRatio Feature Selection", type=FEATURE, help = "")
 public class GainRatio implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();

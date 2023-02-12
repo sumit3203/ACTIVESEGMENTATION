@@ -10,21 +10,30 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AFilter {
+	
 	/**
 	 * unique key used in the GUI 
-	 * @return
+	 * @return String
 	 */
    public String key();
+   
    /**
     * The value is displayed in the GUI as a tab title
-    * @return
+    * @return String
     */
    public String value();
    
    /**
     * The type is used in the loading mechanism
     * 
-    * @return
+    * @return FilterType
     */
    public FilterType type();
+   
+   /**
+    * Help resource
+    * @return String
+    */
+   public String help();
+   
 }

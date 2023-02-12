@@ -57,7 +57,7 @@ import dsp.Conv;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="HESSIAN", value="Hessian components", type=SEGM)
+@AFilter(key="HESSIAN", value="Hessian components", type=SEGM, help = "")
 public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 

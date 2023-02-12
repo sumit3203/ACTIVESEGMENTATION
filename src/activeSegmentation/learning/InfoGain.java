@@ -25,7 +25,7 @@ import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.RemoveUseless;
 
-@AFilter(key="InfoGain", value="InfoGain Feature Selection", type=FEATURE)
+@AFilter(key="InfoGain", value="InfoGain Feature Selection", type=FEATURE, help = "")
 public class InfoGain implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();

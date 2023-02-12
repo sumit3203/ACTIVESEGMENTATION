@@ -70,7 +70,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="GAUSSDER", value="G. Deriv.", type=SEGM)
+@AFilter(key="GAUSSDER", value="G. Deriv.", type=SEGM, help = "")
 public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")

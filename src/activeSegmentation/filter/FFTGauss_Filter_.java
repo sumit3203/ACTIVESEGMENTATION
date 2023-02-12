@@ -60,7 +60,7 @@ import ijaux.scale.SUtils;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="FGAUSS", value="FFT Gaussian", type=SEGM)
+@AFilter(key="FGAUSS", value="FFT Gaussian", type=SEGM, help = "")
 public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final static String KSZ = "KSZ", GEV="GEV1";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;

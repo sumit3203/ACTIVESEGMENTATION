@@ -20,7 +20,7 @@ import ij.gui.Roi;
 import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 
-@AFilter(key="TF", value="Test Filter", type=SEGM)
+@AFilter(key="TF", value="Test Filter", type=SEGM, help = "help.html")
 public class TestFilter implements IFilter {
 
 	/*

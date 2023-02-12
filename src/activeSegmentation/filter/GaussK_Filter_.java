@@ -63,7 +63,7 @@ import static java.lang.Math.*;
 
 
 
-@AFilter(key="CURVATURE", value="Curvature", type=SEGM)
+@AFilter(key="CURVATURE", value="Curvature", type=SEGM, help = "")
 public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;

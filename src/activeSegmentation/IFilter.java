@@ -112,8 +112,9 @@ public interface IFilter extends IAnnotated {
 	}
 	
 	/**
-	 * will provide filter specific help message
-	 * @return
+	 * Provides filter-specific help message/ resource 
+	 * using the annotation mechanism
+	 * @return String
 	 */
 	default public String helpInfo() {
 		return "This is a filter";

@@ -54,7 +54,7 @@ import static activeSegmentation.FilterType.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="ALOG", value="Anisotropic Laplacian of Gaussian", type=SEGM)
+@AFilter(key="ALOG", value="Anisotropic Laplacian of Gaussian", type=SEGM, help = "")
 public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
