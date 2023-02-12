@@ -46,6 +46,28 @@ public class TestFilter implements IFilter {
 	public TestFilter() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	/**
+	 * returns the filter type declared in the class-level annotation
+	 * @return FilterType
+	 */
+	 @Override
+	public String getHelpResource() {
+		Class<?> c= this.getClass();
+		final Annotation[] arran=AnnotationManager.getClassAnnotations(c);
+		for (Annotation aa:arran  ) {
+			//System.out.println("AA: " +aa);
+			if (aa instanceof AFilter) {
+				//System.out.println("AF: " +aa);
+				final AFilter af= ((AFilter)aa);		 
+				return af.help();
+			}
+			  
+		}
+		//throw new RuntimeException("No filter annotations present");
+		System.out.println("No filter annotations present");
+		return "";
+	}
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
@@ -107,6 +129,7 @@ public class TestFilter implements IFilter {
 
 	
 
+	@SuppressWarnings("restriction")
 	public static void main(String[] args) {
 		TestFilter filter = new TestFilter();
 		//filter.getDefaultSettings();
@@ -128,7 +151,19 @@ public class TestFilter implements IFilter {
 		FilterType ft=filter.getAType();
 		System.out.println(ft);
 		
+		String hlp=filter.getHelpResource();
+		
+		System.out.println(hlp);
 
+		
+		 new Thread() {
+	            @Override
+	            public void run() {
+	                javafx.application.Application.launch(WebHelper.class, hlp);
+	            }
+	        }.start();
+		
+		
 	}
 
 	/**

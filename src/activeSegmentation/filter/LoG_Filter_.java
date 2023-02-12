@@ -12,6 +12,7 @@ import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 import ijaux.scale.GScaleSpace;
 import ijaux.scale.SUtils;
+import test.WebHelper;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM, help = "")
+@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM, help = "help.html")
 public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 
@@ -356,6 +357,20 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		LoG_Filter_ filter=new LoG_Filter_();
 		System.out.println("annotated fields");
 		System.out.println(filter.getAnotatedFileds());
+		
+
+		String hlp=filter.getHelpResource();
+		
+		System.out.println(hlp);
+
+		
+		 new Thread() {
+	            @SuppressWarnings("restriction")
+				@Override
+	            public void run() {
+	                javafx.application.Application.launch(WebHelper.class, hlp);
+	            }
+	        }.start();
 	}
 
 

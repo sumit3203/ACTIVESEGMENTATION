@@ -75,5 +75,26 @@ public interface IAnnotated {
 		System.out.println("No filter annotations present");
 		return Pair.of("NONE","NONE");
 	}
+	
+	/**
+	 * returns the help resource
+	 * @return
+	 */
+	 public default String getHelpResource() {
+			Class<?> c= this.getClass();
+			final Annotation[] arran=AnnotationManager.getClassAnnotations(c);
+			for (Annotation aa:arran  ) {
+				//System.out.println("AA: " +aa);
+				if (aa instanceof AFilter) {
+					//System.out.println("AF: " +aa);
+					final AFilter af= ((AFilter)aa);		 
+					return af.help();
+				}
+				  
+			}
+			//throw new RuntimeException("No filter annotations present");
+			System.out.println("No filter annotations present");
+			return "";
+		}
 
 }
