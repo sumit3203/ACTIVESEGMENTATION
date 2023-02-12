@@ -25,7 +25,7 @@ public class WebHelper extends Application {
         scene = new Scene(browser, 750, 500, Color.web("#666970"));
         stage.setScene(scene);
         Platform.setImplicitExit(true);
-      //  scene.getStylesheets().add("webviewsample/BrowserToolbar.css");        
+        scene.getStylesheets().add("./help.css");        
         stage.show();
     }
     
