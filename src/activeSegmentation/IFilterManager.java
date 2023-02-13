@@ -128,6 +128,14 @@ public interface IFilterManager {
 	public static Map<String, String> getFieldAnnotations(String key) {
 		return annotationMap.get(key);
 	}
+	
+	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getHelpInfo(String key);
 
 
 }

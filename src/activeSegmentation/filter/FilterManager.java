@@ -332,4 +332,15 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 	public IFilter getInstance(String key) {
 		return filterMap.get(key);
 	}
+	
+	
+	@Override
+	public String getHelpInfo(String key) {
+		IFilter instance=filterMap.get(key);
+		String url=instance.getHelpResource();
+		IJ.log("help url: "+url);
+		String path=projectInfo.helpURL;
+		IJ.log("help path: "+path);
+		return url;
+	}
 }

@@ -5,6 +5,7 @@ import javafx.geometry.VPos;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import ij.IJ;
 import javafx.application.Platform;
 
 @SuppressWarnings("restriction")
@@ -16,13 +17,15 @@ public class ABrowser extends Region {
     public ABrowser(String resource) {
         //apply the styles
        getStyleClass().add("browser");
-       try {
-		///String hlpfile= WebHelper.class.getResource(resource).toExternalForm();
-		   webEngine.load(resource);
-	} catch (RuntimeException e) {
+      // try {
+		//String hlpfile= WebHelper.class.getResource(resource).toExternalForm();
+       IJ.log("loading browser "+ resource);
+      // webEngine.load("http://www.neuroinformatics.be/");
+          webEngine.load(resource);
+	//} catch (RuntimeException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	//	e.printStackTrace();
+	//}
        //add the web view to the scene
        getChildren().add(browser);
  

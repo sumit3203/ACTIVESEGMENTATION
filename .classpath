@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java|activeSegmentation/gui/Gui2.java|activeSegmentation/evaluation/Curves.java|activeSegmentation/gui/Curves.java|activeSegmentation/util/ClassLoaderHelper.java|activeSegmentation/Project.java|activeSegmentation/IFeatureManager.java|activeSegmentation/ILearningManager.java|test/TestCurves.java|test/TestFeatureSelection.java|test/CellsClassification.java|activeSegmentation/feature/FeatureContainer.java|activeSegmentation/parallel/|activeSegmentation/evaluation/WekaEvaluation.java|activeSegmentation/learning/LVQ.java|activeSegmentation/learning/SMO.java|ijaux/parallel/|activeSegmentation/learning/ApplyClassifier.java|test/ABrowserTest.java" kind="src" path="src"/>
+	<classpathentry excluding="test/FFTProcTest.java|activeSegmentation/filter/RGB_Filter.java|activeSegmentation/gui/Gui2.java|activeSegmentation/evaluation/Curves.java|activeSegmentation/gui/Curves.java|activeSegmentation/util/ClassLoaderHelper.java|activeSegmentation/Project.java|activeSegmentation/IFeatureManager.java|activeSegmentation/ILearningManager.java|test/TestCurves.java|test/TestFeatureSelection.java|test/CellsClassification.java|activeSegmentation/feature/FeatureContainer.java|activeSegmentation/parallel/|activeSegmentation/evaluation/WekaEvaluation.java|activeSegmentation/learning/LVQ.java|activeSegmentation/learning/SMO.java|ijaux/parallel/|activeSegmentation/learning/ApplyClassifier.java|test/ABrowserTest.java" kind="src" path="src">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="resources">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/Auto_Threshold.jar"/>

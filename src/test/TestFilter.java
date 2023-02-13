@@ -159,7 +159,7 @@ public class TestFilter implements IFilter {
 		 new Thread() {
 	            @Override
 	            public void run() {
-	                javafx.application.Application.launch(WebHelper.class, hlp);
+	                javafx.application.Application.launch(WebHelperTest.class, hlp);
 	            }
 	        }.start();
 		

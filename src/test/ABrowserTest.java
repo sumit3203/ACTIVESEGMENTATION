@@ -19,10 +19,10 @@ class ABrowserTest extends Region {
        try {
 		String hlpfile= WebHelper.class.getResource(resource).toExternalForm();
 		   webEngine.load(hlpfile);
-	} catch (RuntimeException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
        //add the web view to the scene
        getChildren().add(browser);
  

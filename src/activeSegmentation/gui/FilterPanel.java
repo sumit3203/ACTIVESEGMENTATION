@@ -3,10 +3,6 @@ package activeSegmentation.gui;
 
 
 import ij.IJ;
-import ij.ImagePlus;
-import ijaux.datatype.Pair;
-import test.FilterField;
-import test.testFilterAnn;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,9 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-
-
-
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
@@ -70,16 +61,18 @@ public class FilterPanel implements Runnable, ASCommon {
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	final ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
 
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	/** This {@link ActionEvent} is fired when the 'compute' button is pressed. */
 	final ActionEvent COMPUTE_BUTTON_PRESSED = new ActionEvent( this, 2, "Compute" );
 
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	/** This {@link ActionEvent} is fired when the 'save' button is pressed. */
 	final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent( this, 4, "Save" );
 
-	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
+	/** This {@link ActionEvent} is fired when the 'default' button is pressed. */
 	final ActionEvent DEFAULT_BUTTON_PRESSED = new ActionEvent( this, 5, "Default" );
 
-
+	/** This {@link ActionEvent} is fired when the 'help' button is pressed. */
+	final ActionEvent HELP_BUTTON_PRESSED = new ActionEvent( this, 6, "Help" );
+	
 	final JFrame frame = new JFrame("Filters");
 	
 	/**
@@ -175,7 +168,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		//p.setBackground(Color.GRAY);
 		int  y=10;
 		if(size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 95, 38,p,PREVIOUS_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, p, PREVIOUS_BUTTON_PRESSED , null);
 		IFilter instance=filterManager.getInstance(filterName);
 		String longname=instance.getName();
 		
@@ -200,8 +193,9 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 				
 		if(size != maxFilters)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38,p ,NEXT_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Next", null, 480, 90, 70, 38, p , NEXT_BUTTON_PRESSED , null);
 
+		addButton( new JButton(),  "Help", null, 480, 180, 70, 38, p , NEXT_BUTTON_PRESSED , null);
 	
 		List<JTextField> jtextList= new ArrayList<>();
 
@@ -266,7 +260,8 @@ public class FilterPanel implements Runnable, ASCommon {
 		if (size != maxFilters)
 			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
 
-		
+		// help button
+		addButton( new JButton(), "Help", null, 480, 180, 90, 20, panel ,HELP_BUTTON_PRESSED , null);
 
 		List<JTextField> jtextList= new ArrayList<>();
 		
@@ -321,7 +316,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		// enable button
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filterName);
-		addButton( button,ASCommon.ENABLED, null, 480,220 , 90, 20, panel ,event, Color.GREEN);
+		addButton( button,ASCommon.ENABLED, null, 480, 220 , 90, 20, panel ,event, Color.GREEN);
 
 
 		return panel;
@@ -402,6 +397,24 @@ public class FilterPanel implements Runnable, ASCommon {
 			updateTabbedGui(key);
 
 
+		}
+		if (event== HELP_BUTTON_PRESSED) {
+			System.out.println("Help pressed");
+			String key= pane.getTitleAt( pane.getSelectedIndex());
+			//System.out.println("title: "+key);
+	 
+			String url=	filterManager.getHelpInfo(key);
+			
+			new Thread() {
+		            @SuppressWarnings("restriction")
+					@Override
+		            public void run() {
+		            	IJ.log("starting help url: "+url);
+		            	IJ.log(" "+WebHelper.class.getResource(url).toExternalForm());
+		                javafx.application.Application.launch(WebHelper.class, url);
+		            }
+		        }.start();
+			
 		}
 
 

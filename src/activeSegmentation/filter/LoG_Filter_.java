@@ -12,7 +12,6 @@ import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 import ijaux.scale.GScaleSpace;
 import ijaux.scale.SUtils;
-import test.WebHelper;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
+import activeSegmentation.gui.WebHelper;
 import dsp.Conv;
 
 import static activeSegmentation.FilterType.*;
@@ -72,7 +72,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM, help = "./help.html")
+@AFilter(key="LOG", value="Laplacian of Gaussian", type=SEGM, help = "/help.html")
 public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 
@@ -119,9 +119,10 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	@Override
 	public String helpInfo() {
-		return "s=sigma^2 - scale; \r\n "
+		/*return "s=sigma^2 - scale; \r\n "
 				+ "normalized - scale by sigma; \r\n "
-				+ "separable - keep enabled for faster run;";
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
 	}
 	
 	

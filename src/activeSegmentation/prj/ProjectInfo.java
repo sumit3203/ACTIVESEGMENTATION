@@ -36,7 +36,9 @@ public class ProjectInfo{
 	
 	public String comment = "Default Comment";
 	
-	public final String version="1.0.6";
+	public final String version="1.0.7";
+	
+	public String helpURL=""; 
 	
 	////////////////////
 	// Private fields
@@ -77,7 +79,7 @@ public class ProjectInfo{
 	private Map<String, Set<String>> featureNames = new HashMap<>();
 	
 	@JsonIgnore
-	private Map<String,List<Pair<String,double[]>>> features=new HashMap<>();
+	private Map<String,List<Pair<String, double[]>>> features=new HashMap<>();
 		
 	@JsonIgnore
 	private int featureLength;
@@ -366,7 +368,7 @@ public class ProjectInfo{
 
 	/**
 	 * 
-	 * @return
+	 * @return pluginPath
 	 */
 	public List<String> getPluginPath() {
 		return pluginPath;

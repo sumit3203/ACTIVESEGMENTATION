@@ -379,5 +379,12 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 
+	@Override
+	public String getHelpInfo(String key) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+
 
 }

@@ -77,7 +77,7 @@ public interface IAnnotated {
 	}
 	
 	/**
-	 * returns the help resource
+	 * returns the help file url
 	 * @return
 	 */
 	 public default String getHelpResource() {
