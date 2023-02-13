@@ -35,7 +35,10 @@ import static java.lang.Math.*;
 
 
 /**
- * @version 	1.2.1 31 Oct 2019
+ * @version 	
+ * 				1.2.2 13 Feb 2023
+ * 				- help annotations
+ * 				1.2.1 31 Oct 2019
  * 				 - kernel plot change
  * 				1.6    23 Aug 2016
  *              1.5		date 23 Sept 2013
@@ -151,6 +154,14 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		FloatProcessor fp=filter(ip,sp,sep,isiso);
 		image.setProcessor(fp);
 		image.updateAndDraw();
+	}
+	
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
 	}
 
   

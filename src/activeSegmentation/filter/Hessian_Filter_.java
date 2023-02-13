@@ -28,6 +28,8 @@ import dsp.Conv;
 
 /**
  * @version 	
+ * 				1.3 13 Feb 2023
+ * 				- help annotations
  * 				1.2 21 Nov 2021
  * 				- added determinant output
  * 				1.1 27 Jun 2021
@@ -57,7 +59,7 @@ import dsp.Conv;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="HESSIAN", value="Hessian components", type=SEGM, help = "")
+@AFilter(key="HESSIAN", value="Hessian components", type=SEGM, help = "/help.html")
 public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 
@@ -121,6 +123,13 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	private Calibration cal=null;
 	
 	
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see ij.plugin.filter.PlugInFilter#run(ij.process.ImageProcessor)

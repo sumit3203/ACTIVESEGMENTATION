@@ -32,6 +32,8 @@ import static java.lang.Math.*;
 
 /**
  * @version 	
+ * 				1.1 13 Feb 2023
+ * 				- help annotations
  * 				1.0 27 Nov 2021
  * 	
  * 	based on LoG v1.3.0 13 April 2020
@@ -61,7 +63,7 @@ import static java.lang.Math.*;
  */
 
 
-@AFilter(key="GAUSS", value="2D Gaussian", type=SEGM, help = "")
+@AFilter(key="GAUSS", value="2D Gaussian", type=SEGM, help = "/help.html")
 public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 	@SuppressWarnings("unused")
 

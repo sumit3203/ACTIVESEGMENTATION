@@ -34,7 +34,10 @@ import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
- * @version   	3.1 31 Oct 2019
+ * @version   	
+ * 				3.2 13 Feb 2023
+ * 				- help annotations
+ * 				3.1 31 Oct 2019
  * 				 - kernel plot change
  * 				23 Aug 2016
  * 
@@ -179,7 +182,13 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		image.show();	
 	}
 
-
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 
 
 	/**

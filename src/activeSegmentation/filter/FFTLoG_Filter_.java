@@ -25,6 +25,8 @@ import static java.lang.Math.*;
 
 /**
  * @version 	
+ * 				1.3.2 13 Feb 2023
+ * 				- help annotations
  * 				1.3.1 7 Oct 2021
  * 				- annotations
  * 				1.3 28 Jun 2021
@@ -99,6 +101,14 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	void showAbout() {
 		IJ.showMessage("FFT LoG " + version, "The plugin applies a Fractional LoG kernel to the image");
+	}
+	
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
 	}
 
 	@Override

@@ -29,7 +29,11 @@ import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
- * @version 	1.0 09 Jan 2021
+ * @version 	
+ * 
+ *			1.1 13 Feb 2023
+ * 				- help annotations
+ * 			1.0 09 Jan 2021
  * 				
  *   
  * 
@@ -56,7 +60,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="CURVATURE1", value="Gaussian Curvature 1", type=SEGM, help = "")
+@AFilter(key="CURVATURE1", value="Gaussian Curvature 1", type=SEGM, help = "/help.html")
 public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -118,6 +122,14 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return  flags;
 	}
 
+	
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 
  /*
   * (non-Javadoc)

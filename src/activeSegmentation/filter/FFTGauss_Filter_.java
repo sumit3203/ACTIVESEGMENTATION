@@ -60,7 +60,7 @@ import ijaux.scale.SUtils;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="FGAUSS", value="FFT Gaussian", type=SEGM, help = "./help.html")
+@AFilter(key="FGAUSS", value="FFT Gaussian", type=SEGM, help = "/help.html")
 public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	private final static String KSZ = "KSZ", GEV="GEV1";
 	private final int flags=DOES_ALL + NO_CHANGES + NO_UNDO;
@@ -105,6 +105,13 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		IJ.showMessage("FFT Kernel " + version, "The plugin applies a Gaussian kernel to the image");
 	}
 	
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 	
 	@Override
 	public void run(ImageProcessor ip) {

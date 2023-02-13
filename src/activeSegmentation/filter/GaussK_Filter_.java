@@ -31,7 +31,10 @@ import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
- * @version 	1.1 19 Nov 2017 
+ * @version 	
+ * 				1.2 13 Feb 2023
+ * 				- help annotations
+ * 				1.1 19 Nov 2017 
  * 					- IFilter added
  * 					- refactoring
  * 				1.0 26 Sept 2017
@@ -63,7 +66,7 @@ import static java.lang.Math.*;
 
 
 
-@AFilter(key="CURVATURE", value="Curvature", type=SEGM, help = "")
+@AFilter(key="CURVATURE", value="Curvature", type=SEGM, help = "/help.html")
 public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;

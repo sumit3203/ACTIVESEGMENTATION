@@ -37,7 +37,10 @@ import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 /**
- * @version   	 28 Feb 2019
+ * @version   	 
+ * 				1.1 13 Feb 2023
+ * 				- help annotations
+ * 				1.0	28 Feb 2019
  * 					- gaussian jet
  *   
  * 
@@ -62,7 +65,7 @@ import dsp.Conv;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-@AFilter(key="GAUSSIAN Jet", value="Gaussian Jet", type=SEGM, help = "")
+@AFilter(key="GAUSSIAN Jet", value="Gaussian Jet", type=SEGM, help = "/help.html")
 public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
     @SuppressWarnings("unused")

@@ -29,7 +29,10 @@ import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
 
 /**
- * @version 	1.0 4 Jun 2022
+ * @version 	
+ * 				1.1 13 Feb 2023
+ * 				- help annotations
+ * 				1.0 4 Jun 2022
  * 				
  *              Isophote curvatures + Streamline curvature
  * 
@@ -109,6 +112,13 @@ public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFi
 		return  flags;
 	}
 
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 
  /*
   * (non-Javadoc)

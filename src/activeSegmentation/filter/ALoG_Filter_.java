@@ -23,7 +23,10 @@ import static java.lang.Math.*;
 
 import static activeSegmentation.FilterType.*;
 /**
- * @version 	1.2.1 31 Oct 2019
+ * @version 	
+ * 				1.2.2 13 Feb 2023
+ * 				- help annotations
+ * 				1.2.1 31 Oct 2019
  * 				 - kernel plot change
  * 				1.2 23 Aug 2016
  *              1.1 27 Jun 2015
@@ -138,6 +141,13 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		image.show();
 	}
 
+	@Override
+	public String helpInfo() {
+		/*return "s=sigma^2 - scale; \r\n "
+				+ "normalized - scale by sigma; \r\n "
+				+ "separable - keep enabled for faster run;";*/
+		return getHelpResource();
+	}
 	
 	
 	@Override
