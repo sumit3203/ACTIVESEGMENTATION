@@ -152,11 +152,11 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
-		String key=getKey();	
+		final String key=getKey();	
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
-				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
+				final String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 
 			}

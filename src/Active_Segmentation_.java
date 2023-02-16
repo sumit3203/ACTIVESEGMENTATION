@@ -24,7 +24,7 @@ public class Active_Segmentation_ implements PlugIn {
 
 
 	/**
-	 * This method is the main entry point into the Plugin. 
+	 * This method is the main entry point into the plugin. 
 	 * This method is written according to 
 	 * ImageJ plugin loading requirements
 	 * @param parameter for imageJ
@@ -61,7 +61,7 @@ public class Active_Segmentation_ implements PlugIn {
 			}
 		}	catch (Exception ex) {
 			IJ.error("plugins.dir misspecified\n"
-					+ "To run the platform in stand-alone mode specify plugins.dir"
+					+ "To run the platform in stand-alone mode please specify plugins.dir"
 					+ "as a command line argument");
 			ex.printStackTrace();
 		} 
