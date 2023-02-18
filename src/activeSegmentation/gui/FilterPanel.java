@@ -3,7 +3,6 @@ package activeSegmentation.gui;
 
 
 import ij.IJ;
-import javafx.application.Application;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -35,6 +34,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+
+import javafx.application.*;
+import javafx.stage.Stage;
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
@@ -407,21 +409,35 @@ public class FilterPanel implements Runnable, ASCommon {
 			String url=	filterManager.getHelpInfo(key);
 			
 			if (!javaFxLaunched ) {
-				new Thread() {
+		/*		 new Thread() {
 
 					@SuppressWarnings("restriction")
 					@Override 
 					public void run() {
 						IJ.log("starting help url: "+url);
-						//IJ.log(" "+WebHelper.class.getResource(url).toExternalForm()); //
-						javafx.application.Application.launch(WebHelper.class, url);
+				        Platform.setImplicitExit(false);
+						Application.launch(WebHelper.class, url);
 						
 						
-					} }.start();
+					} }.start(); */
+					new Thread(()->{
+						IJ.log("starting help url: "+url);
+						Platform.setImplicitExit(false); 
+						Application.launch(WebHelper.class,  url);  
+						}).start();
 					javaFxLaunched=true;
-			} else
-				IJ.log("JavaFx already Launched");
-			
+			} else {
+				System.out.println("JavaFx already Launched");
+				Platform.runLater(()->{
+		            try {
+		                Application application = WebHelper.class.newInstance();
+		                Stage primaryStage = new Stage();
+		                application.start(primaryStage);
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+		        });
+			}
 
 			/*
 			 * if (!javaFxLaunched ) new Thread(()->{Application.launch(WebHelper.class,

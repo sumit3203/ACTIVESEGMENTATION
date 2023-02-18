@@ -7,7 +7,7 @@ import java.io.*;
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IMEC
  *
  *
  * @contents
@@ -31,7 +31,7 @@ import java.io.*;
  */
 public interface ASCommon {
 	
-	public static final String version="1.1.1";
+	public static final String version="1.1.2";
 	
    // to check the class 
 	public static final String CLASS="class";

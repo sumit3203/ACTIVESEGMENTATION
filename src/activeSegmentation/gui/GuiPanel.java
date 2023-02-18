@@ -19,8 +19,7 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
-//import weka.gui.GUIChooser;
-//import weka.gui.explorer.Explorer;
+
 
 /**
  * Selector GUI class

@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.application.Platform;
-import activeSegmentation.ABrowser;
 import ij.IJ;
  
 @SuppressWarnings("restriction")
@@ -22,22 +21,24 @@ public class WebHelper extends Application {
      
     @Override 
     public void start(Stage stage) {
+ 
         // create the scene
         stage.setTitle("Help Browser");
         IJ.log("browser ... ");
         browser= new ABrowser(webhlp);
         scene = new Scene(browser, 750, 500, Color.web("#666970"));
         stage.setScene(scene);
-        Platform.setImplicitExit(true);
-        stage.setOnCloseRequest(e -> Platform.exit());
+
+       // stage.setOnCloseRequest(e -> Platform.exit());
+     //   stage.setOnCloseRequest(e -> stage.close());
         scene.getStylesheets().add(cssfile);        
-//        IJ.log("local "+cssfile);
+      // IJ.log("local "+cssfile);
         stage.show();
     }
     
     @Override
 	public void init() {
-    	Parameters params =this.getParameters();
+    	Parameters params =getParameters();
     	List<String> lst=params.getRaw();
     	//System.out.println(lst);
     	
@@ -46,16 +47,27 @@ public class WebHelper extends Application {
     		setWebHelp(lst.get(0));
     	}
     }
- 
+    
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args){
-        launch("help.html");
-         
+        launch("help.html");         
     }
 
+    /**
+     * 
+     * @return
+     */
 	public String getWebHelp() {
 		return webhlp;
 	}
 
+	/**
+	 * 
+	 * @param webhlp
+	 */
 	public void setWebHelp(String webhlp) {
 		
 		String hlpfile=  WebHelper.class.getResource(webhlp).toExternalForm();

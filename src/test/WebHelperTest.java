@@ -1,13 +1,13 @@
 package test;
 
 import java.util.List;
- 
+
+import activeSegmentation.gui.ABrowser;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.application.Platform;
-import activeSegmentation.ABrowser;
 import ij.IJ;
  
 @SuppressWarnings("restriction")

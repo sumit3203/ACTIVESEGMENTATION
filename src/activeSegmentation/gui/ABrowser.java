@@ -1,18 +1,22 @@
-package activeSegmentation;
+package activeSegmentation.gui;
 
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import ij.IJ;
 import javafx.application.Platform;
 
 @SuppressWarnings("restriction")
 public class ABrowser extends Region {
  
-    final WebView browser = new WebView();
-    final WebEngine webEngine = browser.getEngine();
+    private final WebView browser = new WebView();
+    private final WebEngine webEngine = browser.getEngine();
      
     public ABrowser(String resource) {
         //apply the styles
@@ -26,6 +30,21 @@ public class ABrowser extends Region {
  
     }
     
+    public void loadURL(final String url) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                String tmp="";
+				try {
+					tmp = (new URL(url)).toExternalForm();
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+ 
+            	webEngine.load(tmp);
+            }
+        });
+    }
     
     @Override 
     protected void layoutChildren() {
