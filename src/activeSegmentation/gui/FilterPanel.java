@@ -402,14 +402,14 @@ public class FilterPanel implements Runnable, ASCommon {
 
 		}
 		if (event== HELP_BUTTON_PRESSED) {
-			System.out.println("Help pressed");
+			//System.out.println("Help pressed");
 			String key= pane.getTitleAt( pane.getSelectedIndex());
 			//System.out.println("title: "+key);
 	 
 			String url=	filterManager.getHelpInfo(key);
 			
 			if (!javaFxLaunched ) {
-		/*		 new Thread() {
+				/*		 new Thread() {
 
 					@SuppressWarnings("restriction")
 					@Override 
@@ -417,34 +417,29 @@ public class FilterPanel implements Runnable, ASCommon {
 						IJ.log("starting help url: "+url);
 				        Platform.setImplicitExit(false);
 						Application.launch(WebHelper.class, url);
-						
-						
+
+
 					} }.start(); */
-					new Thread(()->{
-						IJ.log("starting help url: "+url);
-						Platform.setImplicitExit(false); 
-						Application.launch(WebHelper.class,  url);  
-						}).start();
-					javaFxLaunched=true;
+				new Thread(()->{
+					IJ.log("starting help url: "+url);
+					Platform.setImplicitExit(false); 
+					Application.launch(WebHelper.class,  url);  
+				}).start();
+				javaFxLaunched=true;
 			} else {
 				System.out.println("JavaFx already Launched");
 				Platform.runLater(()->{
-		            try {
-		                Application application = WebHelper.class.newInstance();
-		                Stage primaryStage = new Stage();
-		                application.start(primaryStage);
-		            } catch (Exception e) {
-		                e.printStackTrace();
-		            }
-		        });
+					try {
+						Application application = WebHelper.class.newInstance();
+						Stage primaryStage = new Stage();
+						application.start(primaryStage);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
 			}
 
-			/*
-			 * if (!javaFxLaunched ) new Thread(()->{Application.launch(WebHelper.class,
-			 * url); javaFxLaunched=true;}).start(); else IJ.log("JavaFx Launched"); //
-			 * WebHelper.multLaunch(WebHelper.class, url);
-			 */		
-			}
+		}
 
 		
 	}
