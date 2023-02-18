@@ -396,17 +396,6 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		return true;
 	}
 
-/*
-	@Override
-	public String getKey() {
-		return FILTER_KEY;
-	}
-
-	@Override
-	public String getName() {
-		return FILTER_NAME;
-	}
-*/
 
 	/*
 	 * by convention we will plot the lowest order derivative in 1D

@@ -3,6 +3,7 @@ package activeSegmentation.gui;
 
 
 import ij.IJ;
+import javafx.application.Application;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -405,20 +406,34 @@ public class FilterPanel implements Runnable, ASCommon {
 	 
 			String url=	filterManager.getHelpInfo(key);
 			
-			new Thread() {
-		            @SuppressWarnings("restriction")
-					@Override
-		            public void run() {
-		            	IJ.log("starting help url: "+url);
-		            	IJ.log(" "+WebHelper.class.getResource(url).toExternalForm());
-		                javafx.application.Application.launch(WebHelper.class, url);
-		            }
-		        }.start();
+			if (!javaFxLaunched ) {
+				new Thread() {
+
+					@SuppressWarnings("restriction")
+					@Override 
+					public void run() {
+						IJ.log("starting help url: "+url);
+						//IJ.log(" "+WebHelper.class.getResource(url).toExternalForm()); //
+						javafx.application.Application.launch(WebHelper.class, url);
+						
+						
+					} }.start();
+					javaFxLaunched=true;
+			} else
+				IJ.log("JavaFx already Launched");
 			
-		}
 
+			/*
+			 * if (!javaFxLaunched ) new Thread(()->{Application.launch(WebHelper.class,
+			 * url); javaFxLaunched=true;}).start(); else IJ.log("JavaFx Launched"); //
+			 * WebHelper.multLaunch(WebHelper.class, url);
+			 */		
+			}
 
+		
 	}
+	
+	private  boolean javaFxLaunched = false;
 
 	private void updateTabbedGui(String key){
 		//int i=0;

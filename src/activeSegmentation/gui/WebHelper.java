@@ -14,11 +14,11 @@ import ij.IJ;
 public class WebHelper extends Application {
     private Scene scene;
     
-    private String webhlp="";
+    private static String webhlp="";
    
     private ABrowser browser;
 
-	private String cssfile;
+	private static String cssfile;
      
     @Override 
     public void start(Stage stage) {
@@ -29,7 +29,7 @@ public class WebHelper extends Application {
         scene = new Scene(browser, 750, 500, Color.web("#666970"));
         stage.setScene(scene);
         Platform.setImplicitExit(true);
-//        String cssfile=WebHelper.class.getResource("/help.css").toExternalForm();
+        stage.setOnCloseRequest(e -> Platform.exit());
         scene.getStylesheets().add(cssfile);        
 //        IJ.log("local "+cssfile);
         stage.show();

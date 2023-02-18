@@ -17,31 +17,21 @@ public class ABrowser extends Region {
     public ABrowser(String resource) {
         //apply the styles
        getStyleClass().add("browser");
-      // try {
-		//String hlpfile= WebHelper.class.getResource(resource).toExternalForm();
+
        IJ.log("loading browser "+ resource);
-      // webEngine.load("http://www.neuroinformatics.be/");
-          webEngine.load(resource);
-	//} catch (RuntimeException e) {
-		// TODO Auto-generated catch block
-	//	e.printStackTrace();
-	//}
+       webEngine.load(resource);
+ 
        //add the web view to the scene
        getChildren().add(browser);
  
     }
     
-    /*
-    public void load(String url) {
-    	 webEngine.load(url);
-    }
-     */
     
     @Override 
     protected void layoutChildren() {
         double w = getWidth();
         double h = getHeight();
-        layoutInArea(browser,0,0,w,h,0, HPos.CENTER, VPos.CENTER);
+        layoutInArea(browser, 0, 0, w, h, 0, HPos.CENTER, VPos.CENTER);
     }
  
     @Override 

@@ -66,7 +66,7 @@ import static java.lang.Math.*;
 
 
 
-@AFilter(key="CURVATURE", value="Curvature", type=SEGM, help = "/help.html")
+@AFilter(key="CURVATURE", value="Curvature 3D", type=SEGM, help = "/help.html")
 public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
@@ -401,8 +401,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 			double gxx=lap_xx.getf(i);
 			double gyy=lap_yy.getf(i);
 
-			//double lx=2.0f*gx*gy*gxy;
-
+			
 			double dx=gx*gy;
 			gx*=gx;
 			gy*=gy;		

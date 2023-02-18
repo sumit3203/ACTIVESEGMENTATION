@@ -262,12 +262,14 @@ private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
 		double damp=amp*amp*amp;
 	  
 		//  Isophote curvature
+		// (-2*(F[x])*(F[xy])*(F[y])+(F[xx])*(F[y])^2+(F[x])^2*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
 		float gk=(float)(   ( gxx*gy*gy + gyy*gx*gx- 2.*gxy*gx*gy ) /damp   );
 		
 		if (abs(gk) <1e-8) gk=0;
 
 
 	    //Streamline curvature
+		// ((F[x])^2*(F[xy])-(F[x])*(F[xx])*(F[y])-(F[xy])*(F[y])^2+(F[x])*(F[y])*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
 		float gt=(float)(   (  gx*gy*(gyy-gxx) + gxy*(gx*gx - gy*gy) ) /damp  );
 		if (abs(gt) <1e-8) gt=0;
 		
