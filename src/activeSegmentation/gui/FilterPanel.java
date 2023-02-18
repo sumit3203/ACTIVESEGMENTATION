@@ -408,6 +408,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	 
 			String url=	filterManager.getHelpInfo(key);
 			
+			// https://stackoverflow.com/questions/24320014/how-to-call-launch-more-than-once-in-java
 			if (!javaFxLaunched ) {
 				/*		 new Thread() {
 
