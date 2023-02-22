@@ -33,7 +33,10 @@ import ijaux.datatype.*;
 import ijaux.scale.SUtils;
 
 /**
- * @version 	1.0 24 Aug 2019
+ * @version 	
+ * 				1.1 13 Feb 2023
+ * 				- help annotations
+ * 				1.0 24 Aug 2019
  * 				
  *   
  * 

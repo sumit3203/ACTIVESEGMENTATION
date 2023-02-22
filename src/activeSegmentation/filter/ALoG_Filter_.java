@@ -64,7 +64,8 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	private PlugInFilterRunner pfr=null;
 
 	final int flags=DOES_ALL+KEEP_PREVIEW+ NO_CHANGES;
-	private String version="2.0";
+	
+	private String version="1.2.2";
     @SuppressWarnings("unused")
 
 	private int nPasses=1;
@@ -131,11 +132,9 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 		int r = (sz-1)/2;
 		GScaleSpace sp=new GScaleSpace(r);
 
-
 		ImageStack imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
 		imageStack = filter(ip,sp,sz,imageStack);
-
 
 		image=new ImagePlus("ALoG result hw="+((sz-1)/2),imageStack);
 		image.show();
@@ -451,7 +450,4 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 	}
 
 	
-	
-
-
 }

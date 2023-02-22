@@ -119,6 +119,14 @@ public interface IFilter extends IAnnotated {
 	default public String helpInfo() {
 		return "This is a filter";
 	}
-
+	
+	/**
+	 * version info
+	 * @return
+	 */
+	default public String getVersion() {
+		return "1.0";
+	}
+	
 	
 }

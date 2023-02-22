@@ -72,18 +72,20 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	private final static String version = "1.1";
 	
-	
 	public static double sigma=Prefs.getInt(KSZ,3);
+	
+	private static boolean showkernel=true;
+		
+	////////////////////
+	// Annotated fields
+	///////////////////
 	
 	@AFilterField(key=ORD, value="order")
 	public static double order=Prefs.getDouble(ORD,1.0);
 	
-	private static boolean showkernel=true;
-	
 	@AFilterField(key=GEV, value="even")
 	public static boolean even=Prefs.getBoolean(GEV, false);
  
-	
 	@AFilterField(key=LEN, value="initial scale")
 	public int sz= Prefs.getInt(LEN, 1);
 	
@@ -94,11 +96,11 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	
 	/* NEW VARIABLES*/
 
-
 	private Map< String, String > settings= new HashMap<>();
 
 	private boolean isEnabled=true;
 
+	
 	void showAbout() {
 		IJ.showMessage("FFT LoG " + version, "The plugin applies a Fractional LoG kernel to the image");
 	}
