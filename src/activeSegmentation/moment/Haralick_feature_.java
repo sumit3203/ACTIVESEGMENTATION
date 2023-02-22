@@ -59,10 +59,10 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 	/* NEW VARIABLES*/
 
 	/** A string key identifying this factory. */
-	private final  String FILTER_KEY = "GLCM";
+	//private final  String FILTER_KEY = "GLCM";
 
 	/** The pretty name of the target detector. */
-	private final String FILTER_NAME = "Texture Descriptors Filter";
+	//private final String FILTER_NAME = "Texture Descriptors Filter";
 
 	//private final int TYPE=2;
 	// 1 Means Segmentation
@@ -180,10 +180,10 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 	}
 	
 	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
-		
-		
 		return filter(imageProcessor,  roi.getName());
 	}
+	
+	
 	public void generateFeatures() {
 
 		for (int angle: DIRECTIONS){
@@ -200,15 +200,11 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 		}
 	}
 
-	@Override
-	public String getKey() {
-		return this.FILTER_KEY;
-	}
-
-	@Override
-	public String getName() {
-		return this.FILTER_NAME;
-	}
+	/*
+	 * @Override public String getKey() { return this.FILTER_KEY; }
+	 * 
+	 * @Override public String getName() { return this.FILTER_NAME; }
+	 */
 
  
 
@@ -222,10 +218,9 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 		this.isEnabled= isEnabled;
 	}
 
-	@Override
-	public FilterType getFilterType() {
-		return FilterType.CLASSIF;
-	}
+	/*
+	 * @Override public FilterType getFilterType() { return FilterType.CLASSIF; }
+	 */
 
 	@Override
 	public ArrayList<Pair<String,double[]>> getFeatures() {

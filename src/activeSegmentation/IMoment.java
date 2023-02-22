@@ -29,6 +29,14 @@ public interface IMoment<T>  extends IAnnotated, IFilter {
 	
 	public Pair<String, double[]> apply(ImageProcessor imageProcessor, Roi roi);
 	
-	
+	/**
+	 * Provides filter-specific help message/ resource 
+	 * using the annotation mechanism
+	 * @return String
+	 */
+	@Override
+	default public String helpInfo() {
+		return "This is a moment";
+	}
 
 }

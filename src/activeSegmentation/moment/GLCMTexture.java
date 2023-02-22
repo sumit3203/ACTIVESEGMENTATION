@@ -10,8 +10,7 @@ import ij.process.ImageProcessor;
 /**
  * The feature implements the 
  * Haralick, R. M.; Shanmugam, K. & Dinstein, I.
-Textural Features for Image Classification 
-IEEE Transactions on Systems, Man, and Cybernetics, 
+Textural Features for Image Classification, IEEE Transactions on Systems, Man, and Cybernetics, 
 1973, {SMC}-3, 610-621
 
 Helper class
