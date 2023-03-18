@@ -18,6 +18,14 @@ import ij.plugin.filter.Analyzer;
 import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
 
+/**
+ * AREA+MEAN+STD_DEV+MODE+MIN_MAX+
+		CENTROID+CENTER_OF_MASS+PERIMETER+RECT+
+		ELLIPSE+SHAPE_DESCRIPTORS+FERET+INTEGRATED_DENSITY+
+		MEDIAN+SKEWNESS+KURTOSIS+AREA_FRACTION;
+ * @author prodanov
+ *
+ */
 
 @AFilter(key="imagej_features", value="IJ ROI statistics", type=CLASSIF, help = "")
 public class IJstat_feature_ implements IMoment<ArrayList<?>>{

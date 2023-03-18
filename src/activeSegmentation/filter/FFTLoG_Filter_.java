@@ -192,8 +192,6 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	 */
 	public static void main(String[] args) {
 
- 
-		
 		new ImageJ();
 		IJ.run("Blobs (25K)");
 		ImageProcessor ip=IJ.getImage().getProcessor();
