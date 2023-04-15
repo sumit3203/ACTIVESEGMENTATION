@@ -153,6 +153,7 @@ public class ClassInfo {
 		}
 	}
 	
+	
 	/**
 	 * 
 	 * @param key
@@ -188,6 +189,22 @@ public class ClassInfo {
 		if(this.testingRois.containsKey(imageKey)){
 			this.testingRois.get(imageKey).remove(index);
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	@JsonIgnore
+	public void deleteAllTestingRois() {
+		testingRois.clear();
+	}
+	
+	/**
+	 * 
+	 */
+	@JsonIgnore
+	public void deleteAllTrainingRois() {
+		trainingRois.clear();
 	}
 	
 	/**

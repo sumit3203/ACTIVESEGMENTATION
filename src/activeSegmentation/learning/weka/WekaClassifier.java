@@ -187,6 +187,7 @@ public class WekaClassifier implements IClassifier, Serializable {
 			classifier.buildClassifier(newData);			
 		} catch (Exception e) {
 			e.printStackTrace();
+			IJ.log("Runtime exception occured.");
 			new RuntimeException ();
 		}
 		

@@ -69,7 +69,6 @@ public class FeatureManager implements IUtil, ASCommon {
 
 	private ProjectManager projectManager;
 	private ProjectInfo projectInfo;
-	//private Random rand = new Random();
 	private String projectString, featurePath;
 	private int sliceNum=0, totalSlices=0;
 	private List<String> imageList=new ArrayList<>();
@@ -102,7 +101,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		}
 		if (!setFeatureMetadata()) {
 			for (int i = 1; i <= projectInfo.getClasses(); i++) {
-				addClass();
+				addClass("class_"+i);
 			}
 		}
 		//roiman.hide();
@@ -121,52 +120,7 @@ public class FeatureManager implements IUtil, ASCommon {
 		imageList= loadImages( directory, true);
 		return imageList;
 	}
-	/*
-	private int loadImages(String directory) {
-		imageList.clear();
-		File folder = new File(directory);
-		File[] images = folder.listFiles();
-		if (images== null) return -1;
-		
-		final Pattern p = Pattern.compile("\\d+");
-		Comparator<File> comp= new  Comparator<File>(){
-		    @Override 
-		    public int compare(File o1, File o2) {
-		    	   Matcher m = p.matcher(o1.getName());
-		           Integer number1 = null;
-		           if (!m.find()) {
-		               return o1.getName().compareTo(o2.getName());
-		           }
-		           else {
-		               Integer number2 = null;
-		               number1 = Integer.parseInt(m.group());
-		               m = p.matcher(o2.getName());
-		               if (!m.find()) {
-		            	   return o1.getName().compareTo(o2.getName());
-		               }
-		               else {
-		                   number2 = Integer.parseInt(m.group());
-		                   int comparison = number1.compareTo(number2);
-		                   if (comparison != 0) {
-		                       return comparison;
-		                   }
-		                   else {
-		                	   return o1.getName().compareTo(o2.getName());
-		                   }
-		               }
-		           }
-		    }
-	    };
-		Arrays.sort(images, comp);
-		for (File file : images) {
-			//System.out.println(file.getName());
-			if (file.isFile()) {
-				imageList.add(file.getName());
-			}
-		}
-		return imageList.size();
-	}
-*/
+	
 	/**
 	 * 
 	 * @param key
@@ -179,10 +133,11 @@ public class FeatureManager implements IUtil, ASCommon {
 		
 		if(!contains(key, roi, type, sliceNum)) {
 			String imageKey = imageList.get(sliceNum - 1);
+			final ClassInfo ci =classes.get(key);
 			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
-				classes.get(key).addTestingRois(imageKey, roi);
+				ci.addTestingRois(imageKey, roi);
 			} else {
-				classes.get(key).addTrainingRois(imageKey, roi);
+				ci.addTrainingRois(imageKey, roi);
 			}
 			roiman.addRoi(roi);
 			return true;
@@ -216,15 +171,15 @@ public class FeatureManager implements IUtil, ASCommon {
 		return false;
 	}
 	
-	// slow. we should compute the boundaries
+	// slow. we should get the boundaries
 	public boolean intersect(List<Roi> roiList, Roi roi) {
-		//Polygon p = roi.getPolygon();
+
 		Point[] points=roi.getContainedPoints();
 		//System.out.println(roiList.size());
-		for(Roi roitemp: roiList) {
+		for(Roi aroi: roiList) {
 			for(Point point :points) {
 				//System.out.println(point);
-				if(roitemp.contains(point.x, point.y)) {
+				if(aroi.contains(point.x, point.y)) {
 					//System.out.println("in overlap");
 					return true;
 				}
@@ -233,6 +188,42 @@ public class FeatureManager implements IUtil, ASCommon {
 		return false;
 	}
 
+	 // https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
+	/*
+	private boolean isPointInPolygon( Point p, Point[] polygon ) 	{
+		
+ 
+	    double minX = polygon[ 0 ].x;
+	    double maxX = polygon[ 0 ].x;
+	    double minY = polygon[ 0 ].y;
+	    double maxY = polygon[ 0 ].y;
+	    
+	    for ( int i = 1 ; i < polygon.length ; i++ )   {
+	        Point q = polygon[ i ];
+	        minX = Math.min( q.x, minX );
+	        maxX = Math.max( q.x, maxX );
+	        minY = Math.min( q.y, minY );
+	        maxY = Math.max( q.y, maxY );
+	    }
+
+	    if ( p.x < minX || p.x > maxX || p.x < minY || p.x > maxY )   {
+	        return false;
+	    }
+
+	    // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+	    boolean inside = false;
+	    for ( int i = 0, j = polygon.length - 1 ; i < polygon.length ; j = i++ )   {
+	        if ( ( polygon[ i ].y > p.y ) != ( polygon[ j ].y > p.y ) &&
+	             p.x < ( polygon[ j ].x - polygon[ i ].x ) * ( p.y - polygon[ i ].y ) / ( polygon[ j ].y - polygon[ i ].y ) + polygon[ i ].x )
+	        {
+	            inside = !inside;
+	        }
+	    }
+
+	    return inside;
+	}
+	*/
+	
 	/**
 	 * 
 	 * @param classNum
@@ -373,8 +364,8 @@ public class FeatureManager implements IUtil, ASCommon {
 	/**
 	 * 
 	 */
-	public void addClass() {
-		String key = UUID.randomUUID().toString();
+	public void addClass(String key) {
+		//String key = UUID.randomUUID().toString();
 		if (!classes.containsKey(key)) {
 			Map<String, List<Roi>> trainingRois = new HashMap<>();
 			Map<String, List<Roi>> testingRois = new HashMap<>();
@@ -398,6 +389,24 @@ public class FeatureManager implements IUtil, ASCommon {
 		classes.remove(key);
 		final int cn=classes.size();
 		projectInfo.setNClasses(cn);
+		//learningManager.
+	}
+	
+	
+	public boolean deleteExample(String key, Roi roi, String type, int sliceNum) {
+		
+		if(!contains(key, roi, type, sliceNum)) {
+			String imageKey = imageList.get(sliceNum - 1);
+			if (LearningType.valueOf(type).equals(LearningType.TESTING)) {
+				classes.get(key).addTestingRois(imageKey, roi);
+			} else {
+				classes.get(key).addTrainingRois(imageKey, roi);
+			}
+			roiman.addRoi(roi);
+			return true;
+		   }
+		return false;
+		
 	}
 
 	/**

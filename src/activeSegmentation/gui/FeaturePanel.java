@@ -113,7 +113,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	private ActionEvent PREVIOUS_BUTTON_PRESSED = new ActionEvent( this, 1, "Previous" );
 	private ActionEvent ADDCLASS_BUTTON_PRESSED = new ActionEvent( this, 2, "AddClass" );
-	private ActionEvent SAVECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
+	private ActionEvent UPDATECLASS_BUTTON_PRESSED= new ActionEvent( this, 3, "SaveLabel" );
 	private ActionEvent DELETE_BUTTON_PRESSED = new ActionEvent( this, 4, "DeleteClass" );
 	private ActionEvent TRAIN_BUTTON_PRESSED  = new ActionEvent( this, 5, "TRAIN" );
 	private ActionEvent SAVE_BUTTON_PRESSED  = new ActionEvent( this, 6, "SAVEDATA" );
@@ -340,9 +340,9 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			classPanel.setPreferredSize(new Dimension(340, 80+30*tempSize));	
 		}
 		roiPanel.setPreferredSize(new Dimension(350, 175*classes));
-		addButton(new JButton(), "ADD CLASS",null , 630, 20, 130, 20,classPanel,ADDCLASS_BUTTON_PRESSED,null );
-		addButton(new JButton(), "SAVE CLASS",null , 630, 20, 130, 20,classPanel,SAVECLASS_BUTTON_PRESSED,null );
-		addButton(new JButton(), "DELETE CLASS",null , 630, 20, 130, 20,classPanel,DELETE_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Add Class",null , 630, 20, 130, 20,classPanel,ADDCLASS_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Update Class",null , 630, 20, 130, 20,classPanel,UPDATECLASS_BUTTON_PRESSED,null );
+		addButton(new JButton(), "Delete Class",null , 630, 20, 130, 20,classPanel,DELETE_BUTTON_PRESSED,null );
 		for(String key: featureManager.getClassKeys()){
 			String label=featureManager.getClassLabel(key);
 			Color color= featureManager.getClassColor(key);
@@ -447,10 +447,13 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		frame.revalidate();
 		frame.repaint();
 	}
+	
+	private int classCnt=0;
 
 	public void doAction( final ActionEvent event ) {
 		if(event== ADDCLASS_BUTTON_PRESSED){
-			featureManager.addClass();
+			featureManager.addClass("class_"+classCnt);
+			classCnt++;
 			addClassPanel();
 			validateFrame();
 			updateGui();
@@ -468,9 +471,11 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			if(featureManager.getNumOfClasses()-totalDel<2) 
              JOptionPane.showMessageDialog(null, "There should be minimum two classes");
 			else {
-				for (JCheckBox checkBox : jCheckBoxList) 
+				for (JCheckBox checkBox : jCheckBoxList) {
 					if (checkBox.isSelected()) 
 						featureManager.deleteClass(checkBox.getName());
+					classCnt--;
+				}
 				addClassPanel();
 				validateFrame();
 				updateGui();
@@ -484,7 +489,8 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			//JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		} //end if
 		
-		if(event==SAVECLASS_BUTTON_PRESSED){
+		// updaing
+		if(event==UPDATECLASS_BUTTON_PRESSED){
 			for (JCheckBox checkBox : jCheckBoxList) {				
 				//System.out.println(checkBox.getText());
 				String key=checkBox.getName();
@@ -541,6 +547,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		} // end if
 		
 		if(event==TRAIN_BUTTON_PRESSED){
+			
 			//toggleOverlay();
 			if(featureManager.getProjectType()==ProjectType.CLASSIF) {
 				// it means new round of training, so set result setting to false
@@ -559,6 +566,9 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 			//segmentation setting
 			else {
+				// remove result overlay
+				displayImage.setOverlay(null);
+				displayImage.updateAndDraw();
 				classifiedImage=featureManager.compute();
 				toggleOverlay();
 			}
@@ -606,10 +616,11 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		if(event.getActionCommand()== "AddButton"){	
 			String key=((Component)event.getSource()).getName();
 			final Roi r = displayImage.getRoi();
+			// key = "roi";
 			if (null == r)
 				return;
 			displayImage.killRoi();
-			
+			System.out.println("adding roi "+key);
 			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
 				updateGui();
 			else 
@@ -765,7 +776,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 					String item =theList.getSelectedValue().toString();
 					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
 					String[] arr= item.split(" ");
-					//System.out.println("Class Id"+ arr[0].trim());
+					//System.out.println("roi Id "+ arr[0].trim()+" "+ index);
 					//int sliceNum=Integer.parseInt(arr[2].trim());
 					//try {
 						showSelected( arr[0].trim(),index);
@@ -805,7 +816,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		displayImage.killRoi();
 		//displayImage.setColor(Color.YELLOW);
 		String type= learningType.getSelectedItem().toString();
-		//System.out.println(classKey+"--"+index+"---"+type);
+		System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
 		System.out.println(newRoi);
 		if (newRoi!=null) {

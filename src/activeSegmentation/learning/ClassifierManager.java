@@ -184,7 +184,7 @@ public class ClassifierManager implements ASCommon {
 					ex.printStackTrace();
 				}
 			} else {
-				System.out.println("Classifier Manager: applyClassifier: fdata set is null"); 
+				System.out.println("Classifier Manager: applyClassifier: IDataSet fdata set is null"); 
 				try {
 					applyTask= new ApplyTask(dataSet, 0, ni, classificationResult, currentClassifier);
 					pool.invoke(applyTask);
