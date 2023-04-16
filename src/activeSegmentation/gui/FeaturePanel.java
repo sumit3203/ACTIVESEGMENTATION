@@ -210,7 +210,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		classPanel.setBorder(BorderFactory.createTitledBorder("Classes"));
 		
 		JScrollPane classScrolPanel = new JScrollPane(classPanel);
-		classScrolPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		classScrolPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		classScrolPanel.setBounds(605,20,350,80);
 		addClassPanel();
 		panel.add(classScrolPanel);
@@ -223,7 +223,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		features.setBounds(605,120,350,120);
 		features.setBorder(BorderFactory.createTitledBorder("Learning"));
 		
-		addButton(new JButton(), "PREVIOUS", null, 610, 130, 120, 20, features, PREVIOUS_BUTTON_PRESSED, null );
+		addButton(new JButton(), "<<", null, 610, 130, 120, 20, features, PREVIOUS_BUTTON_PRESSED, null );
 		
 		imageNum= new JTextField();
 		imageNum.setColumns(5);
@@ -249,7 +249,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		JPanel computePanel = new JPanel();
 		addButton(new JButton(), "Train", null, 550, 550, 350, 100, computePanel, TRAIN_BUTTON_PRESSED,null);
 		
-		addButton(new JButton(), "Next", null,  800, 130,  80,  20, features,NEXT_BUTTON_PRESSED,null );
+		addButton(new JButton(), ">>", null,  800, 130,  80,  20, features,NEXT_BUTTON_PRESSED,null );
 	
 		addButton(new JButton(), "Save",null,   550, 550, 350, 100, computePanel, SAVE_BUTTON_PRESSED,null);
 		addButton(new JButton(), "Overlay",null,550, 550, 350, 100, computePanel, TOGGLE_BUTTON_PRESSED,null);
