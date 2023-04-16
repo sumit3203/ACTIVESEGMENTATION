@@ -365,7 +365,6 @@ public class FeatureManager implements IUtil, ASCommon {
 	 * 
 	 */
 	public void addClass(String key) {
-		//String key = UUID.randomUUID().toString();
 		if (!classes.containsKey(key)) {
 			Map<String, List<Roi>> trainingRois = new HashMap<>();
 			Map<String, List<Roi>> testingRois = new HashMap<>();
