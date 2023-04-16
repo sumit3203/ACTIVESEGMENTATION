@@ -74,11 +74,19 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private FeatureManager featureManager;
-	/** opacity (in %) of the result overlay image */
-	private int overlayOpacity = 33;
+
+	/** opacity   of the result overlay image */
+	public static final float resultOpacity = .33f;
 	/** alpha composite for the result overlay image */
-	Composite overlayAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, overlayOpacity / 100f);
+	private final Composite overlayAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, resultOpacity );
+	
+	public static final float roiOpacity = .5f;
+	/** alpha composite for the roi overlay image */
+	private final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, roiOpacity );
+	
+	private FeatureManager featureManager;
+	
+
 	private ImageOverlay resultOverlay;
 	private LUT overlayLUT;
 	/** flag to display the overlay image */
@@ -90,7 +98,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	private byte[] blue = new byte[ 256 ];
 
 	private Map<String, JList<String>> exampleList;
-	private Map<String, JList<String>> allexampleList;
+	//private Map<String, JList<String>> allexampleList;
 
 	/** array of ROI list overlays to paint the transparent ROIs of each class */
 	private Map<String,RoiListOverlay> roiOverlayList;
@@ -98,7 +106,6 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	/** Used only during classification setting*/
 	private Map<String,Integer> predictionResultClassification;
 
-	private final Composite transparency050 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f );
 	
 	/*
 	 *  the files must be in the resources/feature folder
@@ -135,6 +142,10 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	private JComboBox<LearningType> learningType;
 	private JFrame frame;
 
+
+	private String ltype="TRAINING";
+
+
 	/*
 	 * constructor 
 	 */
@@ -145,7 +156,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		this.jCheckBoxList= new ArrayList<>();
 		this.jTextList= new HashMap<>();
 		this.exampleList = new HashMap<>();
-		this.allexampleList = new HashMap<>();
+		//this.allexampleList = new HashMap<>();
 		roiOverlayList = new HashMap<>();		
 		this.setVisible(false);
 	}
@@ -390,7 +401,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		exampleList.put(key,current);
 		JList<String> all=GuiUtil.model();
 		all.setForeground(color);
-		allexampleList.put(key,all);	
+		//allexampleList.put(key,all);	
 		RoiListOverlay roiOverlay = new RoiListOverlay();
 		roiOverlay.setComposite( transparency050 );
 		((OverlayedImageCanvas)ic).addOverlay(roiOverlay);
@@ -412,11 +423,11 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		addButton(upload, null, uploadIcon, 605,280,350,250, buttonPanel, uploadAction, null);
 		addButton(download, null, downloadIcon, 605,280,350,250, buttonPanel, downloadAction, null);
 		roiPanel.add(buttonPanel);
-		panel.add(GuiUtil.addScrollPanel(exampleList.get(key),null));
-		panel.add(GuiUtil.addScrollPanel(allexampleList.get(key),null));
+		panel.add(GuiUtil.addScrollPanel(exampleList.get(key),new Dimension(300, 100)));
+		//panel.add(GuiUtil.addScrollPanel(allexampleList.get(key),null));
 		roiPanel.add(panel );
 		exampleList.get(key).addMouseListener(mouseListener);
-		allexampleList.get(key).addMouseListener(mouseListener);
+		//allexampleList.get(key).addMouseListener(mouseListener);
 	}
 
 	private void addClasses(String key , String label, Color color){

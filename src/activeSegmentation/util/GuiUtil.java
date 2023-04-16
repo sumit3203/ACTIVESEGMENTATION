@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -59,10 +60,11 @@ public class GuiUtil {
 	
 	public static  JScrollPane addScrollPanel(Component component, Dimension dimension){
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+		scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 		scrollPane.getViewport().add( component );
-		if (dimension!=null)
-		scrollPane.setMinimumSize( dimension);
+		if (dimension!=null) {
+			scrollPane.setPreferredSize(dimension);
+		}
 		return scrollPane;
 
 	}
