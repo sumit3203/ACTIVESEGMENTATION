@@ -28,7 +28,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import activeSegmentation.gui.OverlayedImageCanvas.Overlay;
+import activeSegmentation.gui.OverlayedImageCanvas.CompositeOverlay;
 
 /**
  * This class implements an overlay based on an image.
@@ -37,7 +37,7 @@ import activeSegmentation.gui.OverlayedImageCanvas.Overlay;
  * @author Ignacio Arganda-Carreras
  *
  */
-public class ImageOverlay implements Overlay{
+public class ImageOverlay implements CompositeOverlay{
 
 	ImageProcessor imp = null;
 	Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);

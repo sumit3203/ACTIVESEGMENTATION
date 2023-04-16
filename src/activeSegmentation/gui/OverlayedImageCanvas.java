@@ -40,15 +40,16 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	
 	/** Generated serial version UID */
 	private static final long serialVersionUID = -9005735333215207618L;
-	protected ArrayList<Overlay> overlays;
+	protected ArrayList<CompositeOverlay> overlays;
+	protected Composite backBufferComposite;
 
 	private int backBufferWidth=-1;
 	private int backBufferHeight=-1;
 
 	private Graphics backBufferGraphics;
 	private Image backBufferImage;
-	protected Composite backBufferComposite;
 	
+	// aspect ratio
 	private double af=1.0;
 	
 	public OverlayedImageCanvas(ImagePlus image) {
@@ -59,11 +60,11 @@ public class OverlayedImageCanvas extends ImageCanvas {
 		overlays = new ArrayList<>();
 	}
 
-	public void addOverlay(Overlay overlay) {
+	public void addOverlay(CompositeOverlay overlay) {
 		overlays.add(overlay);
 	}
 	
-	public List<Overlay> getArray() {
+	public List<CompositeOverlay> getArray() {
 		return overlays;
 	}
 
@@ -71,12 +72,12 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	 * Add the collection of overlays to the display list of this canvas
 	 * @param overlays  the overlay collection to add
 	 */
-	public void addOverlay(Collection<Overlay> overlays) {
+	public void addOverlay(Collection<CompositeOverlay> overlays) {
 		overlays.addAll(overlays);
 	}
 
 	
-	public void removeOverlay(Overlay overlay) {
+	public void removeOverlay(CompositeOverlay overlay) {
 		overlays.remove(overlay);
 
 	}
@@ -115,7 +116,6 @@ public class OverlayedImageCanvas extends ImageCanvas {
         	return  new Dimension(IMAGE_CANVAS_DIMENSION, (int) (IMAGE_CANVAS_DIMENSION*af));
         } else if (mindim<IMAGE_CANVAS_DIMENSION/4) {
         	System.out.println("OverlayedImageCanvas: reset (small) ");
-        //	resetImage( imp);
         	return  new Dimension(IMAGE_CANVAS_DIMENSION, (int) (IMAGE_CANVAS_DIMENSION*af));
         }
         
@@ -174,7 +174,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
     }
     
 	/**
-	 * Remove all {@link Overlay} components from this canvas.
+	 * Remove all {@link CompositeOverlay} components from this canvas.
 	 */
 	public void clearOverlay() {
 		overlays.clear();
@@ -201,7 +201,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
 				
 		synchronized(this) {						
 			super.paint(backBufferGraphics);								
-			for (Overlay overlay : overlays)			
+			for (CompositeOverlay overlay : overlays)			
 				overlay.paint(backBufferGraphics, src.x, src.y, magnification);	
 		}
 
@@ -229,7 +229,7 @@ public class OverlayedImageCanvas extends ImageCanvas {
 	}
 	
 
-	public interface Overlay {	
+	public interface CompositeOverlay {	
 		/**
 		 * Set the composite that will be used to paint this overlay.
 		 */

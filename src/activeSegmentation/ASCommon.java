@@ -31,7 +31,7 @@ import java.io.*;
  */
 public interface ASCommon {
 	
-	public static final String version="1.1.4";
+	public static final String version="1.1.5";
 	
    // to check the class 
 	public static final String CLASS="class";

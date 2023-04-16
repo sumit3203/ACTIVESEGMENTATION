@@ -352,7 +352,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	}
 
 	/**
-	 * Draw the painted traces on the display image
+	 * Draws the painted traces on the display image
 	 */
 	private void drawExamples(){
 	//	imp.setHideOverlay(true);
@@ -360,12 +360,23 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
 					getRoiList(key, type, featureManager.getCurrentSlice());
-			roiOverlayList.get(key).setColor(featureManager.getClassColor(key));
-			roiOverlayList.get(key).setRoi(rois);
+			
+			RoiListOverlay lsto=roiOverlayList.get(key);
+			
+			String[] parts=key.split("_|-");
+			if (parts.length>1) {
+				System.out.println("lab "+ parts[1]);
+				String label=parts[1];
+				lsto.setLabel(label);
+			}
+			
+			lsto.setColor(featureManager.getClassColor(key));
+			lsto.setRoi(rois);
 			//System.out.println("roi draw"+ key);
+			
 		}
 		//imp.setHideOverlay(false);
-		
+	
 		displayImage.updateAndDraw();
 	}
 	
@@ -624,7 +635,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
 				updateGui();
 			else 
-			    JOptionPane.showMessageDialog(null, "Other class already contains roi");	
+			    JOptionPane.showMessageDialog(null, "Another class already contains this roi");	
 	
 			
 		} //end if
@@ -679,7 +690,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				updateResultOverlay(classifiedImage);
 			}
 
-			// user wants to see original rois, no results
+			// user wants to see original rois, not the results
 			else {
 
 				// remove result overlay

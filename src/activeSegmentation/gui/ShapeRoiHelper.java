@@ -3,9 +3,10 @@ package activeSegmentation.gui;
 
 import ij.gui.Roi;
 import ij.gui.ShapeRoi;
-
+ 
 import java.awt.Graphics;
 import java.awt.Shape;
+
 
 /**
  * Wrapper to extract the java.awt.Shape from a ShapeRoi
@@ -19,11 +20,12 @@ public class ShapeRoiHelper extends ShapeRoi {
 
 	private ShapeRoiHelper() { super((Roi)null); }
 
-	// unfortunately, this method is not public in (old) ImageJ
+	// unfortunately, this method is not public in ImageJ
 	public static Shape getShape(ShapeRoi roi) { return roi.getShape(); }
 
 	public static Shape getShape(ShapeRoi roi, Graphics g, int x, int y, double magnification) {
 		return roi.getShape();
 	}
+	
 
 }
