@@ -258,8 +258,11 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		features.add(computePanel);
 		frame.add(features);
 		
+	
 		/*
-		 *  Data panel
+		 *  training/testing panel
+		 *  makes sense only for classification projects because 
+		 *  for segmentation the testing instances are the rest of the dataset.
 		 */
 		
 		if (featureManager.getProjectType()==ProjectType.CLASSIF) {
