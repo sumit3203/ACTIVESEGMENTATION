@@ -63,7 +63,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="FLOG", value="FFT Laplacian of Gaussian", type=SEGM, help = "")
+@AFilter(key="FLOG", value="FFT Laplacian of Gaussian", type=SEGM, help = "/help.html")
 public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 	
 	public final static String KSZ = "KSZ", GEV="GEV2", ORD="ORDL",LEN="G_len",MAX_LEN="G_MAX";

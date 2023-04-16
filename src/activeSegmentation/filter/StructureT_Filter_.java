@@ -60,7 +60,7 @@ import dsp.Conv;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-@AFilter(key="STRUCTURE", value="Structure tensor", type=SEGM, help = "")
+@AFilter(key="STRUCTURE", value="Structure tensor", type=SEGM, help = "/help.html")
 public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilter, IFilterViz {
     @SuppressWarnings("unused")
 

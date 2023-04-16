@@ -59,7 +59,7 @@ import static java.lang.Math.*;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-@AFilter(key="CURVATURE2", value="Curvature 2D", type=SEGM, help = "")
+@AFilter(key="CURVATURE2", value="Curvature 2D", type=SEGM, help = "/help.html")
 public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFilter, IFilterViz {
 
 	private PlugInFilterRunner pfr=null;
