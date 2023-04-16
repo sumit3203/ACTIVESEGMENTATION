@@ -61,7 +61,7 @@ public class GuiUtil {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 		scrollPane.getViewport().add( component );
-		if(dimension!=null)
+		if (dimension!=null)
 		scrollPane.setMinimumSize( dimension);
 		return scrollPane;
 

@@ -209,7 +209,10 @@ public class ProjectInfo{
 //	public void setVersion(String version) {
 //		this.version = version;
 //	}
-
+	/**
+	 * 
+	 * @return SEGM: SEGM / CLASSIF
+	 */
 	public ProjectType getProjectType() {
 		return projectType;
 	}

@@ -44,7 +44,7 @@ import activeSegmentation.gui.OverlayedImageCanvas.CompositeOverlay;
  * The overlay paints the ROI with a specific color and composite mode.
  *  
  * @author Ignacio Arganda-Carreras
- * Dimiter Prodanov
+ * @author Dimiter Prodanov
  *
  */
 public class RoiListOverlay implements CompositeOverlay {
@@ -116,7 +116,7 @@ public class RoiListOverlay implements CompositeOverlay {
 			if( r.getStroke()!=null)
 				g2d.setStroke(r.getStroke());
 			
-			if(type == Roi.FREELINE || type == Roi.LINE || type == Roi.POLYLINE)				
+			if (type == Roi.FREELINE || type == Roi.LINE || type == Roi.POLYLINE || type == Roi.ANGLE || type == Roi.FREELINE || type == Roi.POINT)
 				g2d.draw(shape);							
 			else
 				g2d.fill(shape);
