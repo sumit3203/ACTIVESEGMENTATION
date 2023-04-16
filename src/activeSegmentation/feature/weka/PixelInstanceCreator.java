@@ -27,6 +27,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.Roi;
+import test.AlphanumericSortComparator;
 
 /**
  * 				
@@ -194,8 +195,12 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 		return featureStack;
 	}
 
+	   
+	 
 	private File[] sortImages(File[] images) {
-		final Pattern p = Pattern.compile("\\d+");
+		final Pattern p = Pattern.compile("^\\d+");
+	
+		
 		Arrays.sort(images, new  Comparator<File>(){
 			@Override public int compare(File o1, File o2) {
 				Matcher m = p.matcher(o1.getName());

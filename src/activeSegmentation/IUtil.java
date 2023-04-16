@@ -40,7 +40,7 @@ public interface IUtil {
 		
 		}
 		File[] images = folder.listFiles();
-		if (sortFiles) 
+		if (sortFiles && images.length>1) 
 			images=sortFiles(images);
 		if (images==null) {
 				IJ.log("no files found in "+directory);
@@ -56,33 +56,35 @@ public interface IUtil {
 
 	default public File[] sortFiles(File[] images) {
 		final Pattern p = Pattern.compile("\\d+");
+		if (images.length>1) {
 		Arrays.sort(images, new  Comparator<File>(){
-			@Override public int compare(File o1, File o2) {
-				Matcher m = p.matcher(o1.getName());
-				Integer number1 = null;
-				if (!m.find()) {
-					return o1.getName().compareTo(o2.getName());
-				}
-				else {
-					Integer number2 = null;
-					number1 = Integer.parseInt(m.group());
-					m = p.matcher(o2.getName());
+				@Override public int compare(File o1, File o2) {
+					Matcher m = p.matcher(o1.getName());
+					Integer number1 = null;
 					if (!m.find()) {
 						return o1.getName().compareTo(o2.getName());
 					}
 					else {
-						number2 = Integer.parseInt(m.group());
-						int comparison = number1.compareTo(number2);
-						if (comparison != 0) {
-							return comparison;
-						}
-						else {
+						Integer number2 = null;
+						number1 = Integer.parseInt(m.group());
+						m = p.matcher(o2.getName());
+						if (!m.find()) {
 							return o1.getName().compareTo(o2.getName());
 						}
+						else {
+							number2 = Integer.parseInt(m.group());
+							int comparison = number1.compareTo(number2);
+							if (comparison != 0) {
+								return comparison;
+							}
+							else {
+								return o1.getName().compareTo(o2.getName());
+							}
+						}
 					}
-				}
-			}}
+				}}
 				);
+		}
 		return images;
 	}
 	
