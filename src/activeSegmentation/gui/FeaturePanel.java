@@ -262,37 +262,38 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		 *  Data panel
 		 */
 		
-		JPanel dataJPanel = new JPanel();
-		learningType = new JComboBox<>(LearningType.values());
-		learningType.setVisible(true);
-		learningType.addItemListener( new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(featureManager.getProjectType()==ProjectType.CLASSIF) {
-					if(showColorOverlay) {
-						updateGui();
-						updateResultOverlay(null);
+		if (featureManager.getProjectType()==ProjectType.CLASSIF) {
+			JPanel dataJPanel = new JPanel();
+			learningType = new JComboBox<>(LearningType.values());
+			learningType.setVisible(true);
+			learningType.addItemListener( new ItemListener() {
+	
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if(featureManager.getProjectType()==ProjectType.CLASSIF) {
+						if(showColorOverlay) {
+							updateGui();
+							updateResultOverlay(null);
+						} else 
+							updateGui();			
 					} else 
-						updateGui();			
-				} else 
-					updateGui();
-
-				ltype=	learningType.getSelectedItem().toString();
-				System.out.println("ltype: "+ ltype);
-			}
-		});
-		
-		dataJPanel.setBounds(720,240,100,60);
-		learningType.setSelectedIndex(0);
-		learningType.setFont( panelFONT );
-		learningType.setBackground(Color.GRAY);
-		learningType.setForeground(Color.BLUE);
-		dataJPanel.add(learningType);
-		dataJPanel.setBackground(Color.GRAY);
-		
-		panel.add(dataJPanel);
-		
+						updateGui();
+	
+					ltype=	learningType.getSelectedItem().toString();
+					System.out.println("ltype: "+ ltype);
+				}
+			});
+			
+			dataJPanel.setBounds(720,240,100,60);
+			learningType.setSelectedIndex(0);
+			learningType.setFont( panelFONT );
+			learningType.setBackground(Color.GRAY);
+			learningType.setForeground(Color.BLUE);
+			dataJPanel.add(learningType);
+			dataJPanel.setBackground(Color.GRAY);
+			
+			panel.add(dataJPanel);
+		}
 		/*
 		 * ROI panel
 		 */
@@ -643,7 +644,8 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				return;
 			displayImage.killRoi();
 			System.out.println("adding roi "+key);
-			if(featureManager.addExample(key,r,learningType.getSelectedItem().toString(),featureManager.getCurrentSlice()))
+			
+			if(featureManager.addExample(key,r,ltype,featureManager.getCurrentSlice()))
 				updateGui();
 			else 
 			    JOptionPane.showMessageDialog(null, "Another class already contains this roi");	
@@ -780,24 +782,27 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		}
 	}
 	
-	private LearningType defualtLT = LearningType.TESTING;
+	private LearningType defualtLT = LearningType.TRAINING;
 	
 
-	private void updateExampleLists()	{
-		LearningType type=(LearningType) learningType.getSelectedItem();
-		updateExampleLists(featureManager, type,  exampleList);
-	}
+	/*
+	  private void updateExampleLists() { 
+		  LearningType type=(LearningType)   learningType.getSelectedItem(); 
+		  updateExampleLists(featureManager, type,  exampleList); 
+	  }
+	 */
 	
-	/*TODO
-	private void updateExampleLists()	{
-		if (featureManager.getProjectType()==ProjectType.CLASSIF) {
-			LearningType ltype=(LearningType) learningType.getSelectedItem();
-			updateExampleLists(featureManager, ltype,  exampleList);
-		} else {
-			updateExampleLists(featureManager, defualtLT,  exampleList);
-		}
-	}
-	*/
+ 
+	
+	  private void updateExampleLists() { 
+		 if  (featureManager.getProjectType()==ProjectType.CLASSIF) { 
+			  LearningType   ltype=(LearningType) learningType.getSelectedItem();
+			  updateExampleLists(featureManager, ltype, exampleList); } 
+		 else {
+			 updateExampleLists(featureManager, defualtLT, exampleList); 
+		 } 
+	  }
+	 
 	
 	private  MouseListener mouseListener = new MouseAdapter() {
 		
