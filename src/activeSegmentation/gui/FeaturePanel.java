@@ -278,8 +278,8 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				} else 
 					updateGui();
 
-
-				// here we need to add for classification
+				ltype=	learningType.getSelectedItem().toString();
+				System.out.println("ltype: "+ ltype);
 			}
 		});
 		
@@ -367,7 +367,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	 */
 	private void drawExamples(){
 	//	imp.setHideOverlay(true);
-		final String type=learningType.getSelectedItem().toString();
+		final String type=ltype ;//learningType.getSelectedItem().toString();
 		for(String key: featureManager.getClassKeys()){
 			ArrayList<Roi> rois=(ArrayList<Roi>) featureManager.
 					getRoiList(key, type, featureManager.getCurrentSlice());
@@ -780,10 +780,24 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		}
 	}
 	
+	private LearningType defualtLT = LearningType.TESTING;
+	
+
 	private void updateExampleLists()	{
 		LearningType type=(LearningType) learningType.getSelectedItem();
 		updateExampleLists(featureManager, type,  exampleList);
 	}
+	
+	/*TODO
+	private void updateExampleLists()	{
+		if (featureManager.getProjectType()==ProjectType.CLASSIF) {
+			LearningType ltype=(LearningType) learningType.getSelectedItem();
+			updateExampleLists(featureManager, ltype,  exampleList);
+		} else {
+			updateExampleLists(featureManager, defualtLT,  exampleList);
+		}
+	}
+	*/
 	
 	private  MouseListener mouseListener = new MouseAdapter() {
 		
@@ -810,7 +824,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 			if (mouseEvent.getClickCount() == 2) {
 				int index = theList.getSelectedIndex();
-				String type= learningType.getSelectedItem().toString();
+				String type=ltype;// learningType.getSelectedItem().toString();
 				if (index >= 0) {
 					String item =theList.getSelectedValue().toString();
 					if (item.equalsIgnoreCase("")|| item.equalsIgnoreCase(" ") ) return;
@@ -837,7 +851,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	private void showSelected(String classKey,int index ){
 		displayImage.killRoi();
 		//displayImage.setColor(Color.YELLOW);
-		String type= learningType.getSelectedItem().toString();
+		String type=ltype;// learningType.getSelectedItem().toString();
 		System.out.println(classKey+"--"+index+"---"+type);
 		final Roi newRoi = featureManager.getRoi(classKey, index,type);	
 		System.out.println(newRoi);
@@ -883,7 +897,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	}
 
 	private void downloadRois(String key) {
-		String type=learningType.getSelectedItem().toString();
+		String type=ltype;// learningType.getSelectedItem().toString();
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -899,7 +913,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	}
 
 	private void uploadExamples(String key) {
-		String type=learningType.getSelectedItem().toString();
+		String type=ltype; //learningType.getSelectedItem().toString();
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setAcceptAllFileFilterUsed(false);
