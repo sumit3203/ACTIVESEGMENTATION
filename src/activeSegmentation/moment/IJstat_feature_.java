@@ -34,25 +34,15 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 	
 	private boolean isEnabled=true;
 	
-	private Map<String, String> settings= new HashMap<>();
-	
-//	String key="imagej_features";
+	private ArrayList<Pair<String,double[]>> feature_vector = new ArrayList<Pair<String,double[]>>();
 	
 	public  IJstat_feature_() {
 		String headings[]=ResultsTable.getDefaultHeadings();
 		for(int i=0; i<headings.length; i++) {
-
 			featureMap.put(headings[i], i);
 		}
-
-
 	}
 
-	/*
-	public String getKey() {
-		return this.key;
-	}
-	*/
 	
 	@Override
 	public Set<String> getFeatureNames(){
@@ -74,12 +64,7 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 		return outvector;
 	}
 	
-	/*
-	@Override
-	public Map<String, String> getDefaultSettings() {
-		return this.settings;
-	}
-	 */
+ 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		// TODO Auto-generated method stub

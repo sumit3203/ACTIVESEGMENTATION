@@ -51,7 +51,6 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 	public static final String ENERGY_FEATURE_KEY = "energy";
 	public static final String ENTROPY_FEATURE_KEY = "entropy";
 	public static final String HOMOGENEITY_FEATURE_KEY = "homogeneity";
-	//private ArrayList<Pair<String,Pair<String[],Double[]>>> feature_vector = new ArrayList<>();
 	
 	private ArrayList<Pair<String,double[]>> feature_vector = new ArrayList<Pair<String,double[]>>();
 	private Set<String> features=new HashSet<String>();
@@ -184,7 +183,7 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 	}
 	
 	
-	public void generateFeatures() {
+	private void generateFeatures() {
 
 		for (int angle: DIRECTIONS){
 			for(int distance:DISTANCES){

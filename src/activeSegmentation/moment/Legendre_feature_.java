@@ -132,12 +132,11 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
             }
        }
 	}
+	
 	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
-		
-		
       return filter(imageProcessor, roi.getName());
-
 	}
+	
 	@Override
 	public String getKey() {
 		return this.FILTER_KEY;
@@ -148,7 +147,6 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 		return this.FILTER_NAME;
 	}
 
-	 
 
 	@Override
 	public boolean isEnabled() {
