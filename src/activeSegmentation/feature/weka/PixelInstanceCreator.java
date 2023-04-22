@@ -198,9 +198,8 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	   
 	 
 	private File[] sortImages(File[] images) {
-		final Pattern p = Pattern.compile("^\\d+");
-	
-		
+		final Pattern p = Pattern.compile("^\\d+");	
+		//System.out.println("sorting images: n="+ images.length);
 		Arrays.sort(images, new  Comparator<File>(){
 			@Override public int compare(File o1, File o2) {
 				Matcher m = p.matcher(o1.getName());
@@ -230,6 +229,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 				);
 		return images;
 	}
+	
 	/**
 	 * Add training samples from a rectangular roi
 	 * 
@@ -239,12 +239,8 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	 * @param r shape roi
 	 * @return number of instances added
 	 */
-	private int addRectangleRoiInstances(
-			final Instances trainingData, 
-			int classIndex,
-			ImageStack featureStack, 
-			Roi r) 
-	{		
+	private int addRectangleRoiInstances(final Instances trainingData, int classIndex, final ImageStack featureStack, Roi r) 	{
+		
 		int numInstances = 0;
 		final Rectangle rect = r.getBounds();
 		final Polygon poly=r.getPolygon();
@@ -255,8 +251,7 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 		final int lastY = y0 + rect.height;
 
 		for( int x = x0; x < lastX; x++ )
-			for( int y = y0; y < lastY; y++ )				
-			{
+			for( int y = y0; y < lastY; y++ )	{
 
 				if(poly.contains(new Point(x, y))){
 					trainingData.add( InstanceUtil.createInstance(x, y, classIndex,featureStack ,colorFeatures, oldColorFormat) );

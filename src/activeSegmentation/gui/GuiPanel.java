@@ -121,11 +121,11 @@ public class GuiPanel implements ASCommon {
 		label.setBounds(100, 50, 450, 100);
 		label.setForeground(Color.ORANGE);
 		this.controlPanel.add(label);
-		this.controlPanel.add(addButton("Select Filters",       null, 25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Select Filters",       null,  25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Filter Visualization", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Feature Extraction",   null, 25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Feature Extraction",   null,  25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Model Learning",       null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Evaluation", null, 25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Evaluation",           null,  25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
 
 		this.controlPanel.setLocation(0, 0);
 		this.mainFrame.add(this.controlPanel);

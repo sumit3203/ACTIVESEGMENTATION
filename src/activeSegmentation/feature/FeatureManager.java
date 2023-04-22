@@ -105,9 +105,12 @@ public class FeatureManager implements IUtil, ASCommon {
 			}
 		}
 		//roiman.hide();
-	
-		featureMap.put(ProjectType.SEGM, new PixelInstanceCreator(projectInfo));
-		featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
+		
+		if (projectInfo.getProjectType()==ProjectType.SEGM) {
+			featureMap.put(ProjectType.SEGM, new PixelInstanceCreator(projectInfo));
+		} else {
+			featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
+		}
 	}
 
 	/**
