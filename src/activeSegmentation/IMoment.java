@@ -1,6 +1,8 @@
 package activeSegmentation;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import ij.gui.Roi;
@@ -38,5 +40,9 @@ public interface IMoment<T>  extends IAnnotated, IFilter {
 	default public String helpInfo() {
 		return "This is a moment";
 	}
-
+	
+	@Override
+	public default  Map<String, String> getDefaultSettings() {
+		return new HashMap<String, String>();
+	}
 }

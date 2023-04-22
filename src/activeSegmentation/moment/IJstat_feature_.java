@@ -34,6 +34,8 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 	
 	private boolean isEnabled=true;
 	
+	private Map<String, String> settings= new HashMap<>();
+	
 //	String key="imagej_features";
 	
 	public  IJstat_feature_() {
@@ -71,13 +73,13 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 		//keys.add(e)
 		return outvector;
 	}
-
+	
+	/*
 	@Override
 	public Map<String, String> getDefaultSettings() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.settings;
 	}
-
+	 */
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		// TODO Auto-generated method stub
