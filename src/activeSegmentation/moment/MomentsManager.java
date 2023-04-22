@@ -104,8 +104,8 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 
-	public  void loadFilters(List<String> plugins) throws InstantiationException, IllegalAccessException, 
-	IOException, ClassNotFoundException {
+	public  void loadFilters(List<String> plugins) throws 
+	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
 		//File f=new File(home);
@@ -127,39 +127,40 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		ClassLoader classLoader= MomentsManager.class.getClassLoader();
 
 
-
-
 		for(String plugin: classes){
 			//System.out.println("checking "+ plugin);
-			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
-
-			for(Class<?> cs:classesList){
-				// we load only IFilter classes
-				//System.out.println(cs.getSimpleName());
-				if (cs.getSimpleName().equals(ASCommon.IMOMENT) && !classLoader.loadClass(plugin).isInterface()){
-
-					IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
-					Pair<String, String> p=ianno.getKeyVal();
-					String pkey=p.first;
-					//System.out.println(" IFilter " + pkey);
-
-					FilterType ft=ianno.getAType();
-
-					if (projectType==ProjectType.CLASSIF  ) {
-						if (ft==FilterType.CLASSIF) {
-							System.out.println("in classification");
-							IMoment<?>	moment =(IMoment<?>) ianno;
-							Map<String, String> fmap=moment.getAnotatedFileds();
-							annotationMap.put(pkey, fmap);
-							momentMap.put(pkey, moment);
+			try {
+				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
+	
+				for(Class<?> cs:classesList){
+					// we load only IFilter classes
+					//System.out.println(cs.getSimpleName());
+					if (cs.getSimpleName().equals(ASCommon.IMOMENT) && !classLoader.loadClass(plugin).isInterface()){
+	
+						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						Pair<String, String> p=ianno.getKeyVal();
+						String pkey=p.first;
+						//System.out.println(" IFilter " + pkey);
+	
+						FilterType ft=ianno.getAType();
+	
+						if (projectType==ProjectType.CLASSIF  ) {
+							if (ft==FilterType.CLASSIF) {
+								System.out.println("in classification");
+								IMoment<?>	moment =(IMoment<?>) ianno;
+								Map<String, String> fmap=moment.getAnotatedFileds();
+								annotationMap.put(pkey, fmap);
+								momentMap.put(pkey, moment);
+							}
 						}
-					}
-
-
-				} 
-
-			} // end for
-
+	
+	
+					} 
+	
+				} // end for
+			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
+				System.out.println("error:" + plugin +" not found");
+			}
 		} // end for
 
 

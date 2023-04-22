@@ -26,7 +26,7 @@ import weka.core.Instances;
  * 				
  *   
  * 
- * @author Mukesh Gupta, Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Mukesh Gupta, Sumit Kumar Vohra and Dimiter Prodanov, IMEC
  *
  *
  * @contents

@@ -109,39 +109,39 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 
 		for(String plugin: classes){
-			System.out.println("checking "+ plugin);
+			//System.out.println("checking "+ plugin);
 			try {
-			Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
-
-			for(Class<?> cs:classesList){
-				// we load only IFilter classes
-				//System.out.println(cs.getSimpleName());
-				
-				if (cs.getSimpleName().equals(ASCommon.IFILTER) && !classLoader.loadClass(plugin).isInterface()){
-
-					IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
-					Pair<String, String> p=ianno.getKeyVal();
-					String pkey=p.first;
-					//System.out.println(" IFilter " + pkey);
-
-					FilterType ft=ianno.getAType();
-					//System.out.println(ft);
-					if (projectType==ProjectType.SEGM  ) {
-						if (ft==FilterType.SEGM) {
-							IFilter	filter =(IFilter) ianno;
-							Map<String, String> fmap=filter.getAnotatedFileds();
-							annotationMap.put(pkey, fmap);
-							filterMap.put(pkey, filter);
-						}
-
+				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
+	
+				for(Class<?> cs:classesList){
+					// we load only IFilter classes
+					//System.out.println(cs.getSimpleName());
+					
+					if (cs.getSimpleName().equals(ASCommon.IFILTER) && !classLoader.loadClass(plugin).isInterface()){
+	
+						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						Pair<String, String> p=ianno.getKeyVal();
+						String pkey=p.first;
+						//System.out.println(" IFilter " + pkey);
+	
+						FilterType ft=ianno.getAType();
+						//System.out.println(ft);
+						if (projectType==ProjectType.SEGM  ) {
+							if (ft==FilterType.SEGM) {
+								IFilter	filter =(IFilter) ianno;
+								Map<String, String> fmap=filter.getAnotatedFileds();
+								annotationMap.put(pkey, fmap);
+								filterMap.put(pkey, filter);
+							}
+	
+						} 
+	
+	
 					} 
-
-
-				} 
-
-			} // end for
+	
+				} // end for
 			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
-				System.out.println("error:" + plugin +"not found");
+				System.out.println("error:" + plugin +" not found");
 			}
 
 		} // end for

@@ -33,7 +33,7 @@ import test.AlphanumericSortComparator;
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra and Dimiter Prodanov, IMEC
  *
  *
  * @contents
