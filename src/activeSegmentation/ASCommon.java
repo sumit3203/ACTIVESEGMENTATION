@@ -39,12 +39,14 @@ public interface ASCommon {
 	public static final String JAR=".jar";
 	// to check the .class extension
 	public static final String DOTCLASS=".class";
-	// to look IFilter interface
+	// to look for IFilter interface
 	public static final String IFILTER="IFilter";
-	// to look IMoment interface
+	// to look for IMoment interface
 	public static final String IMOMENT="IMoment";
-	// to look IAnnotated interface
+	// to look for IAnnotated interface
 	public static final String IANNO="IAnnotated";
+	// to look for IFeatureSelection interface
+	public static final String IFEATURE="IFeatureSelection";
 	// to check the .tif  extension
 	public static final String TIFFORMAT=".tif";
 	// to give common name to instance

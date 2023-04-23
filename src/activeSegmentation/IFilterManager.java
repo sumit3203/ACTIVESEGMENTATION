@@ -124,7 +124,11 @@ public interface IFilterManager {
 	
 	
 	
-	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public static Map<String, String> getFieldAnnotations(String key) {
 		return annotationMap.get(key);
 	}
