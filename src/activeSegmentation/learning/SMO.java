@@ -1,4 +1,8 @@
-package test;
+package activeSegmentation.learning;
+
+
+
+import static activeSegmentation.FilterType.FEATURE;
 
 /*
  * This program is free software; you can redistribute it and/or
@@ -15,17 +19,21 @@ package test;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-//package activeSegmentation.learning;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import activeSegmentation.AFilter;
+import activeSegmentation.IDataSet;
+import activeSegmentation.IFeatureSelection;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.core.Instance;
 
 /**
  * @author Sumit Vohra, based on Oscar Gabriel Reyes Pupo
  */
-public class SMO extends weka.classifiers.functions.SMO {
+@AFilter(key="SMO", value="SMO", type=FEATURE, help = "")
+public class SMO extends weka.classifiers.functions.SMO implements IFeatureSelection {
 
     /**
 	 * 
@@ -39,7 +47,7 @@ public class SMO extends weka.classifiers.functions.SMO {
         super();
         setBuildCalibrationModels(true);
           
-        //To be linear kernel, equals to used in the related papers
+        //To be linear kernel, equals to the one used in the related papers
         setC(1.0);
 
         PolyKernel poly = new PolyKernel();
@@ -74,4 +82,16 @@ public class SMO extends weka.classifiers.functions.SMO {
         }
         return 0;
     }
+
+	@Override
+	public IDataSet selectFeatures(IDataSet data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IDataSet filterData(IDataSet data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

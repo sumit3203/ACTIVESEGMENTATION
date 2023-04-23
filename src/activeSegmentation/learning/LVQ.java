@@ -1,6 +1,6 @@
-package test;
+package activeSegmentation.learning;
 
-//package activeSegmentation.learning;
+import static activeSegmentation.FilterType.FEATURE;
 
 /*
  *    This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import activeSegmentation.AFilter;
+import activeSegmentation.IDataSet;
+import activeSegmentation.IFeatureSelection;
 import weka.clusterers.AbstractClusterer;
 import weka.core.Attribute;
 import weka.core.Capabilities;
@@ -44,8 +47,7 @@ import weka.core.EuclideanDistance;
 
 /**
 <!-- globalinfo-start -->
- * A Clusterer that implements Learning Vector Quantization algorithm for
- * unsupervised clustering. <br/>
+ * A Clusterer that implements Learning Vector Quantization algorithm for unsupervised clustering. <br/>
  * T. Kohonen, "Learning Vector Quantization", 
  * The Handbook of Brain Theory and Neural Networks, 2nd Edition, MIT Press, 2003, pp. 631-634.
  * <p/>
@@ -79,8 +81,8 @@ import weka.core.EuclideanDistance;
  * @author John Salatas (jsalatas at gmail.com)
  * @version $Revision: 1 $
  */
-public class LVQ extends AbstractClusterer
-        implements OptionHandler {
+@AFilter(key="LVQ", value="Learning Vector Quantization", type=FEATURE, help = "")
+public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSelection {
 	
     /** for serialization */
     static final long serialVersionUID = -3028490959617832916L;
@@ -141,7 +143,7 @@ public class LVQ extends AbstractClusterer
      * @param n The number of epochs.
      */
     public void setEpochs(int n) {
-        if (n >= 1000) {
+        if (n >=1 &&  n <= 1000) {
             m_epochs = n;
         }
     }
@@ -159,7 +161,7 @@ public class LVQ extends AbstractClusterer
      * @param l The initial learning rate.
      */
     public void setLearningRate(double l) {
-        if (l > 0 && l <= 1) {
+        if (l > 0.0 && l <= 1.0) {
             m_learningRate = l;
         }
     }
@@ -202,7 +204,7 @@ public class LVQ extends AbstractClusterer
     }
 
     /**
-     * @return a string to describe the caclulate statistics option.
+     * @return a string to describe the calculate statistics option.
      */
     public String calcStatsTipText() {
         return "This should calculate statistics for each cluster after training.";
@@ -243,7 +245,8 @@ public class LVQ extends AbstractClusterer
      *
      * @return		the revision
      */
-    public String getRevision() {
+    @Override
+	public String getRevision() {
         return RevisionUtils.extract("$Revision: 1 $");
     }
 
@@ -264,7 +267,8 @@ public class LVQ extends AbstractClusterer
      *
      * @return      the capabilities of this classifier
      */
-    public Capabilities getCapabilities() {
+    @Override
+	public Capabilities getCapabilities() {
         Capabilities result = super.getCapabilities();
         result.disableAll();
         result.enable(Capability.NO_CLASS);
@@ -309,7 +313,8 @@ public class LVQ extends AbstractClusterer
      * @param options the list of options as an array of strings
      * @throws Exception if an option is not supported
      */
-    public void setOptions(String[] options) throws Exception {
+    @Override
+	public void setOptions(String[] options) throws Exception {
         //the defaults can be found here!!!!
         String learningString = Utils.getOption('L', options);
         if (learningString.length() != 0) {
@@ -347,7 +352,8 @@ public class LVQ extends AbstractClusterer
      *
      * @return an array of strings suitable for passing to setOptions()
      */
-    public String[] getOptions() {
+    @Override
+	public String[] getOptions() {
 
         String[] options = new String[12];
         int current = 0;
@@ -378,7 +384,8 @@ public class LVQ extends AbstractClusterer
      * @throws Exception if instance could not be classified
      * successfully
      */
-    public int clusterInstance(Instance i) throws Exception {
+    @Override
+	public int clusterInstance(Instance i) throws Exception {
         if ((m_clusters == null) || (m_instances == null)) {
             return 0;
         }
@@ -398,7 +405,7 @@ public class LVQ extends AbstractClusterer
      * @return an enumeration of all the available options.
      */
     public Enumeration listOptions() {
-        Vector result = new Vector();
+        Vector<Option> result = new Vector<Option>();
 
         result.addElement(new Option(
                 "\tLearning Rate for the training algorithm.\n"
@@ -446,7 +453,8 @@ public class LVQ extends AbstractClusterer
      *
      * @return a description of the clusterer as a string
      */
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\nLVQ\n==================\n");
         if ((m_clusters == null) || (m_instances == null)) {
@@ -585,7 +593,8 @@ public class LVQ extends AbstractClusterer
      * @throws Exception if the clusterer has not been
      * generated successfully
      */
-    public void buildClusterer(Instances data) throws Exception {
+    @Override
+	public void buildClusterer(Instances data) throws Exception {
         // can clusterer handle the data?
         getCapabilities().testWithFail(data);
 
@@ -845,7 +854,8 @@ public class LVQ extends AbstractClusterer
      * @exception Exception if number of clusters could not be returned
      * successfully
      */
-    public int numberOfClusters() throws Exception {
+    @Override
+	public int numberOfClusters() throws Exception {
         return m_numOfClusters;
     }
 
@@ -912,5 +922,17 @@ public class LVQ extends AbstractClusterer
         }
         return m_clusterInstances;
     }
+
+	@Override
+	public IDataSet selectFeatures(IDataSet data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IDataSet filterData(IDataSet data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
