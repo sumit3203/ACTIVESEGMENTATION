@@ -33,6 +33,12 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+/**
+ * used in the paper
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
+
 public class CreateShapes {
 
 	//features

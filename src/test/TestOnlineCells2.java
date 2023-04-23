@@ -32,6 +32,11 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
+/**
+ * used in the paper
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
 public class TestOnlineCells2 {
 	//features
 	Legendre_feature_ legendre_filter_=new Legendre_feature_();

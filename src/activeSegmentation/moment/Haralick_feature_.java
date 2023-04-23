@@ -182,8 +182,8 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 		return filter(imageProcessor,  roi.getName());
 	}
 	
-	
-	private void generateFeatures() {
+	// used in TestOnlineCells1-3
+	public void generateFeatures() {
 
 		for (int angle: DIRECTIONS){
 			for(int distance:DISTANCES){

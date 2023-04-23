@@ -35,7 +35,11 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 
-
+/**
+ * used in the paper
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
 public class TestOnlineCells {
 	//features
 	Legendre_feature_ legendre_filter_=new Legendre_feature_();
