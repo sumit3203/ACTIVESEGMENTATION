@@ -23,6 +23,7 @@ import ijaux.datatype.Pair;
 		CENTROID+CENTER_OF_MASS+PERIMETER+RECT+
 		ELLIPSE+SHAPE_DESCRIPTORS+FERET+INTEGRATED_DENSITY+
 		MEDIAN+SKEWNESS+KURTOSIS+AREA_FRACTION;
+		
  * @author prodanov
  *
  */
@@ -49,7 +50,7 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 		return featureMap.keySet();
 	}
 	
-	
+	// used in the paper code -> refactor
 	public double[] apply(ImageProcessor ip_roi){
 		ResultsTable xx=new ResultsTable();
 		Analyzer analyzer= new Analyzer(new ImagePlus("dummy",ip_roi),Measurements.ALL_STATS, xx);
