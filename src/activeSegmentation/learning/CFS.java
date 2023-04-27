@@ -25,7 +25,9 @@ public class CFS implements IFeatureSelection {
 	public CFS() {}
 	
 	/*
-	 * 
+	 * weka.attributeSelection.CfsSubsetEval:
+M. A. Hall (1998). Correlation-based Feature Subset Selection for
+Machine Learning. Hamilton, New Zealand.
 	 */
 	@Override
 	public IDataSet selectFeatures(IDataSet data){

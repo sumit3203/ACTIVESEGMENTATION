@@ -56,9 +56,6 @@ public class ApplyTask extends RecursiveAction{
 		} else {
 			if (debug)
 				System.out.println("ApplyTask: splitting workLoad: " + mLength);
-			//if (filter!=null)
-			//	invokeAll(createSubtasks(filter));
-			//else 
 				invokeAll(createSubtasks());
 		}
 	}

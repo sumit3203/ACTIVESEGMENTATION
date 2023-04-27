@@ -10,33 +10,30 @@ import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
 import activeSegmentation.learning.weka.WekaDataSet;
 import ij.IJ;
-import weka.attributeSelection.SVMAttributeEval;
-import weka.attributeSelection.Ranker;
+import weka.attributeSelection.BestFirst;
+import weka.attributeSelection.FCBFSearch;
+import weka.attributeSelection.SymmetricalUncertAttributeEval;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
-import weka.filters.unsupervised.attribute.Normalize;
-import weka.filters.unsupervised.attribute.RemoveUseless;
 
-@AFilter(key="SVM", value="SVM Feature Selection", type=FEATURE, help = "")
-public class SVM implements IFeatureSelection {
+/**
+ * weka.attributeSelection.SymmetricalUncertAttributeSetEval:
+weka.attributeSelection.FCBFSearch:
+Lei Yu, Huan Liu: Feature Selection for High-Dimensional Data: A Fast
+Correlation-Based Filter Solution. In: Proceedings of the Twentieth
+International Conference on Machine Learning, 856-863, 2003.
 
-	/**
-	 * weka.attributeSelection.SVMAttributeEval:
-I. Guyon, J. Weston, S. Barnhill, V. Vapnik (2002). Gene selection for
-cancer classification using support vector machines. Machine Learning.
-46:389-422.
-	 */
+ * @author prodanov
+ *
+ */
+@AFilter(key="FCBF", value="Fast Correlation Feature Selection", type=FEATURE, help = "")
+public class FCBF implements IFeatureSelection {
+
 	private AttributeSelection filter = new AttributeSelection();
-		
-	// https://www.linkedin.com/pulse/20140703151554-81407107-attribute-selection-with-weka-an-introduction/
 	
-	/**
-	 * 
-	 */
-	public SVM() {}
-
+	public FCBF() {}
 	
 	/*
 	 * 
@@ -46,36 +43,28 @@ cancer classification using support vector machines. Machine Learning.
 		
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
+		
+		// Evaluator
+		final SymmetricalUncertAttributeEval evaluator = new SymmetricalUncertAttributeEval();
+		evaluator.setMissingMerge(false);
+		// Assign evaluator to filter
+		filter.setEvaluator(evaluator);
+		
+		// Apply filter
 		try {
-		
-		
-			RemoveUseless ru = new RemoveUseless();
-			ru.setInputFormat(data1);
-			final Instances fdata1 = Filter.useFilter(data1, ru);
-		
-			// Evaluator
-			SVMAttributeEval evaluator = new SVMAttributeEval();
-			evaluator.buildEvaluator(fdata1);
-	  
-			// Assign evaluator to filter
-			filter.setEvaluator(evaluator);
-		 
-			final Ranker ranker = new Ranker();
-			ranker.setGenerateRanking(true);
-			ranker.setThreshold(0.1);
-			
-			filter.setSearch(ranker);
-			// Apply filter
-			 
 			filter.setInputFormat(data1);
+			FCBFSearch search1 = new FCBFSearch();
 			filter.setEvaluator(evaluator);
-			filter.setSearch(ranker);
+			// Search strategy: best first (default values)
+			filter.setSearch(search1);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
-			
+			//System.out.println(filter.toString());
+			//System.out.println(search1.globalInfo());
+			IJ.log(search1.toString());
+			System.out.println(evaluator.toString());
 			
 			Enumeration<Attribute> attributes=filteredIns.enumerateAttributes();
- 
 			IJ.log("Selected features:");
 			int c=0;
 			while (attributes.hasMoreElements()) {
@@ -86,9 +75,10 @@ cancer classification using support vector machines. Machine Learning.
 			}
 			IJ.log("Selected "+c);
 			
+			
 			evaluator.clean();
 			return new WekaDataSet(filteredIns);
-		} catch (Exception e) {		
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -96,7 +86,6 @@ cancer classification using support vector machines. Machine Learning.
 	
 	private ArrayList<String> flist=new ArrayList<>();
 	
-
 	
 	@Override
 	public IDataSet filterData(IDataSet data){
@@ -111,8 +100,8 @@ cancer classification using support vector machines. Machine Learning.
 		}
 		return null;
 	}
-
-
+	
+	
 	@Override
 	public String[] getFeatureList() {
 		String[] str= {""};
