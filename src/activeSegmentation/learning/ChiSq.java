@@ -19,8 +19,8 @@ import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.RemoveUseless;
 
-@AFilter(key="Chi2", value="Chi 2 Feature Selection", type=FEATURE, help = "")
-public class Chi2 implements IFeatureSelection {
+@AFilter(key="Chi2", value="Chi^2 Feature Selection", type=FEATURE, help = "")
+public class ChiSq implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();
 		
@@ -29,7 +29,7 @@ public class Chi2 implements IFeatureSelection {
 	/**
 	 * 
 	 */
-	public Chi2() {}
+	public ChiSq() {}
 
 	
 	/*
@@ -45,11 +45,11 @@ public class Chi2 implements IFeatureSelection {
 		
 			RemoveUseless ru = new RemoveUseless();
 			ru.setInputFormat(data1);
-			final Instances normeddata1 = Filter.useFilter(data1, ru);
+			final Instances fdata1 = Filter.useFilter(data1, ru);
 		
 			// Evaluator
 			ChiSquaredAttributeEval evaluator = new ChiSquaredAttributeEval();
-			evaluator.buildEvaluator(normeddata1);
+			evaluator.buildEvaluator(fdata1);
 	  
 			// Assign evaluator to filter
 			filter.setEvaluator(evaluator);
@@ -66,14 +66,7 @@ public class Chi2 implements IFeatureSelection {
 			filter.setSearch(ranker);
 			Instances filteredIns = Filter.useFilter(data1, filter);		
 			filteredIns.deleteWithMissingClass();
-			/*
-			SortedSet<Entry<Attribute, Double>> sortedscores = selectedFeatures(data1, evaluator);
-			IJ.log("Selected features:");
-			for (Entry<Attribute, Double> c:sortedscores) {
-				// System.out.println(c.getKey().name()+ " "+ c.getValue());
-				 IJ.log(c.getKey().name()+ " "+ c.getValue());
-			 }
-			*/
+			
 			
 			Enumeration<Attribute> attributes=filteredIns.enumerateAttributes();
  

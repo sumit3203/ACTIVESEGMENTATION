@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/weka.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/FastRandomForest_0.99.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/chiSquaredAttributeEval.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/SVMAttributeEval-1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

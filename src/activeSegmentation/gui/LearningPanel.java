@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.ImageIcon;
@@ -177,11 +178,12 @@ public class LearningPanel implements Runnable, ASCommon {
 	    
 	    wekaCEPanel.setBounds(30, 30, 250, 30);
 	    learningJPanel.add(wekaCEPanel);
-	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 120);
+	    learningJPanel.setBounds(xOffsetCol1, 20, 300, 150);
 	    
 	    ////////////////////////////////Will be enabled in the future
 	    
 	    JPanel options = new JPanel();
+	    
 	    options.setBorder(BorderFactory.createTitledBorder("Learning Options"));
 	    options.setBounds(xOffsetCol1, 120, 300, 120);
 	
@@ -218,10 +220,12 @@ public class LearningPanel implements Runnable, ASCommon {
 	    /////////////////////////////
 	    JPanel featurePanel = new JPanel();
 	    featurePanel.setBorder(BorderFactory.createTitledBorder("Feature Selection"));
-	    featurePanel.setBounds(xOffsetCol2, 20, 200, 120);
-	    
+	    featurePanel.setBounds(xOffsetCol2, 20, 200, 150);
+	   
 
-	    
+	    JScrollPane classScrolPanel = new JScrollPane(featurePanel);
+		classScrolPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 	    featureSelList.setBackground(Color.WHITE);
 	    featureSelList.setSelectedIndex(0);
 	    featureSelList.addListSelectionListener(new ListSelectionListener() {
@@ -251,7 +255,9 @@ public class LearningPanel implements Runnable, ASCommon {
 	        }
 	      });
 	    
+	    //classScrolPanel.add(featureSelList);
 	    featurePanel.add(featureSelList);
+	    learningJPanel.add(classScrolPanel);
 	     
 	    ////////////////////////////
 	    JPanel IOpanel = new JPanel();
