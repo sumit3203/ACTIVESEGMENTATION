@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -229,7 +230,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	     
 	        		String fv="";
 	        		//System.out.println("Learning: Feature selection: " + fv);
-	        		HashMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
+	        		TreeMap<String,IFeatureSelection>  hm=learningManager.getFeatureSelMap();
 	        	
 	        		int ind=featureSelList.getSelectedIndex();
 	        		//System.out.println(ind);
@@ -276,7 +277,7 @@ public class LearningPanel implements Runnable, ASCommon {
 	 */
 	private void featureSelectionUI(DefaultListModel<String> model) {
 		//model.addElement("NONE");
-		HashMap<String, IFeatureSelection> compset=learningManager.getFeatureSelMap();
+		TreeMap<String, IFeatureSelection> compset=learningManager.getFeatureSelMap();
 		Set<String> set=compset.keySet();
 		for (String s:set) {
 			final String s2=compset.get(s).getName();

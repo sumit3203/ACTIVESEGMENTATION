@@ -1,12 +1,21 @@
 package activeSegmentation.learning;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ForkJoinPool;
-
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import weka.classifiers.AbstractClassifier;
 
@@ -14,21 +23,25 @@ import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 
 import activeSegmentation.ASCommon;
-
+import activeSegmentation.FilterType;
+import activeSegmentation.IAnnotated;
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.InstanceUtil;
 import ij.IJ;
+import ijaux.datatype.Pair;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-
+import activeSegmentation.IFilter;
+import activeSegmentation.ProjectType;
+import activeSegmentation.filter.FilterManager;
 import activeSegmentation.learning.weka.WekaClassifier;
 
 
 
-public class ClassifierManager implements ASCommon {
+public class ClassifierManager extends URLClassLoader implements ASCommon {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 
@@ -38,7 +51,7 @@ public class ClassifierManager implements ASCommon {
 
 	private IDataSet dataset;
 	private ForkJoinPool pool=  new ForkJoinPool();
-	private HashMap<String,IFeatureSelection> featureMap=new HashMap<>();
+	private  TreeMap<String, IFeatureSelection>  featureMap=new TreeMap<>();
 	
 	public static final int PREDERR=-1;
 	
@@ -47,20 +60,120 @@ public class ClassifierManager implements ASCommon {
 	 * @param dataManager
 	 */
 	public ClassifierManager(ProjectManager dataManager){
+		super(new URL[0], IJ.class.getClassLoader());
 		learningList= new ArrayList<>();
 		learningList.add(ASCommon.ACTIVELEARNING);
 		learningList.add(ASCommon.PASSIVELEARNING);
 	 	
-		featureMap.put("activeSegmentation.learning.ID",new ID());
-		featureMap.put("activeSegmentation.learning.CFS",new CFS());
-		featureMap.put("activeSegmentation.learning.PCA",new PCA());
-		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
-		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
+		
+		// implement automatic loading based on IFeatureSelection
+//		featureMap.put("activeSegmentation.learning.ID",new ID());
+//		featureMap.put("activeSegmentation.learning.CFS",new CFS());
+//		featureMap.put("activeSegmentation.learning.PCA",new PCA());
+//		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
+//		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
+		
+		try {
+			List<String> jars=projectInfo.getPluginPath();
+			System.out.println("plugin path: "+jars);
+			if (jars!=null)
+				loadFilters(jars);
+			IJ.log("Selection Filters loaded");
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+			IJ.log("Selection Filters NOT loaded. Check pluginPath variable");
+		}
+		
+
 	}
 	
+	private void addJar(File f) {
+		if (f.getName().endsWith(".jar")) {
+			try {
+				addURL(f.toURI().toURL());
+			} catch (MalformedURLException e) {
+				System.out.println("PluginClassLoader: "+e);
+			}
+		}
+	}
 	
+ 
+	
+	public  void loadFilters(List<String> plugins) throws 
+	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
+
+		//System.out.println("home: "+home);
+		List<String> classes=new ArrayList<>();
+		String cp=System.getProperty("java.class.path");
+		for(String plugin: plugins){
+			if(plugin.endsWith(ASCommon.JAR))	{ 
+				classes.addAll(installJarPlugins(plugin));
+				cp+=";" + plugin;
+				System.setProperty("java.class.path", cp);
+				File g = new File(plugin);
+				if (g.isFile()) addJar(g);
+			}
+		}
+		System.out.println("setting classpath:  "+cp);
+		System.setProperty("java.class.path", cp);
+		ClassLoader classLoader= ClassifierManager.class.getClassLoader();
+
+		for(String plugin: classes){
+			//System.out.println("checking "+ plugin);
+			try {
+				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
+
+				for(Class<?> cs:classesList){
+					// we load only IFilter classes
+					//System.out.println(cs.getSimpleName());
+
+					if (cs.getSimpleName().equals(ASCommon.IFEATURE) && !classLoader.loadClass(plugin).isInterface()){
+
+						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						Pair<String, String> p=ianno.getKeyVal();
+						String pkey=p.first;
+						//System.out.println(" IFilter " + pkey);
+
+						FilterType ft=ianno.getAType();
+
+						IFeatureSelection	filter =(IFeatureSelection) ianno;
+						Map<String, String> fmap=filter.getAnotatedFileds();
+						//	annotationMap.put(pkey, fmap);
+						featureMap.put(pkey, filter);
+
+					} 
+
+				} // end for
+			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
+				System.out.println("error:" + plugin +" not found");
+			}
+
+		} // end for
+
+		if (featureMap.isEmpty()) 
+			throw new RuntimeException("filter list empty ");
+	 
+	}
+	
+ 
+	
+	
+	private  List<String> installJarPlugins(String plugin) throws IOException {
+		List<String> classNames = new ArrayList<>();
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
+		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {
+				String className = entry.getName().replace('/', '.'); // including ".class"
+				classNames.add(className.substring(0, className.length() - ASCommon.DOTCLASS.length()));
+			}
+		}
+		zip.close();
+		return classNames;
+	}
+
 	
 	/**
 	 * trains the classifier
@@ -209,7 +322,7 @@ public class ClassifierManager implements ASCommon {
 	 * 
 	 * @return
 	 */
-	public HashMap<String,IFeatureSelection> getFeatureSelMap() {
+	public TreeMap<String,IFeatureSelection> getFeatureSelMap() {
 		return featureMap;
 	}
 	/**
