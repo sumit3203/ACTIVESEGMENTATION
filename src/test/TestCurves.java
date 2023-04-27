@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 //import activeSegmentation.IProjectManager;
-import activeSegmentation.learning.SMO;
+import test.SMO;
 import activeSegmentation.prj.ProjectManager;
 import weka.core.Instance;
 import weka.core.Instances;

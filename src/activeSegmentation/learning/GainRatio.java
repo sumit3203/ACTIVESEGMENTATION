@@ -47,8 +47,8 @@ public class GainRatio implements IFeatureSelection {
 		Instances data1= data.getDataset();
 		data1.setClassIndex(data1.numAttributes()-1);
 		try {
-			Normalize norm = new Normalize();
-			norm.setInputFormat(data1);
+			//Normalize norm = new Normalize();
+			//norm.setInputFormat(data1);
 		
 			RemoveUseless ru = new RemoveUseless();
 			ru.setInputFormat(data1);
@@ -104,33 +104,7 @@ public class GainRatio implements IFeatureSelection {
 	
 	private ArrayList<String> flist=new ArrayList<>();
 	
-	/**
-	 * @param instances
-	 * @param evaluator
-	 * @return
-	 * @throws Exception
-	 *
-	private SortedSet<Entry<Attribute, Double>> selectedFeatures(Instances instances, GainRatioAttributeEval evaluator){
-		try {
-			Map<Attribute, Double> scores=new HashMap<>();
-			
-			for (int i=0;i<instances.numAttributes(); i++) {
-				Attribute t_attr=instances.attribute(i);
-				
-				if (! t_attr.name().equalsIgnoreCase("class")) {
-					double infogain=evaluator.evaluateAttribute(i);
-					scores.put(t_attr, infogain);
-				}
-			}
-			
-			 SortedSet<Entry<Attribute, Double>> sortedscores = IFeatureSelection.sortByVal(scores, -1);
-			return sortedscores;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	*/
+
 	
 	@Override
 	public IDataSet filterData(IDataSet data){

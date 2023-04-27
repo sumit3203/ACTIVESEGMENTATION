@@ -1,4 +1,4 @@
-package activeSegmentation.learning;
+package test;
 
 import static activeSegmentation.FilterType.FEATURE;
 
@@ -645,7 +645,7 @@ public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSe
         // init cluster statistics
         m_clusterStats = new double[m_instances.numAttributes()][m_numOfClusters][4];
 
-        // init clusters assignements
+        // init clusters assignments
         m_clusterInstances = new Instances[m_numOfClusters];
 
         // keep cluster's attributes
@@ -675,7 +675,7 @@ public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSe
             m_clusterInstances[cluster].add(denormalizeInstance(inst));
         }
 
-        //calc min, max, mean, stdev for each cluster
+        //calculates min, max, mean, stdev for each cluster
         for (int cluster = 0; cluster < m_clusters.numInstances(); cluster++) {
             for (int attr = 0; attr < m_clusters.numAttributes(); attr++) {
                 int unknownValues = 0;
