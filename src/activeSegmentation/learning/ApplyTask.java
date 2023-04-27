@@ -25,13 +25,7 @@ public class ApplyTask extends RecursiveAction{
 	
 	private boolean debug=false;
 
-	/*
-	private IFeatureSelection filter=null;
-	
-	public void setFilter(IFeatureSelection selection) {
-		filter=selection;
-	}
-	*/
+
 	
 	/**
 	 * 
@@ -53,31 +47,7 @@ public class ApplyTask extends RecursiveAction{
 	}
 
 
-	/**
-	 * 
-	 * @param dataSet
-	 * @param mStart
-	 * @param length
-	 * @param classificationResult
-	 * @param classifier
-	 *
-	public ApplyTask(IDataSet dataSet,Integer mStart,int length, double[] classificationResult, 
-			IClassifier classifier, IFeatureSelection filter) {
-		
-		if (filter!=null) {
-			IDataSet fdata = filter.selectFeatures(dataSet);
-			this.dataSet = fdata;
-		} else {
-			System.out.println("ApplyTask: fdata null");
-			throw new RuntimeException();
-		}
-		this.classificationResult= classificationResult;
-		this.iClassifier=classifier;
-		this.mStart= mStart;
-		this.mLength= length;
 
-	}
-*/
 	
 	@Override
 	protected void compute() {
@@ -93,20 +63,7 @@ public class ApplyTask extends RecursiveAction{
 		}
 	}
 	 
-	/*
-	private List<ApplyTask> createSubtasks(IFeatureSelection filter) {
-        List<ApplyTask> subtasks = new ArrayList<>();
-        final int split = mLength / 2;
-        //divide and conquer tree recursion
-        ApplyTask task1 = new ApplyTask(dataSet, mStart,         split,           classificationResult, iClassifier, filter);
-        ApplyTask task2 = new ApplyTask(dataSet, mStart + split, mLength - split, classificationResult, iClassifier, filter);
 
-        subtasks.add(task1);
-        subtasks.add(task2);
-
-        return subtasks;
-    }
-	*/
 	
 	private List<ApplyTask> createSubtasks() {
         List<ApplyTask> subtasks = new ArrayList<>();

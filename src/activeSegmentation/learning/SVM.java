@@ -24,7 +24,7 @@ public class SVM implements IFeatureSelection {
 
 	private AttributeSelection filter = new AttributeSelection();
 		
-	 
+	// https://www.linkedin.com/pulse/20140703151554-81407107-attribute-selection-with-weka-an-introduction/
 	
 	/**
 	 * 
