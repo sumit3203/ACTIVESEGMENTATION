@@ -17,7 +17,7 @@ class ABrowserTest extends Region {
         //apply the styles
        getStyleClass().add("browser");
        try {
-		String hlpfile= WebHelper.class.getResource(resource).toExternalForm();
+		String hlpfile= WebView.class.getResource(resource).toExternalForm();
 		   webEngine.load(hlpfile);
 		} catch (RuntimeException e) {
 			// TODO Auto-generated catch block

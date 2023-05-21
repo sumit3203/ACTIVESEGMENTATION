@@ -33,6 +33,8 @@ public class Active_Segmentation_ implements PlugIn {
 	@Override
 	public void run(String arg0) {
 	
+		System.out.println( System.getProperty("java.classpath"));
+		 
 		ProjectManager dataManager= new ProjectManager();
 		CreateOpenProjectUI creatProject= new CreateOpenProjectUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);

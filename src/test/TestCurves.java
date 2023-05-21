@@ -5,20 +5,30 @@ import java.util.Comparator;
 import java.util.Random;
 
 //import activeSegmentation.IProjectManager;
-import test.SMO;
-import activeSegmentation.prj.ProjectManager;
+//import test.SMO;
+//import activeSegmentation.prj.ProjectManager;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffLoader.*;
+import java.io.*;
 
-public class TestCurves
-{
+public class TestCurves {
+	
   public static void main(String[] args)  {
-    ProjectManager dataManager = new ProjectManager();
-    // to change
-    Instances trainingSet = dataManager.readDataFromARFF("C:\\Users\\sumit\\Documents\\GitHub\\ACTIVESEGMENTATION\\src\\activeSegmentation\\evaluation\\iris.arff").getDataset();
+     
+    
+	try {
+		BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\sumit\\Documents\\GitHub\\ACTIVESEGMENTATION\\src\\activeSegmentation\\evaluation\\iris.arff"));
+		
+		try {
+			 ArffReader arff = new ArffReader(reader);
+	
+    		 Instances trainingSet = arff.getData();
+    
+    
     SMO smo = new SMO();
     trainingSet.randomize(new Random(10L));
-    int trainSize = (int)Math.round(trainingSet.numInstances() * 0.8D);
+    int trainSize = (int) Math.round(trainingSet.numInstances() * 0.8D);
     int testSize = trainingSet.numInstances() - trainSize;
     Instances train = new Instances(trainingSet, 0, trainSize);
     Instances test = new Instances(trainingSet, trainSize, testSize);
@@ -73,10 +83,18 @@ public class TestCurves
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    	
   }
   
-  public static int[] argsort(final double[] a,final boolean  ascending)
-  {
+  public static int[] argsort(final double[] a,final boolean  ascending)  {
     Integer[] indexes = new Integer[a.length];
     for (int i = 0; i < indexes.length; i++) {
       indexes[i] = Integer.valueOf(i);
@@ -94,8 +112,7 @@ public class TestCurves
     return ret;
   }
   
-  private double evaluate(int TP, int FP, int TN, int FN)
-  {
+  private double evaluate(int TP, int FP, int TN, int FN)  {
     double i = 0.0D;
     
     return i;
