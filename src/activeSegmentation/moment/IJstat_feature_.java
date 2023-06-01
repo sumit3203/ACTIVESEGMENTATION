@@ -38,8 +38,9 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 	private ArrayList<Pair<String,double[]>> feature_vector = new ArrayList<Pair<String,double[]>>();
 	
 	public  IJstat_feature_() {
-		String headings[]=ResultsTable.getDefaultHeadings();
+		String headings[]=ResultsTable.getResultsTable().getHeadings();
 		for(int i=0; i<headings.length; i++) {
+			System.out.println("Phead[i], i] = " + headings[i] + ", " + i);
 			featureMap.put(headings[i], i);
 		}
 	}
@@ -56,10 +57,13 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 		Analyzer analyzer= new Analyzer(new ImagePlus("dummy",ip_roi),Measurements.ALL_STATS, xx);
 		analyzer.run(ip_roi);
 		String headings[]=xx.getHeadings();
-		double outvector[]= new double[ResultsTable.getDefaultHeadings().length];
+		double outvector[]= new double[ResultsTable.getResultsTable().getHeadings().length];
 		for(int i=0; i<headings.length; i++) {
 			double value=xx.getValue(headings[i], 0);
-			outvector[featureMap.get(headings[i])]=value;
+			if(featureMap.containsKey(headings[i])) {
+				System.out.println("head[i], i] = " + headings[i] + ", " + i);
+				outvector[featureMap.get(headings[i])]=value;
+			}
 		}
 		//keys.add(e)
 		return outvector;

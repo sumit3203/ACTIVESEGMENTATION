@@ -68,7 +68,8 @@ public class TestOnlineCells2 {
 		// TODO Auto-generated method stub
 		new ImageJ();
 		TestOnlineCells2 test= new TestOnlineCells2();
-		String directory="C:\\Data\\hela\\";
+//		String directory="C:\\Data\\hela\\";
+		String directory = "C:\\Users\\aarya\\Downloads\\hela";
 		test.run(directory);
 		//System.out.println(dirs);
 	}
@@ -152,11 +153,11 @@ public class TestOnlineCells2 {
 		}
 		for(String cellType: dirs) {
 			//System.out.println();
-			Set<String> cellsDir=loadImages(directory+cellType);
+			Set<String> cellsDir=loadImages(directory+ "\\" + cellType);
 			List<CellType> cellList= new ArrayList<>();
 			cells.put(cellType, cellList);
 			for(String traincells: cellsDir) {
-				String tiffile=directory+cellType+"\\"+traincells;
+				String tiffile=directory+"\\" + cellType+"\\"+traincells;
 				Instance instance= createInstance(tiffile, cellType,classIndexMap);
 				CellType cell= new CellType(tiffile, cellType, instance);
 				List<CellType> currentList= cells.get(cellType);

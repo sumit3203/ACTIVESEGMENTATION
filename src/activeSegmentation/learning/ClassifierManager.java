@@ -162,6 +162,8 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 	
 	
 	private  List<String> installJarPlugins(String plugin) throws IOException {
+//		plugin = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
+		System.out.println("plugin=" + plugin);
 		List<String> classNames = new ArrayList<>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
