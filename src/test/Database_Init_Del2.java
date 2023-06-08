@@ -47,7 +47,7 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `class_probabilities` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY, \r\n" +  
-    			" `class_label` TEXT \r\n" + 
+    			" `class_label` VARCHAR(50) \r\n" + 
     			" `probability` float \r\n" + 
     			");";
         lock.execute(query);
@@ -73,8 +73,8 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `class_list` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY,\r\n" + 
-    			" `image_name` TEXT \r\n" + 
-    			" `class_label` TEXT \r\n" + 
+    			" `image_name` VARCHAR(50) \r\n" + 
+    			" `class_label` VARCHAR(50) \r\n" + 
     			")";
         lock.execute(query);
         System.out.println("CLASS_LIST created");
@@ -85,8 +85,8 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `features` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY, \r\n" + 
-    			" `feature_name` TEXT \r\n" +
-    			" `feature_parameter` TEXT \r\n" +
+    			" `feature_name` VARCHAR(50) \r\n" +
+    			" `feature_parameter` VARCHAR(50) \r\n" +
     			")";
         lock.execute(query);
         System.out.println("FEATURES created");
@@ -97,8 +97,8 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `features_values` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY, \r\n" + 
-    			" `image_name` TEXT, \r\n" + 
-    			" `feature_name` TEXT, \r\n" + 
+    			" `image_name` VARCHAR(50), \r\n" + 
+    			" `feature_name` VARCHAR(50), \r\n" + 
     			" `feature_value` FLOAT, \r\n" + 
     			")";
      
