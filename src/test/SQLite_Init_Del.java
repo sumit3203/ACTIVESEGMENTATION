@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Database_Init_Del2 {
+public class SQLite_Init_Del {
 	
-	public Database_Init_Del2() {
+	public SQLite_Init_Del() {
 	}
 	
     public static void connect(String dbname) {
@@ -47,8 +47,8 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `class_probabilities` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY, \r\n" +  
-    			" `class_label` VARCHAR(50) \r\n" + 
-    			" `probability` float \r\n" + 
+    			" `class_label` VARCHAR(50), \r\n" + 
+    			" `probability` FLOAT \r\n" + 
     			");";
         lock.execute(query);
         System.out.println("CLASS_PROBABILITIES created");
@@ -62,8 +62,8 @@ public class Database_Init_Del2 {
     			" `start_time` timestamp, \r\n" + 
     			" `end_time` timestamp, \r\n" +
     			" `dataset_path` TEXT, \r\n" +
-    			" `classifier_output` TEXT, \r\n" +
-    			")";
+    			" `classifier_output` TEXT \r\n" +
+    			");";
         lock.execute(query);
         System.out.println("SESSIONS created");
     }    
@@ -73,9 +73,9 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `class_list` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY,\r\n" + 
-    			" `image_name` VARCHAR(50) \r\n" + 
+    			" `image_name` VARCHAR(50), \r\n" + 
     			" `class_label` VARCHAR(50) \r\n" + 
-    			")";
+    			");";
         lock.execute(query);
         System.out.println("CLASS_LIST created");
     }
@@ -85,9 +85,9 @@ public class Database_Init_Del2 {
         lock.execute(query);
         query="CREATE TABLE `features` (\r\n" + 
     			" `session_id` INTEGER PRIMARY KEY, \r\n" + 
-    			" `feature_name` VARCHAR(50) \r\n" +
+    			" `feature_name` VARCHAR(50), \r\n" +
     			" `feature_parameter` VARCHAR(50) \r\n" +
-    			")";
+    			");";
         lock.execute(query);
         System.out.println("FEATURES created");
     }
@@ -99,8 +99,8 @@ public class Database_Init_Del2 {
     			" `session_id` INTEGER PRIMARY KEY, \r\n" + 
     			" `image_name` VARCHAR(50), \r\n" + 
     			" `feature_name` VARCHAR(50), \r\n" + 
-    			" `feature_value` FLOAT, \r\n" + 
-    			")";
+    			" `feature_value` FLOAT \r\n" + 
+    			");";
      
         lock.execute(query);
         System.out.println("FEATURES_VALUES created");
