@@ -37,5 +37,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/sqlite/client-0.0.5.jar"/>
+	<classpathentry kind="lib" path="C:/sqlite/sqlite-jdbc-3.42.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

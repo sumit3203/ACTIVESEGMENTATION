@@ -289,6 +289,7 @@ public class ProjectManager implements IUtil{
 			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
 		*/
+		// add an option for main plugin folder + check for IJ property
 		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));

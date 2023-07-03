@@ -3,24 +3,16 @@ import static java.lang.Math.PI;
 import static java.lang.Math.exp;
 import static java.lang.Math.sqrt;
 
-import java.awt.Image;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
-import fftscale.filter.FFTAbstractKernel;
 import fftscale.filter.FFTKernelGauss;
 
 import static activeSegmentation.FilterType.SEGM;
@@ -207,7 +199,6 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public Map<String, String> getDefaultSettings() {
-		// TODO Auto-generated method stub
 		settings.put(LEN, Integer.toString(sz));
 		settings.put(MAX_LEN, Integer.toString(max_sz));
 		return settings;
@@ -216,7 +207,6 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		// TODO Auto-generated method stub
 		sz=Integer.parseInt(settingsMap.get(LEN));
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		return true;
@@ -225,7 +215,6 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
-		// TODO Auto-generated method stub
 		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
 			ImageProcessor fp=filter(image, sigma);
 			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
@@ -242,7 +231,7 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		int kh=frame[3];
 		FFTKernelGauss fgauss=new FFTKernelGauss (kw,kh,  sigma, true);
 		FFTConvolver proc = new FFTConvolver(ip, fgauss, true);
-		IComplexFArray kern=fgauss.getKernelComplexF();
+		//IComplexFArray kern=fgauss.getKernelComplexF();
 		
 		
 		FloatProcessor output=proc.convolve();
