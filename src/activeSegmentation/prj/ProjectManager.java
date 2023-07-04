@@ -277,22 +277,15 @@ public class ProjectManager implements IUtil{
 	 * 
 	 */
 	private void setASpath() {
-		//String OS = System.getProperty("os.name").toLowerCase();
-		//IJ.log(OS);
 		String plugindir=IJ.getDir("imagej");
 		IJ.log(plugindir);
-		/*
-		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegJarPath=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
-		}
-		else {
-			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
-		}
-		*/
 		// add an option for main plugin folder + check for IJ property
 		String aspath=(String) IJ.getProperty("AS_pluginpath");
 		System.out.println("ppath "+aspath);
-		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
+		if (aspath==null) {
+			aspath= "activeSegmentation";
+		}
+		activeSegJarPath=plugindir+fs+"plugins"+fs+aspath+fs+"ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
