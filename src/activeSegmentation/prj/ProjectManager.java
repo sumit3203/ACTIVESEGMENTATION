@@ -64,7 +64,7 @@ public class ProjectManager implements IUtil{
 	public boolean loadProject(String fileName) {
 		//IJ.log(System.getProperty("plugins.dir"));
 		IJ.log("loading project ...");
-		setDirectory();
+		setASpath();
 		if(projectInfo==null){
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -162,7 +162,7 @@ public class ProjectManager implements IUtil{
 		if(!returnedMessage.equalsIgnoreCase(message)) {
 			return returnedMessage;
 		}
-		setDirectory();
+		setASpath();
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory+ fs+projectName);
 	
@@ -276,7 +276,7 @@ public class ProjectManager implements IUtil{
 	/**
 	 * 
 	 */
-	private void setDirectory() {
+	private void setASpath() {
 		//String OS = System.getProperty("os.name").toLowerCase();
 		//IJ.log(OS);
 		String plugindir=IJ.getDir("imagej");
@@ -290,6 +290,8 @@ public class ProjectManager implements IUtil{
 		}
 		*/
 		// add an option for main plugin folder + check for IJ property
+		String aspath=(String) IJ.getProperty("AS_pluginpath");
+		System.out.println("ppath "+aspath);
 		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
