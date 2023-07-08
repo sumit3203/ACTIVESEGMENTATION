@@ -91,7 +91,9 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	private void updateFeatures() {
 		//File[] featureImages=new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles();
 		File[] featureImages=sortImages(new File(featurePath+images.get(0).substring(0, images.get(0).lastIndexOf("."))).listFiles());
-
+		if(featureImages == null) {
+			return;
+		}
 		this.numberOfFeatures=featureImages.length;
 		//System.out.println(this.numberOfFeatures);
 		labels=new String[numberOfFeatures];
@@ -199,7 +201,8 @@ public class PixelInstanceCreator implements IFeature, ASCommon {
 	 
 	private File[] sortImages(File[] images) {
 		final Pattern p = Pattern.compile("^\\d+");	
-		//System.out.println("sorting images: n="+ images.length);
+//		System.out.println("sorting images: n="+ images.length);
+		if(images != null)
 		Arrays.sort(images, new  Comparator<File>(){
 			@Override public int compare(File o1, File o2) {
 				Matcher m = p.matcher(o1.getName());
