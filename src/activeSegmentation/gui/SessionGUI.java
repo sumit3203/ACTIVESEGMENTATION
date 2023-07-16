@@ -1,4 +1,5 @@
 package activeSegmentation.gui;
+import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextArea;
 
 
 
@@ -21,6 +21,7 @@ public class SessionGUI {
     ArrayList<Session> sessionList;
     Session session;
     JButton jb_refresh;
+    JButton jb_viewFeatureDetail;
     // JTextArea jta_cellText;
     public final static String driver="org.sqlite.JDBC";
 	
@@ -110,7 +111,6 @@ public class SessionGUI {
                 System.out.println(startTime);
             }
         } catch (Exception e) {
-            System.out.println("bye");
             System.out.println(e.getMessage());
         }
     }
@@ -160,37 +160,37 @@ public class SessionGUI {
         }
     };
     
-    ActionListener viewSessionDetailListener = new ActionListener() {
+    ActionListener viewFeatureDetailListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = jt.getSelectedRow();
             if (selectedRow != -1) {
                 int sessionId = (int) jt.getValueAt(selectedRow, 1); // Session ID from the selected row
                 System.out.println("sessionId = " + sessionId);
-                ArrayList<ClassList> classList = getClassListBySessionId(sessionId);
+                ArrayList<FeatureDetail> featureList = getFeatureListBySessionId(sessionId);
 
-                // Create and populate a new table to show session details
-                Object[][] classListData = new Object[classList.size()][3];
-                for (int i = 0; i < classList.size(); i++) {
-                    ClassList classItem = classList.get(i);
-                    classListData[i] = new Object[] {
-                        classItem.getSessionId(),
-                        classItem.getImageName(),
-                        classItem.getImageLabel()
+                // Create and populate a new table to show feature details
+                Object[][] featureListData = new Object[featureList.size()][3];
+                for (int i = 0; i < featureList.size(); i++) {
+                    FeatureDetail featureItem = featureList.get(i);
+                    featureListData[i] = new Object[] {
+                        featureItem.getSessionId(),
+                        featureItem.getFeatureName(),
+                        featureItem.getFeatureParameter()
                     };
                 }
 
-                String[] classListHeader = new String[] {
+                String[] featureListHeader = new String[] {
                     "Session ID",
-                    "Image Name",
-                    "Image Label"
+                    "Feature Name",
+                    "Feature Parameter"
                 };
 
-                JTable classListTable = new JTable(classListData, classListHeader);
-                JScrollPane classListScrollPane = new JScrollPane(classListTable);
-                classListTable.setFillsViewportHeight(true);
+                JTable featureListTable = new JTable(featureListData, featureListHeader);
+                JScrollPane featureListScrollPane = new JScrollPane(featureListTable);
+                featureListTable.setFillsViewportHeight(true);
 
                 // Show the table in a dialog
-                JOptionPane.showMessageDialog(null, classListScrollPane, "Session Detail", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, featureListScrollPane, "Feature Detail", JOptionPane.PLAIN_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(null, "Please select a session to view details.", "No Session Selected",
                         JOptionPane.ERROR_MESSAGE);
@@ -198,21 +198,203 @@ public class SessionGUI {
         }
     };
 
+    ActionListener viewSessionDetailListener = new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        int selectedRow = jt.getSelectedRow();
+        if (selectedRow != -1) {
+            int sessionId = (int) jt.getValueAt(selectedRow, 1); // Session ID from the selected row
+            System.out.println("sessionId = " + sessionId);
+            ArrayList<ClassList> classList = getClassListBySessionId(sessionId);
+
+            // Create and populate a new table to show session details
+            Object[][] classListData = new Object[classList.size()][4];
+            for (int i = 0; i < classList.size(); i++) {
+                ClassList classItem = classList.get(i);
+                double classProbability = getClassProbability(sessionId, classItem.getImageLabel());
+                classListData[i] = new Object[] {
+                    classItem.getSessionId(),
+                    classItem.getImageName(),
+                    classItem.getImageLabel(),
+                    classProbability
+                };
+            }
+
+            String[] classListHeader = new String[] {
+                "Session ID",
+                "Image Name",
+                "Class Label",
+                "Class Probability"
+            };
+
+            DefaultTableModel dtmClassList = new DefaultTableModel(classListData, classListHeader);
+            JTable classListTable = new JTable(dtmClassList);
+
+            JScrollPane classListScrollPane = new JScrollPane(classListTable);
+            classListTable.setFillsViewportHeight(true);
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            panel.add(classListScrollPane, BorderLayout.CENTER);
+
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // Handle the OK button action
+                }
+            });
+
+            JButton viewFeatureValuesButton = new JButton("View Feature Values");
+            viewFeatureValuesButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    int selectedRow = classListTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        int imageId = (int) classListTable.getValueAt(selectedRow, 0); // Image ID from the selected row
+                        System.out.println("sessionId = " + sessionId);
+                        System.out.println("imageId = " + imageId);
+                        ArrayList<FeatureValue> featureValues = getFeatureValues(sessionId, imageId);
+
+                        Object[][] featureValuesData = new Object[featureValues.size()][3];
+                        for (int i = 0; i < featureValues.size(); i++) {
+                            FeatureValue featureValue = featureValues.get(i);
+                            featureValuesData[i] = new Object[] {
+                                featureValue.getSessionId(),
+                                featureValue.getFeatureName(),
+                                featureValue.getFeatureValue()
+                            };
+                        }
+
+                        String[] featureValuesHeader = new String[] {
+                            "Session ID",
+                            "Feature Name",
+                            "Feature Value"
+                        };
+
+                        JTable featureValuesTable = new JTable(featureValuesData, featureValuesHeader);
+                        JScrollPane featureValuesScrollPane = new JScrollPane(featureValuesTable);
+                        featureValuesTable.setFillsViewportHeight(true);
+
+                        // Show the table in a dialog
+                        JOptionPane.showMessageDialog(null, featureValuesScrollPane, "Feature Values", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please select an image to view feature values.", "No Image Selected",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(okButton);
+            buttonPanel.add(viewFeatureValuesButton);
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Show the table in a dialog
+            JOptionPane.showMessageDialog(null, panel, "Session Detail", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a session to view details.", "No Session Selected",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+};
+    
+    ActionListener viewFeatureValuesListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            int selectedRow = jt.getSelectedRow();
+            if (selectedRow != -1) {
+                int sessionId = (int) jt.getValueAt(selectedRow, 1); // Session ID from the selected row
+                int imageId = (int) jt.getValueAt(selectedRow, 0); // Image ID from the selected row
+                System.out.println("sessionId = " + sessionId);
+                System.out.println("imageId = " + imageId);
+                
+                // Call a method to retrieve and display feature values
+                displayFeatureValues(sessionId, imageId);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a session to view details.", "No Session Selected",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    };
+    
+    private void displayFeatureValues(int sessionId, int imageId) {
+        ArrayList<FeatureValue> featureValues = getFeatureValues(sessionId, imageId);
+
+        Object[][] featureValuesData = new Object[featureValues.size()][3];
+        for (int i = 0; i < featureValues.size(); i++) {
+            FeatureValue featureValue = featureValues.get(i);
+            featureValuesData[i] = new Object[] {
+                featureValue.getSessionId(),
+                featureValue.getFeatureName(),
+                featureValue.getFeatureValue()
+            };
+        }
+
+        String[] featureValuesHeader = new String[] {
+            "Session ID",
+            "Feature Name",
+            "Feature Value"
+        };
+
+        JTable featureValuesTable = new JTable(featureValuesData, featureValuesHeader);
+        JScrollPane featureValuesScrollPane = new JScrollPane(featureValuesTable);
+        featureValuesTable.setFillsViewportHeight(true);
+
+        JOptionPane.showMessageDialog(null, featureValuesScrollPane, "Feature Values", JOptionPane.PLAIN_MESSAGE);
+    }
+
     // Delete session button listener
     ActionListener deleteSessionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = jt.getSelectedRow();
             if (selectedRow != -1) {
                 int ss_id = (int) jt.getValueAt(selectedRow, 0);
-                deleteData(ss_id);
-                sessionList.remove(selectedRow);
-                populateTable(sessionList);
+                
+                // Show confirmation prompt
+                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this session?",
+                        "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    deleteData(ss_id);
+                    sessionList.remove(selectedRow);
+                    populateTable(sessionList);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Please select a row to delete.", "No Row Selected",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
     };
+    
+    private JButton createViewFeatureValuesButton(int sessionId, int imageId) {
+        JButton button = new JButton("View Feature Values");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<FeatureValue> featureValues = getFeatureValues(sessionId, imageId);
+
+                Object[][] featureValuesData = new Object[featureValues.size()][3];
+                for (int i = 0; i < featureValues.size(); i++) {
+                    FeatureValue featureValue = featureValues.get(i);
+                    featureValuesData[i] = new Object[] {
+                        featureValue.getSessionId(),
+                        featureValue.getFeatureName(),
+                        featureValue.getFeatureValue()
+                    };
+                }
+
+                String[] featureValuesHeader = new String[] {
+                    "Session ID",
+                    "Feature Name",
+                    "Feature Value"
+                };
+
+                JTable featureValuesTable = new JTable(featureValuesData, featureValuesHeader);
+                JScrollPane featureValuesScrollPane = new JScrollPane(featureValuesTable);
+                featureValuesTable.setFillsViewportHeight(true);
+
+                JOptionPane.showMessageDialog(null, featureValuesScrollPane, "Feature Values", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+
+        return button;
+    }
 
     // Search session button listener
     ActionListener searchSessionListener = new ActionListener() {
@@ -291,6 +473,64 @@ public class SessionGUI {
         return classList;
     }
 
+    // Fetch class probabilities based on session_id and class_label
+private double getClassProbability(int sessionId, String classLabel) {
+    double probability = 0.0;
+    try {
+        String sql = "SELECT probability FROM class_probabilities WHERE session_id = ? AND class_label = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, sessionId);
+        pstmt.setString(2, classLabel);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            probability = rs.getDouble("probability");
+        }
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+    }
+    return probability;
+}
+
+
+    // fetch featureDetailsbySessionID
+    private ArrayList<FeatureDetail> getFeatureListBySessionId(int sessionId) {
+        ArrayList<FeatureDetail> featureList = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM features WHERE session_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, sessionId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String featureName = rs.getString("feature_name");
+                String featureParameter = rs.getString("feature_parameter");
+                featureList.add(new FeatureDetail(sessionId, featureName, featureParameter));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return featureList;
+    }
+    
+ // Fetch feature values based on sessionId and imageId
+    private ArrayList<FeatureValue> getFeatureValues(int sessionId, int imageId) {
+        ArrayList<FeatureValue> featureValues = new ArrayList<>();
+        try {
+            String sql = "SELECT feature_name, feature_value FROM features_values WHERE session_id = ? AND image_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, sessionId);
+            pstmt.setInt(2, imageId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String featureName = rs.getString("feature_name");
+                String featureValue = rs.getString("feature_value");
+                featureValues.add(new FeatureValue(sessionId, featureName, featureValue));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return featureValues;
+    }
+
     // Search session by session ID in the database
     private ArrayList<Session> searchSession(int sessionId) {
         ArrayList<Session> searchResult = new ArrayList<>();
@@ -317,7 +557,7 @@ public class SessionGUI {
     // Initialize the main user interface
     private void mainInterface() {
         frame = new JFrame("Sessions Database");
-        frame.setSize(800, 600);
+        frame.setSize(1000, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         dtm = new DefaultTableModel(header, 0);
@@ -326,7 +566,7 @@ public class SessionGUI {
         jta_cellText.setLineWrap(true);
         jta_cellText.setWrapStyleWord(true);
         JScrollPane jsp_cellText = new JScrollPane(jta_cellText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jsp_cellText.setBounds(380, 460, 350, 100);
+        jsp_cellText.setBounds(180, 460, 350, 200);
 
         // Add ListSelectionListener to the JTable
         jt.getSelectionModel().addListSelectionListener(e -> {
@@ -349,9 +589,19 @@ public class SessionGUI {
         jsp.setBounds(20, 20, 750, 300);
         
         jb_viewDetail = new JButton("View Session Detail");
-        jb_viewDetail.setBounds(500, 420, 150, 30);
+        jb_viewDetail.setBounds(300, 420, 150, 30);
         jb_viewDetail.addActionListener(viewSessionDetailListener);
         frame.add(jb_viewDetail);
+        
+        jb_viewFeatureDetail = new JButton("View Feature Detail");
+        jb_viewFeatureDetail.setBounds(460, 420, 150, 30);
+        jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
+        frame.add(jb_viewFeatureDetail);
+        
+//        jb_viewFeatureDetail = new JButton("View Feature Detail");
+//        jb_viewFeatureDetail.setBounds(660, 420, 150, 30);
+//        jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
+//        frame.add(jb_viewFeatureDetail);
 
         lbl_sessionId = new JLabel("Session ID");
         lbl_sessionId.setBounds(20, 340, 100, 20);
@@ -379,47 +629,92 @@ public class SessionGUI {
         jtf_classifierOutput.setBounds(130, 500, 200, 20);
 
         jb_add = new JButton("Add");
-        jb_add.setBounds(380, 380, 100, 30);
+        jb_add.setBounds(180, 380, 100, 30);
         jb_add.addActionListener(addSessionListener);
 
         jb_delete = new JButton("Delete");
-        jb_delete.setBounds(500, 380, 100, 30);
+        jb_delete.setBounds(300, 380, 100, 30);
         jb_delete.addActionListener(deleteSessionListener);
 
         jb_search = new JButton("Search");
-        jb_search.setBounds(380, 420, 100, 30);
+        jb_search.setBounds(180, 420, 100, 30);
         jb_search.addActionListener(searchSessionListener);
         
         jb_refresh = new JButton("Refresh");
-        jb_refresh.setBounds(620, 380, 100, 30);
+        jb_refresh.setBounds(420, 380, 100, 30);
         jb_refresh.addActionListener(refreshListener);
         frame.add(jb_refresh);
-
-//        jta_cellText = new JTextArea();
-    //    jta_cellText.setBounds(380, 460, 200, 60);
-    //    jta_cellText.setEditable(false);
-        // frame.add(jta_cellText);
-//        frame.add(jta_cellText);
         frame.add(jsp_cellText);
 
         frame.add(jsp);
-        frame.add(lbl_sessionId);
-        frame.add(jtf_sessionId);
-        frame.add(lbl_startTime);
-        frame.add(jtf_startTime);
-        frame.add(lbl_endTime);
-        frame.add(jtf_endTime);
-        frame.add(lbl_datasetPath);
-        frame.add(jtf_datasetPath);
-        frame.add(lbl_classifierOutput);
-        frame.add(jtf_classifierOutput);
         frame.add(jb_add);
         frame.add(jb_delete);
         frame.add(jb_search);
+        // DEBUG
+//        frame.add(lbl_sessionId);
+//        frame.add(jtf_sessionId);
+//        frame.add(lbl_startTime);
+//        frame.add(jtf_startTime);
+//        frame.add(lbl_endTime);
+//        frame.add(jtf_endTime);
+//        frame.add(lbl_datasetPath);
+//        frame.add(jtf_datasetPath);
+//        frame.add(lbl_classifierOutput);
+//        frame.add(jtf_classifierOutput);
 
         frame.setLayout(null);
         frame.setVisible(true);
         populateTable(sessionList);
+    }
+    
+ // FeatureValue Class
+    class FeatureValue {
+        private int sessionId;
+        private String featureName;
+        private String featureValue;
+
+        public FeatureValue(int sessionId, String featureName, String featureValue) {
+            this.sessionId = sessionId;
+            this.featureName = featureName;
+            this.featureValue = featureValue;
+        }
+
+        public int getSessionId() {
+            return sessionId;
+        }
+
+        public String getFeatureName() {
+            return featureName;
+        }
+
+        public String getFeatureValue() {
+            return featureValue;
+        }
+    }
+    
+    // FeatureDetail Class
+    class FeatureDetail {
+        private int sessionId;
+        private String featureName;
+        private String featureParameter;
+
+        public FeatureDetail(int sessionId, String featureName, String featureParameter) {
+            this.sessionId = sessionId;
+            this.featureName = featureName;
+            this.featureParameter = featureParameter;
+        }
+
+        public int getSessionId() {
+            return sessionId;
+        }
+
+        public String getFeatureName() {
+            return featureName;
+        }
+
+        public String getFeatureParameter() {
+            return featureParameter;
+        }
     }
     
  // ClassList class
@@ -427,12 +722,20 @@ public class SessionGUI {
         private int sessionId;
         private String imageName;
         private String imageLabel;
+        private int imageId; // Add the imageId field
 
         public ClassList(int sessionId, String imageName, String imageLabel) {
             this.sessionId = sessionId;
             this.imageName = imageName;
             this.imageLabel = imageLabel;
         }
+
+        public ClassList(int sessionId, String imageName, String imageLabel, int imageId) {
+        this.sessionId = sessionId;
+        this.imageName = imageName;
+        this.imageLabel = imageLabel;
+        this.imageId = imageId;
+    }
 
         public int getSessionId() {
             return sessionId;
@@ -445,6 +748,10 @@ public class SessionGUI {
         public String getImageLabel() {
             return imageLabel;
         }
+
+        public int getImageId() {
+        return imageId;
+    }
     }
 
     // Session class
