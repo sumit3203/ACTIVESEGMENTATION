@@ -51,13 +51,13 @@ public class Active_Segmentation_ implements PlugIn {
 	 */
 	public static void main(String[] args) {
 		 try {
-//			File f=new File(args[0]);
+			File f=new File(args[0]);
 //			args[0] = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\";
 //			File f=new File("C:\\Users\\aarya\\Downloads\\ImageJ\\plugins");
-			 File f=new File("C:\\Users\\aarya\\Downloads\\ImageJ\\plugins");
+//			 File f=new File("C:\\Users\\aarya\\Downloads\\ImageJ\\plugins");
 			if (f.exists() && f.isDirectory() ) {
-				System.setProperty("plugins.dir", "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins");
-				
+				System.setProperty("plugins.dir", args[0]);
+//				System.out.println(System.getProperty("java.class.path"));
 				new ImageJ();
 				Active_Segmentation_ as=new Active_Segmentation_();
 				as.run("");
