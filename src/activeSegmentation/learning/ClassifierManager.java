@@ -69,11 +69,11 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 		projectInfo= dataManager.getMetaInfo();
 		
 		// implement automatic loading based on IFeatureSelection
-//		featureMap.put("activeSegmentation.learning.ID",new ID());
-//		featureMap.put("activeSegmentation.learning.CFS",new CFS());
-//		featureMap.put("activeSegmentation.learning.PCA",new PCA());
-//		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
-//		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
+		featureMap.put("activeSegmentation.learning.ID",new ID());
+		featureMap.put("activeSegmentation.learning.CFS",new CFS());
+		featureMap.put("activeSegmentation.learning.PCA",new PCA());
+		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
+		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
 		
 		try {
 			List<String> jars=projectInfo.getPluginPath();
