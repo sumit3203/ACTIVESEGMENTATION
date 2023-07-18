@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,20 +40,101 @@ public interface IUtil {
 			throw new RuntimeException(directory+" does not exist ");
 		
 		}
-		File[] images = folder.listFiles();
-		if (sortFiles && images.length>1) 
-			images=sortFiles(images);
-		if (images==null) {
-				IJ.log("no files found in "+directory);
-				throw new RuntimeException("no files found in "+directory);
+
+		Stack<File> stack = new Stack<>();
+        stack.push(folder);
+
+		while(!stack.isEmpty()) {
+			File current = stack.pop();
+			if (current.isFile()) {
+				String relativePath = getRelativePath(folder, current);
+               	String newFileName = replaceDotInFileName(current);
+               if (newFileName != null) {
+                //    imageList.add(newFileName);
+				imageList.add(relativePath + File.separator + newFileName);
+               }
+				// imageList.add(current.getName());
+            } else if (current.isDirectory()) {
+            	File[] files = current.listFiles();
+				if (files != null) {
+	                if (sortFiles && files.length > 1) {
+	                    files = sortFiles(files);
+	                }
+	
+	                for (File file : files) {
+	                    if (file.isFile()) {
+							String relativePath = getRelativePath(folder, current);
+	                        String newFileName = replaceDotInFileName(file);
+							imageList.add(relativePath + File.separator + newFileName);
+	                        // imageList.add(newFileName);
+							// imageList.add(file.getName());
+	                    } else if (file.isDirectory()) {
+	                        stack.push(file);
+	                    }
+	                }
+	            } else {
+					IJ.log("no files found in "+directory);
+					throw new RuntimeException("no files found in "+directory);
+				}
+            } else {
+            	IJ.log("no files or folder found in "+ directory);
+				throw new RuntimeException("no files or folder found in "+directory);
+            }
 		}
-		for (File file : images) {
-			if (file.isFile()) {
-				imageList.add(file.getName());
-			}
-		}
+
 		return imageList;
 	}
+
+	default String getRelativePath(File rootDir, File file) {
+        String rootPath = rootDir.getAbsolutePath();
+        String filePath = file.getAbsolutePath();
+        String relativePath = filePath.substring(rootPath.length());
+        return relativePath.startsWith(File.separator) ? relativePath.substring(1) : relativePath;
+    }
+
+	default String replaceDotInFileName(File file) {
+		String fileName = file.getName();
+        int lastDotIndex = fileName.lastIndexOf(".");
+        int firstDotIndex = fileName.indexOf(".");
+
+        if (lastDotIndex != -1) {
+            if (firstDotIndex == lastDotIndex) {
+                return fileName; // no modifications needed
+            }
+
+            // Multiple dots found
+            String baseName = fileName.substring(0, lastDotIndex);
+            String extension = fileName.substring(lastDotIndex + 1);
+            baseName = baseName.replaceAll("\\.", "-");
+
+            // Rename the file in the OS
+            String newFileName = baseName + '.' + extension;
+            File newFile = new File(file.getParentFile(), newFileName);
+            if (file.renameTo(newFile)) {
+                System.out.println("Renamed file: " + file.getName() + " to " + newFileName);
+                return newFileName;
+            } else {
+                System.out.println("Failed to rename file: " + file.getName());
+            }
+        } else {
+            System.out.println("File has no extension: " + fileName);
+        }
+
+        return null;
+	}
+
+	default void renameFilesInDirectory(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    replaceDotInFileName(file);
+                } else if (file.isDirectory()) {
+                    renameFilesInDirectory(file);
+                }
+            }
+        }
+    }
 
 	default public File[] sortFiles(File[] images) {
 		final Pattern p = Pattern.compile("\\d+");
