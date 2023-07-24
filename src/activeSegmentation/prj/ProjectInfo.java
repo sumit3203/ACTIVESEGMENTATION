@@ -206,9 +206,15 @@ public class ProjectInfo{
 	 * 
 	 * @param version
 	 */
-//	public void setVersion(String version) {
-//		this.version = version;
-//	}
+	public boolean lesserVersion(String version) {
+		final int result= this.version.compareToIgnoreCase(version);
+		return (result<0);
+	}
+	
+	public boolean greaterVersion(String version) {
+		final int result= this.version.compareToIgnoreCase(version);
+		return (result>=0);
+	}
 	/**
 	 * 
 	 * @return SEGM: SEGM / CLASSIF
