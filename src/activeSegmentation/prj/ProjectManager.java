@@ -242,11 +242,12 @@ public class ProjectManager implements IUtil{
 		IJ.log(format);
 		for(int i=1; i<=image.getStackSize();i++) {
 			ImageProcessor processor= image.getStack().getProcessor(i);
-			String title= folder+i;
+			String titleFullPath= folder+i;
 			IJ.log(folder);
-			IJ.log(title);
-			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+title);
-			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+title);
+			IJ.log(titleFullPath);
+			String imageTitle = titleFullPath.substring(titleFullPath.lastIndexOf('\\') + 1);
+			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+imageTitle);
+			IJ.saveAs(new ImagePlus(titleFullPath, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+imageTitle);
 		}
 		IJ.log("createStack done");
 	}
@@ -289,7 +290,7 @@ public class ProjectManager implements IUtil{
 			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
 		}
 		*/
-		activeSegJarPath=plugindir+fs+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
+		activeSegJarPath=plugindir+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
 		// activeSegJarPath = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
