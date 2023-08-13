@@ -33,14 +33,14 @@ public interface IUtil {
 	 * @return
 	 */
 	default public List<String> loadImages(String directory, boolean sortFiles){
-		List<String> imageList = loadImagesProjectPath(directory, sortFiles);
+		List<String> imageList = loadImagesSubDirectoryPath(directory, sortFiles);
 		for (int i = 0; i < imageList.size(); i++) {
 			imageList.set(i, imageList.get(i).substring(imageList.get(i).indexOf("\\") + 1));
 		}
 		return imageList;
 	}
 
-	default public List<String> loadImagesProjectPath(String directory, boolean sortFiles){
+	default public List<String> loadImagesSubDirectoryPath(String directory, boolean sortFiles){
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		if (!folder.exists()) {
