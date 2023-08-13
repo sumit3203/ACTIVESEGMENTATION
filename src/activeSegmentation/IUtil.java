@@ -33,6 +33,14 @@ public interface IUtil {
 	 * @return
 	 */
 	default public List<String> loadImages(String directory, boolean sortFiles){
+		List<String> imageList = loadImagesProjectPath(directory, sortFiles);
+		for (int i = 0; i < imageList.size(); i++) {
+			imageList.set(i, imageList.get(i).substring(imageList.get(i).indexOf("\\") + 1));
+		}
+		return imageList;
+	}
+
+	default public List<String> loadImagesProjectPath(String directory, boolean sortFiles){
 		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		if (!folder.exists()) {
@@ -40,6 +48,17 @@ public interface IUtil {
 			throw new RuntimeException(directory+" does not exist ");
 		
 		}
+		// File[] images = folder.listFiles();
+		// if (sortFiles && images.length>1) 
+		// 	images=sortFiles(images);
+		// if (images==null) {
+		// 		IJ.log("no files found in "+directory);
+		// 		throw new RuntimeException("no files found in "+directory);
+		// }
+		// for (File file : images) {
+		// 	if (file.isFile()) {
+		// 		imageList.add(file.getName());
+		// 	}
 
 		Stack<File> stack = new Stack<>();
         stack.push(folder);
@@ -51,7 +70,11 @@ public interface IUtil {
                	String newFileName = replaceDotInFileName(current);
                if (newFileName != null) {
                 //    imageList.add(newFileName);
-				imageList.add(relativePath + File.separator + newFileName);
+				if (relativePath.isEmpty()) {
+					imageList.add(newFileName);
+				} else {
+					imageList.add(relativePath + File.separator + newFileName);
+				}
                }
 				// imageList.add(current.getName());
             } else if (current.isDirectory()) {
@@ -65,8 +88,11 @@ public interface IUtil {
 	                    if (file.isFile()) {
 							String relativePath = getRelativePath(folder, current);
 	                        String newFileName = replaceDotInFileName(file);
-							imageList.add(relativePath + File.separator + newFileName);
-	                        // imageList.add(newFileName);
+	                        if (relativePath.isEmpty()) {
+	        					imageList.add(newFileName);
+	        				} else {
+	        					imageList.add(relativePath + File.separator + newFileName);
+	        				}	                        // imageList.add(newFileName);
 							// imageList.add(file.getName());
 	                    } else if (file.isDirectory()) {
 	                        stack.push(file);
@@ -81,7 +107,9 @@ public interface IUtil {
 				throw new RuntimeException("no files or folder found in "+directory);
             }
 		}
-
+		// for (int i = 0; i < imageList.size(); i++) {
+		// 	imageList.set(i, imageList.get(i).substring(imageList.get(i).indexOf("\\") + 1));
+		// }
 		return imageList;
 	}
 
