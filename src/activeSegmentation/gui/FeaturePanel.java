@@ -30,6 +30,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,6 +133,9 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
 	private ActionEvent SNAP_BUTTON_PRESSED = new ActionEvent( this, 10, "Snap" );
+	
+	private ActionEvent SAVE_SESSION_BUTTON_PRESSED = new ActionEvent(this, 11, "Save Session Data");
+
 
 	private ImagePlus displayImage;
 	/** Used only in classification setting, in segmentation we get from feature manager*/
@@ -257,8 +263,12 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		addButton(new JButton(), "Snap",null,   550, 650, 350, 100, computePanel, SNAP_BUTTON_PRESSED,null);
 		features.add(computePanel);
 		frame.add(features);
+
+		JPanel sessionPanel = new JPanel();
+		addButton(new JButton(), "Save Session Data",null,   750, 750, 150, 100, sessionPanel, SAVE_SESSION_BUTTON_PRESSED,null); // New button
+		features.add(sessionPanel);
+		frame.add(features);
 		
-	
 		/*
 		 *  training/testing panel
 		 *  makes sense only for classification projects because 
@@ -514,6 +524,19 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			IJ.log("Successfully saved regions of interest");
 			//JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		} //end if
+
+		if (event == SAVE_SESSION_BUTTON_PRESSED) {
+			// Handle the save session data action
+			Connection conn = createConnection();
+			System.out.println(conn);
+			System.out.println("success connection");
+			try {
+				featureManager.saveSessionDetails(conn);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		// updaing
 		if(event==UPDATECLASS_BUTTON_PRESSED){
@@ -770,6 +793,33 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		}
 		overlayLUT = new LUT(red, green, blue);
 	}
+
+	// Create database connection
+    private Connection createConnection() {
+        return connStart("C:\\Users\\aarya\\Desktop\\gsoc23\\ACTIVESEGMENTATION\\sqliteTest.db");
+    }
+
+    private Connection connStart(String dbName) {
+		//connecting to database
+    	Connection conn = null;
+		String driver="org.sqlite.JDBC";
+    	String dbUrl="jdbc:sqlite:"+ dbName;
+        try {
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            Class.forName(driver);
+        } catch(Exception ex) {
+            IJ.log("Can't find Database driver class: " + ex);
+            return null;
+        }
+        try {
+            conn = DriverManager.getConnection(dbUrl);
+            IJ.log("Connected to " + dbUrl);
+            return conn;
+        } catch(SQLException ex) {
+            IJ.log("SQLException: " + ex);
+            return null;
+        }
+    }
 	
 	private void updateGui(){
 		try{
