@@ -15,6 +15,11 @@ import weka.core.Instance;
 
 import java.awt.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 //import java.awt.image.*;
 //import java.util.Arrays;
@@ -333,7 +338,7 @@ public class FeatureManager implements IUtil, ASCommon {
 			if( classes.get(key).getTrainingRois(imageKey)!=null) {
 				roiList.addAll(classes.get(key).getTrainingRois(imageKey));
 			}
-			//System.out.println(roiList.size());
+			// System.out.println(roiList.size());
 			return roiList;
 		}
 		else if(LearningType.valueOf(type).equals(LearningType.TESTING)){
@@ -512,6 +517,80 @@ public class FeatureManager implements IUtil, ASCommon {
 		}
 
 		projectManager.writeMetaInfo(projectInfo);
+	}
+	
+	public void saveSessionDetails(Connection con) throws SQLException {
+		// process data
+		Map<Roi, String> roiImageMap = new HashMap<>(); // ROI -- image
+		Map<String, String> imageLabel = new HashMap<>(); // Image -- class_label
+		for(Map.Entry<String, ClassInfo> entry : classes.entrySet()) {
+			String classLabel = entry.getKey();
+			ClassInfo cinfo = entry.getValue();
+			// training
+			for(String imageName : cinfo.getTrainingRoiSlices()) {
+				for(Roi rois : cinfo.getTrainingRois(imageName)) {
+					roiImageMap.put(rois, imageName);
+				}
+				imageLabel.put(imageName, classLabel);
+			}
+			// testing
+			for(String imageName : cinfo.getTestingRoiSlices()) {
+				for(Roi rois : cinfo.getTestingRois(imageName)) {
+					roiImageMap.put(rois, imageName);
+				}
+				imageLabel.put(imageName, classLabel);
+			}
+		}
+		
+		Map<String, Set<String>> featuresMap = projectInfo.getFeatureNames();
+		
+		
+		// sql queries
+		
+		Statement statement = con.createStatement();
+
+        String query = "SELECT COUNT(*) AS count FROM sessions";
+        ResultSet resultSet = statement.executeQuery(query);
+        int sessionID = 1;
+        if (resultSet.next()) {
+            int rowCount = resultSet.getInt("count");
+            System.out.println("Number of rows in 'sessions' table: " + rowCount);
+            sessionID = rowCount + 1;
+        }
+        int imageID = 0;
+        for(String imageName : imageLabel.keySet()) {
+        	imageID++;
+	        String update="INSERT INTO class_list (session_id, image_name, class_label) "
+	        		+ 				"VALUES  ( ?, ?, ?)";
+	    	PreparedStatement ips=con.prepareStatement(update);
+			ips.setInt(1, sessionID);
+	    	ips.setString(2, imageName); // image_name.png
+	    	ips.setString(3, imageLabel.get(imageName)); // class_label
+	    	ips.executeUpdate();
+			
+	    	update="INSERT INTO images ( session_id, image_id, image_name) "
+	        		+ 				"VALUES  (  ?, ?, ?)";
+	    	//inserting into vectors list the image names	        
+	        PreparedStatement  vps = con.prepareStatement(update);   
+			vps.setInt(1, sessionID);
+			vps.setInt(2, imageID);
+		    vps.setString(3, imageName);
+		    vps.executeUpdate();
+        }
+        
+        for(String featureName : featuresMap.keySet()) {
+	        String update="INSERT INTO features (session_id, feature_name, feature_parameter) "
+	        		+ 				"VALUES  (?, ?, ?)";
+		    PreparedStatement fnps = con.prepareStatement(update);
+		    for(String featureParameter : featuresMap.get(featureName)) {
+			    fnps.setInt(1, sessionID);
+			    fnps.setString(2, featureName);    
+				imageID++;
+				fnps.setString(3, featureParameter);
+				fnps.executeUpdate();
+		    }
+        }
+        
 	}
 
 	/**
