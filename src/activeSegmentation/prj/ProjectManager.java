@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import activeSegmentation.ASCommon;
 import static activeSegmentation.ASCommon.*;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IMoment;
 import activeSegmentation.IUtil;
 import activeSegmentation.ProjectType;
 
@@ -38,6 +39,7 @@ public class ProjectManager implements IUtil{
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegJarPath;
 	private Map<String,String> projectDir=new HashMap<>();
+	private Map<String, IMoment<?>> computedMomentMap= new HashMap<>();
 
 	/**
 	 * 
@@ -190,10 +192,10 @@ public class ProjectManager implements IUtil{
 			
 			}else {
 				// TRAINING IMAGE FOLDER
-				List<String> images=loadImages(trainingImage, true);
+				List<String> images=loadImagesSubDirectoryPath(trainingImage, true);
 				for(String image: images) {
 					ImagePlus currentImage=IJ.openImage(trainingImage+fs+image);
-					createImages(image, currentImage);
+					createImages(image.substring(image.lastIndexOf("\\") + 1), currentImage);
 				}
 			}
 			
@@ -274,6 +276,23 @@ public class ProjectManager implements IUtil{
 		return message;
 	}
 
+	
+	/**
+	 * 
+	 * @return computedMomentMap
+	 */
+    public Map<String, IMoment<?>> getComputedMomentMap() {
+        return computedMomentMap;
+    }
+
+    /**
+	 * 
+	 * @param computedMomentMap
+	 */
+    public void setComputedMomentMap(Map<String, IMoment<?>> computedMomentMap) {
+        this.computedMomentMap = computedMomentMap;
+    }
+
 	/**
 	 * 
 	 */
@@ -293,6 +312,7 @@ public class ProjectManager implements IUtil{
 		activeSegJarPath=plugindir+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
 		// activeSegJarPath = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
+		System.out.println("activeSegPath=" + activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
 	}
 
