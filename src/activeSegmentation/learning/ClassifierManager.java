@@ -23,7 +23,7 @@ import weka.classifiers.AbstractClassifier;
 
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-
+import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
@@ -58,6 +58,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 	private String trainingStartTimeFormatted;
 	private String trainingEndTimeFormatted;
 	private String classifierOutput;
+	private Map<String, Double> classProbabilitiesMap;
 	
 	public static final int PREDERR=-1;
 	
@@ -226,6 +227,31 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 				currentClassifier.buildClassifier(dataset);
 			trainingEndTime = LocalDateTime.now();
 
+
+			Instances instances = dataset.getDataset();
+			int numClasses = instances.numClasses();
+			double[] averageClassProbabilities = new double[numClasses];
+
+			for (int i = 0; i < instances.numInstances(); i++) {
+				Instance instance = instances.instance(i);
+				double[] classProbabilities = currentClassifier.distributionForInstance(instance);
+				
+				for (int classIndex = 0; classIndex < numClasses; classIndex++) {
+					averageClassProbabilities[classIndex] += classProbabilities[classIndex];
+				}
+			}
+
+			int numInstances = instances.numInstances();
+
+			Map<String, Double> classLabelProbabilityMap = new HashMap<>();
+			for (int classIndex = 0; classIndex < numClasses; classIndex++) {
+				String classLabel = instances.classAttribute().value(classIndex);
+				double averageProbability = averageClassProbabilities[classIndex] / numInstances;
+				classLabelProbabilityMap.put(classLabel, averageProbability);
+			}
+			this.setClassProbabilitiesMap(classLabelProbabilityMap);
+			System.out.println(classLabelProbabilityMap);
+
 			// Define the date-time format
 			String formatPattern = "yyyy-MM-dd HH:mm:ss";
 
@@ -367,6 +393,25 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 		}
 		return PREDERR;
 	}
+
+	/**
+	 * 
+	 * @param
+	 * @return classProbabilitiesMap
+	 */
+	public Map<String, Double> getClassProbabilitiesMap() {
+        return classProbabilitiesMap;
+    }
+
+
+	/**
+	 * 
+	 * @param classProbabilitiesMap
+	 * @return
+	 */
+    public void setClassProbabilitiesMap(Map<String, Double> classProbabilitiesMap) {
+        this.classProbabilitiesMap = classProbabilitiesMap;
+    }
 
 
 	/**
