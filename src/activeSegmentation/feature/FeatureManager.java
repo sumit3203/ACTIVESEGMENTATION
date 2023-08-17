@@ -10,6 +10,7 @@ import ij.io.RoiEncoder;
 import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
+import ijaux.datatype.Pair;
 //import ij.process.ImageProcessor;
 import weka.core.Instance;
 
@@ -20,18 +21,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
 //import java.awt.image.*;
 //import java.util.Arrays;
 //import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 //import java.util.Random;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -521,42 +517,73 @@ public class FeatureManager implements IUtil, ASCommon {
 	
 	public void saveSessionDetails(Connection con) throws SQLException {
 		// process data
-		Map<Roi, String> roiImageMap = new HashMap<>(); // ROI -- image
+		Map<String, String> roiImageMap = new HashMap<>(); // ROI -- image
 		Map<String, String> imageLabel = new HashMap<>(); // Image -- class_label
 		for(Map.Entry<String, ClassInfo> entry : classes.entrySet()) {
-			String classLabel = entry.getKey();
-			ClassInfo cinfo = entry.getValue();
-			// training
-			for(String imageName : cinfo.getTrainingRoiSlices()) {
-				for(Roi rois : cinfo.getTrainingRois(imageName)) {
-					roiImageMap.put(rois, imageName);
+			if(projectInfo.getGroundtruth().isEmpty()) {
+				String classLabel = entry.getKey();
+				ClassInfo cinfo = entry.getValue();
+				// training
+				for(String imageName : cinfo.getTrainingRoiSlices()) {
+					for(Roi rois : cinfo.getTrainingRois(imageName)) {
+						roiImageMap.put(rois.getName(), imageName);
+					}
+					imageLabel.put(imageName, classLabel);
 				}
-				imageLabel.put(imageName, classLabel);
-			}
-			// testing
-			for(String imageName : cinfo.getTestingRoiSlices()) {
-				for(Roi rois : cinfo.getTestingRois(imageName)) {
-					roiImageMap.put(rois, imageName);
+				// testing
+				for(String imageName : cinfo.getTestingRoiSlices()) {
+					for(Roi rois : cinfo.getTestingRois(imageName)) {
+						roiImageMap.put(rois.getName(), imageName);
+					}
+					imageLabel.put(imageName, classLabel);
 				}
-				imageLabel.put(imageName, classLabel);
 			}
 		}
 		
-		Map<String, Set<String>> featuresMap = projectInfo.getFeatureNames();
+		Map<String, Set<String>> featuresMap = projectInfo.getFeatureNames(); // FeatureName - FeatureParameters
 		
+		Map<String, List<Pair<String, double[]>>> imageFeatureValues = new HashMap<>(); // Image - <FeatureName, [values]>
 		
+		for (Map.Entry<String, IMoment<?>> entry : projectManager.getComputedMomentMap().entrySet()) {
+            String featureName = entry.getKey();
+            IMoment<?> moment = entry.getValue();
+			ArrayList<Pair<String, double[]>> moment_vector = (ArrayList<Pair<String, double[]>>) moment.getFeatures();
+			if(moment_vector == null) {
+				continue;
+			}
+			for(Pair<String, double[]> momentPair : moment_vector) {
+				String roi = momentPair.first;
+				double[] roiValues = momentPair.second;
+				String imageOrigin = roiImageMap.get(roi);
+				imageFeatureValues.putIfAbsent(imageOrigin, new ArrayList<>());
+				imageFeatureValues.get(imageOrigin).add(new Pair<String, double[]>(featureName, roiValues));
+			}
+        }
 		// sql queries
 		
 		Statement statement = con.createStatement();
 
-        String query = "SELECT COUNT(*) AS count FROM sessions";
-        ResultSet resultSet = statement.executeQuery(query);
-        int sessionID = 1;
-        if (resultSet.next()) {
-            int rowCount = resultSet.getInt("count");
-            System.out.println("Number of rows in 'sessions' table: " + rowCount);
-            sessionID = rowCount + 1;
-        }
+		String query = "SELECT MAX(ss_id) AS max_ss_id FROM sessions";
+		ResultSet resultSet = statement.executeQuery(query);
+		int sessionID = 1;
+
+		if (resultSet.next()) {
+		    int maxSSID = resultSet.getInt("max_ss_id");
+		    
+		    if (!resultSet.wasNull()) { // Check if max_ss_id is not null
+		        sessionID = maxSSID + 1;
+		    }
+		}
+
+		String sql = "INSERT INTO sessions (session_id, start_time, end_time, dataset_path, classifier_output) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setInt(1, sessionID);
+		pstmt.setString(2, learningManager.getTrainingStartTimeFormatted());
+		pstmt.setString(3, learningManager.getTrainingEndTimeFormatted());
+		pstmt.setString(4, projectInfo.getProjectPath());
+		pstmt.setString(5, learningManager.getClassifierOutput());
+		pstmt.executeUpdate();
+		
         int imageID = 0;
         for(String imageName : imageLabel.keySet()) {
         	imageID++;
@@ -576,6 +603,23 @@ public class FeatureManager implements IUtil, ASCommon {
 			vps.setInt(2, imageID);
 		    vps.setString(3, imageName);
 		    vps.executeUpdate();
+
+			// process feature values here for each image
+			String fvQuery="INSERT INTO features_values (session_id, image_id, feature_name, feature_value) "
+			        		+ 				"VALUES  (?,?,?,?)";
+			PreparedStatement fvps=con.prepareStatement(fvQuery);
+			for(Pair<String, double[]> featurePair : imageFeatureValues.get(imageName)) {
+				String featureName = featurePair.first;
+				for(double fValue : featurePair.second) {
+					fvps.setInt(1,sessionID);
+					fvps.setInt(2,imageID - 1);
+					fvps.setString(3, featureName);
+					fvps.setDouble(4, fValue);
+					fvps.executeUpdate();
+//					fvps.clearParameters();
+//					fvps.close();
+				}
+			}
         }
         
         for(String featureName : featuresMap.keySet()) {
@@ -590,6 +634,7 @@ public class FeatureManager implements IUtil, ASCommon {
 				fnps.executeUpdate();
 		    }
         }
+        System.out.println("Session Stored Successfully");
         
 	}
 
