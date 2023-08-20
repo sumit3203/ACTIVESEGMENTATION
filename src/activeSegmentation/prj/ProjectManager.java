@@ -78,6 +78,11 @@ public class ProjectManager implements IUtil{
 				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
+				String loadedVersion = projectInfo.getVersion();
+				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
+					performVersionMigration(loadedVersion);
+				}
+
 				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
@@ -107,6 +112,21 @@ public class ProjectManager implements IUtil{
 
 		return true;
 	}
+
+	public void performVersionMigration(String loadedVersion) {
+        if (!ProjectInfo.compatibleVersion.equals(loadedVersion)) {
+            // Perform migration steps based on version changes
+            if (loadedVersion.compareTo(ProjectInfo.compatibleVersion) < 0) {
+                // Initialize a new field or load external resources to add
+                // newField = "default_value";
+            }
+            // Add more migration steps for other versions as needed
+
+            // Update the version to the current compabtible version
+            projectInfo.setVersion(ProjectInfo.compatibleVersion);
+			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
+        }
+    }
 
 	/**
 	 * 
