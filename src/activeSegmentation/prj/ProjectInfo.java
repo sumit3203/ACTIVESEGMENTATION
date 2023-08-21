@@ -36,7 +36,9 @@ public class ProjectInfo{
 	
 	public String comment = "Default Comment";
 	
-	public final String version="1.0.7";
+	public String version="1.0.7";
+
+	public final static String compatibleVersion="1.0.7";
 	
 	public String helpURL=""; 
 	
@@ -206,9 +208,9 @@ public class ProjectInfo{
 	 * 
 	 * @param version
 	 */
-//	public void setVersion(String version) {
-//		this.version = version;
-//	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 	/**
 	 * 
 	 * @return SEGM: SEGM / CLASSIF
