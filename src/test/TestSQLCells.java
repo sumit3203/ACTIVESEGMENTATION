@@ -67,10 +67,10 @@ public class TestSQLCells {
 	private Connection con;
 	private int vid=1;
 	private int imageID = 1;
-	private int sessionID = 1;
+	private int sessionID = 8; // session id to be created
 	LocalDateTime trainingStartTime;
 	LocalDateTime trainingEndTime;
-	static String datasetPath = "C:\\Users\\aarya\\Desktop\\small_data";
+	static String datasetPath = "C:\\Users\\aarya\\Desktop\\small_data"; // datasetPath to use
 	private Map<Pair<String, String>, double[]> imageFeatureMap = new HashMap<>();
 	
 
@@ -91,11 +91,9 @@ public class TestSQLCells {
 		new ImageJ();
 		TestSQLCells test= new TestSQLCells();
 		System.out.println("RUNNING SQL TEST");
-//		String directory="C:\\Users\\billa\\Documents\\hela_test2\\";
-//		String directory = "C:\\Users\\aarya\\Downloads\\hela";
 		if (args.length != 0) {
 		    datasetPath = args[0];
-		  }
+		}
 		String directory = datasetPath;
 		test.run(directory);
 	}
@@ -155,14 +153,9 @@ public class TestSQLCells {
 
 			String insertQuery = "INSERT INTO sessions (session_id, start_time, end_time, dataset_path, classifier_output) VALUES (?, ?, ?, ?, ?)";
 			PreparedStatement insertStatement = con.prepareStatement(insertQuery);
-
-			// Timestamp startTimestamp = Timestamp.valueOf(trainingStartTime);
-			// Timestamp endTimestamp = Timestamp.valueOf(trainingEndTime);
-
 			// Define the desired date-time format
 			String formatPattern = "yyyy-MM-dd HH:mm:ss";
 
-			// Create a DateTimeFormatter with the specified format pattern
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
 	
 			// Format the LocalDateTime object using the formatter
@@ -176,12 +169,6 @@ public class TestSQLCells {
 			insertStatement.setString(5, eval.toSummaryString("\nResults\n======\n", false));
 			insertStatement.executeUpdate();
 			con.close();
-			
-			//Evaluation eval1 = new Evaluation(newdata);
-			//Instances testNewData = testData;
-			//eval1.evaluateModel(randomForest, testNewData);
-			//System.out.println(eval1.toSummaryString("\nResults\n======\n", false));
-			//System.out.println(eval1.toClassDetailsString());
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
