@@ -519,10 +519,13 @@ public class FeatureManager implements IUtil, ASCommon {
 		// process data
 		Map<String, String> roiImageMap = new HashMap<>(); // ROI -- image
 		Map<String, String> imageLabel = new HashMap<>(); // Image -- class_label
+		Map<String, String> labelNameClass = new HashMap<>();
 		for(Map.Entry<String, ClassInfo> entry : classes.entrySet()) {
 			if(projectInfo.getGroundtruth().isEmpty()) {
+				System.out.println("No ground truth designated for " + entry.getKey());
 				String classLabel = entry.getKey();
 				ClassInfo cinfo = entry.getValue();
+				labelNameClass.put(cinfo.getLabel(), classLabel);
 				// training
 				for(String imageName : cinfo.getTrainingRoiSlices()) {
 					for(Roi rois : cinfo.getTrainingRois(imageName)) {
@@ -621,6 +624,19 @@ public class FeatureManager implements IUtil, ASCommon {
 				}
 			}
         }
+
+		for(Map.Entry<String, String> entry : labelNameClass.entrySet()) {
+			String labelName = entry.getKey();
+			String clabel = entry.getValue();
+			Double probability = learningManager.getClassProbabilitiesMap().get(labelName);
+			String update="INSERT INTO class_probabilities (session_id, class_label, probability) "
+	        		+ 				"VALUES  (?, ?, ?)";
+		    PreparedStatement cpps = con.prepareStatement(update);
+			cpps.setInt(1, sessionID);
+			cpps.setString(2, clabel);    
+			cpps.setDouble(3, probability);
+			cpps.executeUpdate();
+		}
         
         for(String featureName : featuresMap.keySet()) {
 	        String update="INSERT INTO features (session_id, feature_name, feature_parameter) "
