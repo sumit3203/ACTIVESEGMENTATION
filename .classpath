@@ -5,28 +5,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="jars/Auto_Threshold.jar"/>
-	<classpathentry kind="lib" path="jars/BeanShell.jar"/>
-	<classpathentry kind="lib" path="jars/chiSquaredAttributeEval.jar"/>
-	<classpathentry kind="lib" path="jars/dsplib-1-0.jar"/>
-	<classpathentry kind="lib" path="jars/fastCorrBasedFS.jar"/>
-	<classpathentry kind="lib" path="jars/FastRandomForest_0.99.jar"/>
-	<classpathentry kind="lib" path="jars/fftscale-1-0.jar"/>
-	<classpathentry kind="lib" path="jars/jackson-annotations-2.3.1.jar"/>
-	<classpathentry kind="lib" path="jars/jackson-core-2.3.1.jar"/>
-	<classpathentry kind="lib" path="jars/jackson-databind-2.3.1.jar"/>
-	<classpathentry kind="lib" path="jars/java-cup-0.11a.jar"/>
-	<classpathentry kind="lib" path="jars/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="jars/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="jars/mtj-1.0.4.jar"/>
-	<classpathentry kind="lib" path="jars/pentaho-package-manager-1.0.8.jar"/>
-	<classpathentry kind="lib" path="jars/pixlib-1-0.jar"/>
-	<classpathentry kind="lib" path="jars/scale-1-0.jar"/>
-	<classpathentry kind="lib" path="jars/sqlite-jdbc-3.36.0.3.jar"/>
-	<classpathentry kind="lib" path="jars/SVMAttributeEval-1.0.1.jar"/>
-	<classpathentry kind="lib" path="jars/weka.jar"/>
-	<classpathentry kind="lib" path="C:/Users/aarya/Downloads/ImageJ/ij.jar"/>
-	<classpathentry kind="lib" path="C:/Users/aarya/Downloads/sqlite-jdbc-3.42.0.0.jar"/>
+=======
+	<classpathentry kind="lib" path="C:/sqlite/client-0.0.5.jar"/>
+	<classpathentry kind="lib" path="C:/sqlite/sqlite-jdbc-3.42.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

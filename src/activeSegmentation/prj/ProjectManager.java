@@ -66,7 +66,7 @@ public class ProjectManager implements IUtil{
 	public boolean loadProject(String fileName) {
 		//IJ.log(System.getProperty("plugins.dir"));
 		IJ.log("loading project ...");
-		setDirectory();
+		setASpath();
 		if(projectInfo==null){
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -85,6 +85,11 @@ public class ProjectManager implements IUtil{
 				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
+				String loadedVersion = projectInfo.getVersion();
+				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
+					performVersionMigration(loadedVersion);
+				}
+
 				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
@@ -123,7 +128,6 @@ public class ProjectManager implements IUtil{
                 // newField = "default_value";
             }
             // Add more migration steps for other versions as needed
-            
             // Update the version to the current compabtible version
             projectInfo.setVersion(ProjectInfo.compatibleVersion);
 			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
@@ -184,7 +188,7 @@ public class ProjectManager implements IUtil{
 		if(!returnedMessage.equalsIgnoreCase(message)) {
 			return returnedMessage;
 		}
-		setDirectory();
+		setASpath();
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory+ fs+projectName);
 	
@@ -316,17 +320,14 @@ public class ProjectManager implements IUtil{
 	/**
 	 * 
 	 */
-	private void setDirectory() {
-		//String OS = System.getProperty("os.name").toLowerCase();
-		//IJ.log(OS);
+	private void setASpath() {
 		String plugindir=IJ.getDir("imagej");
 		IJ.log(plugindir);
-		/*
-		if( (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 )) {
-			activeSegJarPath=plugindir+"//plugins//activeSegmentation//ACTIVE_SEG.jar";
-		}
-		else {
-			activeSegJarPath=plugindir+"\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";	
+		// add an option for main plugin folder + check for IJ property
+		String aspath=(String) IJ.getProperty("AS_pluginpath");
+		System.out.println("ppath "+aspath);
+		if (aspath==null) {
+			aspath= "activeSegmentation";
 		}
 		*/
 		activeSegJarPath=plugindir+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";

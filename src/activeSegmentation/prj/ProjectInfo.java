@@ -37,7 +37,7 @@ public class ProjectInfo{
 	public String comment = "Default Comment";
 	
 	public String version="1.0.7";
-	
+
 	public final static String compatibleVersion="1.0.7";
 	
 	public String helpURL=""; 
@@ -208,6 +208,16 @@ public class ProjectInfo{
 	 * 
 	 * @param version
 	 */
+	public boolean lesserVersion(String version) {
+		final int result= this.version.compareToIgnoreCase(version);
+		return (result<0);
+	}
+	
+	public boolean greaterVersion(String version) {
+		final int result= this.version.compareToIgnoreCase(version);
+		return (result>=0);
+	}
+	
 	public void setVersion(String version) {
 		this.version = version;
 	}
