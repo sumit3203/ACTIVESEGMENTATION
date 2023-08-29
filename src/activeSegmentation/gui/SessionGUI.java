@@ -168,29 +168,33 @@ public class SessionGUI {
             stmt.execute(sql);
             System.out.println("Table and View created successfully.");
             
-            // Create session_view
-            sql = "CREATE VIEW IF NOT EXISTS session_view AS " +
-                    "SELECT ss_id, session_id, start_time, end_time " +
-                    "FROM sessions;";
-            stmt.execute(sql);
-            
-            // Create class_list_view
-            sql = "CREATE VIEW IF NOT EXISTS class_list_view AS " +
-                    "SELECT session_id, image_name, class_label " +
-                    "FROM class_list;";
-            stmt.execute(sql);
-            
-            // Create feature_view
-            sql = "CREATE VIEW IF NOT EXISTS feature_view AS " +
-                    "SELECT session_id, feature_name, feature_parameter " +
-                    "FROM features;";
-            stmt.execute(sql);
-            
-            // Create feature_values_view
-            sql = "CREATE VIEW IF NOT EXISTS feature_values_view AS " +
-                    "SELECT session_id, image_id, feature_name, feature_value " +
-                    "FROM features_values;";
-            stmt.execute(sql);
+            String createSessionDetailsView = "CREATE VIEW IF NOT EXISTS session_details_view AS " +
+            "SELECT s.session_id, s.start_time, s.end_time, i.image_id, i.image_name " +
+            "FROM sessions s " +
+            "INNER JOIN images i ON s.session_id = i.session_id;";
+            stmt.execute(createSessionDetailsView);
+
+            String createClassListDetailsView = "CREATE VIEW IF NOT EXISTS class_list_details_view AS " +
+            "SELECT cl.session_id, cl.image_name, cl.class_label, i.image_id " +
+            "FROM class_list cl " +
+            "INNER JOIN images i ON cl.session_id = i.session_id AND cl.image_name = i.image_name;";
+            stmt.execute(createClassListDetailsView);
+
+            String createFeatureDetailsView = "CREATE VIEW IF NOT EXISTS feature_details_view AS " +
+            "SELECT f.session_id, f.feature_name, f.feature_parameter " +
+            "FROM features f;";
+            stmt.execute(createFeatureDetailsView);
+
+            String createClassProbabilitiesView = "CREATE VIEW IF NOT EXISTS class_probabilities_view AS " +
+            "SELECT cp.session_id, cp.class_label, cp.probability " +
+            "FROM class_probabilities cp;";
+            stmt.execute(createClassProbabilitiesView);
+
+            String createFeatureValuesView = "CREATE VIEW IF NOT EXISTS feature_values_view AS " +
+            "SELECT fv.session_id, fv.image_id, fv.feature_name, fv.feature_value " +
+            "FROM features_values fv;";
+            stmt.execute(createFeatureValuesView);
+
             System.out.println("Table and View created successfully.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -418,7 +422,7 @@ public class SessionGUI {
     private int getImageId(int sessionId, String imageName) {
         int imageId = -1; // Default value if not found
         try {
-            String sql = "SELECT image_id FROM images WHERE session_id = ? AND image_name = ?";
+            String sql = "SELECT image_id FROM session_details_view WHERE session_id = ? AND image_name = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             pstmt.setString(2, imageName);
@@ -508,36 +512,24 @@ public class SessionGUI {
             conn.setAutoCommit(false);
     
             // delete related records in other tables
-            String deleteClassListSQL = "DELETE FROM class_list WHERE session_id = ?";
-            PreparedStatement deleteClassListStmt = conn.prepareStatement(deleteClassListSQL);
-            deleteClassListStmt.setInt(1, sessionId);
-            deleteClassListStmt.executeUpdate();
-
-            String deleteClassProbabilitiesSQL = "DELETE FROM class_probabilities WHERE session_id = ?";
-            PreparedStatement deleteClassProbabilitiesStmt = conn.prepareStatement(deleteClassProbabilitiesSQL);
-            deleteClassProbabilitiesStmt.setInt(1, sessionId);
-            deleteClassProbabilitiesStmt.executeUpdate();
-
-            String deleteFeaturesSQL = "DELETE FROM features WHERE session_id = ?";
-            PreparedStatement deleteFeaturesStmt = conn.prepareStatement(deleteFeaturesSQL);
-            deleteFeaturesStmt.setInt(1, sessionId);
-            deleteFeaturesStmt.executeUpdate();
-
-            String deleteFeaturesValuesSQL = "DELETE FROM features_values WHERE session_id = ?";
-            PreparedStatement deleteFeaturesValuesStmt = conn.prepareStatement(deleteFeaturesValuesSQL);
-            deleteFeaturesValuesStmt.setInt(1, sessionId);
-            deleteFeaturesValuesStmt.executeUpdate();
-
-            String deleteImagesSQL = "DELETE FROM images WHERE session_id = ?";
-            PreparedStatement deleteImagesStmt = conn.prepareStatement(deleteImagesSQL);
-            deleteImagesStmt.setInt(1, sessionId);
-            deleteImagesStmt.executeUpdate();
+            String[] deleteQueries = {
+                "DELETE FROM class_list WHERE session_id = ?",
+                "DELETE FROM class_probabilities WHERE session_id = ?",
+                "DELETE FROM features WHERE session_id = ?",
+                "DELETE FROM features_values WHERE session_id = ?",
+                "DELETE FROM images WHERE session_id = ?",
+                "DELETE FROM sessions WHERE session_id = ?"
+            };
     
-            // delete the session from the "sessions" table
-            String deleteSessionSQL = "DELETE FROM sessions WHERE session_id = ?";
-            PreparedStatement deleteSessionStmt = conn.prepareStatement(deleteSessionSQL);
-            deleteSessionStmt.setInt(1, sessionId);
-            deleteSessionStmt.executeUpdate();
+            // Create an array of prepared statements
+            PreparedStatement[] deleteStatements = new PreparedStatement[deleteQueries.length];
+    
+            for (int i = 0; i < deleteQueries.length; i++) {
+                deleteStatements[i] = conn.prepareStatement(deleteQueries[i]);
+                deleteStatements[i].setInt(1, sessionId);
+                deleteStatements[i].executeUpdate();
+                deleteStatements[i].close();
+            }
     
             // Commit the transaction
             conn.commit();
@@ -559,11 +551,12 @@ public class SessionGUI {
         }
     }
     
+    
  // Load class_list values into the GUI
     private ArrayList<ClassList> getClassListBySessionId(int sessionId) {
         ArrayList<ClassList> classList = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM class_list WHERE session_id = ?";
+            String sql = "SELECT * FROM class_list_details_view WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
@@ -582,7 +575,7 @@ public class SessionGUI {
 private double getClassProbability(int sessionId, String classLabel) {
     double probability = 0.0;
     try {
-        String sql = "SELECT probability FROM class_probabilities WHERE session_id = ? AND class_label = ?";
+        String sql = "SELECT probability FROM class_probabilities_view WHERE session_id = ? AND class_label = ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, sessionId);
         pstmt.setString(2, classLabel);
@@ -601,7 +594,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     private ArrayList<FeatureDetail> getFeatureListBySessionId(int sessionId) {
         ArrayList<FeatureDetail> featureList = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM features WHERE session_id = ?";
+            String sql = "SELECT * FROM feature_details_view WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
@@ -620,7 +613,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     private ArrayList<FeatureValue> getFeatureValues(int sessionId, int imageId) {
         ArrayList<FeatureValue> featureValues = new ArrayList<>();
         try {
-            String sql = "SELECT feature_name, feature_value FROM features_values WHERE session_id = ? AND image_id = ?";
+            String sql = "SELECT feature_name, feature_value FROM feature_values_view WHERE session_id = ? AND image_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             pstmt.setInt(2, imageId);
