@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class SessionGUI {
-    // Declare the variables and objects
     JTextField jtf_sessionId, jtf_startTime, jtf_endTime, jtf_datasetPath, jtf_classifierOutput;
     JButton jb_add, jb_delete, jb_search, jb_viewDetail;
     JTable jt;
@@ -169,7 +168,6 @@ public class SessionGUI {
             stmt.execute(sql);
             System.out.println("Table and View created successfully.");
             
-            // Add the SQL views here
             // Create session_view
             sql = "CREATE VIEW IF NOT EXISTS session_view AS " +
                     "SELECT ss_id, session_id, start_time, end_time " +
@@ -323,7 +321,7 @@ public class SessionGUI {
                 System.out.println("sessionId = " + sessionId);
                 ArrayList<ClassList> classList = getClassListBySessionId(sessionId);
     
-                // Create and populate a new table to show session details
+                // Populate a new table to show session details
                 Object[][] classListData = new Object[classList.size()][4];
                 for (int i = 0; i < classList.size(); i++) {
                     ClassList classItem = classList.get(i);
@@ -365,7 +363,6 @@ public class SessionGUI {
                         ArrayList<FeatureValue> featureValues = getFeatureValues(sessionId, imageId);
                         Object[][] featureValuesData = new Object[featureValues.size()][3];
                         for (int i = 0; i < featureValues.size(); i++) {
-                    // Your code for viewing feature values goes here
                             FeatureValue featureValue = featureValues.get(i);
                             featureValuesData[i] = new Object[] {
                                 featureValue.getSessionId(),
@@ -381,8 +378,6 @@ public class SessionGUI {
                         JTable featureValuesTable = new JTable(featureValuesData, featureValuesHeader);
                         JScrollPane featureValuesScrollPane = new JScrollPane(featureValuesTable);
                         featureValuesTable.setFillsViewportHeight(true);
-                        // Show the table in a dialog
-                        // JOptionPane.showMessageDialog(null, featureValuesScrollPane, "Feature Values", JOptionPane.PLAIN_MESSAGE);
                         JFrame featureValuesFrame = new JFrame(imageName + " values");
                         featureValuesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         featureValuesFrame.getContentPane().add(featureValuesScrollPane);
@@ -406,11 +401,11 @@ public class SessionGUI {
                 sessionDetailFrame.pack();
                 sessionDetailFrame.setVisible(true);
     
-                // You can add a WindowListener to detect when the user closes the "Session Detail" GUI
                 sessionDetailFrame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
                         // Handle any cleanup or actions when the user closes the "Session Detail" GUI
                         // For example, enable interaction with the parent frame here if needed.
+                        // or close feature_values GUI
                     }
                 });
             } else {
@@ -538,9 +533,7 @@ public class SessionGUI {
             deleteImagesStmt.setInt(1, sessionId);
             deleteImagesStmt.executeUpdate();
     
-            // Repeat the above steps for other related tables
-    
-            // Then, delete the session from the "sessions" table
+            // delete the session from the "sessions" table
             String deleteSessionSQL = "DELETE FROM sessions WHERE session_id = ?";
             PreparedStatement deleteSessionStmt = conn.prepareStatement(deleteSessionSQL);
             deleteSessionStmt.setInt(1, sessionId);
@@ -740,9 +733,9 @@ private double getClassProbability(int sessionId, String classLabel) {
         jtf_classifierOutput = new JTextField();
         jtf_classifierOutput.setBounds(130, 500, 200, 20);
 
-        jb_add = new JButton("Add");
-        jb_add.setBounds(180, 380, 100, 30);
-        jb_add.addActionListener(addSessionListener);
+        // jb_add = new JButton("Add");
+        // jb_add.setBounds(180, 380, 100, 30);
+        // jb_add.addActionListener(addSessionListener);
 
         jb_delete = new JButton("Delete");
         jb_delete.setBounds(300, 380, 100, 30);
@@ -759,7 +752,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         frame.add(jsp_cellText);
 
         frame.add(jsp);
-        frame.add(jb_add);
+//        frame.add(jb_add);
         frame.add(jb_delete);
         frame.add(jb_search);
         // DEBUG
