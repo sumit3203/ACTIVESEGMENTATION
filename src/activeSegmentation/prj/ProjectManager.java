@@ -80,7 +80,8 @@ public class ProjectManager implements IUtil{
 		 
 				String loadedVersion = projectInfo.getVersion();
 				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
-					performVersionMigration(loadedVersion);
+					//performVersionMigration(loadedVersion);
+					IJ.error(loadedVersion+ " is incompatible with " + ProjectInfo.compatibleVersion);
 				}
 
 				
@@ -112,6 +113,8 @@ public class ProjectManager implements IUtil{
 
 		return true;
 	}
+	
+	/*
 
 	public void performVersionMigration(String loadedVersion) {
         if (!ProjectInfo.compatibleVersion.equals(loadedVersion)) {
@@ -127,7 +130,8 @@ public class ProjectManager implements IUtil{
 			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
         }
     }
-
+	 */
+	
 	/**
 	 * 
 	 * @param project
