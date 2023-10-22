@@ -68,25 +68,27 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 		
+		System.out.println("ClassifierManager init");
 		// implement automatic loading based on IFeatureSelection
-//		featureMap.put("activeSegmentation.learning.ID",new ID());
-//		featureMap.put("activeSegmentation.learning.CFS",new CFS());
-//		featureMap.put("activeSegmentation.learning.PCA",new PCA());
-//		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
-//		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
+		featureMap.put("activeSegmentation.learning.ID",new ID());
+		featureMap.put("activeSegmentation.learning.CFS",new CFS());
+		featureMap.put("activeSegmentation.learning.PCA",new PCA());
+		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
+		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
 		
+		/*
 		try {
 			List<String> jars=projectInfo.getPluginPath();
-			System.out.println("plugin path: "+jars);
+			System.out.println("AS plugin path: "+jars);
 			if (jars!=null)
-				loadFilters(jars);
+				loadSelectionFilters(jars);
 			IJ.log("Selection Filters loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 			IJ.log("Selection Filters NOT loaded. Check pluginPath variable");
 		}
-		
+		*/
 
 	}
 	
@@ -102,22 +104,24 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 	
  
 	
-	public  void loadFilters(List<String> plugins) throws 
+	public  void loadSelectionFilters(List<String> plugins) throws 
 	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
 
 		//System.out.println("home: "+home);
 		List<String> classes=new ArrayList<>();
 		String cp=System.getProperty("java.class.path");
 		for(String plugin: plugins){
-			if(plugin.endsWith(ASCommon.JAR))	{ 
+			System.out.println("plugin "+plugin);
+			File g = new File(plugin);
+			if(plugin.endsWith(ASCommon.JAR) && g.isFile())	{ 
 				classes.addAll(installJarPlugins(plugin));
 				cp+=";" + plugin;
 				System.setProperty("java.class.path", cp);
-				File g = new File(plugin);
-				if (g.isFile()) addJar(g);
+				
+				addJar(g);
 			}
 		}
-		System.out.println("setting classpath:  "+cp);
+		System.out.println("load Selection filters: setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= ClassifierManager.class.getClassLoader();
 
@@ -138,7 +142,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 						//System.out.println(" IFilter " + pkey);
 
 						FilterType ft=ianno.getAType();
-
+						System.out.println(pkey+ " class, type " + ft);
 						IFeatureSelection	filter =(IFeatureSelection) ianno;
 						Map<String, String> fmap=filter.getAnotatedFileds();
 						//	annotationMap.put(pkey, fmap);
@@ -154,7 +158,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 		} // end for
 
 		if (featureMap.isEmpty()) 
-			throw new RuntimeException("filter list empty ");
+			throw new RuntimeException("Filter list empty. Check project file ");
 	 
 	}
 	

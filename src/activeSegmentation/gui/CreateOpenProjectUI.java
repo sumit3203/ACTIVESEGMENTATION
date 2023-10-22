@@ -112,8 +112,10 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				currentDir=fileChooser.getSelectedFile();
 				String file=currentDir.toString();		
-				if (projectManager.loadProject(file))
+				if (projectManager.loadProject(file)) {
+					System.out.println(" GuiPanel ");
 					new GuiPanel(projectManager);
+				}
 				else 
 					IJ.error("Not a project file!");
 			}

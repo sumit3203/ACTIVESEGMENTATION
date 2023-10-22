@@ -78,18 +78,20 @@ public class ProjectManager implements IUtil{
 				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
+					/*
 				String loadedVersion = projectInfo.getVersion();
 				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
 					//performVersionMigration(loadedVersion);
+					// we will decide what to do later
 					IJ.error(loadedVersion+ " is incompatible with " + ProjectInfo.compatibleVersion);
 				}
-
+					 */
 				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
 				//System.out.println(projectInfo.toString());
 				IJ.log("project type "+projectInfo.getProjectType() );
-				
+				IJ.log("....");
 			} catch (UnrecognizedPropertyException e) {
 				IJ.log("Error: Wrong version");
 				e.printStackTrace();
@@ -305,13 +307,14 @@ public class ProjectManager implements IUtil{
 		IJ.log(plugindir);
 		// add an option for main plugin folder + check for IJ property
 		String aspath=(String) IJ.getProperty("AS_pluginpath");
-		System.out.println("ppath "+aspath);
+		System.out.println("aspath "+aspath);
 		if (aspath==null) {
 			aspath= "activeSegmentation";
 		}
 		activeSegJarPath=plugindir+fs+"plugins"+fs+aspath+fs+"ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
+		IJ.log("plugins.dir: "+System.getProperty("plugins.dir"));
 	}
 
 	/**
