@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class SQLiteTest {
 	
@@ -44,7 +45,8 @@ public class SQLiteTest {
 	public static void main(String[] args) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
+		//fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("SQLite", "sqlite", "sqlite3", "db", "db3", "s3db", "sl3"));
 		int rVal = fileChooser.showOpenDialog(null);
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			String path=fileChooser.getSelectedFile().toString();
