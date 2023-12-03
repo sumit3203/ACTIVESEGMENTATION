@@ -187,7 +187,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 		}
 
 	
-		JList<String> frameList= GuiUtil.model();
+		JList<String> frameList= GuiUtil.getFilterJList();
 		frameList.setForeground(Color.BLACK);
 		
 		JPanel panel = new JPanel();
@@ -343,11 +343,11 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 
 	private void addSidePanel(Color color,String key,String label){
 		JPanel panel= new JPanel();
-		JList<String> current=GuiUtil.model();
+		JList<String> current=GuiUtil.getFilterJList();
 
 		current.setForeground(color);
 		exampleList.put(key,current);
-		JList<String> all=GuiUtil.model();
+		JList<String> all=GuiUtil.getFilterJList();
 		all.setForeground(color);
 		allexampleList.put(key,all);	
 		

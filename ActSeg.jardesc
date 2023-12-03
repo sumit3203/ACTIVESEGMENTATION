@@ -11,21 +11,27 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.learning"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.filter"/>
+        <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.learning"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;ijaux.moments.zernike"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.feature.weka"/>
         <file path="/ACTIVE_SEGMENTATION/LICENSE"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;"/>
+        <file path="/ACTIVE_SEGMENTATION/.project"/>
         <file path="/ACTIVE_SEGMENTATION/plugins.config"/>
+        <file path="/ACTIVE_SEGMENTATION/.classpath"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.learning.weka"/>
+        <file path="/ACTIVE_SEGMENTATION/test.db"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.evaluation"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.feature"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.util"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.prj"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/resources=/ignore_optional_problems=/true=/"/>
+        <file path="/ACTIVE_SEGMENTATION/ActSeg.jardesc"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.moment"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation"/>
+        <file path="/ACTIVE_SEGMENTATION/README.md"/>
         <javaElement handleIdentifier="=ACTIVE_SEGMENTATION/src&lt;activeSegmentation.gui"/>
+        <file path="/ACTIVE_SEGMENTATION/.gitignore"/>
     </selectedElements>
 </jardesc>

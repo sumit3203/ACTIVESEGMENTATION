@@ -25,6 +25,7 @@ import weka.core.Instance;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
+import activeSegmentation.IClassLoader;
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.LearningInfo;
 import activeSegmentation.prj.ProjectInfo;
@@ -41,7 +42,7 @@ import activeSegmentation.learning.weka.WekaClassifier;
 
 
 
-public class ClassifierManager extends URLClassLoader implements ASCommon {
+public class ClassifierManager extends URLClassLoader implements ASCommon, IClassLoader<IFeatureSelection> {
 
 	private IClassifier currentClassifier= new WekaClassifier(new RandomForest());
 
@@ -68,31 +69,33 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 		
-		System.out.println("ClassifierManager init");
-		// implement automatic loading based on IFeatureSelection
+		System.out.println("ClassifierManager:loading features");
+		//// implement automatic loading based on IFeatureSelection
+		/*
 		featureMap.put("activeSegmentation.learning.ID",new ID());
 		featureMap.put("activeSegmentation.learning.CFS",new CFS());
 		featureMap.put("activeSegmentation.learning.PCA",new PCA());
 		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
 		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
+		*/
 		
-		/*
 		try {
 			List<String> jars=projectInfo.getPluginPath();
 			System.out.println("AS plugin path: "+jars);
 			if (jars!=null)
 				loadSelectionFilters(jars);
+			System.out.println("Selection Filters loaded: "+jars);
 			IJ.log("Selection Filters loaded");
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException | IOException e) {
+		} catch ( Exception e) {
 			e.printStackTrace();
 			IJ.log("Selection Filters NOT loaded. Check pluginPath variable");
 		}
-		*/
-
+		/* */
+		System.out.println("ClassifierManager: end") ;
 	}
 	
 	private void addJar(File f) {
+		System.out.println("addJar");
 		if (f.getName().endsWith(".jar")) {
 			try {
 				addURL(f.toURI().toURL());
@@ -105,15 +108,16 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
  
 	
 	public  void loadSelectionFilters(List<String> plugins) throws 
-	InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
+	InstantiationException, IllegalAccessException, IOException {
 
-		//System.out.println("home: "+home);
+		System.out.println("loadSelectionFilters");
 		List<String> classes=new ArrayList<>();
 		String cp=System.getProperty("java.class.path");
+		System.out.println ("classpath "+ cp);
 		for(String plugin: plugins){
 			System.out.println("plugin "+plugin);
 			File g = new File(plugin);
-			if(plugin.endsWith(ASCommon.JAR) && g.isFile())	{ 
+			if(plugin.endsWith(".jar") && g.isFile())	{ 
 				classes.addAll(installJarPlugins(plugin));
 				cp+=";" + plugin;
 				System.setProperty("java.class.path", cp);
@@ -121,8 +125,14 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 				addJar(g);
 			}
 		}
+		
+		
+		String cpath=System.getProperty("java.class.path");
+		System.out.println ("classpath "+ cpath);
+		/*
 		System.out.println("load Selection filters: setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
+		*/
 		ClassLoader classLoader= ClassifierManager.class.getClassLoader();
 
 		for(String plugin: classes){
@@ -131,12 +141,12 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 				for(Class<?> cs:classesList){
-					// we load only IFilter classes
+					// we load only IFeature classes
 					//System.out.println(cs.getSimpleName());
 
 					if (cs.getSimpleName().equals(ASCommon.IFEATURE) && !classLoader.loadClass(plugin).isInterface()){
 
-						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						IFeatureSelection	ianno =(IFeatureSelection) (classLoader.loadClass(plugin)).newInstance(); 
 						Pair<String, String> p=ianno.getKeyVal();
 						String pkey=p.first;
 						//System.out.println(" IFilter " + pkey);
@@ -144,19 +154,19 @@ public class ClassifierManager extends URLClassLoader implements ASCommon {
 						FilterType ft=ianno.getAType();
 						System.out.println(pkey+ " class, type " + ft);
 						IFeatureSelection	filter =(IFeatureSelection) ianno;
-						Map<String, String> fmap=filter.getAnotatedFileds();
+						//Map<String, String> fmap=filter.getAnotatedFileds();
 						//	annotationMap.put(pkey, fmap);
 						featureMap.put(pkey, filter);
 
 					} 
 
 				} // end for
-			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
+			} catch (  Exception ex) {
 				System.out.println("error:" + plugin +" not found");
 			}
 
 		} // end for
-
+		System.out.println("end loading features");
 		if (featureMap.isEmpty()) 
 			throw new RuntimeException("Filter list empty. Check project file ");
 	 

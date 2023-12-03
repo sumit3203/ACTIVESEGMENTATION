@@ -34,7 +34,7 @@ import java.util.Set;
  *      License along with this library; if not, write to the Free Software
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public interface IFilterManager {
+public interface IFilterManager extends IClassLoader<IAnnotated>{
 
 	/**
 	 * This method will load list of filter from particular
@@ -71,7 +71,11 @@ public interface IFilterManager {
 	 */
 	public Map<String,String> getDefaultFilterSettings(String key);
 	
-	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public IFilter getInstance(String key);
 	
 	/**

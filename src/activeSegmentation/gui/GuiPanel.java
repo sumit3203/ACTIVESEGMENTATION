@@ -56,7 +56,9 @@ public class GuiPanel implements ASCommon {
 	public GuiPanel(ProjectManager projectManager)	{
 		System.out.println(".....");
 		this.projectManager = projectManager;
+		System.out.println("ClassifierManager init");
 		learningManager = new ClassifierManager(this.projectManager);
+		System.out.println("FeatureManager init");
 		featureManager=new FeatureManager(this.projectManager, this.learningManager);
 		
 		System.out.println("init Project GuiPanel ");

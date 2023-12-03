@@ -81,19 +81,21 @@ public class FeatureManager implements IUtil, ASCommon {
 
 	/**
 	 * 
-	 * @param projectManager
-	 * @param learningManager
+	 * @param pMan
+	 * @param lMan
 	 */
-	public FeatureManager(ProjectManager projectManager, ClassifierManager learningManager) {
-		this.projectManager = projectManager;
-		this.learningManager=learningManager;
-		this.projectInfo = this.projectManager.getMetaInfo();
-		this.projectString = this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		System.out.println("projectString "+ this.projectString);
+	public FeatureManager(ProjectManager pMan, ClassifierManager lMan) {
+		projectManager = pMan;
+		learningManager= lMan;
+		System.out.println("FeatureManager ... ");
+		projectInfo = projectManager.getMetaInfo();
+		projectString = projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
+		//System.out.println("FeatureManager init");
+		System.out.println("FeatureManager:projectString "+ this.projectString);
 		this.featurePath = this.projectInfo.getProjectDirectory().get(ASCommon.K_FEATURESDIR);
-		System.out.println("featurePath "+ this.featurePath);
+		System.out.println("FeatureManager:featurePath "+ this.featurePath);
 		//IJ.log("loading images from "+this.projectString);
-		System.out.println("FeatureManager init");
+
 		final List<String> images=loadImages(projectString);
 		totalSlices = images.size();
 		IJ.log("FeatureManager: "+ totalSlices+" image(s) loaded from "+ projectString);

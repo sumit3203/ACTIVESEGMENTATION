@@ -84,14 +84,15 @@ public class FilterPanel implements Runnable, ASCommon {
 	 * @param featureManager
 	 */
 	public FilterPanel(ProjectManager projectManager, FeatureManager  featureManager) {
+		System.out.println("FilterPanel: init ");
 		if(projectManager.getMetaInfo().getProjectType() != ProjectType.SEGM) {
 			this.filterManager =new MomentsManager(projectManager, featureManager);
 		}else {
 			this.filterManager =new FilterManager(projectManager, featureManager);
 
 		}
-
-		this.filterList =GuiUtil.model();
+	
+		this.filterList =GuiUtil.getFilterJList();
 		this.filterList.setForeground(Color.ORANGE);
 
 	}
