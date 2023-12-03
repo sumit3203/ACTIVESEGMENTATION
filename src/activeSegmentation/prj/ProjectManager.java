@@ -78,14 +78,14 @@ public class ProjectManager implements IUtil{
 				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
-					/*
+				
 				String loadedVersion = projectInfo.getVersion();
 				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
-					//performVersionMigration(loadedVersion);
+					performVersionMigration(loadedVersion);
 					// we will decide what to do later
 					IJ.error(loadedVersion+ " is incompatible with " + ProjectInfo.compatibleVersion);
 				}
-					 */
+					 
 				
 				setProjectDir(projectFile.getParent(), null);
 				projectInfo.setProjectDirectory(projectDir);
@@ -116,7 +116,7 @@ public class ProjectManager implements IUtil{
 		return true;
 	}
 	
-	/*
+	
 
 	public void performVersionMigration(String loadedVersion) {
         if (!ProjectInfo.compatibleVersion.equals(loadedVersion)) {
@@ -132,7 +132,7 @@ public class ProjectManager implements IUtil{
 			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
         }
     }
-	 */
+	 
 	
 	/**
 	 * 
