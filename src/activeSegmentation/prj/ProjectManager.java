@@ -86,11 +86,11 @@ public class ProjectManager implements IUtil{
 				System.out.println(projectInfo.getLearning());
 		 
 				
-				String loadedVersion = projectInfo.getVersion();
-				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
-					performVersionMigration(loadedVersion);
+				String loadedVersion1 = projectInfo.getVersion();
+				if (!loadedVersion1.equals(ProjectInfo.compatibleVersion)) {
+					performVersionMigration(loadedVersion1);
 					// we will decide what to do later
-					IJ.error(loadedVersion+ " is incompatible with " + ProjectInfo.compatibleVersion);
+					IJ.error(loadedVersion1+ " is incompatible with " + ProjectInfo.compatibleVersion);
 				}
 					 
 				
@@ -335,7 +335,7 @@ public class ProjectManager implements IUtil{
 		if (aspath==null) {
 			aspath= "activeSegmentation";
 		}
-		*/
+		
 		activeSegJarPath=plugindir+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
 		// activeSegJarPath = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
