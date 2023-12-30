@@ -13,9 +13,6 @@ import ij.plugin.PlugIn;
 
 public class Active_Segmentation_ implements PlugIn, ASCommon {
 
-	//public static final String version="1.1.2";
-
-
 	/**
 	 * 
 	 */
