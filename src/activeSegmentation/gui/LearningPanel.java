@@ -72,7 +72,7 @@ public class LearningPanel implements Runnable, ASCommon {
   
   //Weka-specific variables
   private AbstractClassifier aclass=null;
-  private GenericObjectEditor wekaClassifierEditor = new GenericObjectEditor();
+  private GenericObjectEditor wekaClassifierEditor ;
    
   /**
    * 
@@ -83,7 +83,11 @@ public class LearningPanel implements Runnable, ASCommon {
     this.projectManager = projectManager;
     this.learningManager=learningManager;
     this.projectInfo = projectManager.getMetaInfo();
-    
+    try {
+    	this.wekaClassifierEditor = new GenericObjectEditor();
+    }catch (Exception ex ) {
+    	ex.printStackTrace();
+    }
     DefaultListModel<String> model = new DefaultListModel<>();
     featureSelectionUI(model);
     featureSelList = new JList<>(model);
@@ -119,6 +123,7 @@ public class LearningPanel implements Runnable, ASCommon {
     	//GuiUtil.printStringArray(options);
     	try {
     		if (cname!="") {
+    			// TODO change into loadClass from  TestLoadClass 
 				aclass = (AbstractClassifier) Class.forName(cname).newInstance();
 				//cls.setOptions(options);		
 				IClassifier classifier = new WekaClassifier(aclass);
@@ -140,6 +145,8 @@ public class LearningPanel implements Runnable, ASCommon {
     	
     } // end LOAD
   }
+  
+ 
   
   @Override
   public void run()  {
@@ -303,6 +310,7 @@ public class LearningPanel implements Runnable, ASCommon {
 		System.out.println(""+defaultOptions);
 	
 		try {
+			// TODO change into loadClass from  TestLoadClass 
 			final AbstractClassifier cls = (AbstractClassifier)c.getClass().newInstance();
 			cls.setOptions(optionsArray);
 

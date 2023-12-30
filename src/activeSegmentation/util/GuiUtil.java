@@ -2,26 +2,21 @@ package activeSegmentation.util;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 
 public class GuiUtil {
 
 	/**
-	 * Returns a gridbag constraint with the given parameters, standard
+	 * Returns a GridBag constraint with the given parameters, standard
 	 * L&amp;F insets and a west anchor.
 	 */
 	public static GridBagConstraints getGbc(int x, int y, int width,
@@ -44,13 +39,14 @@ public class GuiUtil {
 		return c;
 	}
 
-	/*
-	 * TOOD: rename to more meaningful name
+	/**
+	 * 
+	 * @return
 	 */
-	public static  JList<String> model(){
-		DefaultListModel<String> traces = new DefaultListModel<String>();
+	public static  JList<String> getFilterJList(){
+		DefaultListModel<String> traces = new DefaultListModel<>();
 		traces.addElement(" ");
-		JList<String> list=new JList<String>(traces);
+		JList<String> list=new JList<>(traces);
 		list.setVisibleRowCount(5);
 		list.setFixedCellHeight(20);
 		list.setFixedCellWidth(100);

@@ -73,7 +73,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 		try {
 			List<String> jars=projectInfo.getPluginPath();
-			System.out.println("plugin path: "+jars);
+			System.out.println("filter plugin path: "+jars);
 			if (jars!=null)
 				loadFilters(jars);
 			IJ.log("Filters loaded");
@@ -108,22 +108,25 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 
+		
 		for(String plugin: classes){
 			//System.out.println("checking "+ plugin);
-			try {
+			//try {
 				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
-	
+				final boolean isInterface=classLoader.loadClass(plugin).isInterface();
+				
 				for(Class<?> cs:classesList){
 					// we load only IFilter classes
 					//System.out.println(cs.getSimpleName());
 					
-					if (cs.getSimpleName().equals(ASCommon.IFILTER) && !classLoader.loadClass(plugin).isInterface()){
-	
-						IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+					if (cs.getSimpleName().equals(ASCommon.IFILTER) && !isInterface){
+
+						//IAnnotated	ianno =(IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
+						IAnnotated	ianno = inewInstance(plugin); //  (IAnnotated) (classLoader.loadClass(plugin)).newInstance(); 
 						Pair<String, String> p=ianno.getKeyVal();
 						String pkey=p.first;
-						//System.out.println(" IFilter " + pkey);
-	
+						System.out.println(" IFilter " + pkey);
+						
 						FilterType ft=ianno.getAType();
 						//System.out.println(ft);
 						if (projectType==ProjectType.SEGM  ) {
@@ -132,22 +135,22 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 								Map<String, String> fmap=filter.getAnotatedFileds();
 								annotationMap.put(pkey, fmap);
 								filterMap.put(pkey, filter);
-							}
+							} // end if
 	
-						} 
+						} // end if
+						
 	
-	
-					} 
+					} // end if
 	
 				} // end for
-			} catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
-				System.out.println("error:" + plugin +" not found");
-			}
+			//} catch (  ClassNotFoundException ex) {
+			//	System.out.println("error:" + plugin +" not found");
+			//}
 
 		} // end for
-
-		//System.out.println("filter list ");
-		//System.out.println(filterMap);
+		
+		System.out.println("filter list ");
+		System.out.println(filterMap);
 
 		if (filterMap.isEmpty()) 
 			throw new RuntimeException("filter list empty ");
