@@ -207,6 +207,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 			//System.out.println("filter applied"+filter.getName());
 			if(filter.isEnabled()){
 				features.put(filter.getKey(), filter.getFeatureNames());
+				System.out.println("filter applied"+filter.getName());
 			}
 
 		}
@@ -245,6 +246,17 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 			IJ.log("Features computed "+featureList.size());
 			projectInfo.setFeatures(featureList);
 			projectInfo.setFeatureNames(features);
+			Map<String, IMoment<?>> filteredMomentMap = new HashMap<>();
+
+			for (Map.Entry<String, IMoment<?>> entry : momentMap.entrySet()) {
+			    String key = entry.getKey();
+			    IMoment<?> imoment = entry.getValue();
+
+			    if (imoment.isEnabled()) {
+			        filteredMomentMap.put(key, imoment);
+			    }
+			}
+			projectManager.setComputedMomentMap(filteredMomentMap);
 
 		}
 
@@ -369,7 +381,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 			e.printStackTrace();
 			return null;
 		}
-		 */
+		*/
 		return null;
 	}
 

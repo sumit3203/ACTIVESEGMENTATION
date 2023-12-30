@@ -123,7 +123,7 @@ public class Database_Init_Del {
     }
    
 	public static void main(String[] args) {
-		String path="C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif.db";
+		String path="C:\\Users\\aarya\\Desktop\\gsoc23\\ACTIVESEGMENTATION\\test.db";
 		connect(path);	 
 	}
 
