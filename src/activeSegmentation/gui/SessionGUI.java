@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import ij.IJ;
+import ij.*;
 
 
 import javax.swing.table.DefaultTableModel;
