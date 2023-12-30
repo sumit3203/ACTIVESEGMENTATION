@@ -5,9 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import javafx.scene.control.Dialog;
+
 
 import javax.swing.table.DefaultTableModel;
 
@@ -52,7 +50,7 @@ public class SessionGUI {
 
     // Create database connection
     private void createConnection() {
-        connStart("C:\\Users\\aarya\\Desktop\\gsoc23\\ACTIVESEGMENTATION\\sqliteTest.db");
+        connStart("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db");
     }
 
     boolean connStart(String dbName) {

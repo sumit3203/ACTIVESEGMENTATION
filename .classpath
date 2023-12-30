@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="resources">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Java/javafx-sdk-20.0.1/bin"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/Auto_Threshold.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/BeanShell.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/dsplib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/fftscale-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/jackson-annotations-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/jackson-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/jackson-databind-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/java-cup-0.11a.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/mtj-1.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/pixlib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/scale-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/weka.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/FastRandomForest_0.99.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/chiSquaredAttributeEval.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/SVMAttributeEval-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION/jars/fastCorrBasedFS.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
