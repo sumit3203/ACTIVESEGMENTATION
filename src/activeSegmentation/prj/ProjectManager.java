@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import activeSegmentation.ASCommon;
 import static activeSegmentation.ASCommon.*;
 import activeSegmentation.IDataSet;
+import activeSegmentation.IMoment;
 import activeSegmentation.IUtil;
 import activeSegmentation.ProjectType;
 
@@ -38,6 +39,7 @@ public class ProjectManager implements IUtil{
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String activeSegJarPath;
 	private Map<String,String> projectDir=new HashMap<>();
+	private Map<String, IMoment<?>> computedMomentMap= new HashMap<>();
 
 	/**
 	 * 
@@ -74,7 +76,12 @@ public class ProjectManager implements IUtil{
 				if (projectFile.getName().indexOf(".json") <0) return false;
 				
 				projectInfo= mapper.readValue(projectFile, ProjectInfo.class);
-		 
+				
+				String loadedVersion = projectInfo.getVersion();
+				if (!loadedVersion.equals(ProjectInfo.compatibleVersion)) {
+					performVersionMigration(loadedVersion);
+				}
+
 				System.out.println("loading learning object");
 				System.out.println(projectInfo.getLearning());
 		 
@@ -126,7 +133,6 @@ public class ProjectManager implements IUtil{
                 // newField = "default_value";
             }
             // Add more migration steps for other versions as needed
-
             // Update the version to the current compabtible version
             projectInfo.setVersion(ProjectInfo.compatibleVersion);
 			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
@@ -216,10 +222,10 @@ public class ProjectManager implements IUtil{
 			
 			}else {
 				// TRAINING IMAGE FOLDER
-				List<String> images=loadImages(trainingImage, true);
+				List<String> images=loadImagesSubDirectoryPath(trainingImage, true);
 				for(String image: images) {
 					ImagePlus currentImage=IJ.openImage(trainingImage+fs+image);
-					createImages(image, currentImage);
+					createImages(image.substring(image.lastIndexOf("\\") + 1), currentImage);
 				}
 			}
 			
@@ -268,11 +274,12 @@ public class ProjectManager implements IUtil{
 		IJ.log(format);
 		for(int i=1; i<=image.getStackSize();i++) {
 			ImageProcessor processor= image.getStack().getProcessor(i);
-			String title= folder+i;
+			String titleFullPath= folder+i;
 			IJ.log(folder);
-			IJ.log(title);
-			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+title);
-			IJ.saveAs(new ImagePlus(title, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+title);
+			IJ.log(titleFullPath);
+			String imageTitle = titleFullPath.substring(titleFullPath.lastIndexOf('\\') + 1);
+			createDirectory(projectDir.get(ASCommon.K_FILTERSDIR)+imageTitle);
+			IJ.saveAs(new ImagePlus(titleFullPath, processor),format,projectDir.get(ASCommon.K_IMAGESDIR)+imageTitle);
 		}
 		IJ.log("createStack done");
 	}
@@ -299,6 +306,23 @@ public class ProjectManager implements IUtil{
 		return message;
 	}
 
+	
+	/**
+	 * 
+	 * @return computedMomentMap
+	 */
+    public Map<String, IMoment<?>> getComputedMomentMap() {
+        return computedMomentMap;
+    }
+
+    /**
+	 * 
+	 * @param computedMomentMap
+	 */
+    public void setComputedMomentMap(Map<String, IMoment<?>> computedMomentMap) {
+        this.computedMomentMap = computedMomentMap;
+    }
+
 	/**
 	 * 
 	 */
@@ -311,8 +335,11 @@ public class ProjectManager implements IUtil{
 		if (aspath==null) {
 			aspath= "activeSegmentation";
 		}
-		activeSegJarPath=plugindir+fs+"plugins"+fs+aspath+fs+"ACTIVE_SEG.jar";
+		*/
+		activeSegJarPath=plugindir+"plugins"+fs+"activeSegmentation"+fs+"ACTIVE_SEG.jar";
+		// activeSegJarPath = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
 		IJ.log(activeSegJarPath);
+		System.out.println("activeSegPath=" + activeSegJarPath);
 		//System.out.println(System.getProperty("plugins.dir"));
 		IJ.log("plugins.dir: "+System.getProperty("plugins.dir"));
 	}

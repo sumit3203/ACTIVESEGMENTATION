@@ -41,6 +41,7 @@ public class GuiPanel implements ASCommon {
 	final ActionEvent LEARNING_BUTTON_PRESSED   = new ActionEvent(this, 2, "Learning"  );
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
 	final ActionEvent FILTERVIS_BUTTON_PRESSED  = new ActionEvent(this, 4, "FilterVis" );
+	final ActionEvent SESSIONGUI_BUTTON_PRESSED = new ActionEvent(this, 5, "SessionGUI");
 
 	
 	private FeatureManager featureManager;
@@ -103,6 +104,10 @@ public class GuiPanel implements ASCommon {
 			SwingUtilities.invokeLater(evaluationPanel);	
 
 		}
+
+		if (event == this.SESSIONGUI_BUTTON_PRESSED) {
+			new SessionGUI(); // Create and display the SessionGUI instance
+		}
 		
 	}
 	
@@ -130,6 +135,7 @@ public class GuiPanel implements ASCommon {
 		this.controlPanel.add(addButton("Feature Extraction",   null,  25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Model Learning",       null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Evaluation",           null,  25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("View Sessions",           null,  275, 350, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
 
 		this.controlPanel.setLocation(0, 0);
 		this.mainFrame.add(this.controlPanel);

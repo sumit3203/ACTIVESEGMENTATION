@@ -80,7 +80,9 @@ public class TestOnlineCells {
 		// TODO Auto-generated method stub
 		new ImageJ();
 		TestOnlineCells test= new TestOnlineCells();
-		String directory="C:\\Users\\billa\\Documents\\hela_test2\\";
+//		String directory="C:\\Users\\billa\\Documents\\hela_test2\\";
+//		String directory = "C:\\Users\\aarya\\Downloads\\hela";
+		String directory = "C:\\Users\\aarya\\Desktop\\small_data";
 		test.run(directory);
 	}
 
@@ -163,11 +165,11 @@ public class TestOnlineCells {
 		}
 		for(String cellType: dirs) {
 			//System.out.println();
-			Set<String> cellsDir=loadImages(directory+cellType);
+			Set<String> cellsDir=loadImages(directory+"\\"+cellType);
 			List<CellType> cellList= new ArrayList<>();
 			cells.put(cellType, cellList);
 			for(String traincells: cellsDir) {
-				String tiffile=directory+cellType+"\\"+traincells;
+				String tiffile=directory + "\\" + cellType+"\\"+traincells;
 				Instance instance= createInstance(tiffile, cellType,classIndexMap);
 				CellType cell= new CellType(tiffile, cellType, instance);
 				List<CellType> currentList= cells.get(cellType);
@@ -208,7 +210,8 @@ public class TestOnlineCells {
 			//starting the database implementation
 			trainingData2.addAll(testData);
 			Enumeration<Instance> enums=trainingData2.enumerateInstances();			
-			connStart("C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif.db");		
+//			connStart("C:\\Users\\billa\\Documents\\GitHub\\ACTIVESEGMENTATION\\classif.db");
+			connStart("C:\\Users\\aarya\\Desktop\\gsoc23\\ACTIVESEGMENTATION\\test.db");
 			insert(enums,trainInstances,testInstances,cells,randomforest);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -268,12 +271,12 @@ public class TestOnlineCells {
 			List<CellType> cellsinside=cells.get(key);
 			Collections.shuffle(cellsinside);
 			for (CellType cell: cellsinside.subList(0, cellsinside.size()*4/5)) {
-				tifs.add(cell.getTiffile().replace("C:\\Users\\billa\\Documents\\hela_test2\\"+cell.getCelltype()+"\\",""));
+				tifs.add(cell.getTiffile().replace("C:\\Users\\aarya\\Desktop\\small_data\\"+cell.getCelltype()+"\\",""));
 				ct.add(cell.getCelltype());
 				toi.add("Train");
 			}
 			for (CellType cell: cellsinside.subList(cellsinside.size()*4/5,cellsinside.size())) {
-				tifs.add(cell.getTiffile().replace("C:\\Users\\billa\\Documents\\hela_test2\\"+cell.getCelltype()+"\\",""));
+				tifs.add(cell.getTiffile().replace("C:\\Users\\aarya\\Desktop\\small_data\\"+cell.getCelltype()+"\\",""));
 				ct.add(cell.getCelltype());
 				toi.add("Test");
 			}
@@ -293,7 +296,7 @@ public class TestOnlineCells {
 			}
 			System.out.println("\n"+ ss);
 			//returning the sum of the probability vectors in order to check if sum=1
-	        
+
 	        	
 	        	String update="INSERT INTO image_list (image_name, instance_type, cell_type,v_id) "
 	            		+ 				"VALUES  ( ?, ?,?,?)";

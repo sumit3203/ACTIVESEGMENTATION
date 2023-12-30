@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,7 @@ import weka.classifiers.AbstractClassifier;
 
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
-
+import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
 import activeSegmentation.IAnnotated;
@@ -53,6 +55,11 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 	private IDataSet dataset;
 	private ForkJoinPool pool=  new ForkJoinPool();
 	private  TreeMap<String, IFeatureSelection>  featureMap=new TreeMap<>();
+
+	private String trainingStartTimeFormatted;
+	private String trainingEndTimeFormatted;
+	private String classifierOutput;
+	private Map<String, Double> classProbabilitiesMap;
 	
 	public static final int PREDERR=-1;
 	
@@ -69,15 +76,21 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 		projectMan = dataManager;
 		projectInfo= dataManager.getMetaInfo();
 		
+
+		// implement automatic loading based on IFeatureSelection
+
 		System.out.println("ClassifierManager:loading features");
 		//// implement automatic loading based on IFeatureSelection
 		/*
+
 		featureMap.put("activeSegmentation.learning.ID",new ID());
 		featureMap.put("activeSegmentation.learning.CFS",new CFS());
 		featureMap.put("activeSegmentation.learning.PCA",new PCA());
 		featureMap.put("activeSegmentation.learning.InfoGain",new InfoGain());
 		featureMap.put("activeSegmentation.learning.GainRatio",new GainRatio());
+
 		*/
+
 		
 		try {
 			List<String> jars=projectInfo.getPluginPath();
@@ -176,6 +189,8 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 	
 	
 	private  List<String> installJarPlugins(String plugin) throws IOException {
+//		plugin = "C:\\Users\\aarya\\Downloads\\ImageJ\\plugins\\activeSegmentation\\ACTIVE_SEG.jar";
+		System.out.println("plugin=" + plugin);
 		List<String> classNames = new ArrayList<>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
@@ -199,6 +214,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
     	
 		try {
 			//System.out.println("Classifier Manager: in training");
+			// SQLSESSIONTABLE CHECK  ROI -- CLASS_LABEL
 			String filename=folder.getCanonicalPath()+fs+projectInfo.getGroundtruth();
 			//IJ.log(filename);
 			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
@@ -217,6 +233,10 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
 			//System.out.println("cname "+ cname);
+			LocalDateTime trainingStartTime;
+			LocalDateTime trainingEndTime;
+			
+			trainingStartTime = LocalDateTime.now();
 			if (cname!="")  {			
 			 	IFeatureSelection cclass =featureMap.get(cname);
 			 	if (dataset==null) {
@@ -225,7 +245,46 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 				currentClassifier.buildClassifier(dataset, cclass);							
 			} else
 				currentClassifier.buildClassifier(dataset);
-			
+			trainingEndTime = LocalDateTime.now();
+
+
+			Instances instances = dataset.getDataset();
+			int numClasses = instances.numClasses();
+			double[] averageClassProbabilities = new double[numClasses];
+
+			for (int i = 0; i < instances.numInstances(); i++) {
+				Instance instance = instances.instance(i);
+				double[] classProbabilities = currentClassifier.distributionForInstance(instance);
+				
+				for (int classIndex = 0; classIndex < numClasses; classIndex++) {
+					averageClassProbabilities[classIndex] += classProbabilities[classIndex];
+				}
+			}
+
+			int numInstances = instances.numInstances();
+
+			Map<String, Double> classLabelProbabilityMap = new HashMap<>();
+			for (int classIndex = 0; classIndex < numClasses; classIndex++) {
+				String classLabel = instances.classAttribute().value(classIndex);
+				double averageProbability = averageClassProbabilities[classIndex] / numInstances;
+				classLabelProbabilityMap.put(classLabel, averageProbability);
+			}
+			this.setClassProbabilitiesMap(classLabelProbabilityMap);
+			System.out.println(classLabelProbabilityMap);
+
+			// Define the date-time format
+			String formatPattern = "yyyy-MM-dd HH:mm:ss";
+
+			// Create a DateTimeFormatter with the specified format pattern
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
+	
+			// Format the LocalDateTime object using the formatter
+			String formattedStartTime = trainingStartTime.format(formatter);
+			String formattedEndTime = trainingEndTime.format(formatter);
+
+			this.setTrainingStartTimeFormatted(formattedStartTime);
+			this.setTrainingEndTimeFormatted(formattedEndTime);
+
 			//currentClassifier.buildClassifier(dataset);
 			if(dataset!=null)
 				InstanceUtil.writeDataToARFF(dataset.getDataset(), projectInfo);
@@ -239,11 +298,13 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 			System.out.println("Classifier summary");
 			
 			String outputstr=currentClassifier.toString();
+			
 			// print summary here
 			System.out.println(outputstr);
 			
 			IFeatureSelection cclass =featureMap.get(cname);
 			outputstr+= currentClassifier.evaluateModel(dataset, cclass);
+			this.setClassifierOutput(outputstr);
 			 
 			//Write output-> move to evaluation;
 			InstanceUtil.writeDataToTXT(outputstr, projectInfo);
@@ -294,7 +355,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 			IDataSet fdata=null;
 			if (cname!="")  {
 				IFeatureSelection filter =featureMap.get(cname);
-				//System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
+				System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
 				//fdata=filter.selectFeatures(dataSet);
 				fdata=filter.filterData(dataSet);
 			}
@@ -353,6 +414,25 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 		return PREDERR;
 	}
 
+	/**
+	 * 
+	 * @param
+	 * @return classProbabilitiesMap
+	 */
+	public Map<String, Double> getClassProbabilitiesMap() {
+        return classProbabilitiesMap;
+    }
+
+
+	/**
+	 * 
+	 * @param classProbabilitiesMap
+	 * @return
+	 */
+    public void setClassProbabilitiesMap(Map<String, Double> classProbabilitiesMap) {
+        this.classProbabilitiesMap = classProbabilitiesMap;
+    }
+
 
 	/**
 	 * 
@@ -361,5 +441,59 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 	public Object getClassifier() {
 		return currentClassifier.getClassifier();
 	}
+
+	/**
+     * Get the formatted training start time.
+     *
+     * @return The formatted training start time.
+     */
+    public String getTrainingStartTimeFormatted() {
+        return trainingStartTimeFormatted;
+    }
+
+    /**
+     * Set the formatted training start time.
+     *
+     * @param trainingStartTimeFormatted The formatted training start time to set.
+     */
+    public void setTrainingStartTimeFormatted(String trainingStartTimeFormatted) {
+        this.trainingStartTimeFormatted = trainingStartTimeFormatted;
+    }
+
+    /**
+     * Get the formatted training end time.
+     *
+     * @return The formatted training end time.
+     */
+    public String getTrainingEndTimeFormatted() {
+        return trainingEndTimeFormatted;
+    }
+
+    /**
+     * Set the formatted training end time.
+     *
+     * @param trainingEndTimeFormatted The formatted training end time to set.
+     */
+    public void setTrainingEndTimeFormatted(String trainingEndTimeFormatted) {
+        this.trainingEndTimeFormatted = trainingEndTimeFormatted;
+    }
+
+	/**
+     * Get the classifier's output.
+     *
+     * @return The classifier's output.
+     */
+    public String getClassifierOutput() {
+        return classifierOutput;
+    }
+
+    /**
+     * Set the classifier's output.
+     *
+     * @param classifierOutput The classifier's output to set.
+     */
+    public void setClassifierOutput(String classifierOutput) {
+        this.classifierOutput = classifierOutput;
+    }
 
 }
