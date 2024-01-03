@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 public class SessionGUI {
     JTextField jtf_sessionId, jtf_startTime, jtf_endTime, jtf_datasetPath, jtf_classifierOutput;
     JButton jb_add, jb_delete, jb_search, jb_viewDetail;
-    JTable jt;
+    JTable table;
     JFrame frame;
     JLabel lbl_sessionId, lbl_startTime, lbl_endTime, lbl_datasetPath, lbl_classifierOutput;
     ArrayList<Session> sessionList;
@@ -24,7 +24,8 @@ public class SessionGUI {
     // JTextArea jta_cellText;
     public final static String driver="org.sqlite.JDBC";
 	
-	private Connection conn;
+	private Connection conn=null;
+	
     String header[] = new String[] {
         "ID",
         "Session ID",
@@ -33,15 +34,18 @@ public class SessionGUI {
         "Dataset Path",
         "Classifier Output"
     };
+    
     DefaultTableModel dtm;
-    Statement stmt;
-    ResultSet rs;
+    //Statement stmt;
+   // ResultSet rs;
+    
+    
 
     // Constructor
     public SessionGUI() {
-        conn = null;
-        stmt = null;
-        rs = null;
+  
+        //stmt = null;
+      //  rs = null;
         createConnection();
         createTable();
         loadData();
@@ -57,7 +61,7 @@ public class SessionGUI {
 		//connecting to database
     	String dbUrl="jdbc:sqlite:"+ dbName;
         try {
-            //Class.forName("org.gjt.mm.mysql.Driver");
+          
             Class.forName(driver);
         } catch(Exception ex) {
             IJ.log("Can't find Database driver class: " + ex);
@@ -148,7 +152,7 @@ public class SessionGUI {
     // Create sessions table if it does not exist
     private void createTable() {
         try {
-            stmt = conn.createStatement();
+           Statement stmt = conn.createStatement();
             createCPtable(stmt);
             createSStable(stmt);
             createCLtable(stmt);
@@ -203,8 +207,8 @@ public class SessionGUI {
     private void loadData() {
         try {
             sessionList = new ArrayList<>();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM sessions");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
             while (rs.next()) {
                 int ss_id = rs.getInt("ss_id");
                 int sessionId = rs.getInt("session_id");
@@ -239,7 +243,8 @@ public class SessionGUI {
 
     // Add session button listener
     ActionListener addSessionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             try {
             	int ss_id = sessionList.size() + 1;
                 int sessionId = Integer.parseInt(jtf_sessionId.getText());
@@ -267,10 +272,11 @@ public class SessionGUI {
     };
     
     ActionListener viewFeatureDetailListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = jt.getSelectedRow();
+        @Override
+		public void actionPerformed(ActionEvent e) {
+            int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                int sessionId = (int) jt.getValueAt(selectedRow, 1); // Session ID from the selected row
+                int sessionId = (int) table.getValueAt(selectedRow, 1); // Session ID from the selected row
                 System.out.println("sessionId = " + sessionId);
                 ArrayList<FeatureDetail> featureList = getFeatureListBySessionId(sessionId);
 
@@ -304,7 +310,8 @@ public class SessionGUI {
 
                 // Show the table in a dialog
                 featureDetailFrame.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
+                    @Override
+					public void windowClosing(WindowEvent e) {
                         // Handle any cleanup or actions when the user closes the "Feature Detail" GUI
                     }
                 });
@@ -316,10 +323,11 @@ public class SessionGUI {
     };
 
     ActionListener viewSessionDetailListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = jt.getSelectedRow();
+        @Override
+		public void actionPerformed(ActionEvent e) {
+            int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                int sessionId = (int) jt.getValueAt(selectedRow, 1); // Session ID from the selected row
+                int sessionId = (int) table.getValueAt(selectedRow, 1); // Session ID from the selected row
                 System.out.println("sessionId = " + sessionId);
                 ArrayList<ClassList> classList = getClassListBySessionId(sessionId);
     
@@ -404,7 +412,8 @@ public class SessionGUI {
                 sessionDetailFrame.setVisible(true);
     
                 sessionDetailFrame.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
+                    @Override
+					public void windowClosing(WindowEvent e) {
                         // Handle any cleanup or actions when the user closes the "Session Detail" GUI
                         // For example, enable interaction with the parent frame here if needed.
                         // or close feature_values GUI
@@ -436,10 +445,11 @@ public class SessionGUI {
 
     // Delete session button listener
     ActionListener deleteSessionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = jt.getSelectedRow();
+        @Override
+		public void actionPerformed(ActionEvent e) {
+            int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                int sessionId = (int) jt.getValueAt(selectedRow, 1);
+                int sessionId = (int) table.getValueAt(selectedRow, 1);
                 
                 // Show confirmation prompt
                 int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this session?",
@@ -459,7 +469,8 @@ public class SessionGUI {
 
     // Search session button listener
     ActionListener searchSessionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             String searchQuery = JOptionPane.showInputDialog(null, "Enter a session ID to search:",
                     "Search Session", JOptionPane.PLAIN_MESSAGE);
             if (searchQuery != null && !searchQuery.isEmpty()) {
@@ -471,20 +482,21 @@ public class SessionGUI {
     
  // Refresh button listener
     ActionListener refreshListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             loadData(); // Reload data from the database
             populateTable(sessionList); // Update the table with new data
         }
     };
     
  // Load values into the GUI
-    private void loadValues(int sessionId, String startTime, String endTime, String datasetPath, String classifierOutput) {
-        jtf_sessionId.setText(String.valueOf(sessionId));
-        jtf_startTime.setText(startTime);
-        jtf_endTime.setText(endTime);
-        jtf_datasetPath.setText(datasetPath);
-        jtf_classifierOutput.setText(classifierOutput);
-    }
+//    private void loadValues(int sessionId, String startTime, String endTime, String datasetPath, String classifierOutput) {
+//        jtf_sessionId.setText(String.valueOf(sessionId));
+//        jtf_startTime.setText(startTime);
+//        jtf_endTime.setText(endTime);
+//        jtf_datasetPath.setText(datasetPath);
+//        jtf_classifierOutput.setText(classifierOutput);
+//    }
 
     // Insert session data into database
     private void insertData(int sessionId, String startTime, String endTime, String datasetPath,
@@ -634,7 +646,7 @@ private double getClassProbability(int sessionId, String classLabel) {
             String sql = "SELECT * FROM sessions WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 int ss_id = rs.getInt("ss_id");
                 String startTime = rs.getString("start_time");
@@ -657,7 +669,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         dtm = new DefaultTableModel(header, 0);
-        jt = new JTable(dtm);
+        table = new JTable(dtm);
         JTextArea jta_cellText = new JTextArea(10, 30);
         jta_cellText.setLineWrap(true);
         jta_cellText.setWrapStyleWord(true);
@@ -665,10 +677,10 @@ private double getClassProbability(int sessionId, String classLabel) {
         jsp_cellText.setBounds(180, 460, 350, 200);
 
         // Add ListSelectionListener to the JTable
-        jt.getSelectionModel().addListSelectionListener(e -> {
+        table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                int selectedRow = jt.getSelectedRow();
-                int selectedColumn = jt.getSelectedColumn();
+                int selectedRow = table.getSelectedRow();
+                int selectedColumn = table.getSelectedColumn();
                 if (selectedRow != -1 && selectedColumn != -1) {
                     Object cellValue = dtm.getValueAt(selectedRow, selectedColumn);
                     if (cellValue != null) {
@@ -681,18 +693,18 @@ private double getClassProbability(int sessionId, String classLabel) {
                 }
             }
         });
-        JScrollPane jsp = new JScrollPane(jt);
+        JScrollPane jsp = new JScrollPane(table);
         jsp.setBounds(20, 20, 750, 300);
         
         jb_viewDetail = new JButton("View Session Detail");
         jb_viewDetail.setBounds(300, 420, 150, 30);
         jb_viewDetail.addActionListener(viewSessionDetailListener);
-        frame.add(jb_viewDetail);
+        frame.getContentPane().add(jb_viewDetail);
         
         jb_viewFeatureDetail = new JButton("View Feature Detail");
         jb_viewFeatureDetail.setBounds(460, 420, 150, 30);
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
-        frame.add(jb_viewFeatureDetail);
+        frame.getContentPane().add(jb_viewFeatureDetail);
         
 //        jb_viewFeatureDetail = new JButton("View Feature Detail");
 //        jb_viewFeatureDetail.setBounds(660, 420, 150, 30);
@@ -739,13 +751,13 @@ private double getClassProbability(int sessionId, String classLabel) {
         jb_refresh = new JButton("Refresh");
         jb_refresh.setBounds(420, 380, 100, 30);
         jb_refresh.addActionListener(refreshListener);
-        frame.add(jb_refresh);
-        frame.add(jsp_cellText);
+        frame.getContentPane().add(jb_refresh);
+        frame.getContentPane().add(jsp_cellText);
 
-        frame.add(jsp);
+        frame.getContentPane().add(jsp);
 //        frame.add(jb_add);
-        frame.add(jb_delete);
-        frame.add(jb_search);
+        frame.getContentPane().add(jb_delete);
+        frame.getContentPane().add(jb_search);
         // DEBUG
 //        frame.add(lbl_sessionId);
 //        frame.add(jtf_sessionId);
@@ -758,7 +770,7 @@ private double getClassProbability(int sessionId, String classLabel) {
 //        frame.add(lbl_classifierOutput);
 //        frame.add(jtf_classifierOutput);
 
-        frame.setLayout(null);
+        frame.getContentPane().setLayout(null);
         frame.setVisible(true);
         populateTable(sessionList);
     }
@@ -895,6 +907,7 @@ private double getClassProbability(int sessionId, String classLabel) {
 
     // Main method
     public static void main(String[] args) {
+    	//new ImageJ();
         new SessionGUI();
     }
 }
