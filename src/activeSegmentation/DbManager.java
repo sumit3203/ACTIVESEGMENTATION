@@ -1,3 +1,4 @@
+package activeSegmentation;
 
 
 import java.sql.Connection;

@@ -9,6 +9,8 @@ import ij.*;
 
 import javax.swing.table.DefaultTableModel;
 
+import activeSegmentation.DbManager;
+
 
 
 public class SessionGUI {
@@ -22,9 +24,11 @@ public class SessionGUI {
     JButton jb_refresh;
     JButton jb_viewFeatureDetail;
     // JTextArea jta_cellText;
-    public final static String driver="org.sqlite.JDBC";
+    //public final static String driver="org.sqlite.JDBC";
 	
-	private Connection conn=null;
+	//private Connection conn=null;
+	
+	private DbManager man=new DbManager();
 	
     String header[] = new String[] {
         "ID",
@@ -46,13 +50,16 @@ public class SessionGUI {
   
         //stmt = null;
       //  rs = null;
-        createConnection();
+       // createConnection();
+        
+        man.loadDB("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db" );
         createTable();
         loadData();
         mainInterface();
     }
 
     // Create database connection
+    /*
     private void createConnection() {
         connStart("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db");
     }
@@ -76,7 +83,7 @@ public class SessionGUI {
             return false;
         }
     }
-
+     */
     private static void createIMtable(Statement lock) throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS `images` (\r\n" +
                 " `img_id` INTEGER PRIMARY KEY, \r\n" +
@@ -152,7 +159,8 @@ public class SessionGUI {
     // Create sessions table if it does not exist
     private void createTable() {
         try {
-           Statement stmt = conn.createStatement();
+        	Connection conn=man.getConnection();
+            Statement stmt = conn.createStatement();
             createCPtable(stmt);
             createSStable(stmt);
             createCLtable(stmt);
@@ -207,6 +215,7 @@ public class SessionGUI {
     private void loadData() {
         try {
             sessionList = new ArrayList<>();
+            Connection conn=man.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
             while (rs.next()) {
@@ -430,6 +439,7 @@ public class SessionGUI {
         int imageId = -1; // Default value if not found
         try {
             String sql = "SELECT image_id FROM session_details_view WHERE session_id = ? AND image_name = ?";
+            Connection conn=man.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             pstmt.setString(2, imageName);
@@ -503,6 +513,7 @@ public class SessionGUI {
             String classifierOutput) {
         try {
             String sql = "INSERT INTO sessions (session_id, start_time, end_time, dataset_path, classifier_output) VALUES (?, ?, ?, ?, ?)";
+            Connection conn=man.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             pstmt.setString(2, startTime);
@@ -517,8 +528,10 @@ public class SessionGUI {
 
     // Delete session data from database
     private void deleteData(int sessionId) {
+    	Connection conn=man.getConnection();
         try {
             // Use a transaction to ensure atomicity of the operation
+        	
             conn.setAutoCommit(false);
     
             // delete related records in other tables
@@ -565,6 +578,7 @@ public class SessionGUI {
  // Load class_list values into the GUI
     private ArrayList<ClassList> getClassListBySessionId(int sessionId) {
         ArrayList<ClassList> classList = new ArrayList<>();
+        Connection conn=man.getConnection();
         try {
             String sql = "SELECT * FROM class_list_details_view WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -584,6 +598,7 @@ public class SessionGUI {
     // Fetch class probabilities based on session_id and class_label
 private double getClassProbability(int sessionId, String classLabel) {
     double probability = 0.0;
+    Connection conn=man.getConnection();
     try {
         String sql = "SELECT probability FROM class_probabilities_view WHERE session_id = ? AND class_label = ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -603,6 +618,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     // fetch featureDetailsbySessionID
     private ArrayList<FeatureDetail> getFeatureListBySessionId(int sessionId) {
         ArrayList<FeatureDetail> featureList = new ArrayList<>();
+        Connection conn=man.getConnection();
         try {
             String sql = "SELECT * FROM feature_details_view WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -622,6 +638,7 @@ private double getClassProbability(int sessionId, String classLabel) {
  // Fetch feature values based on sessionId and imageId
     private ArrayList<FeatureValue> getFeatureValues(int sessionId, int imageId) {
         ArrayList<FeatureValue> featureValues = new ArrayList<>();
+        Connection conn=man.getConnection();
         try {
             String sql = "SELECT feature_name, feature_value FROM feature_values_view WHERE session_id = ? AND image_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -642,6 +659,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     // Search session by session ID in the database
     private ArrayList<Session> searchSession(int sessionId) {
         ArrayList<Session> searchResult = new ArrayList<>();
+        Connection conn=man.getConnection();
         try {
             String sql = "SELECT * FROM sessions WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
