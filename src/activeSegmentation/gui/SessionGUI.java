@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import ij.*;
+//import ij.*;
 
 
 import javax.swing.table.DefaultTableModel;
@@ -24,9 +24,8 @@ public class SessionGUI {
     JButton jb_refresh;
     JButton jb_viewFeatureDetail;
     // JTextArea jta_cellText;
-    //public final static String driver="org.sqlite.JDBC";
-	
-	//private Connection conn=null;
+ 
+ 
 	
 	private DbManager man=new DbManager();
 	
@@ -40,50 +39,20 @@ public class SessionGUI {
     };
     
     DefaultTableModel dtm;
-    //Statement stmt;
-   // ResultSet rs;
+ 
     
     
 
     // Constructor
     public SessionGUI() {
-  
-        //stmt = null;
-      //  rs = null;
-       // createConnection();
-        
+   
         man.loadDB("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db" );
         createTable();
         loadData();
         mainInterface();
     }
 
-    // Create database connection
-    /*
-    private void createConnection() {
-        connStart("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db");
-    }
-
-    boolean connStart(String dbName) {
-		//connecting to database
-    	String dbUrl="jdbc:sqlite:"+ dbName;
-        try {
-          
-            Class.forName(driver);
-        } catch(Exception ex) {
-            IJ.log("Can't find Database driver class: " + ex);
-            return false;
-        }
-        try {
-            conn = DriverManager.getConnection(dbUrl);
-            IJ.log("Connected to " + dbUrl);
-            return true;
-        } catch(SQLException ex) {
-            IJ.log("SQLException: " + ex);
-            return false;
-        }
-    }
-     */
+ 
     private static void createIMtable(Statement lock) throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS `images` (\r\n" +
                 " `img_id` INTEGER PRIMARY KEY, \r\n" +
@@ -206,8 +175,9 @@ public class SessionGUI {
             stmt.execute(createFeatureValuesView);
 
             System.out.println("Table and View created successfully.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            //System.out.println(e.getMessage());
+            man.logError(e);
         }
     }
 
@@ -229,8 +199,9 @@ public class SessionGUI {
                 sessionList.add(new Session(ss_id, sessionId, startTime, endTime, datasetPath, classifierOutput));
                 System.out.println(startTime);
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            //System.out.println(e.getMessage());
+            man.logError(e);
         }
     }
 
@@ -372,7 +343,8 @@ public class SessionGUI {
     
                 JButton viewFeatureValuesButton = new JButton("View Feature Values");
                 viewFeatureValuesButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                    @Override
+					public void actionPerformed(ActionEvent e) {
                         int selectedRow = classListTable.getSelectedRow();
                     if (selectedRow != -1) {
                         String imageName = (String) classListTable.getValueAt(selectedRow, 1); // image Name from the selected row
@@ -448,7 +420,8 @@ public class SessionGUI {
                 imageId = rs.getInt("image_id");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+            man.logError(e);
         }
         return imageId;
     }
@@ -499,14 +472,7 @@ public class SessionGUI {
         }
     };
     
- // Load values into the GUI
-//    private void loadValues(int sessionId, String startTime, String endTime, String datasetPath, String classifierOutput) {
-//        jtf_sessionId.setText(String.valueOf(sessionId));
-//        jtf_startTime.setText(startTime);
-//        jtf_endTime.setText(endTime);
-//        jtf_datasetPath.setText(datasetPath);
-//        jtf_classifierOutput.setText(classifierOutput);
-//    }
+
 
     // Insert session data into database
     private void insertData(int sessionId, String startTime, String endTime, String datasetPath,
@@ -556,12 +522,13 @@ public class SessionGUI {
     
             // Commit the transaction
             conn.commit();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             // Handle any exceptions, and roll back the transaction if an error occurs
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                System.out.println("Rollback failed: " + ex.getMessage());
+                System.out.println("Rollback failed: ");
+                man.logError(ex);
             }
             System.out.println(e.getMessage());
         } finally {
@@ -569,7 +536,8 @@ public class SessionGUI {
                 // Reset auto-commit mode
                 conn.setAutoCommit(true);
             } catch (SQLException ex) {
-                System.out.println("Failed to set auto-commit mode: " + ex.getMessage());
+                System.out.println("Failed to set auto-commit mode: ");
+                man.logError(ex);
             }
         }
     }
@@ -609,7 +577,8 @@ private double getClassProbability(int sessionId, String classLabel) {
             probability = rs.getDouble("probability");
         }
     } catch (SQLException e) {
-        System.out.println(e.getMessage());
+       // System.out.println(e.getMessage());
+    	 man.logError(e);
     }
     return probability;
 }
@@ -630,7 +599,8 @@ private double getClassProbability(int sessionId, String classLabel) {
                 featureList.add(new FeatureDetail(sessionId, featureName, featureParameter));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+        	 man.logError(e);
         }
         return featureList;
     }
@@ -651,7 +621,8 @@ private double getClassProbability(int sessionId, String classLabel) {
                 featureValues.add(new FeatureValue(sessionId, featureName, featureValue));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+        	 man.logError(e);
         }
         return featureValues;
     }
@@ -674,8 +645,9 @@ private double getClassProbability(int sessionId, String classLabel) {
 
                 searchResult.add(new Session(ss_id, sessionId, startTime, endTime, datasetPath, classifierOutput));
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            //System.out.println(e.getMessage());
+        	 man.logError(e);
         }
         return searchResult;
     }
@@ -683,7 +655,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     // Initialize the main user interface
     private void mainInterface() {
         frame = new JFrame("Sessions Database");
-        frame.setSize(1000, 800);
+        frame.setSize(800, 800);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         dtm = new DefaultTableModel(header, 0);
@@ -691,7 +663,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         JTextArea jta_cellText = new JTextArea(10, 30);
         jta_cellText.setLineWrap(true);
         jta_cellText.setWrapStyleWord(true);
-        JScrollPane jsp_cellText = new JScrollPane(jta_cellText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane jsp_cellText = new JScrollPane(jta_cellText, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jsp_cellText.setBounds(180, 460, 350, 200);
 
         // Add ListSelectionListener to the JTable
@@ -773,20 +745,10 @@ private double getClassProbability(int sessionId, String classLabel) {
         frame.getContentPane().add(jsp_cellText);
 
         frame.getContentPane().add(jsp);
-//        frame.add(jb_add);
+
         frame.getContentPane().add(jb_delete);
         frame.getContentPane().add(jb_search);
-        // DEBUG
-//        frame.add(lbl_sessionId);
-//        frame.add(jtf_sessionId);
-//        frame.add(lbl_startTime);
-//        frame.add(jtf_startTime);
-//        frame.add(lbl_endTime);
-//        frame.add(jtf_endTime);
-//        frame.add(lbl_datasetPath);
-//        frame.add(jtf_datasetPath);
-//        frame.add(lbl_classifierOutput);
-//        frame.add(jtf_classifierOutput);
+
 
         frame.getContentPane().setLayout(null);
         frame.setVisible(true);
