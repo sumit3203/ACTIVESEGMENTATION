@@ -25,7 +25,7 @@ public class SessionGUI {
     JTable table;
     JFrame frame;
     JLabel lbl_sessionId, lbl_startTime, lbl_endTime, lbl_datasetPath, lbl_classifierOutput;
-    ArrayList<Session> sessionList;
+    ArrayList<Session> sessionList= new ArrayList<>();
     Session session;
     JButton jb_refresh;
     JButton jb_viewFeatureDetail;
@@ -52,11 +52,14 @@ public class SessionGUI {
     public SessionGUI(ProjectManager projectManager) {
     	if (projectManager!=null) {
     		ProjectInfo pi=projectManager.getMetaInfo();
+    		String sessFile=pi.getSessionFile();
+    		man.loadDB(sessFile);
+    	} else {
+    		man.loadDB("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db" );
     	}
-        man.loadDB("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db" );
         // TODO move to a SessionManager class
         //createTable();
-        loadData();
+        loadData(sessionList);
         mainInterface();
     }
 
@@ -64,9 +67,9 @@ public class SessionGUI {
    
 
     // Load data from database into the sessionList
-    private void loadData() {
+    private void loadData(ArrayList<Session> sessionList) {
         try {
-            sessionList = new ArrayList<>();
+            //sessionList = new ArrayList<>();
             Connection conn=man.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
@@ -340,7 +343,7 @@ public class SessionGUI {
             String searchQuery = JOptionPane.showInputDialog(null, "Enter a session ID to search:",
                     "Search Session", JOptionPane.PLAIN_MESSAGE);
             if (searchQuery != null && !searchQuery.isEmpty()) {
-                ArrayList<Session> searchResult = searchSession(Integer.parseInt(searchQuery));
+                ArrayList<Session> searchResult = fetchSession(Integer.parseInt(searchQuery));
                 populateTable(searchResult);
             }
         }
@@ -350,7 +353,7 @@ public class SessionGUI {
     ActionListener refreshListener = new ActionListener() {
         @Override
 		public void actionPerformed(ActionEvent e) {
-            loadData(); // Reload data from the database
+            loadData(sessionList); // Reload data from the database
             populateTable(sessionList); // Update the table with new data
         }
     };
@@ -447,24 +450,24 @@ public class SessionGUI {
     }
 
     // Fetch class probabilities based on session_id and class_label
-private double getClassProbability(int sessionId, String classLabel) {
-    double probability = 0.0;
-    Connection conn=man.getConnection();
-    try {
-        String sql = "SELECT probability FROM class_probabilities_view WHERE session_id = ? AND class_label = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, sessionId);
-        pstmt.setString(2, classLabel);
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            probability = rs.getDouble("probability");
-        }
-    } catch (SQLException e) {
-       // System.out.println(e.getMessage());
-    	 man.logError(e);
-    }
-    return probability;
-}
+	private double getClassProbability(int sessionId, String classLabel) {
+	    double probability = 0.0;
+	    Connection conn=man.getConnection();
+	    try {
+	        String sql = "SELECT probability FROM class_probabilities_view WHERE session_id = ? AND class_label = ?";
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, sessionId);
+	        pstmt.setString(2, classLabel);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            probability = rs.getDouble("probability");
+	        }
+	    } catch (SQLException e) {
+	       // System.out.println(e.getMessage());
+	    	 man.logError(e);
+	    }
+	    return probability;
+	}
 
 
     // fetch featureDetailsbySessionID
@@ -488,7 +491,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         return featureList;
     }
     
- // Fetch feature values based on sessionId and imageId
+    // Fetch feature values based on sessionId and imageId
     private ArrayList<FeatureValue> getFeatureValues(int sessionId, int imageId) {
         ArrayList<FeatureValue> featureValues = new ArrayList<>();
         Connection conn=man.getConnection();
@@ -511,7 +514,7 @@ private double getClassProbability(int sessionId, String classLabel) {
     }
 
     // Search session by session ID in the database
-    private ArrayList<Session> searchSession(int sessionId) {
+    private ArrayList<Session> fetchSession(int sessionId) {
         ArrayList<Session> searchResult = new ArrayList<>();
         Connection conn=man.getConnection();
         try {
@@ -614,7 +617,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         jb_delete.setBounds(300, 380, 100, 30);
         jb_delete.addActionListener(deleteSessionListener);
 
-        jb_search = new JButton("Search");
+        jb_search = new JButton("Fetch");
         jb_search.setBounds(180, 420, 100, 30);
         jb_search.addActionListener(searchSessionListener);
         
@@ -635,157 +638,6 @@ private double getClassProbability(int sessionId, String classLabel) {
         populateTable(sessionList);
     }
     
- // FeatureValue Class
-    class FeatureValue {
-        private int sessionId;
-        private String featureName;
-        private String featureValue;
-
-        public FeatureValue(int sessionId, String featureName, String featureValue) {
-            this.sessionId = sessionId;
-            this.featureName = featureName;
-            this.featureValue = featureValue;
-        }
-
-        public int getSessionId() {
-            return sessionId;
-        }
-
-        public String getFeatureName() {
-            return featureName;
-        }
-
-        public String getFeatureValue() {
-            return featureValue;
-        }
-    }
-    
-    // FeatureDetail Class
-    class FeatureDetail {
-        private int sessionId;
-        private String featureName;
-        private String featureParameter;
-
-        /**
-         * 
-         * @param sessionId
-         * @param featureName
-         * @param featureParameter
-         */
-        public FeatureDetail(int sessionId, String featureName, String featureParameter) {
-            this.sessionId = sessionId;
-            this.featureName = featureName;
-            this.featureParameter = featureParameter;
-        }
-
-        public int getSessionId() {
-            return sessionId;
-        }
-
-        public String getFeatureName() {
-            return featureName;
-        }
-
-        public String getFeatureParameter() {
-            return featureParameter;
-        }
-    }
-    
- // ClassList class
-    class ClassList {
-        private int sessionId;
-        private String imageName;
-        private String imageLabel;
-        private int imageId; // Add the imageId field
- 
-        /**
-         * 
-         * @param sessionId
-         * @param imageName
-         * @param imageLabel
-         */
-        public ClassList(int sessionId, String imageName, String imageLabel) {
-            this.sessionId = sessionId;
-            this.imageName = imageName;
-            this.imageLabel = imageLabel;
-        }
-
-        public ClassList(int sessionId, String imageName, String imageLabel, int imageId) {
-        this.sessionId = sessionId;
-        this.imageName = imageName;
-        this.imageLabel = imageLabel;
-        this.imageId = imageId;
-    }
-
-        public int getSessionId() {
-            return sessionId;
-        }
-
-        public String getImageName() {
-            return imageName;
-        }
-
-        public String getImageLabel() {
-            return imageLabel;
-        }
-
-        public int getImageId() {
-        return imageId;
-    }
-    }
-
-    // Session class
-    class Session {
-        private int ss_id;
-        private int sessionId;
-        private String startTime;
-        private String endTime;
-        private String datasetPath;
-        private String classifierOutput;
-
-    	/**
-    	 * 
-    	 * @param ss_id
-    	 * @param sessionId
-    	 * @param startTime
-    	 * @param endTime
-    	 * @param datasetPath
-    	 * @param classifierOutput
-    	 */
-        public Session(int ss_id, int sessionId, String startTime, String endTime, String datasetPath, String classifierOutput) {
-            this.ss_id = ss_id;
-            this.sessionId = sessionId;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.datasetPath = datasetPath;
-            this.classifierOutput = classifierOutput;
-        }
-
-        public int getSSId() {
-            return ss_id;
-        }
-        
-        public int getSessionId() {
-            return sessionId;
-        }
-
-        public String getStartTime() {
-            return startTime;
-        }
-
-        public String getEndTime() {
-            return endTime;
-        }
-
-        public String getDatasetPath() {
-            return datasetPath;
-        }
-
-        public String getClassifierOutput() {
-            return classifierOutput;
-        }
-    }
-
     // Main method
     public static void main(String[] args) {
 
