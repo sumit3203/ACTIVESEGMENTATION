@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package activeSegmentation.session;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package activeSegmentation.session;
 
 // Session class
 public class Session {

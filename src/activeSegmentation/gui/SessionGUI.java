@@ -12,6 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import activeSegmentation.DbManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
+import activeSegmentation.session.FeatureDetail;
+import activeSegmentation.session.FeatureValue;
+import activeSegmentation.session.Session;
 
 
 /**

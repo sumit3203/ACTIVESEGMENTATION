@@ -1,4 +1,4 @@
-package activeSegmentation.gui;
+package activeSegmentation.session;
 
 public class FeatureValue {
     private int sessionId;
