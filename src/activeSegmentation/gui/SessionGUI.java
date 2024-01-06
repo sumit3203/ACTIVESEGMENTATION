@@ -652,6 +652,8 @@ private double getClassProbability(int sessionId, String classLabel) {
         return searchResult;
     }
 
+    
+    
     // Initialize the main user interface
     private void mainInterface() {
         frame = new JFrame("Sessions Database");
@@ -696,10 +698,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
         frame.getContentPane().add(jb_viewFeatureDetail);
         
-//        jb_viewFeatureDetail = new JButton("View Feature Detail");
-//        jb_viewFeatureDetail.setBounds(660, 420, 150, 30);
-//        jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
-//        frame.add(jb_viewFeatureDetail);
+
 
         lbl_sessionId = new JLabel("Session ID");
         lbl_sessionId.setBounds(20, 340, 100, 20);
@@ -726,9 +725,7 @@ private double getClassProbability(int sessionId, String classLabel) {
         jtf_classifierOutput = new JTextField();
         jtf_classifierOutput.setBounds(130, 500, 200, 20);
 
-        // jb_add = new JButton("Add");
-        // jb_add.setBounds(180, 380, 100, 30);
-        // jb_add.addActionListener(addSessionListener);
+
 
         jb_delete = new JButton("Delete");
         jb_delete.setBounds(300, 380, 100, 30);
@@ -887,7 +884,7 @@ private double getClassProbability(int sessionId, String classLabel) {
 
     // Main method
     public static void main(String[] args) {
-    	//new ImageJ();
+
         new SessionGUI();
     }
 }

@@ -9,34 +9,44 @@ import activeSegmentation.IEvaluation;
 //import activeSegmentation.evaluation.EvaluationCurve;
 import activeSegmentation.prj.ProjectManager;
 
-public class EvaluationPanel  implements Runnable {
+public class EvaluationPanel extends JFrame  implements Runnable {
 
 
 	private ProjectManager projectManager=null;
 	private IEvaluation evaluation=null;
 
-	public EvaluationPanel() {}
-
-	public EvaluationPanel(ProjectManager dataManager, IEvaluation evaluation) {
-		this.projectManager = dataManager;
-		this.evaluation = evaluation;
-	}
-
-	public void doAction(ActionEvent event) {}
-
-	@Override
-	public void run()  {
-		JFrame frame = new JFrame("Evaluation");
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+	public void showPanel() {
+		setTitle("Evaluation");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		Explorer explorer= new Explorer();
 		//explorer.setVisible(true);
-		frame.add(explorer);
+		add(explorer);
 
-		frame.setSize(800, 600);
-		frame.setLocationRelativeTo(null);
-		//frame.setResizable(false);
-		frame.setVisible(true);
+		setSize(800, 600);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		isRunning=true;
 	}
+
+	public EvaluationPanel(ProjectManager dataManager, IEvaluation evaluation) {
+		
+		this.projectManager = dataManager;
+		this.evaluation = evaluation;
+		showPanel();
+	}
+
+
+	@Override
+	public void run() {
+		if (!isRunning)
+			showPanel();
+		
+	}
+	
+	boolean isRunning=false;
+	
+	
+	 
 
 
 }

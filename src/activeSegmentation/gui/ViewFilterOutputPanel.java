@@ -116,16 +116,26 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 		this.roiOverlayList = new HashMap<>();
 		this.projectInfo=this.projectManager.getMetaInfo();
 		this.filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
-		this.setVisible(false);
+		super.setVisible(false);
 
-		//showPanel();
+		showPanel();
 	}
 
 	@Override
 	public void run() {
-		showPanel();
+		if (!isRunning)
+			showPanel();
 		
 	}
+	
+	boolean isRunning=false;
+	
+	
+	@Override
+	public void setVisible(boolean vis) {
+		frame.setVisible(vis);
+	}
+	
 	
 	/**
 	 * 
@@ -169,7 +179,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 	public void showPanel() {
 
 		frame = new JFrame("Feature Inspector");
-		frame.setResizable(false);
+		//frame.setResizable(false);
  		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
  		
 		roiPanel=new JPanel();
@@ -323,12 +333,14 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 		frame.pack();
 		
 		frame.setSize(1000, 600);
+		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setFocusable(true);
 		WindowManager.addWindow(this);
 		refreshPanel();
         updateGui();
+        isRunning=true;
         }
 	}
 

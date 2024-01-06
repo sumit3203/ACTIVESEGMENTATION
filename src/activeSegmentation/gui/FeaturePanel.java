@@ -164,12 +164,23 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		this.exampleList = new HashMap<>();
 		//this.allexampleList = new HashMap<>();
 		roiOverlayList = new HashMap<>();		
-		this.setVisible(false);
+		super.setVisible(false);
+		showPanel();
 	}
 
 	@Override
 	public void run() {
-		showPanel();		
+		if (!isRunning)
+			showPanel();
+		
+	}
+	
+	boolean isRunning=false;
+	
+	
+	@Override
+	public void setVisible(boolean vis) {
+		frame.setVisible(vis);
 	}
 
 	public void showPanel() {
@@ -350,7 +361,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 		frame.setFocusable(true);
 		WindowManager.addWindow(this);
 		updateGui();
-
+		isRunning=true;
 	}
 
 	private void addClassPanel(){
@@ -525,6 +536,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			//JOptionPane.showMessageDialog(null, "Successfully saved regions of interest");
 		} //end if
 
+		/* execute only if a project is of CLSSIF type
 		if (event == SAVE_SESSION_BUTTON_PRESSED) {
 			// Handle the save session data action
 			Connection conn = createConnection();
@@ -537,6 +549,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				e.printStackTrace();
 			}
 		}
+		*/
 		
 		// updaing
 		if(event==UPDATECLASS_BUTTON_PRESSED){

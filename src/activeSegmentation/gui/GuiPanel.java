@@ -68,39 +68,39 @@ public class GuiPanel implements ASCommon {
 
 	public void doAction(ActionEvent event) 	{
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
-			if(this.filterPanel == null) {
+			//if(this.filterPanel == null) {
 				// for time being feature manager is passed , will think
 				// of better design later
-				this.filterPanel = new FilterPanel(this.projectManager,featureManager);
-			}	
-			SwingUtilities.invokeLater(this.filterPanel);
+				filterPanel = new FilterPanel(projectManager,featureManager);
+			//}	
+			SwingUtilities.invokeLater(filterPanel);
 		}
 		
 		if(event==this.FILTERVIS_BUTTON_PRESSED){
-		 	if (this.filterOutputPanel==null) {
-		 		filterOutputPanel=new ViewFilterOutputPanel(this.projectManager,featureManager);
-		 	}
+		 	//if (this.filterOutputPanel==null) {
+		 		filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
+		 	//}
 		 	SwingUtilities.invokeLater(this.filterOutputPanel);
 		}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
-			if (this.featurePanel == null) {
+			//if (this.featurePanel == null) {
 				featurePanel=new FeaturePanel(featureManager);
-			}	
+			//}	
 			SwingUtilities.invokeLater(this.featurePanel);
 		}
 			
 		if (event == this.LEARNING_BUTTON_PRESSED)	{
-			if (this.learningPanel == null) {
-				this.learningPanel = new LearningPanel(this.projectManager, this.learningManager);
-			}
-			SwingUtilities.invokeLater(this.learningPanel);
+			//if (this.learningPanel == null) {
+				learningPanel = new LearningPanel(projectManager, learningManager);
+			//}
+			SwingUtilities.invokeLater(learningPanel);
 		}
 
 		if (event == this.EVALUATION_BUTTON_PRESSED) {
-			if (evaluationPanel==null) {
-				evaluationPanel = new EvaluationPanel();
-			}
+			//if (evaluationPanel==null) {
+				evaluationPanel = new EvaluationPanel(projectManager, null);
+			//}
 			SwingUtilities.invokeLater(evaluationPanel);	
 
 		}

@@ -52,7 +52,7 @@ import activeSegmentation.prj.ProjectManager;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class LearningPanel implements Runnable, ASCommon {
+public class LearningPanel extends JFrame implements Runnable, ASCommon {
  
   //platform-level variables
   private ProjectManager projectManager;
@@ -65,7 +65,7 @@ public class LearningPanel implements Runnable, ASCommon {
   private boolean hasChanged=false;  
   
   //UI variables
-  private final JFrame frame = new JFrame("Learning");
+//  private final JFrame frame = new JFrame("Learning");
   private final ActionEvent LOAD_BUTTON_PRESSED = new ActionEvent(this, 1, "Load");
   private final ActionEvent SAVE_BUTTON_PRESSED = new ActionEvent(this, 2, "Save");
   private ClassifierManager learningManager;
@@ -157,10 +157,11 @@ public class LearningPanel implements Runnable, ASCommon {
 	 * 
 	 */
 	private void showPanel() {
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    frame.getContentPane().setBackground(Color.GRAY);
-	    frame.setLocationRelativeTo(null);
-	    frame.setSize(600, 300);
+		setTitle("Learning");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    getContentPane().setBackground(Color.GRAY);
+	    setLocationRelativeTo(null);
+	    setSize(600, 300);
 	    
 	    
 	    final int xOffsetCol1=10;
@@ -280,9 +281,9 @@ public class LearningPanel implements Runnable, ASCommon {
 	    aPanel.add(IOpanel);
 	    // aPanel.add(options);
 	    
-	    frame.add(aPanel);
-	    frame.setVisible(true);
-	    frame.setResizable(false);
+	    add(aPanel);
+	    setVisible(true);
+	    setResizable(false);
 	}
 
 	/**

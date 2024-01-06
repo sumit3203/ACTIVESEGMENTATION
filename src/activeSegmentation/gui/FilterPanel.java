@@ -48,7 +48,7 @@ import activeSegmentation.moment.MomentsManager;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 
-public class FilterPanel implements Runnable, ASCommon {
+public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 	private IFilterManager filterManager;
 
@@ -76,7 +76,7 @@ public class FilterPanel implements Runnable, ASCommon {
 	/** This {@link ActionEvent} is fired when the 'help' button is pressed. */
 	final ActionEvent HELP_BUTTON_PRESSED = new ActionEvent( this, 6, "Help" );
 	
-	final JFrame frame = new JFrame("Filters");
+	//final JFrame frame = new JFrame("Filters");
 	
 	/**
 	 * Constructor 
@@ -94,20 +94,26 @@ public class FilterPanel implements Runnable, ASCommon {
 	
 		this.filterList =GuiUtil.getFilterJList();
 		this.filterList.setForeground(Color.ORANGE);
+		
+		
+		showPanel();
 
 	}
 
 	@Override
 	public void run() {
-
-		showPanel();
+		if (!isRunning)
+			showPanel();
 	}
+	
+	boolean isRunning=false;
 
 	/**
 	 * 
 	 */
 	private void showPanel() {
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setTitle("Filters");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		pane.setFont(ASCommon.FONT);
@@ -116,6 +122,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		panel.setLayout(null);
 		panel.setFont(ASCommon.FONT);
 		panel.setBackground(Color.GRAY);
+		
 		loadFilters();
 		pane.setSize(600, 400);
 		filterList.addMouseListener(mouseListener);
@@ -128,11 +135,12 @@ public class FilterPanel implements Runnable, ASCommon {
 		addButton(new JButton(), "Default",null , 240, 420, 100, 50, panel, DEFAULT_BUTTON_PRESSED, null );
 		addButton(new JButton(), "Save"   ,null , 350, 420, 100, 50, panel, SAVE_BUTTON_PRESSED,    null );
 
-		frame.add(pane);
-		frame.add(panel);
-		frame.setSize(730, 520);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+		getContentPane().add(pane);
+		getContentPane().add(panel);
+		setSize(730, 520);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		isRunning=true;
 	}
 
 
@@ -196,7 +204,7 @@ public class FilterPanel implements Runnable, ASCommon {
 			
 		}
 				
-		if(size != maxFilters)
+		if(size != maxFilters-1)
 			addButton( new JButton(), "Next", null, 480, 90, 70, 38, p , NEXT_BUTTON_PRESSED , null);
 
 		addButton( new JButton(),  "Help", null, 480, 180, 70, 38, p , NEXT_BUTTON_PRESSED , null);
@@ -261,7 +269,7 @@ public class FilterPanel implements Runnable, ASCommon {
 		}
 		
 		// next button
-		if (size != maxFilters)
+		if (size != maxFilters-1)
 			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
 
 		// help button
@@ -343,9 +351,11 @@ public class FilterPanel implements Runnable, ASCommon {
 			}
 		}
 		if(event == PREVIOUS_BUTTON_PRESSED ){
+			//TODO check for the bonds
 			pane.setSelectedIndex(pane.getSelectedIndex()-1);
 		}
 		if(event==NEXT_BUTTON_PRESSED){
+			//TODO check for the bonds
 			pane.setSelectedIndex(pane.getSelectedIndex()+1);
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
