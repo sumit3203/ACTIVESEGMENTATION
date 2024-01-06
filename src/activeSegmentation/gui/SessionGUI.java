@@ -22,11 +22,11 @@ import activeSegmentation.session.Session;
  * @author prodanov
  *
  */
-public class SessionGUI {
+public class SessionGUI extends JFrame {
     JTextField jtf_sessionId, jtf_startTime, jtf_endTime, jtf_datasetPath, jtf_classifierOutput;
     JButton jb_add, jb_delete, jb_search, jb_viewDetail;
     JTable table;
-    JFrame frame;
+    //JFrame frame;
     JLabel lbl_sessionId, lbl_startTime, lbl_endTime, lbl_datasetPath, lbl_classifierOutput;
     ArrayList<Session> sessionList= new ArrayList<>();
     Session session;
@@ -545,9 +545,10 @@ public class SessionGUI {
     
     // Initialize the main user interface
     private void mainInterface() {
-        frame = new JFrame("Sessions Database");
-        frame.setSize(800, 800);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //frame = new JFrame("Sessions Database");
+    	setTitle("Sessions Database");
+        setSize(800, 800);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         dtm = new DefaultTableModel(header, 0);
         table = new JTable(dtm);
@@ -580,12 +581,12 @@ public class SessionGUI {
         jb_viewDetail = new JButton("View Session Detail");
         jb_viewDetail.setBounds(300, 420, 150, 30);
         jb_viewDetail.addActionListener(viewSessionDetailListener);
-        frame.getContentPane().add(jb_viewDetail);
+        getContentPane().add(jb_viewDetail);
         
         jb_viewFeatureDetail = new JButton("View Feature Detail");
         jb_viewFeatureDetail.setBounds(460, 420, 150, 30);
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
-        frame.getContentPane().add(jb_viewFeatureDetail);
+        getContentPane().add(jb_viewFeatureDetail);
         
 
 
@@ -627,17 +628,18 @@ public class SessionGUI {
         jb_refresh = new JButton("Refresh");
         jb_refresh.setBounds(420, 380, 100, 30);
         jb_refresh.addActionListener(refreshListener);
-        frame.getContentPane().add(jb_refresh);
-        frame.getContentPane().add(jsp_cellText);
+        
+        getContentPane().add(jb_refresh);
+        getContentPane().add(jsp_cellText);
 
-        frame.getContentPane().add(jsp);
+        getContentPane().add(jsp);
 
-        frame.getContentPane().add(jb_delete);
-        frame.getContentPane().add(jb_search);
+        getContentPane().add(jb_delete);
+        getContentPane().add(jb_search);
 
 
-        frame.getContentPane().setLayout(null);
-        frame.setVisible(true);
+        getContentPane().setLayout(null);
+        setVisible(true);
         populateTable(sessionList);
     }
     
