@@ -133,7 +133,7 @@ public class ProjectManager implements IUtil{
                 // newField = "default_value";
             }
             // Add more migration steps for other versions as needed
-            // Update the version to the current compabtible version
+            // Update the version to the current compatible version
             projectInfo.setVersion(ProjectInfo.compatibleVersion);
 			System.out.println("version updated to " + ProjectInfo.compatibleVersion);
         }

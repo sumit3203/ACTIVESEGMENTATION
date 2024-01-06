@@ -71,6 +71,8 @@ public class ProjectInfo{
 	@JsonProperty(value="learning") 
 	private LearningInfo learning = new LearningInfo();
 	
+	private String sessionFile="";
+	
 	/*
 	 * JSON ignore part
 	 */
@@ -395,6 +397,22 @@ public class ProjectInfo{
 	 */
 	public void setPluginPath(List<String> pluginPath) {
 		this.pluginPath = pluginPath;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSessionFile() {
+		return sessionFile;
+	}
+
+	/**
+	 * 
+	 * @param sessionFile
+	 */
+	public void setSessionFile(String sessionFile) {
+		this.sessionFile = sessionFile;
 	}
 	 
 	

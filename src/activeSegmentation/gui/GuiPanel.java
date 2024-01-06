@@ -106,7 +106,7 @@ public class GuiPanel implements ASCommon {
 		}
 
 		if (event == this.SESSIONGUI_BUTTON_PRESSED) {
-			new SessionGUI(); // Create and display the SessionGUI instance
+			new SessionGUI(projectManager); // Create and display the SessionGUI instance
 		}
 		
 	}

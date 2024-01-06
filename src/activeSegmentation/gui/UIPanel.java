@@ -145,7 +145,7 @@ public class UIPanel extends JFrame  implements ASCommon  {
 		
 		JButton btnSessions = new JButton("Sessions");
 		btnSessions.addActionListener(e ->{  
-				sessionPanel = new SessionGUI();
+				sessionPanel = new SessionGUI(projectManager);
 			 
 		});
 		

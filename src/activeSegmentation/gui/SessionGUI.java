@@ -10,9 +10,15 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import activeSegmentation.DbManager;
+import activeSegmentation.prj.ProjectInfo;
+import activeSegmentation.prj.ProjectManager;
 
 
-
+/**
+ * 
+ * @author prodanov
+ *
+ */
 public class SessionGUI {
     JTextField jtf_sessionId, jtf_startTime, jtf_endTime, jtf_datasetPath, jtf_classifierOutput;
     JButton jb_add, jb_delete, jb_search, jb_viewDetail;
@@ -24,7 +30,6 @@ public class SessionGUI {
     JButton jb_refresh;
     JButton jb_viewFeatureDetail;
     // JTextArea jta_cellText;
- 
  
 	
 	private DbManager man=new DbManager();
@@ -44,142 +49,19 @@ public class SessionGUI {
     
 
     // Constructor
-    public SessionGUI() {
-   
+    public SessionGUI(ProjectManager projectManager) {
+    	if (projectManager!=null) {
+    		ProjectInfo pi=projectManager.getMetaInfo();
+    	}
         man.loadDB("C:\\GitHub\\ACTIVESEGMENTATION\\sqliteTest.db" );
-        createTable();
+        // TODO move to a SessionManager class
+        //createTable();
         loadData();
         mainInterface();
     }
 
  
-    private static void createIMtable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `images` (\r\n" +
-                " `img_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER, \r\n" +
-                " `image_id` INTEGER, \r\n" +
-                " `image_name` VARCHAR(50) \r\n" +
-                ");";
-        lock.execute(query);
-        System.out.println("IMAGES created");
-    }
-    
-    private static void createCPtable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `class_probabilities` (\r\n" +
-                " `cp_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER, \r\n" +
-                " `class_label` VARCHAR(50), \r\n" +
-                " `probability` FLOAT \r\n" +
-                ");";
-        lock.execute(query);
-        System.out.println("CLASS_PROBABILITIES created");
-    }
-    
-    private static void createSStable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `sessions` (\r\n" +
-                " `ss_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER, \r\n" +
-                " `start_time` VARCHAR(50), \r\n" +
-                " `end_time` VARCHAR(50), \r\n" +
-                " `dataset_path` TEXT, \r\n" +
-                " `classifier_output` TEXT \r\n" +
-                ");";
-        lock.execute(query);
-        System.out.println("SESSIONS created");
-    }
-    
-    private static void createCLtable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `class_list` (\r\n" +
-                " `class_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER,\r\n" +
-                " `image_name` VARCHAR(50), \r\n" +
-                " `class_label` VARCHAR(50) \r\n" +
-                ");";
-        lock.execute(query);
-        System.out.println("CLASS_LIST created");
-    }
-    
-    private static void createFStable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `features` (\r\n" +
-                " `feature_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER, \r\n" +
-                " `feature_name` VARCHAR(50), \r\n" +
-                " `feature_parameter` VARCHAR(50) \r\n" +
-                ");";
-        lock.execute(query);
-        System.out.println("FEATURES created");
-    }
-    
-    private static void createFVtable(Statement lock) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS `features_values` (\r\n" +
-                " `fvalue_id` INTEGER PRIMARY KEY, \r\n" +
-                " `session_id` INTEGER, \r\n" +
-                " `feature_name` VARCHAR(50), \r\n" +
-                " `feature_value` FLOAT, \r\n" +
-                " `image_id` INTEGER, \r\n" +
-                " FOREIGN KEY(image_id) REFERENCES vectors(image_id)\r\n" +
-                ");";
-    
-        lock.execute(query);
-        System.out.println("FEATURES_VALUES created");
-    }
-    
-
-    // Create sessions table if it does not exist
-    private void createTable() {
-        try {
-        	Connection conn=man.getConnection();
-            Statement stmt = conn.createStatement();
-            createCPtable(stmt);
-            createSStable(stmt);
-            createCLtable(stmt);
-            createFStable(stmt);
-            createFVtable(stmt);
-            createIMtable(stmt);
-            String sql = "CREATE TABLE IF NOT EXISTS sessions (\n"
-                    + " ss_id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                    + " session_id INTEGER,\n"
-                    + " start_time TEXT,\n"
-                    + " end_time TEXT,\n"
-                    + " dataset_path TEXT,\n"
-                    + " classifier_output TEXT\n"
-                    + ");";
-            stmt.execute(sql);
-            System.out.println("Table and View created successfully.");
-            
-            String createSessionDetailsView = "CREATE VIEW IF NOT EXISTS session_details_view AS " +
-            "SELECT s.session_id, s.start_time, s.end_time, i.image_id, i.image_name " +
-            "FROM sessions s " +
-            "INNER JOIN images i ON s.session_id = i.session_id;";
-            stmt.execute(createSessionDetailsView);
-
-            String createClassListDetailsView = "CREATE VIEW IF NOT EXISTS class_list_details_view AS " +
-            "SELECT cl.session_id, cl.image_name, cl.class_label, i.image_id " +
-            "FROM class_list cl " +
-            "INNER JOIN images i ON cl.session_id = i.session_id AND cl.image_name = i.image_name;";
-            stmt.execute(createClassListDetailsView);
-
-            String createFeatureDetailsView = "CREATE VIEW IF NOT EXISTS feature_details_view AS " +
-            "SELECT f.session_id, f.feature_name, f.feature_parameter " +
-            "FROM features f;";
-            stmt.execute(createFeatureDetailsView);
-
-            String createClassProbabilitiesView = "CREATE VIEW IF NOT EXISTS class_probabilities_view AS " +
-            "SELECT cp.session_id, cp.class_label, cp.probability " +
-            "FROM class_probabilities cp;";
-            stmt.execute(createClassProbabilitiesView);
-
-            String createFeatureValuesView = "CREATE VIEW IF NOT EXISTS feature_values_view AS " +
-            "SELECT fv.session_id, fv.image_id, fv.feature_name, fv.feature_value " +
-            "FROM features_values fv;";
-            stmt.execute(createFeatureValuesView);
-
-            System.out.println("Table and View created successfully.");
-        } catch (SQLException e) {
-            //System.out.println(e.getMessage());
-            man.logError(e);
-        }
-    }
+   
 
     // Load data from database into the sessionList
     private void loadData() {
@@ -369,6 +251,7 @@ public class SessionGUI {
                         JTable featureValuesTable = new JTable(featureValuesData, featureValuesHeader);
                         JScrollPane featureValuesScrollPane = new JScrollPane(featureValuesTable);
                         featureValuesTable.setFillsViewportHeight(true);
+                        
                         JFrame featureValuesFrame = new JFrame(imageName + " values");
                         featureValuesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         featureValuesFrame.getContentPane().add(featureValuesScrollPane);
@@ -783,6 +666,12 @@ private double getClassProbability(int sessionId, String classLabel) {
         private String featureName;
         private String featureParameter;
 
+        /**
+         * 
+         * @param sessionId
+         * @param featureName
+         * @param featureParameter
+         */
         public FeatureDetail(int sessionId, String featureName, String featureParameter) {
             this.sessionId = sessionId;
             this.featureName = featureName;
@@ -808,7 +697,13 @@ private double getClassProbability(int sessionId, String classLabel) {
         private String imageName;
         private String imageLabel;
         private int imageId; // Add the imageId field
-
+ 
+        /**
+         * 
+         * @param sessionId
+         * @param imageName
+         * @param imageLabel
+         */
         public ClassList(int sessionId, String imageName, String imageLabel) {
             this.sessionId = sessionId;
             this.imageName = imageName;
@@ -848,6 +743,15 @@ private double getClassProbability(int sessionId, String classLabel) {
         private String datasetPath;
         private String classifierOutput;
 
+    	/**
+    	 * 
+    	 * @param ss_id
+    	 * @param sessionId
+    	 * @param startTime
+    	 * @param endTime
+    	 * @param datasetPath
+    	 * @param classifierOutput
+    	 */
         public Session(int ss_id, int sessionId, String startTime, String endTime, String datasetPath, String classifierOutput) {
             this.ss_id = ss_id;
             this.sessionId = sessionId;
@@ -885,6 +789,6 @@ private double getClassProbability(int sessionId, String classLabel) {
     // Main method
     public static void main(String[] args) {
 
-        new SessionGUI();
+        new SessionGUI(null);
     }
 }
