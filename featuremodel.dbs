@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Sqlite" id="Sqlite-19b8" database="Sqlite" >
+	<schema name="Default" >
+		<table name="class_list" spec="" >
+			<column name="class_id" type="INTEGER" jt="4" mandatory="y" />
+			<column name="session_id" type="INTEGER" jt="4" />
+			<column name="image_name" type="VARCHAR" length="50" jt="12" />
+			<column name="class_label" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_class_list" unique="PRIMARY_KEY" >
+				<column name="class_id" />
+			</index>
+		</table>
+		<table name="class_probabilities" spec="" >
+			<column name="cp_id" type="INTEGER" jt="4" />
+			<column name="class_id" type="INTEGER" jt="4" />
+			<column name="probability" type="FLOAT" jt="7" />
+			<index name="pk_class_probabilities" unique="UNIQUE_KEY" >
+				<column name="cp_id" options=" AUTOINCREMENT" />
+			</index>
+			<fk name="FK_class_probabilities sessions" to_schema="Default" to_table="sessions" options="" >
+				<fk_column name="class_id" pk="session_id" />
+			</fk>
+		</table>
+		<table name="features" spec="" >
+			<column name="feature_id" type="INTEGER" jt="4" mandatory="y" />
+			<column name="session_id" type="INTEGER" jt="4" />
+			<column name="feature_name" type="VARCHAR" length="50" jt="12" />
+			<column name="feature_parameter" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_features" unique="PRIMARY_KEY" >
+				<column name="feature_id" />
+			</index>
+			<fk name="fk_features" to_schema="Default" to_table="sessions" update_action="cascade" >
+				<fk_column name="session_id" pk="session_id" />
+			</fk>
+		</table>
+		<table name="features_values" spec="" >
+			<column name="fvalue_id" type="INTEGER" jt="4" />
+			<column name="feature_id" type="INTEGER" jt="4" />
+			<column name="feature_name" type="VARCHAR" length="50" jt="12" />
+			<column name="feature_value" type="FLOAT" jt="7" />
+			<column name="image_id" type="INTEGER" jt="4" />
+			<index name="pk_features_values" unique="UNIQUE_KEY" >
+				<column name="fvalue_id" options=" AUTOINCREMENT" />
+			</index>
+			<fk name="FK_features_values features" to_schema="Default" to_table="features" delete_action="cascade" update_action="cascade" options="" >
+				<fk_column name="feature_id" pk="feature_id" />
+			</fk>
+		</table>
+		<table name="images" spec="" >
+			<column name="session_id" type="INTEGER" jt="4" />
+			<column name="image_id" type="INTEGER" jt="4" />
+			<column name="image_name" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_images" unique="UNIQUE_KEY" >
+				<column name="image_id" options=" AUTOINCREMENT" />
+			</index>
+			<index name="unq_images_session_id" unique="UNIQUE_KEY" >
+				<column name="session_id" />
+			</index>
+		</table>
+		<table name="sessions" spec="" >
+			<column name="session_id" type="INTEGER" jt="4" />
+			<column name="start_time" type="VARCHAR" length="50" jt="12" />
+			<column name="end_time" type="VARCHAR" length="50" jt="12" />
+			<column name="dataset_path" type="TEXT" jt="-1" />
+			<column name="classifier_output" type="TEXT" jt="-1" />
+			<index name="pk_sessions" unique="UNIQUE_KEY" >
+				<column name="session_id" options=" AUTOINCREMENT" />
+			</index>
+		</table>
+		<view name="class_list_details_view" >
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS SELECT cl.session_id, cl.image_name, cl.class_label, i.image_id FROM class_list cl, images i where cl.session_id = i.session_id AND cl.image_name = i.image_name]]></view_script>
+			<column name="session_id" type="INTEGER" />
+			<column name="image_name" type="VARCHAR" />
+			<column name="class_label" type="VARCHAR" />
+			<column name="image_id" type="INTEGER" />
+		</view>
+		<view name="session_details_view" >
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS SELECT s.session_id, s.start_time, s.end_time, i.image_id, i.image_name FROM sessions s, images i where s.session_id = i.session_id]]></view_script>
+			<column name="session_id" type="INTEGER" />
+			<column name="start_time" type="VARCHAR" />
+			<column name="end_time" type="VARCHAR" />
+			<column name="image_id" type="INTEGER" />
+			<column name="image_name" type="VARCHAR" />
+		</view>
+	</schema>
+	<layout name="Main Layout" id="Layout-17c8" show_relation="columns" >
+		<entity schema="Default" name="class_list" color="BED3F4" x="1248" y="224" />
+		<entity schema="Default" name="class_list_details_view" color="F4DDBE" x="752" y="416" />
+		<entity schema="Default" name="class_probabilities" color="F4DDBE" x="768" y="224" />
+		<entity schema="Default" name="features" color="C7F4BE" x="48" y="224" />
+		<entity schema="Default" name="features_values" color="C7F4BE" x="288" y="224" />
+		<entity schema="Default" name="images" color="BED3F4" x="1456" y="432" />
+		<entity schema="Default" name="session_details_view" color="BED3F4" x="1232" y="432" />
+		<entity schema="Default" name="sessions" color="F4DDBE" x="976" y="224" />
+		<callout x="768" y="80" pointer="Round" >
+			<comment><![CDATA[This is a layout. You can create multiple layouts with the same or different tables. 
+
+Edit tables by double-clicking the table headers.]]></comment>
+		</callout>
+		<group name="class_list" color="ECF0F7" >
+			<entity schema="Default" name="session_details_view" />
+			<entity schema="Default" name="class_list" />
+			<entity schema="Default" name="images" />
+		</group>
+		<group name="features" color="EEF7EC" >
+			<entity schema="Default" name="features_values" />
+			<entity schema="Default" name="features" />
+		</group>
+		<group name="class_probabilities" color="F7F2EC" >
+			<entity schema="Default" name="class_probabilities" />
+			<entity schema="Default" name="class_list_details_view" />
+			<entity schema="Default" name="sessions" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-263e" show_column_type="y" show_relation="columns" >
+		<entity schema="Default" name="class_list" color="BED3F4" x="1424" y="48" />
+		<entity schema="Default" name="class_list_details_view" color="F4DDBE" x="864" y="240" />
+		<entity schema="Default" name="class_probabilities" color="F4DDBE" x="912" y="48" />
+		<entity schema="Default" name="features" color="C7F4BE" x="48" y="48" />
+		<entity schema="Default" name="features_values" color="C7F4BE" x="352" y="48" />
+		<entity schema="Default" name="images" color="BED3F4" x="1696" y="256" />
+		<entity schema="Default" name="session_details_view" color="BED3F4" x="1424" y="256" />
+		<entity schema="Default" name="sessions" color="F4DDBE" x="1136" y="48" />
+		<script name="SQL Editor" id="Editor-206a" language="SQL" >
+			<string><![CDATA[SELECT
+	cp_id, class_id, probability
+FROM
+	class_probabilities s;]]></string>
+		</script>
+		<browser id="Browse-2237" name="Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="Default" entity="class_probabilities" x="-2147483648" y="-2147483648" width="-2147483648" height="-2147483648" >
+				<browse_table schema="Default" entity="sessions" fk="FK_class_probabilities sessions" x="40" y="-2147483648" width="500" height="350" record_view="y" />
+			</browse_table>
+		</browser>
+		<query id="Query-293" name="Query Builder" >
+			<query_table schema="Default" name="class_probabilities" alias="cp" x="48" y="48" >
+				<column name="cp_id" />
+				<column name="class_id" />
+				<column name="probability" />
+				<query_table schema="Default" name="sessions" alias="s" x="272" y="48" fk="FK_class_probabilities sessions" type="Inner Join" >
+					<column name="session_id" />
+					<column name="start_time" />
+					<column name="end_time" />
+					<column name="dataset_path" />
+					<column name="classifier_output" />
+				</query_table>
+			</query_table>
+		</query>
+		<form name="Report" id="Report-f16" template="Page" css="container-fluid" view="frame" >
+			<var name="samplePageNumber" type="4" value="0" mandatory="n" />
+			<var name="sampleRecordsPerPage" type="4" value="100" mandatory="n" />
+			<body name="Body" template="Grid" max_records="100" pos="0,0,0,0,f,f" layout="{{-2,-2,-2,-2,-1},{-2,-2,-2,-2}}" generate_path="y" scroll="n" html="n" header_rows="0" footer_rows="0" >
+				<cell type="label" name="Class_probabilities Data" template="H3" pos="0,0,1,0,l,c" />
+				<cell type="chart" name="Pie" template="Pie" pos="0,1,4,1,l,c" max_records="20" generate_path="y" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="cp_id" type="4" />
+						<var name="class_id" type="4" />
+						<var name="probability" type="7" />
+						<script ><![CDATA[SELECT * FROM class_probabilities]]></script>
+					</form_script>
+					<param name="width" value="100%" />
+					<param name="title" value="Sample Chart" />
+					<param name="value" value="cp_id" />
+					<param name="height" value="400px" />
+				</cell>
+				<tableview name="sample" template="Table" max_records="100" css="sortable table table-striped table-sm table-hover" pos="0,2,4,2,f,f" layout="{{-2,-2,-2,-2},{-2,-2}}" generate_path="y" scroll="n" html="n" header_rows="1" footer_rows="0" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="cp_id" type="4" />
+						<var name="class_id" type="4" />
+						<var name="probability" type="7" />
+						<script ><![CDATA[SELECT * FROM class_probabilities]]></script>
+					</form_script>
+					<cell type="label" name="cp_id" template="Plain" pos="0,0,0,0,c,c" />
+					<cell type="label" name="class_id" template="Plain" pos="1,0,1,0,c,c" />
+					<cell type="label" name="probability" template="Plain" pos="2,0,2,0,c,c" />
+					<cell type="label" name="${cp_id}" template="Plain" pos="0,1,0,1,l,c" />
+					<cell type="label" name="${class_id}" template="Plain" pos="1,1,1,1,l,c" />
+					<cell type="label" name="${probability}" template="Plain" pos="2,1,2,1,l,c" />
+					<cell type="button" name="More" template="Plain" css="btn btn-sm btn-secondary" pos="3,1,3,1,c,c" ref_id="Report-f16" />
+				</tableview>
+				<cell type="href" name="" template="Plain" disabled="${samplePageNumber&lt;1}" pos="0,3,0,3,l,c" glyph="bi-chevron_double_left" ref_id="Report-f16" >
+					<var name="samplePageNumber" value="0" />
+				</cell>
+				<cell type="href" name="" template="Plain" disabled="${samplePageNumber&lt;1}" pos="1,3,1,3,l,c" glyph="bi-chevron_left" ref_id="Report-f16" >
+					<var name="samplePageNumber" value="${Math.max(0,samplePageNumber-1)}" />
+				</cell>
+				<cell type="label" name="Page ${samplePageNumber+1}" template="Plain" pos="2,3,2,3,l,c" />
+				<cell type="href" name="" template="Plain" disabled="${!sampleHasNextPage}" pos="3,3,3,3,l,c" glyph="bi-chevron_right" ref_id="Report-f16" >
+					<var name="samplePageNumber" value="${( samplePageNumber+1 )}" />
+				</cell>
+			</body>
+		</form>
+	</layout>
+</project>

@@ -23,7 +23,7 @@ import ij.IJ;
 import ij.WindowManager;
 
 //  to rename to CreateOpenProjectUI
-public class CreateOpenProjectUI implements Runnable, ASCommon {
+public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 	//public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
@@ -59,7 +59,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 	 * 
 	 * @param projectManager
 	 */
-	public CreateOpenProjectUI(ProjectManager projectManager) {
+	public CreateOpenProjectGUI(ProjectManager projectManager) {
 		this.projectManager=projectManager;
 		projectList= new JComboBox<>(ProjectType.values());
 	}
@@ -304,7 +304,7 @@ public class CreateOpenProjectUI implements Runnable, ASCommon {
 
 
 	private ImageIcon createImageIcon(String path, String description) {
-		URL imgURL = CreateOpenProjectUI.class.getResource(path);
+		URL imgURL = CreateOpenProjectGUI.class.getResource(path);
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
 		} else {            

@@ -4,7 +4,7 @@ import java.io.File;
 import javax.swing.SwingUtilities;
 
 import activeSegmentation.ASCommon;
-import activeSegmentation.gui.CreateOpenProjectUI;
+import activeSegmentation.gui.CreateOpenProjectGUI;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImageJ;
@@ -34,7 +34,7 @@ public class Active_Segmentation_ implements PlugIn, ASCommon {
 		System.out.println( System.getProperty("java.classpath"));
 		 
 		ProjectManager dataManager= new ProjectManager();
-		CreateOpenProjectUI creatProject= new CreateOpenProjectUI(dataManager);
+		CreateOpenProjectGUI creatProject= new CreateOpenProjectGUI(dataManager);
 		SwingUtilities.invokeLater(creatProject);
 		IJ.log(arg0);
 		IJ.log("AS version "+version);
