@@ -190,6 +190,25 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			
 			String projectType=projectList.getSelectedItem().toString();
 			//System.out.println(projectName+"--"+ projectType);
+
+			// Check if the project name field is empty
+			if (projectName==null || projectName.isEmpty()) {
+				// Display an error message to the user
+				IJ.error("Project name cannot be empty.");
+				return;
+			}
+
+			// Check if project directory is empty or same as training image directory
+			if (projectDirectory == null || projectDirectory.isEmpty() || projectDirectory.equalsIgnoreCase(trainingImage)) {
+				IJ.error("Project directory cannot be empty and should not be the same as the training image directory.");
+				return;
+			}
+
+			// Check if training image directory is empty and no image is currently open
+			if ((null == WindowManager.getCurrentImage() && (trainingImage == null || trainingImage.isEmpty()))) {
+				IJ.error("Training folder cannot be empty and should contain either a tif file or folder with tiff images.");
+				return;
+			}
 			
 			// TODO change the signaling mechanism
 			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
