@@ -116,8 +116,8 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 					System.out.println(" GuiPanel ");
 					new GuiPanel(projectManager);
 					
-					UIPanel frame=new UIPanel(projectManager);
-					frame.setVisible(true);
+//					UIPanel frame=new UIPanel(projectManager);
+//					frame.setVisible(true);
 				}
 				else 
 					IJ.error("Not a project file!");
