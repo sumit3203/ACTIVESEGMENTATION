@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="resources">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Lenovo/ImageJ"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Program Files/Java/javafx-sdk-21.0.2/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/Auto_Threshold.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/BeanShell.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/chiSquaredAttributeEval.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/dsplib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/fastCorrBasedFS.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/FastRandomForest_0.99.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/fftscale-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/ij.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/jackson-annotations-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/jackson-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/jackson-databind-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/java-cup-0.11a.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/mtj-1.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/pentaho-package-manager-1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/pixlib-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/scale-1-0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/sqlite-jdbc-3.36.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/SVMAttributeEval-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/git-repositories/ACTIVESEGMENTATION/jars/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-21.0.2/lib/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lenovo/ImageJ/ij.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
