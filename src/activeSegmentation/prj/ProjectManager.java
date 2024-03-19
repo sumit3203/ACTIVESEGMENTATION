@@ -190,10 +190,7 @@ public class ProjectManager implements IUtil{
 			String projectDescription,
 			String trainingImage){
 		String message="done";
-		String returnedMessage=validate(projectName,projectDirectory,trainingImage);
-		if(!returnedMessage.equalsIgnoreCase(message)) {
-			return returnedMessage;
-		}
+
 		setASpath();
 		projectInfo= new ProjectInfo();
 		projectInfo.setProjectPath(projectDirectory+ fs+projectName);
@@ -283,29 +280,6 @@ public class ProjectManager implements IUtil{
 		}
 		IJ.log("createStack done");
 	}
-	
-	/**
-	 * 
-	 * @param projectName
-	 * @param projectDirectory
-	 * @param trainingImage
-	 * @return
-	 */
-	private String validate(String projectName,String projectDirectory, 
-			String trainingImage) {
-		String message="done";
-		if(projectName==null|| projectName.isEmpty()) {
-			return "Project name cannot be empty";
-
-		} else if(projectDirectory==null|| projectDirectory.isEmpty() || projectDirectory.equalsIgnoreCase(trainingImage)) {
-			return "Project directory cannot be empty and should not be the same as training image directory";
-		}
-		else if (null == WindowManager.getCurrentImage() &&(trainingImage==null|| trainingImage.isEmpty())) {
-			return "Training folder cannot be empty and should contain either a tif file or folder with tiff images";
-		}
-		return message;
-	}
-
 	
 	/**
 	 * 
