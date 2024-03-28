@@ -1,5 +1,5 @@
 package activeSegmentation.gui;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import javax.swing.table.DefaultTableModel;
 
+import activeSegmentation.ASCommon;
 import activeSegmentation.DbManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
@@ -22,7 +23,7 @@ import activeSegmentation.session.Session;
  * @author prodanov
  *
  */
-public class SessionGUI extends JFrame {
+public class SessionGUI extends JFrame implements ASCommon {
     JTextField jtf_sessionId, jtf_startTime, jtf_endTime, jtf_datasetPath, jtf_classifierOutput;
     JButton jb_add, jb_delete, jb_search, jb_viewDetail;
     JTable table;
@@ -577,14 +578,16 @@ public class SessionGUI extends JFrame {
         });
         JScrollPane jsp = new JScrollPane(table);
         jsp.setBounds(20, 20, 750, 300);
-        
+
         jb_viewDetail = new JButton("View Session Detail");
-        jb_viewDetail.setBounds(300, 420, 150, 30);
+        jb_viewDetail.setBounds(180, 420, 160, 30);
+        configureButton(jb_viewDetail);
         jb_viewDetail.addActionListener(viewSessionDetailListener);
         getContentPane().add(jb_viewDetail);
-        
+
         jb_viewFeatureDetail = new JButton("View Feature Detail");
-        jb_viewFeatureDetail.setBounds(460, 420, 150, 30);
+        jb_viewFeatureDetail.setBounds(370, 420, 160, 30);
+        configureButton(jb_viewFeatureDetail);
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
         getContentPane().add(jb_viewFeatureDetail);
         
@@ -618,15 +621,18 @@ public class SessionGUI extends JFrame {
 
 
         jb_delete = new JButton("Delete");
-        jb_delete.setBounds(300, 380, 100, 30);
+        jb_delete.setBounds(305, 380, 100, 30);
+        configureButton(jb_delete);
         jb_delete.addActionListener(deleteSessionListener);
 
         jb_search = new JButton("Fetch");
-        jb_search.setBounds(180, 420, 100, 30);
+        jb_search.setBounds(180, 380, 100, 30);
+        configureButton(jb_search);
         jb_search.addActionListener(searchSessionListener);
-        
+
         jb_refresh = new JButton("Refresh");
-        jb_refresh.setBounds(420, 380, 100, 30);
+        jb_refresh.setBounds(430, 380, 100, 30);
+        configureButton(jb_refresh);
         jb_refresh.addActionListener(refreshListener);
         
         getContentPane().add(jb_refresh);
@@ -641,6 +647,15 @@ public class SessionGUI extends JFrame {
         getContentPane().setLayout(null);
         setVisible(true);
         populateTable(sessionList);
+    }
+
+    private void configureButton(JButton button) {
+        Font labelFONT = new Font("Arial", Font.BOLD, 12);
+        button.setFont(labelFONT);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setBackground(buttonBGColor);
+        button.setForeground(Color.WHITE);
     }
     
     // Main method
