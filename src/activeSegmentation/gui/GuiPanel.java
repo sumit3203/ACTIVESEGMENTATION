@@ -1,24 +1,14 @@
 package activeSegmentation.gui;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import activeSegmentation.ASCommon;
-//import activeSegmentation.IEvaluation;
-//import activeSegmentation.ILearningManager;
-//import activeSegmentation.IProjectManager;
-//import activeSegmentation.evaluation.EvaluationMetrics;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.learning.ClassifierManager;
 import activeSegmentation.prj.ProjectManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -26,32 +16,33 @@ import activeSegmentation.prj.ProjectManager;
  * @author Sumit Vohra, Dimiter Prodanov
  *
  */
-public class GuiPanel implements ASCommon {
-	
+public class GuiPanel extends JFrame implements ASCommon {
+
 	private JFrame mainFrame;
 	private JPanel controlPanel;
 	private LearningPanel learningPanel;
 	private FilterPanel filterPanel;
 	private FeaturePanel featurePanel;
 	private ViewFilterOutputPanel filterOutputPanel;
-	 
-	
+
+
 	final ActionEvent FEATURE_BUTTON_PRESSED    = new ActionEvent(this, 0, "Feature"   );
 	final ActionEvent FILTER_BUTTON_PRESSED     = new ActionEvent(this, 1, "Filter"    );
 	final ActionEvent LEARNING_BUTTON_PRESSED   = new ActionEvent(this, 2, "Learning"  );
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
 	final ActionEvent FILTERVIS_BUTTON_PRESSED  = new ActionEvent(this, 4, "FilterVis" );
 	final ActionEvent SESSIONGUI_BUTTON_PRESSED = new ActionEvent(this, 5, "SessionGUI");
+	final ActionEvent HOME_BUTTON_PRESSED       = new ActionEvent(this, 6, "Home");
+	final ActionEvent EXIT_BUTTON_PRESSED       = new ActionEvent(this, 7, "Exit");
 
-	
+
 	private FeatureManager featureManager;
 	private ClassifierManager learningManager;
 	private ProjectManager projectManager;
 	private EvaluationPanel evaluationPanel;
-	
 
 	/**
-	 * 
+	 *
 	 * @param projectManager
 	 */
 	public GuiPanel(ProjectManager projectManager)	{
@@ -61,86 +52,116 @@ public class GuiPanel implements ASCommon {
 		learningManager = new ClassifierManager(this.projectManager);
 		System.out.println("FeatureManager init");
 		featureManager=new FeatureManager(this.projectManager, this.learningManager);
-		
+
 		System.out.println("init Project GuiPanel ");
 		initGUI();
+	}
+
+	public JPanel getMainPanel() {
+		return controlPanel;
 	}
 
 	public void doAction(ActionEvent event) 	{
 		if ((event == this.FILTER_BUTTON_PRESSED)) {
 			//if(this.filterPanel == null) {
-				// for time being feature manager is passed , will think
-				// of better design later
-				filterPanel = new FilterPanel(projectManager,featureManager);
-			//}	
+			// for time being feature manager is passed , will think
+			// of better design later
+			filterPanel = new FilterPanel(projectManager,featureManager);
+			//}
 			SwingUtilities.invokeLater(filterPanel);
 		}
-		
+
 		if(event==this.FILTERVIS_BUTTON_PRESSED){
-		 	//if (this.filterOutputPanel==null) {
-		 		filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
-		 	//}
-		 	SwingUtilities.invokeLater(this.filterOutputPanel);
+			//if (this.filterOutputPanel==null) {
+			filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
+			//}
+			SwingUtilities.invokeLater(this.filterOutputPanel);
 		}
 
 		if ((event == this.FEATURE_BUTTON_PRESSED)) {
 			//if (this.featurePanel == null) {
-				featurePanel=new FeaturePanel(featureManager);
-			//}	
+			featurePanel=new FeaturePanel(featureManager);
+			//}
 			SwingUtilities.invokeLater(this.featurePanel);
 		}
-			
+
 		if (event == this.LEARNING_BUTTON_PRESSED)	{
 			//if (this.learningPanel == null) {
-				learningPanel = new LearningPanel(projectManager, learningManager);
+			learningPanel = new LearningPanel(projectManager, learningManager);
 			//}
 			SwingUtilities.invokeLater(learningPanel);
 		}
 
 		if (event == this.EVALUATION_BUTTON_PRESSED) {
 			//if (evaluationPanel==null) {
-				evaluationPanel = new EvaluationPanel(projectManager, null);
+			evaluationPanel = new EvaluationPanel(projectManager, null);
 			//}
-			SwingUtilities.invokeLater(evaluationPanel);	
+			SwingUtilities.invokeLater(evaluationPanel);
 
 		}
 
 		if (event == this.SESSIONGUI_BUTTON_PRESSED) {
 			new SessionGUI(projectManager); // Create and display the SessionGUI instance
 		}
-		
+
+		if (event == this.HOME_BUTTON_PRESSED) {
+			mainFrame.dispose(); // Close the current window
+			new CreateOpenProjectGUI(projectManager).run(); // Reopen the main window
+		}
+
+		// Confirm Exit
+		if (event == this.EXIT_BUTTON_PRESSED) {
+			int response = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
+		}
+
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	private void initGUI()	{
 		this.mainFrame = new JFrame("Active Segmentation v." + version);
 		this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		this.mainFrame.setLocationRelativeTo(null);
-
 		this.mainFrame.setSize(frameWidth, frameHeight);
+		this.mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent the default close operation
+
+		// Confirm Exit to intercept the window close event
+		mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(mainFrame,
+						"Are you sure you want to exit?", "Confirm Exit",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					System.exit(0);
+				}
+			}
+		});
 
 		this.controlPanel = new JPanel();
 		this.controlPanel.setLayout(null);
 		this.controlPanel.setBackground(Color.GRAY);
+
 		JLabel label = new JLabel("Active Segmentation");
 		label.setFont(largeFONT);
-		label.setBounds(100, 50, 450, 100);
+		label.setBounds(120, 20, 450, 100);
 		label.setForeground(Color.ORANGE);
 		this.controlPanel.add(label);
-		this.controlPanel.add(addButton("Select Filters",       null,  25, 150, 200, 50, this.FILTER_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Filter Visualization", null, 275, 150, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Feature Extraction",   null,  25, 250, 200, 50, this.FEATURE_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Model Learning",       null, 275, 250, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Evaluation",           null,  25, 350, 200, 50, this.EVALUATION_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("View Sessions",           null,  275, 350, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Select Filters",       null,  60, 130, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Filter Visualization", null, 300, 130, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Feature Extraction",   null,  60, 210, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Model Learning",       null, 300, 210, 200, 50, this.LEARNING_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Evaluation",           null,  60, 290, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("View Sessions",        null,  300, 290, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Home", 				 null, 340, 380, 100, 30, this.HOME_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Exit",                 null,  450, 380, 100, 30, this.EXIT_BUTTON_PRESSED));
 
-		this.controlPanel.setLocation(0, 0);
-		this.mainFrame.add(this.controlPanel);
-		this.mainFrame.setVisible(true);
-		this.mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 
@@ -155,7 +176,7 @@ public class GuiPanel implements ASCommon {
 		button.addActionListener(new ActionListener()		{
 			@Override
 			public void actionPerformed(ActionEvent e)			{
-				 doAction(action);
+				doAction(action);
 			}
 		});
 		return button;
