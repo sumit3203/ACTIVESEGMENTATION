@@ -1,43 +1,6 @@
 package activeSegmentation.gui;
 
 
-
-import ij.IJ;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-
-import javafx.application.*;
-import javafx.stage.Stage;
-
 import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
@@ -47,6 +10,16 @@ import activeSegmentation.filter.FilterManager;
 import activeSegmentation.moment.MomentsManager;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
+import ij.IJ;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.*;
 
 public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
@@ -75,6 +48,8 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 	/** This {@link ActionEvent} is fired when the 'help' button is pressed. */
 	final ActionEvent HELP_BUTTON_PRESSED = new ActionEvent( this, 6, "Help" );
+
+	final ActionEvent CANCEL_BUTTON_PRESSED = new ActionEvent( this, 7, "Cancel" );
 	
 	//final JFrame frame = new JFrame("Filters");
 	
@@ -131,9 +106,11 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
 		updateFilterList();
-		addButton(new JButton(), "Compute",null , 20,  420, 100, 50, panel, COMPUTE_BUTTON_PRESSED, null );
-		addButton(new JButton(), "Default",null , 240, 420, 100, 50, panel, DEFAULT_BUTTON_PRESSED, null );
-		addButton(new JButton(), "Save"   ,null , 350, 420, 100, 50, panel, SAVE_BUTTON_PRESSED,    null );
+		addButton(new JButton(), "Compute",null , 40,  420, 110, 35, panel, COMPUTE_BUTTON_PRESSED, null );
+		addButton(new JButton(), "Default",null , 266, 420, 100, 35, panel, DEFAULT_BUTTON_PRESSED, null );
+		addButton(new JButton(), "Save"   ,null , 376, 420, 100, 35, panel, SAVE_BUTTON_PRESSED,    null );
+		addButton(new JButton(), "Cancel"   ,null , 486, 420, 100, 35, panel, CANCEL_BUTTON_PRESSED,    null );
+		addButton(new JButton(), "Help"   ,null , 605, 420, 100, 35, panel, HELP_BUTTON_PRESSED,    null );
 
 		getContentPane().add(pane);
 		getContentPane().add(panel);
@@ -178,9 +155,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		JPanel p = new JPanel();
 		p.setLayout(null);
 		//p.setBackground(Color.GRAY);
-		int  y=10;
+		int  y=25;
 		if(size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 95, 38, p, PREVIOUS_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Previous", null, 10, 340, 90, 25, p, PREVIOUS_BUTTON_PRESSED , null);
 		IFilter instance=filterManager.getInstance(filterName);
 		String longname=instance.getName();
 		
@@ -189,8 +166,8 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		if (image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
-			int offset1=3;
-			imagelabel.setBounds(100, offset1, 210, 225);
+			int offset1=15;
+			imagelabel.setBounds(50, offset1, 210, 225);
 			p.add(imagelabel);
 			offset1+=225+2;
 			
@@ -199,15 +176,15 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
 			
-			label.setBounds( 105, offset1, 210, 25 );
+			label.setBounds( 55, offset1, 210, 25 );
 			p.add(label);
 			
 		}
 				
 		if(size != maxFilters-1)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38, p , NEXT_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Next", null, 495, 340, 90, 25, p , NEXT_BUTTON_PRESSED , null);
 
-		addButton( new JButton(),  "Help", null, 480, 180, 70, 38, p , NEXT_BUTTON_PRESSED , null);
+//		addButton( new JButton(),  "Help", null, 495, 305, 90, 25, p , HELP_BUTTON_PRESSED , null);
 	
 		List<JTextField> jtextList= new ArrayList<>();
 
@@ -215,21 +192,21 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			JLabel label= new JLabel(key);
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
-			label.setBounds( 330, y, 70, 25 );
+			label.setBounds( 280, y, 70, 25 );
 			p.add(label);
 
-			JTextField input= new JTextField(settingsMap.get(key));
-			input.setFont(ASCommon.FONT);
-			input.setBounds(400, y, 70, 25 );
-			p.add(input);   
-			jtextList.add(input);
-			y=y+50;
+			JComponent inputComponent = createInputComponent(settingsMap.get(key));
+			inputComponent.setFont(ASCommon.FONT);
+			inputComponent.setBounds(380, y, 40, 25);
+			p.add(inputComponent);
+
+			y += 40;
 		}
 
 		filerMap.put(filterName, jtextList);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button, 1 , filterName);
-		addButton( button,ASCommon.ENABLED, null, 480, 220 , 90, 20,p ,event, Color.GREEN);
+		addButton( button,ASCommon.ENABLED, null, 495, 300 , 90, 30,p ,event, Color.GREEN);
 		return p;
 	}
 
@@ -241,10 +218,10 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 
-		int  y=10;
+		int  y=25;
 		// previous button
 		if (size!=1)
-			addButton( new JButton(), "Previous", null, 10, 90, 90, 38, panel, PREVIOUS_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Previous", null, 10, 340, 90, 25, panel, PREVIOUS_BUTTON_PRESSED , null);
 		
 		IFilter instance=filterManager.getInstance(filterName);
 		String longname=instance.getName();
@@ -253,8 +230,8 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		if (image!=null){
 			Icon icon = new ImageIcon( image );
 			JLabel imagelabel= new JLabel(icon);
-			int offset1=3;
-			imagelabel.setBounds(100, offset1, 210, 225);
+			int offset1=15;
+			imagelabel.setBounds(50, offset1, 210, 225);
 			panel.add(imagelabel);
 			offset1+=225+2;
 			
@@ -263,17 +240,17 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
 			
-			label.setBounds( 105, offset1, 210, 25 );
+			label.setBounds( 55, offset1, 210, 25 );
 			panel.add(label);
 			
 		}
 		
 		// next button
 		if (size != maxFilters-1)
-			addButton( new JButton(), "Next", null, 480, 90, 70, 38, panel ,NEXT_BUTTON_PRESSED , null);
+			addButton( new JButton(), "Next", null, 495, 340, 90, 25, panel ,NEXT_BUTTON_PRESSED , null);
 
 		// help button
-		addButton( new JButton(), "Help", null, 480, 180, 90, 20, panel ,HELP_BUTTON_PRESSED , null);
+//		addButton( new JButton(), "Help", null, 495, 305, 90, 25, panel ,HELP_BUTTON_PRESSED , null);
 
 		List<JTextField> jtextList= new ArrayList<>();
 		
@@ -286,39 +263,18 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			JLabel label= new JLabel(fieldsMap.get(key));
 			label.setFont(ASCommon.FONT);
 			label.setForeground(Color.BLACK);
-			label.setBounds( 330, y, 70, 25 );
+			label.setBounds( 280, y, 70, 25 );
 			panel.add(label);
+
 			String value=settingsMap.get(key);
 			System.out.println("in tab value "+ value);
-			//TODO change into check boxes
-//			if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-//				System.out.println(" check box for " + key);
-//				JCheckBox cbox = new JCheckBox (); 
-//				cbox.setBounds(400, y, 70, 25 );
-//				panel.add(cbox);  
-//				if (value.equalsIgnoreCase("true"))
-//					cbox.setSelected(true);
-//				jcboxList.add(cbox);
-//	 
-//				cbox.addActionListener(new ActionListener() {
-//		    	    @Override
-//		    	    public void actionPerformed(ActionEvent event) {
-//		    	    	JCheckBox cbLog = (JCheckBox) event.getSource();
-//		    	        if (cbLog.isSelected()) {
-//		    	            System.out.println("cbox is enabled");		    	     
-//		    	        } else {
-//		    	            System.out.println("cbox is disabled");
-//		    	        }
-//		    	    }
-//		    	});  
-//			} else {
-				JTextField input= new JTextField(settingsMap.get(key));
-				input.setFont(ASCommon.FONT);
-				input.setBounds(400, y, 70, 25 );
-				panel.add(input);   
-				jtextList.add(input);
-//			}
-			y=y+50;
+
+			JComponent inputComponent = createInputComponent(settingsMap.get(key));
+			inputComponent.setFont(ASCommon.FONT);
+			inputComponent.setBounds(380, y, 40, 25);
+			panel.add(inputComponent);
+
+			y += 40;
 		}
 
 		filerMap.put(filterName, jtextList);
@@ -328,10 +284,26 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		// enable button
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button,1 , filterName);
-		addButton( button,ASCommon.ENABLED, null, 480, 220 , 90, 20, panel ,event, Color.GREEN);
+		addButton( button,ASCommon.ENABLED, null, 495, 300 , 90, 30, panel ,event, Color.GREEN);
 
 
 		return panel;
+	}
+
+	private JComponent createInputComponent(String value) {
+		if (value.matches("\\d+")) {
+			return new JSpinner(new SpinnerNumberModel(Integer.parseInt(value), 0, Integer.MAX_VALUE, 1));
+		} else if (value.matches("\\d+\\.\\d+")) {
+			return new JSpinner(new SpinnerNumberModel(Double.parseDouble(value), 0, Double.MAX_VALUE, 0.1));
+		} else if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+			JCheckBox checkBox = new JCheckBox();
+			checkBox.setSelected(Boolean.parseBoolean(value));
+			return checkBox;
+		} else {
+			JTextField textField = new JTextField(value);
+			textField.setFont(ASCommon.FONT);
+			return textField;
+		}
 	}
 
 
@@ -412,6 +384,13 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 
 		}
+
+		if (event.getActionCommand() == CANCEL_BUTTON_PRESSED.getActionCommand()) {
+			// Handle cancel button press
+			setVisible(false); // Hide the JFrame
+			return; // Exit the method
+		}
+
 		if (event== HELP_BUTTON_PRESSED) {
 			//System.out.println("Help pressed");
 			String key= pane.getTitleAt( pane.getSelectedIndex());
