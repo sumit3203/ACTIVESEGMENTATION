@@ -54,6 +54,13 @@ public interface IFilterManager extends IClassLoader<IAnnotated>{
 	 *
 	 */
 	public void applyFilters();
+
+	// New method to support progress reporting
+	void applyFilters(ProgressCallback callback);
+
+	interface ProgressCallback {
+		void onProgress(int progress);
+	}
 	
 	/**
 	 * This method will set of filters loaded by the plugin  

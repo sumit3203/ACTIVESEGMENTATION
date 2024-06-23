@@ -28,6 +28,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private JTabbedPane pane;
 	private JList<String> filterList;
 	private Map<String,List<JTextField>> filerMap = new HashMap<>();
+	private JProgressBar progressBar;
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
@@ -69,7 +70,11 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	
 		this.filterList =GuiUtil.getFilterJList();
 		this.filterList.setForeground(Color.ORANGE);
-		
+
+		progressBar = new JProgressBar(0, 100); // Initialize progress bar
+		progressBar.setStringPainted(true); // Show the progress percentage
+		progressBar.setVisible(false); // Initially hidden
+		getContentPane().add(progressBar, BorderLayout.SOUTH); // Add progress bar to the bottom of the frame
 		
 		showPanel();
 
@@ -332,7 +337,22 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
 
-			filterManager.applyFilters();
+//			filterManager.applyFilters();
+
+			// Show the progress bar when computation starts
+			progressBar.setVisible(true);
+			progressBar.setValue(0);
+
+			// Run computation in a separate thread
+			new Thread(() -> {
+				filterManager.applyFilters(progress -> {
+					// This method is called periodically by filterManager.applyFilters with the progress percentage
+					SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
+				});
+
+				// Hide the progress bar when computation is done
+				SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
+			}).start();
 
 		}
 		if(event==SAVE_BUTTON_PRESSED){
