@@ -27,6 +27,9 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	final ActionEvent TESTINGF_BUTTON_PRESSED = new ActionEvent( this, 5, "browse" );
 	final ActionEvent FINISH_BUTTON_PRESSED = new ActionEvent( this, 6, "finish" );
 	final ActionEvent CANCEL_BUTTON_PRESSED = new ActionEvent( this, 7, "cancel" );
+	final ActionEvent BACK_BUTTON_PRESSED = new ActionEvent(this, 9, "back");
+	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent(this, 10, "next");
+	final ActionEvent EXIT_BUTTON_PRESSED = new ActionEvent(this, 11, "exit");
 
 
 	//////////////////////////
@@ -40,9 +43,11 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	private JPanel cardPanel;
 	private CardLayout cardLayout;
 	private ProjectManager projectManager;
+	private JButton nextButton;
+	private JButton exitButton;
 
-	int frameWidth = 580; // width
-	int frameHeight = 460; // height
+	int frameWidth = 600; // width
+	int frameHeight = 450; // height
 
 	/**
 	 *
@@ -84,13 +89,20 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 		JLabel label = new JLabel("Active Segmentation");
 		label.setFont(largeFONT);
-		label.setBounds(120, 150, 450, 100);
+		label.setBounds(135, 115, 450, 100);
 		label.setForeground(Color.ORANGE);
 		controlFrame.add(label);
 
-		controlFrame.add(addButton("Create Project", createImageIcon("addProject.png", "add"), 65, 250, 210, 60, CREATE_BUTTON_PRESSED));
-		controlFrame.add(addButton("Open Project", createImageIcon("openProject.png", "add"), 295, 250, 200, 60, OPEN_BUTTON_PRESSED));
-//		controlFrame.add(addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED)); // Exit button
+		controlFrame.add(addButton("Create Project", createImageIcon("addProject.png", "add"), 77, 215, 210, 60, CREATE_BUTTON_PRESSED));
+		controlFrame.add(addButton("Open Project", createImageIcon("openProject.png", "add"), 307, 215, 200, 60, OPEN_BUTTON_PRESSED));
+
+		nextButton = addButton("Next", createImageIcon("next.png", "next"), 350, 360, 100, 30, NEXT_BUTTON_PRESSED);
+		nextButton.setVisible(false); // Initially hide the nextButton
+		controlFrame.add(nextButton);
+
+		exitButton = addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED); // Exit button
+		exitButton.setVisible(false);
+		controlFrame.add(exitButton);
 
 		controlFrame.setLocation(0, 0);
 		mainFrame.add(controlFrame);
@@ -197,6 +209,8 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			projectList.setSelectedIndex(0); // Reset project type selection if needed
 
 			cardLayout.show(cardPanel, "mainPanel"); // Go back to the main panel
+			nextButton.setVisible(false);
+			exitButton.setVisible(false);
 		}
 
 		// Creating project structure
@@ -241,14 +255,24 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-//		// Confirm Exit
-//		if (event == EXIT_BUTTON_PRESSED) {
-//			int response = javax.swing.JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
-//					javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
-//			if (response == javax.swing.JOptionPane.YES_OPTION) {
-//				System.exit(0);
-//			}
-//		}
+		if (event == BACK_BUTTON_PRESSED) {
+			cardLayout.show(cardPanel, "mainPanel"); // Switch back to the main panel
+			nextButton.setVisible(true);
+			exitButton.setVisible(true);
+		}
+
+		if (event == NEXT_BUTTON_PRESSED) {
+			cardLayout.show(cardPanel, "createProjectPanel"); // Switch to the create project panel
+		}
+
+		// Confirm Exit
+		if (event == EXIT_BUTTON_PRESSED) {
+			int response = javax.swing.JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
+					javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
+			if (response == javax.swing.JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
+		}
 	}
 
 	private JPanel createProjectPanel() {
@@ -258,63 +282,64 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 		JLabel label = new JLabel("Create Project");
 		label.setFont(largeFONT);
-		label.setBounds(50, 0, 450, 100);
+		label.setBounds(50, 10, 450, 100);
 		label.setForeground(Color.ORANGE);
 		panel.add(label);
 
 		JLabel projectName = new JLabel("Project Name *:");
 		projectName.setFont(mediumFONT);
-		projectName.setBounds(50, 100, 200, 30);
+		projectName.setBounds(50, 110, 200, 30);
 		panel.add(projectName);
 
 		projectNField.setColumns(20);
-		projectNField.setBounds(200, 100, 250, 30);
+		projectNField.setBounds(200, 110, 250, 30);
 		panel.add(projectNField);
 
 		JLabel projectDesc = new JLabel("Project Desc :");
 		projectDesc.setFont(mediumFONT);
-		projectDesc.setBounds(50, 140, 200, 30);
+		projectDesc.setBounds(50, 150, 200, 30);
 		panel.add(projectDesc);
 
 		projectDField.setColumns(20);
-		projectDField.setBounds(200, 140, 250, 30);
+		projectDField.setBounds(200, 150, 250, 30);
 		panel.add(projectDField);
 
 		JLabel projectType = new JLabel("Project Type :");
 		projectType.setFont(mediumFONT);
-		projectType.setBounds(50, 180, 250, 30);
+		projectType.setBounds(50, 190, 250, 30);
 		panel.add(projectType);
 
 		projectList.setSelectedIndex(0);
-		projectList.setBounds(200, 180, 250, 30);
+		projectList.setBounds(200, 190, 250, 30);
 		panel.add(projectList);
 
 		JLabel projectFolder = new JLabel("Project Folder *:");
 		projectFolder.setFont(mediumFONT);
-		projectFolder.setBounds(50, 220, 200, 30);
+		projectFolder.setBounds(50, 230, 200, 30);
 		panel.add(projectFolder);
 
 		projectFField.setColumns(200);
-		projectFField.setBounds(200, 220, 250, 30);
+		projectFField.setBounds(200, 230, 250, 30);
 		panel.add(projectFField);
-		panel.add(addButton("Browse", null, 455, 220, 100, 30, BROWSE_BUTTON_PRESSED));
+		panel.add(addButton("Browse", null, 460, 230, 100, 30, BROWSE_BUTTON_PRESSED));
 
 		if (null == WindowManager.getCurrentImage()) {
 			JLabel trainingImage = new JLabel("Training Image *:");
 			trainingImage.setFont(mediumFONT);
-			trainingImage.setBounds(50, 260, 200, 30);
+			trainingImage.setBounds(50, 270, 200, 30);
 			panel.add(trainingImage);
 
 			trainingImageP.setColumns(200);
-			trainingImageP.setBounds(200, 260, 250, 30);
+			trainingImageP.setBounds(200, 270, 250, 30);
 			panel.add(trainingImageP);
-			panel.add(addButton("Folder", null, 240, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
-			panel.add(addButton("Image Stack", null, 350, 300, 100, 30, Tiff_BUTTON_PRESSED));
+			panel.add(addButton("Folder", null, 240, 310, 100, 30, TRAININGF_BUTTON_PRESSED));
+			panel.add(addButton("Image Stack", null, 350, 310, 100, 30, Tiff_BUTTON_PRESSED));
 		}
 
-		panel.add(addButton("Finish", null, 40, 340, 200, 60, FINISH_BUTTON_PRESSED));
-		panel.add(addButton("Cancel", null, 250, 340, 200, 60, CANCEL_BUTTON_PRESSED));
-//		panel.add(addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED));
+		panel.add(addButton("Finish", null, 80, 360, 120, 30, FINISH_BUTTON_PRESSED));
+		panel.add(addButton("Cancel", null, 240, 360, 100, 30, CANCEL_BUTTON_PRESSED));
+		panel.add(addButton("Back", null, 350, 360, 100, 30, BACK_BUTTON_PRESSED));
+		panel.add(addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED));
 
 		return panel;
 	}

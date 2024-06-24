@@ -32,7 +32,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 	final ActionEvent EVALUATION_BUTTON_PRESSED = new ActionEvent(this, 3, "Evaluation");
 	final ActionEvent FILTERVIS_BUTTON_PRESSED  = new ActionEvent(this, 4, "FilterVis" );
 	final ActionEvent SESSIONGUI_BUTTON_PRESSED = new ActionEvent(this, 5, "SessionGUI");
-	final ActionEvent HOME_BUTTON_PRESSED       = new ActionEvent(this, 6, "Home");
+	final ActionEvent BACK_BUTTON_PRESSED       = new ActionEvent(this, 6, "Back");
 	final ActionEvent EXIT_BUTTON_PRESSED       = new ActionEvent(this, 7, "Exit");
 
 
@@ -104,7 +104,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 			new SessionGUI(projectManager); // Create and display the SessionGUI instance
 		}
 
-		if (event == this.HOME_BUTTON_PRESSED) {
+		if (event == this.BACK_BUTTON_PRESSED) {
 			mainFrame.dispose(); // Close the current window
 			new CreateOpenProjectGUI(projectManager).run(); // Reopen the main window
 		}
@@ -150,17 +150,17 @@ public class GuiPanel extends JFrame implements ASCommon {
 
 		JLabel label = new JLabel("Active Segmentation");
 		label.setFont(largeFONT);
-		label.setBounds(120, 20, 450, 100);
+		label.setBounds(130, 10, 450, 100);
 		label.setForeground(Color.ORANGE);
 		this.controlPanel.add(label);
-		this.controlPanel.add(addButton("Select Filters",       null,  60, 130, 200, 50, this.FILTER_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Filter Visualization", null, 300, 130, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Feature Extraction",   null,  60, 210, 200, 50, this.FEATURE_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Model Learning",       null, 300, 210, 200, 50, this.LEARNING_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Evaluation",           null,  60, 290, 200, 50, this.EVALUATION_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("View Sessions",        null,  300, 290, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Home", 				 null, 340, 380, 100, 30, this.HOME_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Exit",                 null,  450, 380, 100, 30, this.EXIT_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Select Filters",       null,  70, 110, 200, 50, this.FILTER_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Filter Visualization", null, 310, 110, 200, 50, this.FILTERVIS_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Feature Extraction",   null,  70, 190, 200, 50, this.FEATURE_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Model Learning",       null, 310, 190, 200, 50, this.LEARNING_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Evaluation",           null,  70, 270, 200, 50, this.EVALUATION_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("View Sessions",        null,  310, 270, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Back", 				 null, 350, 360, 100, 30, this.BACK_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Exit",                 null,  460, 360, 100, 30, this.EXIT_BUTTON_PRESSED));
 
 	}
 
