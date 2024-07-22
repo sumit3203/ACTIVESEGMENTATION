@@ -1,26 +1,17 @@
 package activeSegmentation.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Panel;
+import activeSegmentation.ASCommon;
+import activeSegmentation.ProjectType;
+import activeSegmentation.prj.ProjectManager;
+import ij.IJ;
+import ij.WindowManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import activeSegmentation.*;
-import activeSegmentation.prj.ProjectManager;
-import ij.IJ;
-import ij.WindowManager;
 
 //  to rename to CreateOpenProjectUI
 public class CreateOpenProjectGUI implements Runnable, ASCommon {
@@ -36,67 +27,97 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	final ActionEvent TESTINGF_BUTTON_PRESSED = new ActionEvent( this, 5, "browse" );
 	final ActionEvent FINISH_BUTTON_PRESSED = new ActionEvent( this, 6, "finish" );
 	final ActionEvent CANCEL_BUTTON_PRESSED = new ActionEvent( this, 7, "cancel" );
-	
-	
+	final ActionEvent BACK_BUTTON_PRESSED = new ActionEvent(this, 9, "back");
+	final ActionEvent NEXT_BUTTON_PRESSED = new ActionEvent(this, 10, "next");
+	final ActionEvent EXIT_BUTTON_PRESSED = new ActionEvent(this, 11, "exit");
+
+
 	//////////////////////////
 	private JTextField projectFField= new JTextField();
 	private JTextField projectNField = new JTextField();
 	private JTextField projectDField= new JTextField();
 	private JTextField trainingImageP = new JTextField();
-	private JLabel errorText= new JLabel("");
-		
-	private JComboBox<ProjectType> projectList;
-	private JFrame newProjectFrame;
-	private ProjectManager projectManager;
-	
-	/** main GUI panel (containing the buttons panel on the left,
-	 *  the image in the center and the annotations panel on the right */
 
-	private JFrame mainFrame = new JFrame();
-	
-	
+	private JComboBox<ProjectType> projectList;
+	private JFrame mainFrame;
+	private JPanel cardPanel;
+	private CardLayout cardLayout;
+	private ProjectManager projectManager;
+	private JButton nextButton;
+	private JButton exitButton;
+
+	int frameWidth = 600; // width
+	int frameHeight = 450; // height
+
 	/**
-	 * 
+	 *
 	 * @param projectManager
 	 */
 	public CreateOpenProjectGUI(ProjectManager projectManager) {
-		this.projectManager=projectManager;
-		projectList= new JComboBox<>(ProjectType.values());
+		this.projectManager = projectManager;
+		projectList = new JComboBox<>(ProjectType.values());
 	}
-	
-	
+
 	@Override
 	public void run() {
- 
-		mainFrame.getContentPane().setBackground( Color.GRAY );
-		mainFrame.setSize(frameWidth,frameHeight);
+		mainFrame = new JFrame();
+		mainFrame.getContentPane().setBackground(Color.GRAY);
+		mainFrame.setSize(frameWidth, frameHeight);
 		mainFrame.setLocationRelativeTo(null);
-		JPanel controlFrame= new JPanel();
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent the default close operation
+
+		// Confirm Exit to intercept the window close event
+		mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(mainFrame,
+						"Are you sure you want to exit?", "Confirm Exit",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					System.exit(0);
+				}
+			}
+		});
+
+		cardPanel = new JPanel(new CardLayout());
+		cardLayout = (CardLayout) cardPanel.getLayout();
+
+		JPanel controlFrame = new JPanel();
 		controlFrame.setLayout(null);
-		controlFrame.setBackground(Color.GRAY );
-		//setControls(controlFrame);
-		//JLabel logo= new JLabel(createImageIcon("images/logo1.png","logo"));
-		//logo.setBounds( 10, 10, 450, 200 );
-		//controlFrame.add(logo);
-		JLabel label= new JLabel("Active Segmentation");
+		controlFrame.setBackground(Color.GRAY);
+
+		JLabel label = new JLabel("Active Segmentation");
 		label.setFont(largeFONT);
-		label.setBounds( 100, 150, 450, 100 );
+		label.setBounds(135, 115, 450, 100);
 		label.setForeground(Color.ORANGE);
 		controlFrame.add(label);
 
-		controlFrame.add(addButton("Create Project",createImageIcon("addProject.png","add"),  30, 250, 220, 60, CREATE_BUTTON_PRESSED));
-		controlFrame.add(addButton("Open Project",  createImageIcon("openProject.png","add"),270, 250, 200, 60, OPEN_BUTTON_PRESSED));
+		controlFrame.add(addButton("Create Project", createImageIcon("addProject.png", "add"), 77, 215, 210, 60, CREATE_BUTTON_PRESSED));
+		controlFrame.add(addButton("Open Project", createImageIcon("openProject.png", "add"), 307, 215, 200, 60, OPEN_BUTTON_PRESSED));
+
+		nextButton = addButton("Next", createImageIcon("next.png", "next"), 350, 360, 100, 30, NEXT_BUTTON_PRESSED);
+		nextButton.setVisible(false); // Initially hide the nextButton
+		controlFrame.add(nextButton);
+
+		exitButton = addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED); // Exit button
+		exitButton.setVisible(false);
+		controlFrame.add(exitButton);
+
 		controlFrame.setLocation(0, 0);
 		mainFrame.add(controlFrame);
-		mainFrame.setVisible(true);  
-		//mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		cardPanel.add(controlFrame, "mainPanel");
+		cardPanel.add(createProjectPanel(), "createProjectPanel");
+		mainFrame.add(cardPanel);
+		mainFrame.setVisible(true);
 	}
-	
+
 	private static File currentDir=null;
-	
-	private void doAction( final ActionEvent event ){ 
+
+	private void doAction( final ActionEvent event ){
 		if(event ==CREATE_BUTTON_PRESSED ){
-			newProjectFrame=createProjectFrame();
+			cardLayout.show(cardPanel, "createProjectPanel");
 		}
 
 		if(event ==OPEN_BUTTON_PRESSED ){
@@ -108,18 +129,24 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			int rVal = fileChooser.showOpenDialog(null);
 			if (currentDir!=null)
 				fileChooser.setSelectedFile(currentDir);
-			
+
 			if (rVal == JFileChooser.APPROVE_OPTION) {
-				currentDir=fileChooser.getSelectedFile();
-				String file=currentDir.toString();		
+				currentDir = fileChooser.getSelectedFile();
+				String file = currentDir.toString();
 				if (projectManager.loadProject(file)) {
 					System.out.println(" GuiPanel ");
-					new GuiPanel(projectManager);
-					
+
+					// Updates mainFrame by replacing its content with the main panel of a new GuiPanel instance
+					activeSegmentation.gui.GuiPanel guiPanel = new activeSegmentation.gui.GuiPanel(projectManager);
+					mainFrame.getContentPane().removeAll();
+					mainFrame.getContentPane().add(guiPanel.getMainPanel());
+					mainFrame.revalidate();
+					mainFrame.repaint();
+
 //					UIPanel frame=new UIPanel(projectManager);
 //					frame.setVisible(true);
 				}
-				else 
+				else
 					IJ.error("Not a project file!");
 			}
 		}
@@ -135,7 +162,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 				projectFField.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
-		
+
 		if(event== TRAININGF_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
@@ -147,7 +174,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 				trainingImageP.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
-		
+
 		if(event== Tiff_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
@@ -159,7 +186,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 				trainingImageP.setText(fileChooser.getSelectedFile().toString());
 			}
 		}
-		
+
 		if(event== TESTINGF_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
 
@@ -169,25 +196,30 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			//TODO what do we do here?
 			//int rVal = fileChooser.showOpenDialog(null);
 			//if (rVal == JFileChooser.APPROVE_OPTION) {
-				//pluginsDir.setText(fileChooser.getSelectedFile().toString());
+			//pluginsDir.setText(fileChooser.getSelectedFile().toString());
 			//}
 		}
-		
-		if(event== CANCEL_BUTTON_PRESSED){
 
-			if(newProjectFrame!=null){
-				System.out.println("Cancel");
-				newProjectFrame.setVisible(false);
-				newProjectFrame.dispose();
-			}
+		if (event == CANCEL_BUTTON_PRESSED) {
+			// Reset fields or perform any necessary cleanup
+			projectNField.setText("");
+			projectDField.setText("");
+			projectFField.setText("");
+			trainingImageP.setText("");
+			projectList.setSelectedIndex(0); // Reset project type selection if needed
+
+			cardLayout.show(cardPanel, "mainPanel"); // Go back to the main panel
+			nextButton.setVisible(false);
+			exitButton.setVisible(false);
 		}
+
 		// Creating project structure
 		if(event== FINISH_BUTTON_PRESSED){
 			String projectName=projectNField.getText();
 			String projectDirectory=projectFField.getText();
 			String projectDescription=projectDField.getText();
 			String trainingImage=trainingImageP.getText();
-			
+
 			String projectType=projectList.getSelectedItem().toString();
 			//System.out.println(projectName+"--"+ projectType);
 
@@ -211,109 +243,121 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 
 			// TODO change the signaling mechanism
-			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription, 
-					trainingImage);	
+			String message=projectManager.createProject(projectName, projectType, projectDirectory, projectDescription,
+					trainingImage);
 			if("DONE".equalsIgnoreCase(message)) {
-				newProjectFrame.setVisible(false);
-				newProjectFrame.dispose();
-				new GuiPanel(projectManager);
+				// Updates mainFrame by replacing its content with the main panel of a new GuiPanel instance
+				activeSegmentation.gui.GuiPanel guiPanel = new activeSegmentation.gui.GuiPanel(projectManager);
+				mainFrame.getContentPane().removeAll();
+				mainFrame.getContentPane().add(guiPanel.getMainPanel());
+				mainFrame.revalidate();
+				mainFrame.repaint();
 			}
-			else {
-				errorText.setText(message);
+		}
+
+		if (event == BACK_BUTTON_PRESSED) {
+			cardLayout.show(cardPanel, "mainPanel"); // Switch back to the main panel
+			nextButton.setVisible(true);
+			exitButton.setVisible(true);
+		}
+
+		if (event == NEXT_BUTTON_PRESSED) {
+			cardLayout.show(cardPanel, "createProjectPanel"); // Switch to the create project panel
+		}
+
+		// Confirm Exit
+		if (event == EXIT_BUTTON_PRESSED) {
+			int response = javax.swing.JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
+					javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
+			if (response == javax.swing.JOptionPane.YES_OPTION) {
+				System.exit(0);
 			}
 		}
 	}
-	
 
-	private JFrame createProjectFrame(){
-		
-		JFrame mainFrame = new JFrame("Create Project");
-		mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		mainFrame.getContentPane().setBackground( panelColor );
-		mainFrame.setSize(600,500);
-		mainFrame.setLocationRelativeTo(null);
-		JPanel controlFrame= new JPanel();
-		controlFrame.setLayout(null);
-		controlFrame.setBackground( panelColor);
-		JLabel label= new JLabel("Create Project");
+	private JPanel createProjectPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(panelColor);
+
+		JLabel label = new JLabel("Create Project");
 		label.setFont(largeFONT);
-		label.setBounds( 50, 0, 450, 100 );
+		label.setBounds(50, 10, 450, 100);
 		label.setForeground(Color.ORANGE);
-		controlFrame.add(label);
-		JLabel projectName= new JLabel("Project Name *:");
+		panel.add(label);
+
+		JLabel projectName = new JLabel("Project Name *:");
 		projectName.setFont(mediumFONT);
-		projectName.setBounds( 50, 100, 200, 30 );
-		controlFrame.add(projectName);
+		projectName.setBounds(50, 110, 200, 30);
+		panel.add(projectName);
+
 		projectNField.setColumns(20);
-		projectNField.setBounds( 200, 100, 250, 30 );
-		controlFrame.add(projectNField);
-		JLabel projectDesc= new JLabel("Project Desc :");
+		projectNField.setBounds(200, 110, 250, 30);
+		panel.add(projectNField);
+
+		JLabel projectDesc = new JLabel("Project Desc :");
 		projectDesc.setFont(mediumFONT);
-		projectDesc.setBounds( 50, 140, 200, 30 );
-		controlFrame.add(projectDesc);
+		projectDesc.setBounds(50, 150, 200, 30);
+		panel.add(projectDesc);
 
 		projectDField.setColumns(20);
-		projectDField.setBounds( 200, 140, 250, 30 );
-		controlFrame.add(projectDField);
-		JLabel projectType= new JLabel("Project Type :");
-		projectType.setFont(mediumFONT);
-		projectType.setBounds( 50, 180, 250, 30 );
-		controlFrame.add(projectType);
+		projectDField.setBounds(200, 150, 250, 30);
+		panel.add(projectDField);
 
+		JLabel projectType = new JLabel("Project Type :");
+		projectType.setFont(mediumFONT);
+		projectType.setBounds(50, 190, 250, 30);
+		panel.add(projectType);
 
 		projectList.setSelectedIndex(0);
-		projectList.setBounds( 200, 180, 250, 30 );
-		controlFrame.add(projectList);
-		JLabel projectFolder= new JLabel("Project Folder *:");
+		projectList.setBounds(200, 190, 250, 30);
+		panel.add(projectList);
+
+		JLabel projectFolder = new JLabel("Project Folder *:");
 		projectFolder.setFont(mediumFONT);
-		projectFolder.setBounds( 50, 220, 200, 30 );
-		controlFrame.add(projectFolder);		
+		projectFolder.setBounds(50, 230, 200, 30);
+		panel.add(projectFolder);
+
 		projectFField.setColumns(200);
-		projectFField.setBounds( 200, 220, 250, 30 );
-		controlFrame.add(projectFField);	
-		controlFrame.add(addButton("Browse",null, 460, 220, 100, 30, BROWSE_BUTTON_PRESSED));
-		
-		if(null == WindowManager.getCurrentImage()) {
-			JLabel trainingImage= new JLabel("Training Image *:");
+		projectFField.setBounds(200, 230, 250, 30);
+		panel.add(projectFField);
+		panel.add(addButton("Browse", null, 460, 230, 100, 30, BROWSE_BUTTON_PRESSED));
+
+		if (null == WindowManager.getCurrentImage()) {
+			JLabel trainingImage = new JLabel("Training Image *:");
 			trainingImage.setFont(mediumFONT);
-			trainingImage.setBounds( 50, 260, 200, 30 );
-			controlFrame.add(trainingImage);		
+			trainingImage.setBounds(50, 270, 200, 30);
+			panel.add(trainingImage);
+
 			trainingImageP.setColumns(200);
-			trainingImageP.setBounds( 200, 260, 250, 30 );
-			controlFrame.add(trainingImageP);	
-			controlFrame.add(addButton("Folder",     null, 250, 300, 100, 30, TRAININGF_BUTTON_PRESSED));
-			controlFrame.add(addButton("Image Stack",null, 360, 300, 100, 30, Tiff_BUTTON_PRESSED));
+			trainingImageP.setBounds(200, 270, 250, 30);
+			panel.add(trainingImageP);
+			panel.add(addButton("Folder", null, 240, 310, 100, 30, TRAININGF_BUTTON_PRESSED));
+			panel.add(addButton("Image Stack", null, 350, 310, 100, 30, Tiff_BUTTON_PRESSED));
 		}
-		
-		errorText.setFont(labelFONT);
-		errorText.setBounds(30, 300, 600, 30 );
-		errorText.setForeground(Color.RED);
-		controlFrame.add(errorText);
 
-		controlFrame.add(addButton("Finish",null, 30, 350, 220, 60, FINISH_BUTTON_PRESSED));
-		controlFrame.add(addButton("Cancel",null,270, 350, 200, 60, CANCEL_BUTTON_PRESSED));
+		panel.add(addButton("Finish", null, 80, 360, 120, 30, FINISH_BUTTON_PRESSED));
+		panel.add(addButton("Cancel", null, 240, 360, 100, 30, CANCEL_BUTTON_PRESSED));
+		panel.add(addButton("Back", null, 350, 360, 100, 30, BACK_BUTTON_PRESSED));
+		panel.add(addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED));
 
-		controlFrame.setLocation(0, 0);
-		mainFrame.add(controlFrame);
-		mainFrame.setVisible(true);
-		return mainFrame;
-
+		return panel;
 	}
-	
+
 	private JButton addButton( final String label, final ImageIcon icon, final int x,
-			final int y, final int width, final int height,final ActionEvent action)
+							   final int y, final int width, final int height,final ActionEvent action)
 	{
 		final JButton button =  new JButton(label, icon);
 		button.setFont( labelFONT );
-		button.setBorderPainted(false); 
-		button.setFocusPainted(false); 
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
 		button.setBackground(buttonBGColor);
 		button.setForeground(Color.WHITE);
 		button.setBounds( x, y, width, height );
 		button.addActionListener( new ActionListener()		{
 			@Override
 			public void actionPerformed( final ActionEvent e )	{
-		
+
 				doAction(action);
 			}
 		} );
@@ -326,11 +370,11 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 		URL imgURL = CreateOpenProjectGUI.class.getResource(path);
 		if (imgURL != null) {
 			return new ImageIcon(imgURL, description);
-		} else {            
+		} else {
 			//System.err.println("Couldn't find file: " + path);
 			return null;
 		}
-	}   
+	}
 
 
 }
