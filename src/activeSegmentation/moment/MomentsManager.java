@@ -1,31 +1,7 @@
 package activeSegmentation.moment;
 
 
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import activeSegmentation.ASCommon;
-import activeSegmentation.FilterType;
-import activeSegmentation.IAnnotated;
-import activeSegmentation.IFilter;
-import activeSegmentation.LearningType;
-import activeSegmentation.IFilterViz;
-import activeSegmentation.IMoment;
-import activeSegmentation.IFilterManager;
-import activeSegmentation.ProjectType;
+import activeSegmentation.*;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
@@ -34,6 +10,18 @@ import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 
@@ -195,13 +183,17 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 		return imageList;
 	}
 
-	public void applyFilters(){
+	@Override
+	public void applyFilters(ProgressCallback callback){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
 		Map<String,Set<String>> features= new HashMap<>();
+
+		int totalSteps = images.size() * momentMap.size();
+		int step = 0;
 
 		for(IMoment filter: momentMap.values()){
 			//System.out.println("filter applied"+filter.getName());
@@ -238,6 +230,12 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 				}
 			}
+
+			// Update progress
+			step++;
+			if (callback != null) {
+				callback.onProgress(step * 100 / totalSteps);
+			}
 		}
 		
 		
@@ -260,6 +258,12 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 		}
 
+	}
+
+
+	@Override
+	public void applyFilters() {
+		applyFilters(null);
 	}
 
 

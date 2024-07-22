@@ -171,7 +171,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 
 	@Override
-	public void applyFilters(){
+	public void applyFilters(ProgressCallback callback){
 		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
@@ -179,12 +179,22 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		Map<String,Set<String>> features= new HashMap<>();
 			
 		List<String>images= loadImages(projectString, false);
+
+		int totalSteps = images.size() * filterMap.size();
+		int step = 0;
+
 		for(IFilter filter: filterMap.values()){
 			System.out.println("FeatureManager: filter applied "+filter.getName());
 			if(filter.isEnabled()){
 				for(String image: images) {
 					//IJ.log(image);
 					filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
+
+					// Update progress
+					step++;
+					if (callback != null) {
+						callback.onProgress(step * 100 / totalSteps);
+					}
 				}
 
 			}
@@ -199,6 +209,13 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		}
 
 	}
+
+
+	@Override
+	public void applyFilters() {
+		applyFilters(null);
+	}
+
 	
 	@Override
 	public Set<String> getAllFilters(){
