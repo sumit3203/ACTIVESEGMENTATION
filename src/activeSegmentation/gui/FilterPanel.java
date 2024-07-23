@@ -27,7 +27,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 	private JTabbedPane pane;
 	private JList<String> filterList;
-	private Map<String,List<JTextField>> filerMap = new HashMap<>();
+	private Map<String,List<JComponent>> filerMap = new HashMap<>();
 	private JProgressBar progressBar;
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
@@ -191,7 +191,8 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 //		addButton( new JButton(),  "Help", null, 495, 305, 90, 25, p , HELP_BUTTON_PRESSED , null);
 	
-		List<JTextField> jtextList= new ArrayList<>();
+//		List<JTextField> jtextList= new ArrayList<>();
+		List<JComponent> inputComponents = new ArrayList<>();
 
 		for (String key: settingsMap.keySet()){
 			JLabel label= new JLabel(key);
@@ -204,11 +205,12 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			inputComponent.setFont(ASCommon.FONT);
 			inputComponent.setBounds(380, y, 40, 25);
 			p.add(inputComponent);
+			inputComponents.add(inputComponent);
 
 			y += 40;
 		}
 
-		filerMap.put(filterName, jtextList);
+		filerMap.put(filterName, inputComponents);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button, 1 , filterName);
 		addButton( button,ASCommon.ENABLED, null, 495, 300 , 90, 30,p ,event, Color.GREEN);
@@ -257,11 +259,11 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		// help button
 //		addButton( new JButton(), "Help", null, 495, 305, 90, 25, panel ,HELP_BUTTON_PRESSED , null);
 
-		List<JTextField> jtextList= new ArrayList<>();
-		
+//		List<JTextField> jtextList= new ArrayList<>();
 		//List<Pair<String, String>> skvList=new ArrayList<>();
-		
 //		List<JCheckBox> jcboxList= new ArrayList<>();
+
+		List<JComponent> inputComponents = new ArrayList<>();
 		
 		for (String key: settingsMap.keySet()){
 
@@ -278,11 +280,12 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			inputComponent.setFont(ASCommon.FONT);
 			inputComponent.setBounds(380, y, 40, 25);
 			panel.add(inputComponent);
+			inputComponents.add(inputComponent);
 
 			y += 40;
 		}
 
-		filerMap.put(filterName, jtextList);
+		filerMap.put(filterName, inputComponents);
 
 //		filerMap2.put(filterName, jcboxList);
 		
@@ -361,17 +364,37 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			final String key= pane.getTitleAt( pane.getSelectedIndex());
 //			int i=0;
 			final Map<String,String> settingsMap= new HashMap<>();
-			List<JTextField> l=filerMap.get(key);
-			ListIterator<JTextField> iter=l.listIterator();
+
+//			List<JTextField> l=filerMap.get(key);
+//			ListIterator<JTextField> iter=l.listIterator();
 			//Set<String> ks=filterManager.getDefaultFilterSettings(key).keySet();
 			//System.out.println(ks);
+
+			List<JComponent> inputComponents = filerMap.get(key);
+			Iterator<JComponent> iter = inputComponents.iterator();
+
 			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
+
+				JComponent inputComponent = iter.next();
+				String value = "";
+
+				if (inputComponent instanceof JTextField) {
+					value = ((JTextField) inputComponent).getText();
+				} else if (inputComponent instanceof JSpinner) {
+					value = ((JSpinner) inputComponent).getValue().toString();
+				} else if (inputComponent instanceof JCheckBox) {
+					value = Boolean.toString(((JCheckBox) inputComponent).isSelected());
+				}
+
+				settingsMap.put(settingsKey, value);
+				System.out.println("save/button " + settingsKey + " " + value);
+
 //					settingsMap.put(settingsKey, f.getText());
 				//	settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
 				//settingsMap.put(settingsKey, l.get(i).getText());	
-				final String strval= iter.next().getText();
-				System.out.println("save/button "+settingsKey+" " + strval );
-				settingsMap.put(settingsKey, strval );
+//				final String strval= iter.next().getText();
+//				System.out.println("save/button "+settingsKey+" " + strval );
+//				settingsMap.put(settingsKey, strval );
 	
 //				System.out.println("save/button "+settingsKey+" "+ l.get(i).getText() +" :: " + strval );
 //				List<JCheckBox> l2 = filerMap2.get(key);
@@ -460,14 +483,35 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private void updateTabbedGui(String key){
 		//int i=0;
 		Map<String,String> settingsMap=filterManager.getDefaultFilterSettings(key);
-		List<JTextField> l=filerMap.get(key);
-		ListIterator<JTextField> iter=l.listIterator();
+//		List<JTextField> l=filerMap.get(key);
+//		ListIterator<JTextField> iter=l.listIterator();
+
+		List<JComponent> inputComponents = filerMap.get(key);
+		Iterator<JComponent> iter = inputComponents.iterator();
 		
 		for (String settingsKey: settingsMap.keySet() ){
+
+			String value = settingsMap.get(settingsKey);
+			JComponent inputComponent = iter.next();
+
+			if (inputComponent instanceof JTextField) {
+				((JTextField) inputComponent).setText(value);
+			} else if (inputComponent instanceof JSpinner) {
+				if (value.matches("\\d+")) {
+					((JSpinner) inputComponent).setValue(Integer.parseInt(value));
+				} else if (value.matches("\\d+\\.\\d+")) {
+					((JSpinner) inputComponent).setValue(Double.parseDouble(value));
+				}
+			} else if (inputComponent instanceof JCheckBox) {
+				((JCheckBox) inputComponent).setSelected(Boolean.parseBoolean(value));
+			}
+
+			System.out.println("default/button " + settingsKey + " " + value);
+
 			//filerMap.get(key).get(i).setText(settingsMap.get(settingsKey));
-			final String strval= settingsMap.get(settingsKey);
-			iter.next().setText(strval);
-			System.out.println("default/button "+settingsKey+" " + strval );
+//			final String strval= settingsMap.get(settingsKey);
+//			iter.next().setText(strval);
+//			System.out.println("default/button "+settingsKey+" " + strval );
 			//i++;
 		}
 
