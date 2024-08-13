@@ -19,14 +19,17 @@ import java.io.File;
 
 /**
  * VisualizationPanel provides the user interface for selecting an ARFF file
- * and visualizing machine learning evaluation metrics such as ROC Curve and
- * Precision-Recall Curve using data from the selected file.
+ * and visualizing machine learning evaluation metrics such as ROC Curve,
+ * Precision-Recall Curve, and generating a detailed report. The panel integrates
+ * Weka's visualization and analysis functions.
  */
 public class VisualizationPanel extends JPanel {
     private JButton chooseFileButton;
     private JButton rocButton;
     private JButton precisionRecallButton;
-    private JPanel visualizationPanel;
+    private JButton reportButton;
+    private JPanel chartPanelContainer; // Panel for displaying charts
+    private JTextArea reportArea; // Added JTextArea for report display
     private String arffFilePath; // Field to store the selected file path
     private final Color buttonBGColor = new Color(160, 160, 160);
 
@@ -41,27 +44,39 @@ public class VisualizationPanel extends JPanel {
         chooseFileButton = new JButton("Choose ARFF File");
         rocButton = new JButton("Visualize ROC Curve");
         precisionRecallButton = new JButton("Visualize Precision-Recall Curve");
+        reportButton = new JButton("Generate Report");
 
         configureButton(chooseFileButton);
         configureButton(rocButton);
         configureButton(precisionRecallButton);
+        configureButton(reportButton);
 
         // Add action listeners to buttons
         chooseFileButton.addActionListener(e -> selectFile());
         rocButton.addActionListener(e -> visualizeROC());
         precisionRecallButton.addActionListener(e -> visualizePrecisionRecall());
+        reportButton.addActionListener(e -> generateReport());
 
         // Add buttons to panel
         buttonPanel.add(chooseFileButton);
         buttonPanel.add(rocButton);
         buttonPanel.add(precisionRecallButton);
+        buttonPanel.add(reportButton);
 
-        // Panel for displaying charts
-        visualizationPanel = new JPanel(new BorderLayout());
+        // Panel for displaying charts and report
+        chartPanelContainer = new JPanel(new BorderLayout());
+
+        // Initialize the report area
+        reportArea = new JTextArea();
+        reportArea.setEditable(false);
+        reportArea.setLineWrap(true);
+        reportArea.setWrapStyleWord(true);
+
+        JScrollPane reportScrollPane = new JScrollPane(reportArea);
 
         // Add panels to the main panel
         add(buttonPanel, BorderLayout.NORTH);
-        add(visualizationPanel, BorderLayout.CENTER);
+        add(chartPanelContainer, BorderLayout.CENTER);
     }
 
     /**
@@ -89,9 +104,9 @@ public class VisualizationPanel extends JPanel {
             // Validate file extension
             if (!selectedFile.getName().endsWith(".arff")) {
                 JOptionPane.showMessageDialog(this, "Please select a valid .arff file.", "Invalid File Type", JOptionPane.WARNING_MESSAGE);
-            } else {
-                // Display the selected file path
-                JOptionPane.showMessageDialog(this, "Selected file: " + arffFilePath, "File Selected", JOptionPane.INFORMATION_MESSAGE);
+//            } else {
+//                // Display the selected file path
+//                JOptionPane.showMessageDialog(this, "Selected file: " + arffFilePath, "File Selected", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -156,10 +171,10 @@ public class VisualizationPanel extends JPanel {
             );
 
             ChartPanel chartPanel = new ChartPanel(rocChart);
-            visualizationPanel.removeAll();
-            visualizationPanel.add(chartPanel, BorderLayout.CENTER);
-            visualizationPanel.revalidate();
-            visualizationPanel.repaint();
+            chartPanelContainer.removeAll();
+            chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
+            chartPanelContainer.revalidate();
+            chartPanelContainer.repaint();
 
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
@@ -229,15 +244,68 @@ public class VisualizationPanel extends JPanel {
             );
 
             ChartPanel chartPanel = new ChartPanel(prChart);
-            visualizationPanel.removeAll();
-            visualizationPanel.add(chartPanel, BorderLayout.CENTER);
-            visualizationPanel.revalidate();
-            visualizationPanel.repaint();
+            chartPanelContainer.removeAll();
+            chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
+            chartPanelContainer.revalidate();
+            chartPanelContainer.repaint();
 
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error visualizing Precision-Recall curve: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Generates a report based on the selected ARFF file.
+     * Displays the report in the JTextArea.
+     */
+    private void generateReport() {
+        if (arffFilePath == null) {
+            JOptionPane.showMessageDialog(this, "Please select a file first.", "No File Selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            // Load dataset from ARFF file
+            WekaDataSet wekaDataSet = new WekaDataSet(arffFilePath);
+            Instances data = wekaDataSet.getDataset();
+            if (data.classIndex() == -1) {
+                data.setClassIndex(data.numAttributes() - 1);
+            }
+
+            // Build and evaluate classifier
+            Classifier classifier = new J48();
+            classifier.buildClassifier(data);
+
+            // Determine the number of folds
+            int numInstances = data.numInstances();
+            int numFolds = Math.min(10, numInstances);
+            if (numFolds < 2) {
+                throw new IllegalArgumentException("Number of folds must be greater than 1");
+            }
+
+            Evaluation eval = new Evaluation(data);
+            eval.crossValidateModel(classifier, data, numFolds, new java.util.Random(1));
+
+            // Generate report
+            StringBuilder report = new StringBuilder();
+            report.append("Dataset: ").append(arffFilePath).append("\n\n");
+            report.append("Summary Statistics:\n").append(eval.toSummaryString()).append("\n\n");
+            report.append("Detailed Accuracy By Class:\n").append(eval.toClassDetailsString()).append("\n\n");
+            report.append("Confusion Matrix:\n").append(eval.toMatrixString()).append("\n");
+
+            // Display the report in the JTextArea
+            reportArea.setText(report.toString());
+            chartPanelContainer.removeAll();
+            chartPanelContainer.add(new JScrollPane(reportArea), BorderLayout.CENTER);
+            chartPanelContainer.revalidate();
+            chartPanelContainer.repaint();
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
