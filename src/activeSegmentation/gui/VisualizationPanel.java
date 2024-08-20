@@ -5,6 +5,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import weka.classifiers.Classifier;
@@ -170,6 +171,12 @@ public class VisualizationPanel extends JPanel {
                     false
             );
 
+            // Customize the chart's appearance
+            XYPlot plot = rocChart.getXYPlot();
+            plot.setDomainGridlinePaint(Color.BLACK); // Set grid color to black
+            plot.setRangeGridlinePaint(Color.BLACK);
+            plot.setBackgroundPaint(Color.WHITE);     // Set background color to white
+
             ChartPanel chartPanel = new ChartPanel(rocChart);
             chartPanelContainer.removeAll();
             chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
@@ -242,6 +249,12 @@ public class VisualizationPanel extends JPanel {
                     true,
                     false
             );
+
+            // Customize the chart's appearance
+            XYPlot plot = prChart.getXYPlot();
+            plot.setDomainGridlinePaint(Color.BLACK); // Set grid color to black
+            plot.setRangeGridlinePaint(Color.BLACK);  // Set grid color to black
+            plot.setBackgroundPaint(Color.WHITE);     // Set background color to white
 
             ChartPanel chartPanel = new ChartPanel(prChart);
             chartPanelContainer.removeAll();
