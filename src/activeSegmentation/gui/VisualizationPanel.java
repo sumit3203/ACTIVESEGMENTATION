@@ -16,7 +16,10 @@ import weka.core.Instances;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * VisualizationPanel provides the user interface for selecting an ARFF file
@@ -315,11 +318,43 @@ public class VisualizationPanel extends JPanel {
             chartPanelContainer.revalidate();
             chartPanelContainer.repaint();
 
+            // Add Export button to the GenerateReport panel
+            JButton exportButton = new JButton("Export Report");
+            exportButton.addActionListener(e -> exportReportAsText(String.valueOf(report)));
+            chartPanelContainer.add(exportButton, BorderLayout.SOUTH);
+
+            // Revalidate and repaint the chartPanelContainer to show the Export button
+            chartPanelContainer.revalidate();
+            chartPanelContainer.repaint();
+
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error generating report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+        }
+    }
+
+    // Method to save the report as a text file
+    private void exportReportAsText(String report) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Report");
+        fileChooser.setSelectedFile(new File("report.txt"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            saveReportToTextFile(fileToSave.getAbsolutePath(), report);
+        }
+    }
+
+    // Method to actually write the content to a file
+    private void saveReportToTextFile(String filePath, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(report);
+            JOptionPane.showMessageDialog(this, "Report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
