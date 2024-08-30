@@ -74,10 +74,10 @@ public class SessionGUI extends JFrame implements ASCommon {
     private void loadData(ArrayList<Session> sessionList) {
         try {
             //sessionList = new ArrayList<>();
-            Connection conn=man.getConnection();
-            Statement stmt = conn.createStatement();
+            final Connection conn=man.getConnection();
+            final Statement stmt = conn.createStatement();
             if (conn!=null) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
+            	final ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
 	            while (rs.next()) {
 	                int ss_id = rs.getInt("ss_id");
 	                int sessionId = rs.getInt("session_id");
@@ -277,8 +277,8 @@ public class SessionGUI extends JFrame implements ASCommon {
                 buttonPanel.add(viewFeatureValuesButton);
                 panel.add(buttonPanel, BorderLayout.SOUTH);
     
-                // Create a new JFrame for the "Session Detail" GUI
-                JFrame sessionDetailFrame = new JFrame("Session Detail");
+                // Create a new JFrame for the "Session Details" GUI
+                JFrame sessionDetailFrame = new JFrame("Session Details");
                 sessionDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 sessionDetailFrame.getContentPane().add(panel);
                 sessionDetailFrame.pack();
@@ -440,7 +440,7 @@ public class SessionGUI extends JFrame implements ASCommon {
         ArrayList<ClassList> classList = new ArrayList<>();
         Connection conn=man.getConnection();
         try {
-            String sql = "SELECT * FROM class_list_details_view WHERE session_id = ?";
+            String sql = "SELECT image_name, class_label FROM class_list_details_view WHERE session_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
@@ -581,13 +581,13 @@ public class SessionGUI extends JFrame implements ASCommon {
         JScrollPane jsp = new JScrollPane(table);
         jsp.setBounds(20, 20, 750, 300);
 
-        jb_viewDetail = new JButton("View Session Detail");
+        jb_viewDetail = new JButton("View Data");
         jb_viewDetail.setBounds(180, 420, 160, 30);
         configureButton(jb_viewDetail);
         jb_viewDetail.addActionListener(viewSessionDetailListener);
         getContentPane().add(jb_viewDetail);
 
-        jb_viewFeatureDetail = new JButton("View Feature Detail");
+        jb_viewFeatureDetail = new JButton("View Features");
         jb_viewFeatureDetail.setBounds(370, 420, 160, 30);
         configureButton(jb_viewFeatureDetail);
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
