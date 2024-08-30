@@ -76,17 +76,19 @@ public class SessionGUI extends JFrame implements ASCommon {
             //sessionList = new ArrayList<>();
             Connection conn=man.getConnection();
             Statement stmt = conn.createStatement();
+            if (conn!=null) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM sessions");
-            while (rs.next()) {
-                int ss_id = rs.getInt("ss_id");
-                int sessionId = rs.getInt("session_id");
-                String startTime = rs.getString("start_time");
-                String endTime = rs.getString("end_time");
-                String datasetPath = rs.getString("dataset_path");
-                String classifierOutput = rs.getString("classifier_output");
-
-                sessionList.add(new Session(ss_id, sessionId, startTime, endTime, datasetPath, classifierOutput));
-                System.out.println(startTime);
+	            while (rs.next()) {
+	                int ss_id = rs.getInt("ss_id");
+	                int sessionId = rs.getInt("session_id");
+	                String startTime = rs.getString("start_time");
+	                String endTime = rs.getString("end_time");
+	                String datasetPath = rs.getString("dataset_path");
+	                String classifierOutput = rs.getString("classifier_output");
+	
+	                sessionList.add(new Session(ss_id, sessionId, startTime, endTime, datasetPath, classifierOutput));
+	                System.out.println(startTime);
+	            }
             }
         } catch (SQLException e) {
             //System.out.println(e.getMessage());

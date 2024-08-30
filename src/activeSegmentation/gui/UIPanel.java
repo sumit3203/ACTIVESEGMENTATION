@@ -134,8 +134,7 @@ public class UIPanel extends JFrame  implements ASCommon  {
 		
 		JButton btnLearning = new JButton("Model Learning");
 		btnLearning.addActionListener(e -> {
-	
-				learningPanel = new LearningPanel(projectManager, learningManager);
+					learningPanel = new LearningPanel(projectManager, learningManager);
 				learningPanel.setVisible(true);
 	
 		});
