@@ -27,7 +27,7 @@ import activeSegmentation.IFilterViz;
 import dsp.Conv;
 
 /**
- * @version 	
+ * @version 	1.0 15 Dec 2025
  * 				
  * 				based on Hessian_Filter 1.3 13 Feb 2023
  * 				
@@ -37,7 +37,7 @@ import dsp.Conv;
  *
  *
  * @contents
- * The plugin computes the eigenvalues of the ridge filter
+ * The plugin computes the eigenvalues of the Weingarten map
  * 
  * 
  * @license This library is free software; you can redistribute it and/or
@@ -77,7 +77,6 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 	public  int max_sz= Prefs.getInt(MAX_LEN, 8);
 	
 	private boolean isEnabled=true;
-
 	private float[][] kernel=null;
 
 	private ImagePlus image=null;
@@ -92,8 +91,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 	/* NEW VARIABLES*/
  	
 	/** It stores the settings of the Filter. */
-	private Map< String, String > settings= new HashMap<>();
-	
+	private Map< String, String > settings= new HashMap<>();	
   
 
 	/**
@@ -113,6 +111,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 
 	// It is used to check whether to calibrate or not
 	private boolean doCalib = false;
+	
 	/*
 	 * This variable is to calibrate the Image Window
 	 */
@@ -126,6 +125,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 				+ "separable - keep enabled for faster run;";*/
 		return getHelpResource();
 	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see ij.plugin.filter.PlugInFilter#run(ij.process.ImageProcessor)
@@ -140,8 +140,6 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		image=new ImagePlus("Weingarten result hw="+(r),imageStack);
 		image.show();
 	}
-
-	
 	
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
@@ -304,6 +302,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		}
 		String fkey=this.getKey();
 		
+		/*
 		if (fulloutput) {
 			imageStack.addSlice(fkey+"_X_diff_"+sz, gradx);
 			imageStack.addSlice(fkey+"_Y_diff_"+sz, grady);
@@ -311,10 +310,12 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 			imageStack.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
 			imageStack.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
 		}
-
-		imageStack.addSlice(fkey+"_Amp_"+sz, pamp);
-		imageStack.addSlice(fkey+"_Sin_"+sz, sin_phase);
-		imageStack.addSlice(fkey+"_Cos_"+sz, cos_phase);
+		 */
+		if (fulloutput) {
+			imageStack.addSlice(fkey+"_Amp_"+sz, pamp);
+			imageStack.addSlice(fkey+"_Sin_"+sz, sin_phase);
+			imageStack.addSlice(fkey+"_Cos_"+sz, cos_phase);
+		}
 		imageStack.addSlice(fkey+"_Det_"+sz, hesdet); 
 		imageStack.addSlice(fkey+"_E1_"+sz, eigen1);
 		imageStack.addSlice(fkey+"_E2_"+sz, eigen2);
@@ -372,6 +373,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
 		//sigma = (float) (gd.getNextNumber());
@@ -385,7 +387,6 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		}
 		sz =  (2*(int)r+1);
 		if (gd.wasCanceled()) {
-
 			return false;
 		}
 		return r>0;
@@ -410,7 +411,6 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		prefs.put(LEN, Integer.toString(sz));
 		prefs.put(FULL_OUTPUT, Boolean.toString(fulloutput));
 		// prefs.put(SIGMA, Float.toString(sigma));
-
 	}
 
 	@Override

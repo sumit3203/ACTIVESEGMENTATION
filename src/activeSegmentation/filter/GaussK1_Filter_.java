@@ -277,7 +277,6 @@ public class GaussK1_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		try {
 
-			// TODO Auto-generated method stub
 			int sz=8;
 			int r = (sz-1)/2;
 			GScaleSpace sp=new GScaleSpace(r);

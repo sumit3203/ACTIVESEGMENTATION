@@ -335,6 +335,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 	}
 
 	// Called after modifications to the dialog. Returns true if valid input.
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		wnd = (int)(gd.getNextNumber());
 		int r = (int)(gd.getNextNumber());

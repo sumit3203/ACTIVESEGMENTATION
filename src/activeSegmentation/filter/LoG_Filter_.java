@@ -366,7 +366,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		
 		 new Thread() {
-	            @SuppressWarnings("restriction")
+	            
 				@Override
 	            public void run() {
 	                javafx.application.Application.launch(WebHelper.class, hlp);

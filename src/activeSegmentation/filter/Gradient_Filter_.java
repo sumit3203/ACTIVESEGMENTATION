@@ -384,6 +384,7 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		try {

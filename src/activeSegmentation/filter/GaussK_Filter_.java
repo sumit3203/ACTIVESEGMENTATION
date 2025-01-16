@@ -214,6 +214,7 @@ public class GaussK_Filter_ implements ExtendedPlugInFilter, DialogListener, IFi
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
 		//sigma = (float) (gd.getNextNumber());

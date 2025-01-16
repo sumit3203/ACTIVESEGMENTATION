@@ -160,141 +160,141 @@ public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFi
 	}
 
 
-/**
- * @param ip
- * @param sp
- * @return
- */
-private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
-	float[][] kernel=null;
-	ip.snapshot();
-	if (!isFloat) 
-		ip=ip.toFloat(0, null);
+	/**
+	 * @param ip
+	 * @param sp
+	 * @return
+	 */
+	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, ImageStack is) {
+		float[][] kernel=null;
+		ip.snapshot();
+		if (!isFloat) 
+			ip=ip.toFloat(0, null);
+		
+		 
+		
+		float[] kernx= sp.gauss1D();
+		System.out.println("kernx :"+kernx.length);
+		SUtils.flip(kernx);		
+		float[] kern_diff2= sp.diff2Gauss1D();
+		System.out.println("kern_diff2 :"+kern_diff2.length);
+		SUtils.flip(kern_diff2);
+		
+		float[] kern_diff1=sp.diffGauss1D();
+		System.out.println("kern_diff1 :"+kern_diff1.length);
+		SUtils.flip(kern_diff1);
+		
+		kernel=new float[4][];
+		kernel[0]=kernx;
+		kernel[1]=kern_diff2;
+		kernel[2]=kern_diff1;
+		
+		float[] kernel2=sp.computeDiff2Kernel2D();
+		kernel[3]=kernel2;
+		SUtils.flip(kernel2);  // symmetric but this is the correct way
+		
+		int sz= sp.getSize();
+		if (debug ) {
+			FloatProcessor fpkern2=new FloatProcessor(sz,sz);
 	
+			float[][] disp= new float[2][];
+	
+			disp[0]=GScaleSpace.joinXY(kernel, 0, 1);
+			disp[1]=GScaleSpace.joinXY(kernel, 1, 0);
+	
+			for (int i=0; i<sz*sz; i++)
+				fpkern2.setf(i, disp[0][i]+ disp[1][i]);
+	
+			new ImagePlus("kernel sep",fpkern2).show();
+			
+			
+		}
+	
+		
+		FloatProcessor fpaux= (FloatProcessor) ip;
+			
+		Conv cnv=new Conv();
+	
+		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
+		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
+		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
+		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
+		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
+	
+		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+		cnv.convolveFloat1D(gradx, kernx, Oy);
+	
+		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+		cnv.convolveFloat1D(grady, kernx, Ox);
+	
+		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
+		cnv.convolveFloat1D(lap_xx, kernx, Oy);
+	
+		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
+		cnv.convolveFloat1D(lap_yy, kernx, Ox);
+	
+		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
+		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+		
+		int width=ip.getWidth();
+		int height=ip.getHeight();
+	
+	
+		FloatProcessor lap_norm=new FloatProcessor(width, height); // normal 
+		FloatProcessor lap_tan=new FloatProcessor(width, height); // tangential
+		FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
+		
+		for (int i=0; i<width*height; i++) {
+			// components of the gradient
+			double gx=gradx.getf(i);
+			double gy=grady.getf(i);
+	
+			// components of the Hessian
+			double gxy=lap_xy.getf(i);
+	
+			double gxx=lap_xx.getf(i);
+			double gyy=lap_yy.getf(i);
+	
+			float det= (float) (gxx*gyy- gxy*gxy);
+		 		
+			double amp=sqrt( gx*gx+gy*gy)+ 1e-6; 
+			
+			double damp=amp*amp*amp;
+		  
+			//  Isophote curvature
+			// (-2*(F[x])*(F[xy])*(F[y])+(F[xx])*(F[y])^2+(F[x])^2*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
+			float gk=(float)(   ( gxx*gy*gy + gyy*gx*gx- 2.*gxy*gx*gy ) /damp   );
+			
+			if (abs(gk) <1e-8) gk=0;
+	
+	
+		    //Streamline curvature
+			// ((F[x])^2*(F[xy])-(F[x])*(F[xx])*(F[y])-(F[xy])*(F[y])^2+(F[x])*(F[y])*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
+			float gt=(float)(   (  gx*gy*(gyy-gxx) + gxy*(gx*gx - gy*gy) ) /damp  );
+			if (abs(gt) <1e-8) gt=0;
+			
+			lap_tan.setf(i, gt);
+			lap_norm.setf(i, gk);
+			hesdet.setf(i, det);
+		}
+		
+		String fkey=this.getKey();
+		
+		if (fulloutput) {
+			is.addSlice(fkey+"_X_diff_"+sz, gradx);
+			is.addSlice(fkey+"_Y_diff_"+sz, grady);
+			is.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
+			is.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
+			is.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
+		}
+	
+		is.addSlice(fkey+"_K_n_"+sz, lap_norm);
+		 
+		is.addSlice(fkey+"_K_t_"+sz, lap_tan);
+		is.addSlice(fkey+"_Hess_det_"+sz, hesdet);
 	 
-	
-	float[] kernx= sp.gauss1D();
-	System.out.println("kernx :"+kernx.length);
-	SUtils.flip(kernx);		
-	float[] kern_diff2= sp.diff2Gauss1D();
-	System.out.println("kern_diff2 :"+kern_diff2.length);
-	SUtils.flip(kern_diff2);
-	
-	float[] kern_diff1=sp.diffGauss1D();
-	System.out.println("kern_diff1 :"+kern_diff1.length);
-	SUtils.flip(kern_diff1);
-	
-	kernel=new float[4][];
-	kernel[0]=kernx;
-	kernel[1]=kern_diff2;
-	kernel[2]=kern_diff1;
-	
-	float[] kernel2=sp.computeDiff2Kernel2D();
-	kernel[3]=kernel2;
-	SUtils.flip(kernel2);  // symmetric but this is the correct way
-	
-	int sz= sp.getSize();
-	if (debug ) {
-		FloatProcessor fpkern2=new FloatProcessor(sz,sz);
-
-		float[][] disp= new float[2][];
-
-		disp[0]=GScaleSpace.joinXY(kernel, 0, 1);
-		disp[1]=GScaleSpace.joinXY(kernel, 1, 0);
-
-		for (int i=0; i<sz*sz; i++)
-			fpkern2.setf(i, disp[0][i]+ disp[1][i]);
-
-		new ImagePlus("kernel sep",fpkern2).show();
-		
-		
+		return is;
 	}
-
-	
-	FloatProcessor fpaux= (FloatProcessor) ip;
-		
-	Conv cnv=new Conv();
-
-	FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
-	FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
-	FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
-	FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
-	FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
-
-	cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-	cnv.convolveFloat1D(gradx, kernx, Oy);
-
-	cnv.convolveFloat1D(grady, kern_diff1, Oy);
-	cnv.convolveFloat1D(grady, kernx, Ox);
-
-	cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-	cnv.convolveFloat1D(lap_xx, kernx, Oy);
-
-	cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-	cnv.convolveFloat1D(lap_yy, kernx, Ox);
-
-	cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-	cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
-	
-	int width=ip.getWidth();
-	int height=ip.getHeight();
-
-
-	FloatProcessor lap_norm=new FloatProcessor(width, height); // normal 
-	FloatProcessor lap_tan=new FloatProcessor(width, height); // tangential
-	FloatProcessor hesdet=new FloatProcessor(width, height); // Hessian determinant
-	
-	for (int i=0; i<width*height; i++) {
-		// components of the gradient
-		double gx=gradx.getf(i);
-		double gy=grady.getf(i);
-
-		// components of the Hessian
-		double gxy=lap_xy.getf(i);
-
-		double gxx=lap_xx.getf(i);
-		double gyy=lap_yy.getf(i);
-
-		float det= (float) (gxx*gyy- gxy*gxy);
-	 		
-		double amp=sqrt( gx*gx+gy*gy)+ 1e-6; 
-		
-		double damp=amp*amp*amp;
-	  
-		//  Isophote curvature
-		// (-2*(F[x])*(F[xy])*(F[y])+(F[xx])*(F[y])^2+(F[x])^2*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
-		float gk=(float)(   ( gxx*gy*gy + gyy*gx*gx- 2.*gxy*gx*gy ) /damp   );
-		
-		if (abs(gk) <1e-8) gk=0;
-
-
-	    //Streamline curvature
-		// ((F[x])^2*(F[xy])-(F[x])*(F[xx])*(F[y])-(F[xy])*(F[y])^2+(F[x])*(F[y])*(F[yy]))/((F[x])^2+(F[y])^2)^(3/2)
-		float gt=(float)(   (  gx*gy*(gyy-gxx) + gxy*(gx*gx - gy*gy) ) /damp  );
-		if (abs(gt) <1e-8) gt=0;
-		
-		lap_tan.setf(i, gt);
-		lap_norm.setf(i, gk);
-		hesdet.setf(i, det);
-	}
-	
-	String fkey=this.getKey();
-	
-	if (fulloutput) {
-		is.addSlice(fkey+"_X_diff_"+sz, gradx);
-		is.addSlice(fkey+"_Y_diff_"+sz, grady);
-		is.addSlice(fkey+"_XX_diff_"+sz, lap_xx);
-		is.addSlice(fkey+"_YY_diff_"+sz, lap_yy);
-		is.addSlice(fkey+"_XY_diff_"+sz, lap_xy);
-	}
-
-	is.addSlice(fkey+"_K_n_"+sz, lap_norm);
-	 
-	is.addSlice(fkey+"_K_t_"+sz, lap_tan);
-	is.addSlice(fkey+"_Hess_det_"+sz, hesdet);
- 
-	return is;
-}
 
 	
 	

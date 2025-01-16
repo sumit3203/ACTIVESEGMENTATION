@@ -180,7 +180,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 			ip=ip.toFloat(0, null);
 
 		pass++;
-		double sigma=sp.getSigma();
+		//double sigma=sp.getSigma();
 		//System.out.println(settings.get(LEN)+"MG");
 		//GScaleSpace sp=new GScaleSpace(sigma);
 		float[] kernx= sp.gauss1D();
@@ -363,6 +363,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	/* (non-Javadoc)
 	 * @see ij.gui.DialogListener#dialogItemChanged(ij.gui.GenericDialog, java.awt.AWTEvent)
 	 */
+	@Override
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e) {
 		double r = (int)(gd.getNextNumber());
 		//sigma = (float) (gd.getNextNumber());
@@ -422,6 +423,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
 		try {
