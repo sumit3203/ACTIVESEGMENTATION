@@ -3,6 +3,7 @@ package activeSegmentation.prj;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
+import ij.io.Opener;
 import ij.process.ImageProcessor;
 
 import java.io.File;
@@ -212,8 +213,9 @@ public class ProjectManager implements IUtil{
 			IJ.log(image.getTitle());
             createImages(image.getTitle(), image);
 		}else { 
-			
-			if(trainingImage.endsWith(".tif")|| trainingImage.endsWith(".tiff") || trainingImage.endsWith(".jpg")) {
+			//
+			final String ftype=Opener.getFileFormat(trainingImage);
+			if (!ftype.equalsIgnoreCase("unknown")) {
 				ImagePlus currentImage=IJ.openImage(trainingImage);
 				createImages(currentImage.getTitle(), currentImage);
 			
