@@ -33,6 +33,11 @@ import activeSegmentation.IMoment;
 import activeSegmentation.IUtil;
 import activeSegmentation.ProjectType;
 
+/**
+ * 
+ * @author Sumit Vohra, Dimiter Prodanov
+ *
+ */
 public class ProjectManager implements IUtil{
 
 	private IDataSet dataSet;

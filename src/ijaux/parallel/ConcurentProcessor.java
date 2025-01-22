@@ -26,7 +26,7 @@ public class ConcurentProcessor<T> extends ParallelFramework implements Callable
 	 */
 	public ConcurentProcessor() {
 		executor =(ThreadPoolExecutor) Executors.newFixedThreadPool(n_cpus, factory);	
-		//if(debug)
+		if(debug)
 			System.out.println("starting a ConcurentProcessor " + n_cpus);
 	}
 	
