@@ -7,6 +7,8 @@ import ij.IJ;
 import ij.WindowManager;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -125,7 +127,10 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 			// For Directory
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fileChooser.setAcceptAllFileFilterUsed(false);
+			//fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JSON", "json" ));
+		 
+			
 			int rVal = fileChooser.showOpenDialog(null);
 			if (currentDir!=null)
 				fileChooser.setSelectedFile(currentDir);
@@ -137,14 +142,14 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 					System.out.println(" GuiPanel ");
 
 					// Updates mainFrame by replacing its content with the main panel of a new GuiPanel instance
-					activeSegmentation.gui.GuiPanel guiPanel = new activeSegmentation.gui.GuiPanel(projectManager);
+					GuiPanel guiPanel = new  GuiPanel(projectManager);
 					mainFrame.getContentPane().removeAll();
 					mainFrame.getContentPane().add(guiPanel.getMainPanel());
 					mainFrame.revalidate();
 					mainFrame.repaint();
 
-//					UIPanel frame=new UIPanel(projectManager);
-//					frame.setVisible(true);
+					//UIPanel frame=new UIPanel(projectManager);
+					//frame.setVisible(true);
 				}
 				else
 					IJ.error("Not a project file!");

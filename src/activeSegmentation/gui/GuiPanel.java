@@ -48,7 +48,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 	 * @param projectManager
 	 */
 	public GuiPanel(ProjectManager projectManager)	{
-		System.out.println(".....");
+		System.out.println("..GuiPanel...");
 		this.projectManager = projectManager;
 		System.out.println("ClassifierManager init");
 		learningManager = new ClassifierManager(this.projectManager);
