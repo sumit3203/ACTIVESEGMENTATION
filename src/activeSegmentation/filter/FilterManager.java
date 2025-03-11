@@ -171,7 +171,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 
 	@Override
-	public void applyFilters(ProgressCallback callback){
+	public void applyFilters(ProgressCallback callback) throws InterruptedException {
 		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
@@ -185,8 +185,18 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 		for(IFilter filter: filterMap.values()){
 			System.out.println("FeatureManager: filter applied "+filter.getName());
+
+			//check interruption
+			if (Thread.currentThread().isInterrupted()) {
+				throw new InterruptedException("Computation was canceled.");
+			}
+
 			if(filter.isEnabled()){
 				for(String image: images) {
+					if (Thread.currentThread().isInterrupted()) {
+						throw new InterruptedException("Computation was canceled.");
+					}
+
 					//IJ.log(image);
 					filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 
@@ -212,7 +222,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 
 	@Override
-	public void applyFilters() {
+	public void applyFilters() throws InterruptedException {
 		applyFilters(null);
 	}
 

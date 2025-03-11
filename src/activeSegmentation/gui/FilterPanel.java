@@ -29,6 +29,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private JList<String> filterList;
 	private Map<String,List<JComponent>> filerMap = new HashMap<>();
 	private JProgressBar progressBar;
+	private Thread computationThread;
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
@@ -347,16 +348,24 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			progressBar.setValue(0);
 
 			// Run computation in a separate thread
-			new Thread(() -> {
-				filterManager.applyFilters(progress -> {
-					// This method is called periodically by filterManager.applyFilters with the progress percentage
-					SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
-				});
+			computationThread = new Thread(() -> {
+				try {
+					filterManager.applyFilters(progress -> {
+						// This method is called periodically by filterManager.applyFilters with the progress percentage
+						SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
+					});
+				} catch (InterruptedException e) {
+					System.out.println("Computation was canceled.");
+				} finally {
+					// Hide the progress bar when computation is done or canceled
+					SwingUtilities.invokeLater(() -> {
+						progressBar.setVisible(false);
+						progressBar.setValue(0); // reset
+					});
+				}
+			});
 
-				// Hide the progress bar when computation is done
-				SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
-			}).start();
-
+			computationThread.start();
 		}
 		if(event==SAVE_BUTTON_PRESSED){
 
@@ -430,6 +439,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 		if (event.getActionCommand() == CANCEL_BUTTON_PRESSED.getActionCommand()) {
 			// Handle cancel button press
+			if (computationThread != null && computationThread.isAlive()) {
+				computationThread.interrupt();
+			}
 			setVisible(false); // Hide the JFrame
 			return; // Exit the method
 		}
