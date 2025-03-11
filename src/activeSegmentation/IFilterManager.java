@@ -53,10 +53,10 @@ public interface IFilterManager extends IClassLoader<IAnnotated>{
 	 * @param image on which filter is applied
 	 *
 	 */
-	public void applyFilters();
+	public void applyFilters() throws InterruptedException;
 
 	// New method to support progress reporting
-	void applyFilters(ProgressCallback callback);
+	void applyFilters(ProgressCallback callback) throws InterruptedException;
 
 	interface ProgressCallback {
 		void onProgress(int progress);

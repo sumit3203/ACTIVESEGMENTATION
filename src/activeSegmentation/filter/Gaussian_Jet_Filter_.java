@@ -1,40 +1,32 @@
 package activeSegmentation.filter;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.Prefs;
-import ij.gui.GenericDialog;
-import ij.gui.Roi;
-import ij.measure.Calibration;
-import ij.gui.DialogListener;
-import ij.plugin.filter.ExtendedPlugInFilter;
-import ij.plugin.filter.PlugInFilterRunner;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
-import ijaux.scale.*;
-
-import static activeSegmentation.FilterType.SEGM;
-import static java.lang.Math.PI;
-import static java.lang.Math.exp;
-import static java.lang.Math.sqrt;
-
-import java.awt.*;
-import java.io.File;
-import java.util.*;
-import java.util.List;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.Conv;
+import ij.*;
+import ij.gui.DialogListener;
+import ij.gui.GenericDialog;
+import ij.gui.Roi;
+import ij.measure.Calibration;
+import ij.plugin.filter.ExtendedPlugInFilter;
+import ij.plugin.filter.PlugInFilterRunner;
+import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
+import ijaux.scale.GScaleSpace;
+import ijaux.scale.Pair;
+import ijaux.scale.SUtils;
+
+import java.awt.*;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import static activeSegmentation.FilterType.SEGM;
+import static java.lang.Math.*;
 
 /**
  * @version   	 
@@ -266,7 +258,7 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		for (int i=0; i <n; i++) { 
 			FloatProcessor fpaux= (FloatProcessor) ipaux.duplicate();
 			for (int j=0; j <n; j++) {
-				cnv.convolveSep(fpaux, kernel[i], kernel[n-i]);
+				cnv.convolveSep(fpaux, kernel[i], kernel[j]);
 				is.addSlice("dx [" +i+"] dy["+j+"]", fpaux);
 			}
 
