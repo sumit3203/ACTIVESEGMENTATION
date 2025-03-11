@@ -162,8 +162,10 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		p.setLayout(null);
 		//p.setBackground(Color.GRAY);
 		int  y=25;
-		if(size!=1)
+		if (size!=1) {
 			addButton( new JButton(), "Previous", null, 10, 340, 90, 25, p, PREVIOUS_BUTTON_PRESSED , null);
+		}
+
 		IFilter instance=filterManager.getInstance(filterName);
 		String longname=instance.getName();
 		
@@ -187,8 +189,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			
 		}
 				
-		if(size != maxFilters-1)
+		if(size != maxFilters) {
 			addButton( new JButton(), "Next", null, 495, 340, 90, 25, p , NEXT_BUTTON_PRESSED , null);
+		}
 
 //		addButton( new JButton(),  "Help", null, 495, 305, 90, 25, p , HELP_BUTTON_PRESSED , null);
 	
@@ -228,8 +231,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 		int  y=25;
 		// previous button
-		if (size!=1)
+		if (size!=1) {
 			addButton( new JButton(), "Previous", null, 10, 340, 90, 25, panel, PREVIOUS_BUTTON_PRESSED , null);
+		}
 		
 		IFilter instance=filterManager.getInstance(filterName);
 		String longname=instance.getName();
@@ -254,8 +258,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 		
 		// next button
-		if (size != maxFilters-1)
+		if (size != maxFilters) {
 			addButton( new JButton(), "Next", null, 495, 340, 90, 25, panel ,NEXT_BUTTON_PRESSED , null);
+		}
 
 		// help button
 //		addButton( new JButton(), "Help", null, 495, 305, 90, 25, panel ,HELP_BUTTON_PRESSED , null);
@@ -332,12 +337,16 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			}
 		}
 		if(event == PREVIOUS_BUTTON_PRESSED ){
-			//TODO check for the bonds
-			pane.setSelectedIndex(pane.getSelectedIndex()-1);
+			int currentIndex = pane.getSelectedIndex();
+			if (currentIndex > 0) {
+				pane.setSelectedIndex(currentIndex - 1);
+			}
 		}
 		if(event==NEXT_BUTTON_PRESSED){
-			//TODO check for the bonds
-			pane.setSelectedIndex(pane.getSelectedIndex()+1);
+			int currentIndex = pane.getSelectedIndex();
+			if (currentIndex < pane.getTabCount() - 1) {
+				pane.setSelectedIndex(currentIndex + 1);
+			}
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
 
