@@ -11,9 +11,6 @@ import activeSegmentation.moment.MomentsManager;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 import ij.IJ;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -456,44 +453,12 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 
 		if (event== HELP_BUTTON_PRESSED) {
-			//System.out.println("Help pressed");
 			String key= pane.getTitleAt( pane.getSelectedIndex());
-			//System.out.println("title: "+key);
-	 
-			String url=	filterManager.getHelpInfo(key);
+			String url = filterManager.getHelpInfo(key);
 			
-			// https://stackoverflow.com/questions/24320014/how-to-call-launch-more-than-once-in-java
-			if (!javaFxLaunched ) {
-				/*		 new Thread() {
-
-					@SuppressWarnings("restriction")
-					@Override 
-					public void run() {
-						IJ.log("starting help url: "+url);
-				        Platform.setImplicitExit(false);
-						Application.launch(WebHelper.class, url);
-
-
-					} }.start(); */
-				new Thread(()->{
-					IJ.log("starting help url: "+url);
-					Platform.setImplicitExit(false); 
-					Application.launch(WebHelper.class,  url);  
-				}).start();
-				javaFxLaunched=true;
-			} else {
-				System.out.println("JavaFx already Launched");
-				Platform.runLater(()->{
-					try {
-						Application application = WebHelper.class.newInstance();
-						Stage primaryStage = new Stage();
-						application.start(primaryStage);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
-			}
-
+			// Use simplified WebHelper to open URL in default browser
+			IJ.log("Opening help URL: " + url);
+			WebHelper.openURL(url);
 		}
 
 		

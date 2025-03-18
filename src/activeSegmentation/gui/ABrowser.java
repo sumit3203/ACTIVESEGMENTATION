@@ -1,73 +1,32 @@
 package activeSegmentation.gui;
 
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.scene.layout.Region;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+import javax.swing.JPanel;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import ij.IJ;
-import javafx.application.Platform;
-
-@SuppressWarnings("restriction")
-public class ABrowser extends Region {
- 
-    private final WebView browser = new WebView();
-    private final WebEngine webEngine = browser.getEngine();
-     
-    public ABrowser(String resource) {
-        //apply the styles
-       getStyleClass().add("browser");
-
-       IJ.log("loading browser "+ resource);
-       webEngine.load(resource);
- 
-       //add the web view to the scene
-       getChildren().add(browser);
- 
+/**
+ * Simplified ABrowser class without JavaFX dependencies
+ */
+public class ABrowser extends JPanel {
+    
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * Constructor using awt/swing instead of JavaFX
+     */
+    public ABrowser() {
+        super();
     }
     
-    public void loadURL(final String url) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                String tmp="";
-				try {
-					tmp = (new URL(url)).toExternalForm();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
- 
-            	webEngine.load(tmp);
-            }
-        });
+    /**
+     * Constructor that takes a URL string
+     */
+    public ABrowser(String url) {
+        this();
     }
     
-    @Override 
-    protected void layoutChildren() {
-        double w = getWidth();
-        double h = getHeight();
-        layoutInArea(browser, 0, 0, w, h, 0, HPos.CENTER, VPos.CENTER);
-    }
- 
-    @Override 
-    protected double computePrefWidth(double height) {
-        return 750;
-    }
- 
-    @Override 
-    protected double computePrefHeight(double width) {
-        return 500;
-    }
-    
- // JavaScript interface object
-    public class JavaApp {
- 
-        public void exit() {
-            Platform.exit();
-        }
+    /**
+     * Load URL method that does nothing in this simplified version
+     */
+    public void loadURL(String url) {
+        // Does nothing in simplified version
     }
 }

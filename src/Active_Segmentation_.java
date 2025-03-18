@@ -1,4 +1,3 @@
-
 import java.io.File;
 
 import javax.swing.SwingUtilities;
@@ -49,24 +48,29 @@ public class Active_Segmentation_ implements PlugIn, ASCommon {
 	 */
 	public static void main(String[] args) {
 		 try {
-			File f=new File(args[0]);
-			if (f.exists() && f.isDirectory() ) {
-				System.setProperty("plugins.dir", args[0]);
-//				System.out.println(System.getProperty("java.class.path"));
+			// Check if args are provided
+			if (args.length > 0) {
+				File f = new File(args[0]);
+				if (f.exists() && f.isDirectory() ) {
+					System.setProperty("plugins.dir", args[0]);
+					new ImageJ();
+					Active_Segmentation_ as = new Active_Segmentation_();
+					as.run("");
+				} else {
+					throw new IllegalArgumentException("Invalid plugins directory");
+				}
+			} else {
+				// Run with default ImageJ plugins directory
+				System.out.println("No plugins directory specified, using default location");
 				new ImageJ();
-				Active_Segmentation_ as=new Active_Segmentation_();
+				Active_Segmentation_ as = new Active_Segmentation_();
 				as.run("");
-	 		} else {
-				throw new IllegalArgumentException();
 			}
-		}	catch (Exception ex) {
-			IJ.error("plugins.dir misspecified\n"
+		} catch (Exception ex) {
+			IJ.error("Error running plugin. \n"
 					+ "To run the platform in stand-alone mode please specify plugins.dir"
-					+ "as a command line argument");
+					+ " as a command line argument");
 			ex.printStackTrace();
 		} 
-		
-		
 	}
-
 }

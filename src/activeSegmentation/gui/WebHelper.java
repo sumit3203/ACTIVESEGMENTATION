@@ -1,85 +1,38 @@
 package activeSegmentation.gui;
 
-import java.util.List;
- 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.application.Platform;
 import ij.IJ;
- 
-@SuppressWarnings("restriction")
-public class WebHelper extends Application {
-    private Scene scene;
-    
-    private static String webhlp="";
-   
-    private ABrowser browser;
 
-	private static String cssfile;
-     
-    @Override 
-    public void start(Stage stage) {
- 
-        // create the scene
-        stage.setTitle("Help Browser");
-        IJ.log("browser ... ");
-        browser= new ABrowser(webhlp);
-        scene = new Scene(browser, 750, 500, Color.web("#666970"));
-        stage.setScene(scene);
-
-       // stage.setOnCloseRequest(e -> Platform.exit());
-     //   stage.setOnCloseRequest(e -> stage.close());
-        scene.getStylesheets().add(cssfile);        
-      // IJ.log("local "+cssfile);
-        stage.show();
-    }
+/**
+ * Simplified WebHelper class without JavaFX dependencies
+ */
+public class WebHelper {
     
-    @Override
-	public void init() {
-    	Parameters params =getParameters();
-    	List<String> lst=params.getRaw();
-    	//System.out.println(lst);
-    	
-    	if (!lst.isEmpty()) {
-    		 IJ.log("init "+lst.get(0));
-    		setWebHelp(lst.get(0));
-    	}
+    private static final String HELP_URL = "https://github.com/sumit3203/ACTIVESEGMENTATION";
+    
+    public WebHelper() {
+        // Empty constructor
     }
     
     /**
-     * 
-     * @param args
+     * Show help in external browser instead of JavaFX browser
      */
-    public static void main(String[] args){
-        launch("help.html");         
+    public static void openURL(String url) {
+        try {
+            IJ.showMessage("Help", "Opening browser to: " + url);
+            IJ.log("Opening URL: " + url);
+            
+            // Use desktop browser instead
+            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+        } catch (Exception ex) {
+            IJ.error("Could not open URL: " + url);
+            ex.printStackTrace();
+        }
     }
-
+    
     /**
-     * 
-     * @return
+     * Launch help in default browser
      */
-	public String getWebHelp() {
-		return webhlp;
-	}
-
-	/**
-	 * 
-	 * @param webhlp
-	 */
-	public void setWebHelp(String webhlp) {
-		
-		String hlpfile=  WebHelper.class.getResource(webhlp).toExternalForm();
-		IJ.log("local "+hlpfile);
-		this.webhlp = hlpfile;
-		String ker= webhlp.substring(0, webhlp.length()-4);
-		//System.out.println(ker+"css");
-		 cssfile=WebHelper.class.getResource(ker+"css").toExternalForm();
-       // scene.getStylesheets().add(cssfile);        
-        IJ.log("local "+cssfile);
-	}
-
-
-
+    public static void showHelp() {
+        openURL(HELP_URL);
+    }
 }
