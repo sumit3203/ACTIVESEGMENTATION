@@ -2,6 +2,17 @@
 /bin/
 *.zip
 *.class
+*.log
+*.aux
+*.bbl
+*.blg
+*.sav
+*.gz
+*.4ct
+*.4tc
+*.idv
+*.lg
+*.xref
 /.temp-Active_Segmentation_-classpathOnly-1581890621933.jar
 .classpath
 .classpath
