@@ -1,0 +1,128 @@
+% !TeX spellcheck = en_US
+\documentclass{amsart}
+\usepackage{amsaddr}
+ 
+%%%%%%%%%%%%%%%
+%  Help file for the AS\IJ platform
+%%%%%%%%%%%%%%% 
+\title{Active Segmentation Moments and Texture Features}
+
+\author{Dimiter Prodanov\textsuperscript{1,2} }
+\address{
+	\textsuperscript{1}NERF, IMEC, Kapeldreef 75, 3001 Leuven, Belgium; 
+	\textsuperscript{2}PAML-LN,
+	IICT, Bulgarian Academy of Sciences,
+	Sofia, Bulgaria
+}
+%\email{dimiter.prodanov@imec.be; dimiterpp@gmail.com}
+%%%%%%%%%%%
+% Doc
+%%%%%%%%%%%
+\begin{document}
+\date{\today}	
+\maketitle
+\tableofcontents
+
+%%%%%%%%%%%%
+% Section
+%%%%%%%%%%%%
+ %%%%%%%%%%%%%
+ %  Section
+ %%%%%%%%%%%%%
+ \section{Image Moments}\label{sec:immom}
+ 
+ Spatial and central moments are important statistical properties of an image. 
+ Mathematically, the image moment is generally defined as the inner product  of the image intensity function f(x,y) and a certain basis function $ P_{m,n}$.  
+ In the continuous approximation, the moments of a function are computed by the integral
+ \[
+ M_{m,n}   = \iint\limits_{I} P_{m,n}(x,y) f(x,y) dx dy
+ \]
+ where $ P_{m,n}(x,y)$ is polynomial, parameterized by the integers \textit{m} and \textit{n}.   
+  depending on whether the basis functions satisfy orthogonality, the image moments can
+ be classified into orthogonal moments and non-orthogonal moments.
+ 
+ %%%%%%%%%%%%%%
+ %  Sec
+ %%%%%%%%%%%%%%
+ \section{Raw and Central Moments}\label{sec:rawmom}
+ For example, the raw image moments are given by the homogeneous form $P_{m,n}(x,y)= x^m y^n$.
+ The moments, can be referred to the center of the image frame or to the center of mass of the image $(x_c, y_c)$, 
+ in which case,   $P_{m,n}(x,y) = (x-x_c)^m (y-y_c)^n$.
+ The two main problems with such a choice is that the moments contain redundant information because the homogeneous polynomials are not orthogonal; 
+ also the computation loses numerical precision due to cancellation of large terms. 
+ Mathematically, a better choice of  polynomials is a polynomial from an orthogonal  family. 
+ Such polynomials enjoy an expansion property, that is 
+ \[
+ f(x,y) = \sum_{m=0}^{\infty} \sum_{n=0}^{\infty} M_{m,n} P_{m,n}(x,y)
+ \]
+ Useful examples of such orthogonal families are the Legendre and Zernike polynomials.
+
+%%%%%%%%%%%%
+%  Sec
+%%%%%%%%%%%%
+\section{Legendre moments}\label{sec:legendre}
+ 	The Legendre polynomials form an orthogonal set on the interval $[-1, 1]$ 
+ 	%and can be defined by the Rodriguez formula
+ 	%\begin{equation}
+ 	%L_{n} (x) = \frac{1}{2^n n!} \left( \frac{d}{dx} \right)^n (x^2-1)^n
+ 	%\end{equation}
+ 	The Legendre polynomials enjoy a two term recurrence relation %\footnote{\url{https://mathworld.wolfram.com/LegendrePolynomial.html}}
+ 	\begin{equation}
+ 		(n+1)L_{n+1} (x)=  (2 n + 1) x L_{n} (x) - n L_{n-1}(x) , \quad L_0(x)=1, \quad  L_1(x)= x
+ 	\end{equation}
+ 	that was used for their computation in the present paper. 
+ 	The advantage of the recursion relation is that all Legendre moments up to a user-defined order can be computed simultaneously. 
+
+%%%%%%%%%%%%
+%  Section
+%%%%%%%%%%%%
+\section{Zernike moments} \label{sec:zernike}
+ 	The Zernike polynomials are normalized on the unit disk in the complex plane.
+ 	The radial  Zernike polynomials   can be defined for $n-m$ even as:
+ 	\begin{equation}
+ 		R_{n}^{m} (r) = \sum_{l=0}^{ (n-m)/2 } \frac{(-)^l  (n-l)! }{l! ( (n+m)/2 -l )! ( (n-m)/2 -l)! } r^{n - 2 l}
+ 	\end{equation}
+ 	and 0 otherwise.
+ 	The present paper implemented a  recursive computation method given by the formula \cite{Shakibaei2013}
+ 	\begin{equation}
+ 		R^m_n(r)=r \left( R^{|m-1|}_{n-1} (r) +  R^{m+1}_{n-1} (r) \right)  - R^{m}_{n-2} (r), \quad R^0_0=1
+ 	\end{equation}
+ 	The orthogonal Zernike polynomials then are
+ 	\begin{equation}
+ 		V_{mn}(r, \theta):= R_{n}^{m} (r) e^{-i m \theta}
+ 	\end{equation}
+ 	The normalization of the polynomials for grayscale images is not an issue because they have a fixed dynamic range, 
+ 	so an image can be always normalized to unit range prior to computation of an image moment.  
+
+%%%%%%%%%%%
+%  Section
+%%%%%%%%%%
+\section{Haralick features}
+
+Haralick features \cite{Haralick1973} are coded as following
+0 --  Angular 2\textsuperscript{nd} Moment;
+1 -- Contrast;
+2 -- Correlation;
+3 -- Dissimilarity;
+4 -- Energy;
+5 -- Entropy;
+6 -- Homogeneity.
+
+%%%%%%%%%%
+% Section
+%%%%%%%%%%
+\section{ImageJ statistics}\label{sec:istat}
+The following ImageJ statistics are computed:
+Area, mean, stdev, min, max, centroid, center of mass,  perimeter, ellipse, shape descriptors, Ferret's diameter, integrated density, median, skewness, kurtosis, area fraction.
+
+%AREA+MEAN+STD_DEV+MODE+MIN_MAX+
+%CENTROID+CENTER_OF_MASS+PERIMETER+RECT+
+%ELLIPSE+SHAPE_DESCRIPTORS+FERET+INTEGRATED_DENSITY+
+%MEDIAN+SKEWNESS+KURTOSIS+AREA_FRACTION;
+
+%%%%%%%%%%%%%%%%%%%%%%
+%  Bib
+%%%%%%%%%%%%%%%%%
+\bibliographystyle{plain}
+\bibliography{wekasegmentation}
+\end{document}
