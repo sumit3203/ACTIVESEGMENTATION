@@ -71,5 +71,12 @@ public class JCudaTest {
         cuMemFree(deviceOutput);
         System.out.println("\nJCuda test completed successfully.");
 
+        try {
+            System.out.println("\nWaiting 10 seconds... check nvidia-smi now.");
+            Thread.sleep(10000); // 10 seconds
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
