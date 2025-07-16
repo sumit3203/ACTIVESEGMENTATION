@@ -1,5 +1,7 @@
-package jcuda;
+package dsp.cuda;
 
+import jcuda.Pointer;
+import jcuda.Sizeof;
 import jcuda.driver.*;
 
 import static jcuda.driver.JCudaDriver.*;
@@ -20,7 +22,7 @@ public class JCudaTest {
 
         // Load the compiled PTX file
         CUmodule module = new CUmodule();
-        cuModuleLoad(module, "jcuda/cuda/test_kernel.ptx");
+        cuModuleLoad(module, "dsp/cuda/kernels/test_kernel.ptx");
         System.out.println("3. PTX kernel file loaded.");
 
         // Launch helloKernel()
