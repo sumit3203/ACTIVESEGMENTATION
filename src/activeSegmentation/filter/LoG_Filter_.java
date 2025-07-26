@@ -49,7 +49,7 @@ import static java.lang.Math.*;
  * 				
  *   
  * 
- * @author Dimiter Prodanov IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov IMEC, BAS , Sumit Kumar Vohra
  *
  *
  * @contents

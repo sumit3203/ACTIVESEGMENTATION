@@ -171,10 +171,10 @@ public class GuiPanel extends JFrame implements ASCommon {
 		this.controlPanel.add(addButton("Feature Extraction",   null,  70, 170, 200, 50, this.FEATURE_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Model Learning",       null, 310, 170, 200, 50, this.LEARNING_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Evaluation",           null,  70, 240, 200, 50, this.EVALUATION_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("View Sessions",        null,  310, 240, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("View Sessions",        null, 310, 240, 200, 50, this.SESSIONGUI_BUTTON_PRESSED));
 		this.controlPanel.add(addButton("Visualization",        null,  70, 310, 200, 50, this.VISUALIZATION_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Back", 				 null, 310, 310, 98, 50, this.BACK_BUTTON_PRESSED));
-		this.controlPanel.add(addButton("Exit",                 null,  413, 310, 98, 50, this.EXIT_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Back", 				null, 310, 310,  98, 50, this.BACK_BUTTON_PRESSED));
+		this.controlPanel.add(addButton("Exit",                 null, 413, 310,  98, 50, this.EXIT_BUTTON_PRESSED));
 
 	}
 

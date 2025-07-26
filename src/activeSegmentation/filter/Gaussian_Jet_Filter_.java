@@ -33,10 +33,10 @@ import static java.lang.Math.*;
  * 				1.1 13 Feb 2023
  * 				- help annotations
  * 				1.0	28 Feb 2019
- * 					- gaussian jet
+ * 					- Gaussian jet
  *   
  * 
- * @author Dimiter Prodanov,IMEC, Sumit Kumar Vohra
+ * @author Dimiter Prodanov,  Sumit Kumar Vohra
  *
  *
  * @contents

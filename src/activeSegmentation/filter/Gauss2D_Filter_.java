@@ -40,7 +40,8 @@ import static java.lang.Math.*;
  * 				
  *   
  * 
- * @author Dimiter Prodanov IMEC 
+ * @author Dimiter Prodanov 
+ * 		   IMEC, BAS 
  *
  *
  * @contents

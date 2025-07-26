@@ -11,7 +11,6 @@ import ij.gui.DialogListener;
 import ij.measure.Calibration;
 import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
-import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.scale.*;
@@ -42,7 +41,7 @@ import static java.lang.Math.*;
  *   
  * 
  * @author Dimiter Prodanov
- * 		  IMEC
+ * 		  
  *
  *
  * @contents

@@ -34,7 +34,7 @@ import static activeSegmentation.FilterType.*;
  * 				
  *   
  * 
- * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra , Kuleuven
+ * @author Dimiter Prodanov, IMEC, BAS,  Sumit Kumar Vohra 
  *
  *
  * @contents

@@ -33,7 +33,7 @@ import ijaux.scale.SUtils;
  *   
  * 
  * @author Dimiter Prodanov
- * 		  IMEC
+ * 		   IMEC, BAS
  *
  *
  * @contents
