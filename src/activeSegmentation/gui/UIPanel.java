@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 /**
  * 
@@ -58,6 +59,7 @@ public class UIPanel extends JFrame  implements ASCommon  {
 	 * Create the frame.
 	 */
 	public UIPanel(ProjectManager projMan) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UIPanel.class.getResource("/activeSegmentation/gui/logo.png")));
 		setTitle("Active Segmentation v." + version);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 400);
