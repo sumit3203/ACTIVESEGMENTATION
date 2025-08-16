@@ -6,8 +6,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+//import java.net.MalformedURLException;
+import java.net.*;
 
 import ij.IJ;
 import javafx.application.Platform;
@@ -29,19 +29,33 @@ public class ABrowser extends Region {
  
     }
     
+    /*
     public void loadURL(final String url) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 String tmp="";
 				try {
-					tmp = (new URL(url)).toExternalForm();
+					tmp = new java.net.URI(url).toASCIIString();
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
  
             	webEngine.load(tmp);
             }
+        });
+    }
+    */
+    
+    public void loadURL(final String url) {
+        Platform.runLater(() -> {
+            String tmp = "";
+            try {
+                tmp = new URI(url).toASCIIString();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            webEngine.load(tmp);
         });
     }
     

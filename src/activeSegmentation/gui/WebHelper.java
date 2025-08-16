@@ -52,7 +52,7 @@ public class WebHelper extends Application {
      * @param args
      */
     public static void main(String[] args){
-        launch("/help2.html");         
+        launch("/help.html");         
     }
 
     /**
