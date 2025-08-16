@@ -2,14 +2,10 @@ package test;
 
 import static activeSegmentation.FilterType.SEGM;
 
-import java.awt.Image;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.AnnotationManager;
@@ -18,7 +14,6 @@ import activeSegmentation.IFilter;
 import ij.Prefs;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.datatype.Pair;
 
 @AFilter(key="TF", value="Test Filter", type=SEGM, help = "help.html")
 public class TestFilter implements IFilter {

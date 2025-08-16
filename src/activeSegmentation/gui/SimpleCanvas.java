@@ -1,24 +1,24 @@
 package activeSegmentation.gui;
 
-import ij.IJ;
+//import ij.IJ;
 import ij.ImagePlus;
-import ij.gui.ImageCanvas;
-import ij.gui.Roi;
+//import ij.gui.ImageCanvas;
+//import ij.gui.Roi;
 import ij.gui.Toolbar;
-import ij.plugin.Zoom;
-import ij.plugin.tool.PlugInTool;
+//import ij.plugin.Zoom;
+//import ij.plugin.tool.PlugInTool;
 
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+//import java.awt.event.KeyAdapter;
+//import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import activeSegmentation.util.GuiUtil;
+//import activeSegmentation.util.GuiUtil;
 
-import java.awt.event.*;
+//import java.awt.event.*;
 
 
 /**

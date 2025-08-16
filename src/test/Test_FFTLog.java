@@ -2,25 +2,14 @@ package test;
 
 import static fftscale.FFTConvolver.framesize;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import fftscale.ComplexFProcessor;
 import fftscale.FFTConvolver;
 import fftscale.filter.FFTKernelLoG;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.Prefs;
-import ij.gui.ImageRoi;
 import ij.gui.OvalRoi;
-import ij.gui.Overlay;
 import ij.gui.Roi;
-import ij.gui.Toolbar;
 import ij.process.ByteProcessor;
-import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ijaux.datatype.IComplexFArray;

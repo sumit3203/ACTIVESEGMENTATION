@@ -1,5 +1,6 @@
 package activeSegmentation.gui;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
@@ -12,11 +13,16 @@ import activeSegmentation.prj.ProjectManager;
 public class EvaluationPanel extends JFrame  implements Runnable {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -262535262594447708L;
 	private ProjectManager projectManager=null;
 	private IEvaluation evaluation=null;
 
 	public void showPanel() {
 		setTitle("Evaluation");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EvaluationPanel.class.getResource("logo.png")));
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		Explorer explorer= new Explorer();
 		//explorer.setVisible(true);

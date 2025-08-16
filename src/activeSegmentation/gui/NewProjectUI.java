@@ -56,7 +56,7 @@ public class NewProjectUI extends JFrame implements ASCommon {
 	 * Create the frame.
 	 */
 	public NewProjectUI() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(NewProjectUI.class.getResource("/activeSegmentation/gui/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(NewProjectUI.class.getResource("logo.png")));
 		setTitle("Active Segmentation: New Project "+version);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 480, 400);

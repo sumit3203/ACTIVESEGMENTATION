@@ -34,6 +34,6 @@
 	<classpathentry kind="lib" path="C:/sqlite/client-0.0.5.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/sqlite-jdbc-3.36.0.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/IJ"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx17"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

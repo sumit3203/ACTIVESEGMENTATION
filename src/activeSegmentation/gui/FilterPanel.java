@@ -94,6 +94,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	 */
 	private void showPanel() {
 		setTitle("Filters");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FilterPanel.class.getResource("logo.png")));
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		pane = new JTabbedPane();
 		pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);

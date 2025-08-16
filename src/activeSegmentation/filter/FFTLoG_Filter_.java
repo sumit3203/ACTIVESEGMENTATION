@@ -9,7 +9,6 @@ import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
-import fftscale.filter.FFTKernelGauss;
 import fftscale.filter.FFTKernelLoG;
 
 import static activeSegmentation.FilterType.SEGM;

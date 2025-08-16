@@ -19,6 +19,7 @@ import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -185,7 +186,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 	public void showPanel() {
 		frame = new JFrame("Marking");	     
-		
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(FeaturePanel.class.getResource("logo.png")));
 		frame.setResizable(false);
  		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
  

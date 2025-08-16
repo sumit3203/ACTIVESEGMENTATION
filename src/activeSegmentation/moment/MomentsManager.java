@@ -172,7 +172,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 	private List<String> loadImages(String directory){
-		List<String> imageList= new ArrayList<String>();
+		List<String> imageList= new ArrayList<>();
 		File folder = new File(directory);
 		File[] images = folder.listFiles();
 		for (File file : images) {
@@ -186,7 +186,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	@Override
 	public void applyFilters(ProgressCallback callback){
 		String projectString=this.projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
-		String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
+		//String filterString=this.projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		List<String>images= loadImages(projectString);
@@ -267,21 +267,25 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 	}
 
 
+	@Override
 	public Set<String> getAllFilters(){
 		return momentMap.keySet();
 	}
 
 
+	@Override
 	public Map<String,String> getDefaultFilterSettings(String key){
 		return momentMap.get(key).getDefaultSettings();
 	}
 
 
+	@Override
 	public boolean isFilterEnabled(String key){
 		return momentMap.get(key).isEnabled();
 	}
 
 
+	@Override
 	public boolean updateFilterSettings(String key, Map<String,String> settingsMap){
 		return momentMap.get(key).updateSettings(settingsMap);
 	}
@@ -289,7 +293,7 @@ public class MomentsManager extends URLClassLoader implements IFilterManager {
 
 
 	private  List<String> installJarPlugins(String plugin) throws IOException {
-		List<String> classNames = new ArrayList<String>();
+		List<String> classNames = new ArrayList<>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(plugin));
 		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
 			if (!entry.isDirectory() && entry.getName().endsWith(ASCommon.DOTCLASS)) {

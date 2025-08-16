@@ -12,7 +12,6 @@ import java.net.URL;
 import ij.IJ;
 import javafx.application.Platform;
 
-@SuppressWarnings("restriction")
 public class ABrowser extends Region {
  
     private final WebView browser = new WebView();

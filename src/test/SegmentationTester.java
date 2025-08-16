@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+//import java.util.Random;
+//import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,9 +30,9 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import ijaux.datatype.Pair;
+//import ijaux.datatype.Pair;
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.SMO;
+//import weka.classifiers.functions.SMO;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -51,6 +51,8 @@ public class SegmentationTester {
 	RandomForest randomForest= new RandomForest();
 	//training Data
 	Instances trainingData;
+	
+	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 

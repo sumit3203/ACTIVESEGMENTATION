@@ -111,7 +111,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		
 		for(String plugin: classes){
 			//System.out.println("checking "+ plugin);
-			//try {
+			try {
 				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 				final boolean isInterface=classLoader.loadClass(plugin).isInterface();
 				
@@ -143,9 +143,9 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 					} // end if
 	
 				} // end for
-			//} catch (  ClassNotFoundException ex) {
-			//	System.out.println("error:" + plugin +" not found");
-			//}
+			} catch (  ClassNotFoundException ex) {
+				System.out.println("error:" + plugin +" not found");
+			}
 
 		} // end for
 		
