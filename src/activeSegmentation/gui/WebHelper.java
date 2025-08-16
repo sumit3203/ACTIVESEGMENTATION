@@ -7,6 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 //import javafx.application.Platform;
+
+import javafx.concurrent.Worker;
+import javafx.scene.web.WebEngine;
+import java.io.InputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import ij.IJ;
  
 public class WebHelper extends Application {
@@ -16,22 +23,37 @@ public class WebHelper extends Application {
    
     private ABrowser browser;
 
-	private static String cssfile;
+	private static String cssfile="";
      
     @Override 
     public void start(Stage stage) {
- 
-        // create the scene
         stage.setTitle("Help Browser");
         IJ.log("browser ... ");
-        browser= new ABrowser(webhlp);
+        browser = new ABrowser(webhlp);
         scene = new Scene(browser, 750, 500, Color.web("#666970"));
         stage.setScene(scene);
 
-       // stage.setOnCloseRequest(e -> Platform.exit());
-     //   stage.setOnCloseRequest(e -> stage.close());
-        scene.getStylesheets().add(cssfile);        
-      // IJ.log("local "+cssfile);
+        scene.getStylesheets().add(cssfile);
+
+        // Load and inject JavaScript after the page is loaded
+        /*
+        WebEngine engine = browser.getEngine();
+        engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                // Read the JS file as a String
+                try (InputStream in = getClass().getResourceAsStream("/tex-chtml-full.js")) {
+                    if (in != null) {
+                        String js = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+                        engine.executeScript(js);
+                    } else {
+                        System.err.println("JS file not found!");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
+
         stage.show();
     }
     

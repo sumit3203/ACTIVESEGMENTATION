@@ -59,6 +59,10 @@ public class ABrowser extends Region {
         });
     }
     
+    public WebEngine getEngine() {
+        return webEngine;
+    }
+    
     @Override 
     protected void layoutChildren() {
         double w = getWidth();
