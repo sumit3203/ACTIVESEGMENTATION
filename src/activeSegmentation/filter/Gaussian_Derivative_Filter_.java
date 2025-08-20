@@ -19,12 +19,6 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
@@ -51,7 +45,7 @@ import static java.lang.Math.*;
  * 				1.0	 8 Nov 2012
  *   
  * 
- * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra
+ * @author Dimiter Prodanov , Sumit Kumar Vohra
  *
  *
  * @contents

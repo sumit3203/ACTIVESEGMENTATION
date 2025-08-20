@@ -33,7 +33,7 @@ import dsp.Conv;
  * 				
  *   
  * 
- * @author Dimiter Prodanov, IMEC + IICT
+ * @author Dimiter Prodanov, BAS
  *
  *
  * @contents

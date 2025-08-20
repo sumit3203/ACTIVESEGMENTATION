@@ -318,6 +318,7 @@ public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSe
         //the defaults can be found here!!!!
         String learningString = Utils.getOption('L', options);
         if (learningString.length() != 0) {
+        	//TODO Double
             setLearningRate((new Double(learningString)).doubleValue());
         } else {
             setLearningRate(1);
@@ -379,7 +380,7 @@ public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSe
      * Classifies a given instance.
      *
      * @param i the instance to be assigned to a cluster
-     * @return the number of the assigned cluster as an interger
+     * @return the number of the assigned cluster as an integer
      * if the class is enumerated, otherwise the predicted value
      * @throws Exception if instance could not be classified
      * successfully
@@ -404,8 +405,9 @@ public class LVQ extends AbstractClusterer implements OptionHandler,  IFeatureSe
      *
      * @return an enumeration of all the available options.
      */
-    public Enumeration listOptions() {
-        Vector<Option> result = new Vector<Option>();
+    @Override
+	public Enumeration<Option> listOptions() {
+        Vector<Option> result = new Vector<>();
 
         result.addElement(new Option(
                 "\tLearning Rate for the training algorithm.\n"

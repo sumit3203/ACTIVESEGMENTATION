@@ -1,13 +1,13 @@
 package activeSegmentation.gui;
 
 
-import ij.IJ;
-import ij.ImageJ;
+//import ij.IJ;
+//import ij.ImageJ;
 import ij.ImagePlus;
 import ij.WindowManager;
-import ij.gui.ImageCanvas;
+//import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
-import ij.gui.Overlay;
+//import ij.gui.Overlay;
 import ij.gui.Roi;
 
 import java.awt.AlphaComposite;
@@ -16,9 +16,9 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Rectangle;
+//import java.awt.Rectangle;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

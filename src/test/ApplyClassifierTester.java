@@ -47,6 +47,7 @@ public class ApplyClassifierTester {
 		
 		 double[] classificationResult = new double[test.size()];
 		 
+		 pool.close();
 		//ApplyTask applyTask= new ApplyTask(test, 0, test.size(), classificationResult, iclassifier);
 		//pool.invoke(applyTask);
 		/*	for(double result: classificationResult){

@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JFileChooser;
 import javax.swing.border.TitledBorder;
+import java.awt.Toolkit;
 
 public class NewProjectUI extends JFrame implements ASCommon {
 
@@ -55,6 +56,7 @@ public class NewProjectUI extends JFrame implements ASCommon {
 	 * Create the frame.
 	 */
 	public NewProjectUI() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(NewProjectUI.class.getResource("logo.png")));
 		setTitle("Active Segmentation: New Project "+version);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 480, 400);

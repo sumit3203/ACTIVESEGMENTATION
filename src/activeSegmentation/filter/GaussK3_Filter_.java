@@ -37,7 +37,7 @@ import static java.lang.Math.*;
  *              Isophote curvatures + Streamline curvature
  * 
  * @author Dimiter Prodanov
- * 		  IMEC
+ * 		  
  *
  *
  * @contents

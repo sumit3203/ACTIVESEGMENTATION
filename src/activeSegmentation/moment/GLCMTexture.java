@@ -3,8 +3,6 @@ package activeSegmentation.moment;
 
 import java.awt.Rectangle;
 
-import ij.ImagePlus;
-import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 
 /**

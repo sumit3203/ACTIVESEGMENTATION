@@ -6,10 +6,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.application.Platform;
+//import javafx.application.Platform;
 import ij.IJ;
  
-@SuppressWarnings("restriction")
 public class WebHelper extends Application {
     private Scene scene;
     
@@ -53,7 +52,7 @@ public class WebHelper extends Application {
      * @param args
      */
     public static void main(String[] args){
-        launch("help.html");         
+        launch("/help.html");         
     }
 
     /**

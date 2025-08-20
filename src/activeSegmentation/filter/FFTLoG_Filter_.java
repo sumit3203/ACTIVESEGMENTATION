@@ -9,7 +9,6 @@ import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import fftscale.*;
-import fftscale.filter.FFTKernelGauss;
 import fftscale.filter.FFTKernelLoG;
 
 import static activeSegmentation.FilterType.SEGM;
@@ -40,7 +39,7 @@ import static java.lang.Math.*;
  *   
  * 
  * @author Dimiter Prodanov
- * 		  IMEC
+ * 		   IMEC, BAS
  *
  *
  * @contents

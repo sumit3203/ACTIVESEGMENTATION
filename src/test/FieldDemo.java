@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 
 public class FieldDemo {
 
-   public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+   public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException {
       Field field = SampleClass.class.getField("sampleField");
       Annotation annotation = field.getAnnotation(CustomAnnotation.class);
       if(annotation instanceof CustomAnnotation){

@@ -2,12 +2,13 @@ package activeSegmentation.gui;
 
 
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -158,6 +159,7 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
 	 */
 	private void showPanel() {
 		setTitle("Learning");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LearningPanel.class.getResource("logo.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    getContentPane().setBackground(Color.GRAY);
 	    setLocationRelativeTo(null);

@@ -63,6 +63,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	@Override
 	public void run() {
 		mainFrame = new JFrame();
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(CreateOpenProjectGUI.class.getResource("logo.png")));
 		mainFrame.getContentPane().setBackground(Color.GRAY);
 		mainFrame.setSize(frameWidth, frameHeight);
 		mainFrame.setLocationRelativeTo(null);

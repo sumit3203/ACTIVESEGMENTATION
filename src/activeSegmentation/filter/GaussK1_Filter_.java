@@ -38,7 +38,7 @@ import static java.lang.Math.*;
  *   
  * 
  * @author Dimiter Prodanov
- * 		  IMEC
+ * 		  
  *
  *
  * @contents

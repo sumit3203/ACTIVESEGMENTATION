@@ -18,11 +18,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
@@ -49,7 +44,7 @@ import static java.lang.Math.*;
  * 				
  *   
  * 
- * @author Dimiter Prodanov IMEC  & Sumit Kumar Vohra
+ * @author Dimiter Prodanov, IMEC, BAS,   & Sumit Kumar Vohra
  *
  *
  * @contents

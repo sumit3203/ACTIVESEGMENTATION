@@ -37,7 +37,7 @@ import dsp.Conv;
  * 				
  *   
  * 
- * @author Dimiter Prodanov, IMEC , Sumit Kumar Vohra , KULeuven
+ * @author Dimiter Prodanov, IMEC, BAS , Sumit Kumar Vohra , KULeuven
  *
  *
  * @contents

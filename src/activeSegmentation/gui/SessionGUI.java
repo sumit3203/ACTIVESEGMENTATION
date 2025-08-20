@@ -13,6 +13,7 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.DbManager;
 import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
+import activeSegmentation.session.ClassList;
 import activeSegmentation.session.FeatureDetail;
 import activeSegmentation.session.FeatureValue;
 import activeSegmentation.session.Session;

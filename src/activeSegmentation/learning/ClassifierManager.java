@@ -26,7 +26,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import activeSegmentation.ASCommon;
 import activeSegmentation.FilterType;
-import activeSegmentation.IAnnotated;
+//import activeSegmentation.IAnnotated;
 import activeSegmentation.IClassLoader;
 import activeSegmentation.IClassifier;
 import activeSegmentation.prj.LearningInfo;
@@ -37,9 +37,9 @@ import ij.IJ;
 import ijaux.datatype.Pair;
 import activeSegmentation.IDataSet;
 import activeSegmentation.IFeatureSelection;
-import activeSegmentation.IFilter;
-import activeSegmentation.ProjectType;
-import activeSegmentation.filter.FilterManager;
+//import activeSegmentation.IFilter;
+//import activeSegmentation.ProjectType;
+//import activeSegmentation.filter.FilterManager;
 import activeSegmentation.learning.weka.WekaClassifier;
 
 
@@ -121,7 +121,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
  
 	
 	public  void loadSelectionFilters(List<String> plugins) throws 
-	InstantiationException, IllegalAccessException, IOException {
+	IOException {
 
 		System.out.println("loadSelectionFilters");
 		List<String> classes=new ArrayList<>();
