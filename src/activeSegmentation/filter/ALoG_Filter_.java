@@ -1,5 +1,7 @@
 package activeSegmentation.filter;
 
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.*;
 import ij.gui.*;
 import ij.measure.*;
@@ -17,9 +19,8 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
-
-import static java.lang.Math.*;
+import dsp.IConv;
+import dsp.ConvFactory;
 
 import static activeSegmentation.FilterType.*;
 /**
@@ -219,7 +220,7 @@ public class ALoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilt
 
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
-		Conv cnv=new Conv();
+		IConv cnv = ConvFactory.createConv();
 
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
