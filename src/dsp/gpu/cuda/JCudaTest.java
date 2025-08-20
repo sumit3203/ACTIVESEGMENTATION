@@ -1,4 +1,4 @@
-package dsp.cuda;
+package dsp.gpu.cuda;
 
 import jcuda.Pointer;
 import jcuda.Sizeof;
