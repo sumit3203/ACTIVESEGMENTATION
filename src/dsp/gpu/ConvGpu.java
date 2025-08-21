@@ -2,6 +2,7 @@ package dsp.gpu;
 
 import dsp.IConv;
 import dsp.gpu.cuda.CudaContextManager;
+import dsp.gpu.cuda.CudaMemoryManager;
 import ij.IJ;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
@@ -23,6 +24,7 @@ public class ConvGpu implements IConv {
     private CUmodule module;
     private CUfunction function;
     private boolean gpuInitialized = false;
+    private CUstream stream;
 
     static {
         JCudaDriver.setExceptionsEnabled(true);
@@ -48,6 +50,10 @@ public class ConvGpu implements IConv {
             // Get function
             function = new CUfunction();
             JCudaDriver.cuModuleGetFunction(function, module, "convolve2DKernel");
+
+            // Create CUDA stream
+            stream = new CUstream();
+            JCudaDriver.cuStreamCreate(stream, CUstream_flags.CU_STREAM_DEFAULT);
 
             gpuInitialized = true;
         } catch (Exception e) {
@@ -222,25 +228,24 @@ public class ConvGpu implements IConv {
 
     private boolean convolveFloatGPU(ImageProcessor ip, float[] kernel, int kw, int kh) {
         long startTime = System.nanoTime();
-
         int width = ip.getWidth();
         int height = ip.getHeight();
         float[] input = (float[]) ip.getPixels();
         float[] output = new float[input.length];
 
         try {
-            // Allocate device memory
-            CUdeviceptr d_input = new CUdeviceptr();
-            CUdeviceptr d_kernel = new CUdeviceptr();
-            CUdeviceptr d_output = new CUdeviceptr();
+            // Use memory pool
+            long inputSize = input.length * Sizeof.FLOAT;
+            long kernelSize = kernel.length * Sizeof.FLOAT;
+            long outputSize = output.length * Sizeof.FLOAT;
 
-            JCudaDriver.cuMemAlloc(d_input, input.length * Sizeof.FLOAT);
-            JCudaDriver.cuMemAlloc(d_kernel, kernel.length * Sizeof.FLOAT);
-            JCudaDriver.cuMemAlloc(d_output, output.length * Sizeof.FLOAT);
+            CUdeviceptr d_input = CudaMemoryManager.allocate(inputSize);
+            CUdeviceptr d_kernel = CudaMemoryManager.allocate(kernelSize);
+            CUdeviceptr d_output = CudaMemoryManager.allocate(outputSize);
 
-            // Copy data to device
-            JCudaDriver.cuMemcpyHtoD(d_input, Pointer.to(input), input.length * Sizeof.FLOAT);
-            JCudaDriver.cuMemcpyHtoD(d_kernel, Pointer.to(kernel), kernel.length * Sizeof.FLOAT);
+            // Use async memory copies with stream
+            JCudaDriver.cuMemcpyHtoDAsync(d_input, Pointer.to(input), inputSize, stream);
+            JCudaDriver.cuMemcpyHtoDAsync(d_kernel, Pointer.to(kernel), kernelSize, stream);
 
             // Setup kernel parameters
             Pointer kernelParameters = Pointer.to(
@@ -252,26 +257,29 @@ public class ConvGpu implements IConv {
                     Pointer.to(new int[]{kw})
             );
 
-            // Launch kernel
+            // Launch kernel with stream
             int blockSize = 16;
             int gridX = (width + blockSize - 1) / blockSize;
             int gridY = (height + blockSize - 1) / blockSize;
 
             JCudaDriver.cuLaunchKernel(function,
-                    gridX, gridY, 1,      // Grid dimension
-                    blockSize, blockSize, 1, // Block dimension
-                    0, null,               // Shared memory and stream
-                    kernelParameters, null  // Kernel parameters
-            );
+                    gridX, gridY, 1,
+                    blockSize, blockSize, 1,
+                    0, stream, kernelParameters, null);
 
-            // Copy result back
-            JCudaDriver.cuMemcpyDtoH(Pointer.to(output), d_output, output.length * Sizeof.FLOAT);
+            // Async copy back to host
+            JCudaDriver.cuMemcpyDtoHAsync(Pointer.to(output), d_output, outputSize, stream);
+
+            // Wait for all async operations to complete
+            JCudaDriver.cuStreamSynchronize(stream);
+
+            // Set the result
             ip.setPixels(output);
 
-            // Free device memory
-            JCudaDriver.cuMemFree(d_input);
-            JCudaDriver.cuMemFree(d_kernel);
-            JCudaDriver.cuMemFree(d_output);
+            // Return memory to pool
+            CudaMemoryManager.free(d_input, inputSize);
+            CudaMemoryManager.free(d_kernel, kernelSize);
+            CudaMemoryManager.free(d_output, outputSize);
 
             long endTime = System.nanoTime();
             IJ.log(String.format("GPU convolution time: %.2f ms", (endTime - startTime) / 1e6));
@@ -280,6 +288,18 @@ public class ConvGpu implements IConv {
         } catch (Exception e) {
             IJ.log("GPU convolution failed: " + e.getMessage());
             return false;
+        }
+    }
+
+    public void cleanup() {
+        try {
+            if (stream != null) {
+                JCudaDriver.cuStreamDestroy(stream);
+            }
+            // Free all pooled memory at application exit
+            CudaMemoryManager.freeAll();
+        } catch (Exception e) {
+            IJ.log("GPU cleanup failed: " + e.getMessage());
         }
     }
 
