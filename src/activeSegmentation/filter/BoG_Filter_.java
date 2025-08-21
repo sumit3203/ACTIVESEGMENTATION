@@ -25,7 +25,6 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.cpu.Conv;
 
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;

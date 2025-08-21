@@ -24,8 +24,6 @@ public class ConvGpu implements IConv {
     private CUmodule module;
     private CUfunction function2D;
     private CUfunction function1D;
-    private CUfunction functionBiLaplacian;
-    private CUfunction functionGaussDeriv;
     private boolean gpuInitialized = false;
     private CUstream stream;
 
@@ -56,12 +54,6 @@ public class ConvGpu implements IConv {
 
             function1D = new CUfunction();
             JCudaDriver.cuModuleGetFunction(function1D, module, "convolve1DKernel");
-
-            functionBiLaplacian = new CUfunction();
-            JCudaDriver.cuModuleGetFunction(functionBiLaplacian, module, "biLaplacianKernel");
-
-            functionGaussDeriv = new CUfunction();
-            JCudaDriver.cuModuleGetFunction(functionGaussDeriv, module, "gaussianDerivativeKernel");
 
             // Create CUDA stream
             stream = new CUstream();
