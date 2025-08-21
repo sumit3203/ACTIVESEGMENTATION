@@ -116,7 +116,8 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		updateFilterList();
 
 		gpuToggle = new JCheckBox("Use GPU");
-		gpuToggle.setFont(ASCommon.FONT);
+		gpuToggle.setFont(ASCommon.FONT.deriveFont(Font.BOLD, 11.5f));
+		gpuToggle.setForeground(Color.WHITE); // set text color
 		gpuToggle.setSelected(false); // Default to CPU
 		gpuToggle.setBounds(150, 420, 100, 35);
 		gpuToggle.setBackground(new Color(200, 200, 200)); // Light grey
