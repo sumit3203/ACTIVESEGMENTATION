@@ -22,7 +22,10 @@ public class ConvGpu implements IConv {
     public final static int Ox = 0, Oy = 1, Oz = 2;
 
     private CUmodule module;
-    private CUfunction function;
+    private CUfunction function2D;
+    private CUfunction function1D;
+    private CUfunction functionBiLaplacian;
+    private CUfunction functionGaussDeriv;
     private boolean gpuInitialized = false;
     private CUstream stream;
 
@@ -37,7 +40,7 @@ public class ConvGpu implements IConv {
             CudaContextManager.getContext();
 
             // Load PTX file
-            String ptxFileName = "convolve2d_kernel.ptx";
+            String ptxFileName = "convolution_kernels.ptx";
             File ptxFile = new File(ptxFileName);
             if (!ptxFile.exists()) {
                 throw new RuntimeException("PTX file not found: " + ptxFile.getAbsolutePath());
@@ -47,9 +50,18 @@ public class ConvGpu implements IConv {
             module = new CUmodule();
             JCudaDriver.cuModuleLoad(module, ptxFileName);
 
-            // Get function
-            function = new CUfunction();
-            JCudaDriver.cuModuleGetFunction(function, module, "convolve2DKernel");
+            // Get all kernel functions
+            function2D = new CUfunction();
+            JCudaDriver.cuModuleGetFunction(function2D, module, "convolve2DKernel");
+
+            function1D = new CUfunction();
+            JCudaDriver.cuModuleGetFunction(function1D, module, "convolve1DKernel");
+
+            functionBiLaplacian = new CUfunction();
+            JCudaDriver.cuModuleGetFunction(functionBiLaplacian, module, "biLaplacianKernel");
+
+            functionGaussDeriv = new CUfunction();
+            JCudaDriver.cuModuleGetFunction(functionGaussDeriv, module, "gaussianDerivativeKernel");
 
             // Create CUDA stream
             stream = new CUstream();
@@ -262,7 +274,7 @@ public class ConvGpu implements IConv {
             int gridX = (width + blockSize - 1) / blockSize;
             int gridY = (height + blockSize - 1) / blockSize;
 
-            JCudaDriver.cuLaunchKernel(function,
+            JCudaDriver.cuLaunchKernel(function2D,
                     gridX, gridY, 1,
                     blockSize, blockSize, 1,
                     0, stream, kernelParameters, null);
