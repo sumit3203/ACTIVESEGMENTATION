@@ -1,4 +1,6 @@
 package activeSegmentation.filter;
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -24,7 +26,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
+import dsp.cpu.Conv;
 
 /**
  * @version 	1.0 15 Dec 2025
@@ -215,7 +217,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
-		Conv cnv=new Conv();
+		IConv cnv = ConvFactory.createConv();
 
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();

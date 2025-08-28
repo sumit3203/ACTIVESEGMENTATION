@@ -17,3 +17,7 @@
 .classpath
 .classpath
 .classpath
+.idea/
+*.iml
+resources/META-INF/
+

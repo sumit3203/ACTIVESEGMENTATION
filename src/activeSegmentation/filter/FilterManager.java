@@ -55,6 +55,19 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 	private ProjectInfo projectInfo;
 	private ProjectType projectType;
 
+	private boolean useGPU = false;
+
+	// Add these methods
+	public void setUseGPU(boolean useGPU) {
+		this.useGPU = useGPU;
+		// Update the ConvFactory setting
+		dsp.ConvFactory.setUseGPU(useGPU);
+	}
+
+	public boolean isUsingGPU() {
+		return useGPU;
+	}
+
 	/**
 	 * 
 	 * @param projectManager
@@ -172,6 +185,10 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 
 	@Override
 	public void applyFilters(ProgressCallback callback) throws InterruptedException {
+
+		// Set the GPU preference before applying filters
+		dsp.ConvFactory.setUseGPU(this.useGPU);
+
 		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
