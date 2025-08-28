@@ -1,16 +1,15 @@
 % !TeX spellcheck = en_US
 \documentclass{amsart}
 \usepackage{amsaddr}
- \usepackage{amsmath,amssymb,amsfonts}
+ 
 %%%%%%%%%%%%%%%
 %  Help file for the AS\IJ platform
 %%%%%%%%%%%%%%% 
 \title{Active Segmentation Filters}
 
-\author{Dimiter Prodanov\textsuperscript{1,2} }
+\author{Dimiter Prodanov  }
 \address{
-	\textsuperscript{1}NERF, IMEC, Leuven, Belgium; 
-	\textsuperscript{2}PAML-LN,
+    PAML-LN,
 	IICT, Bulgarian Academy of Sciences,
 	Sofia, Bulgaria
 }
@@ -82,7 +81,7 @@ in the frequency domain.
 \section{Weak differentiation}\label{sec:diff}
 Weak differentiation operations in distributional sense can be defined in terms of convolution with the gradient of a  smooth kernel function as:
 \[
-	\nabla_{G} F: = - F \star \nabla G 
+	\nabla_{G} F: = - F \ast \nabla G 
 \]
 where the symbol $\nabla$ represents the  of the gradient operator for the Euclidean basis ($e_1$, $e_2$)
 \[
@@ -250,7 +249,7 @@ are coherent as a function of scale.
 Suppose that we have a scale-space representation of the gradient  $\nabla_G $.
 Then the structure tensor is the smoothed tensor product of the smoothed gradient vector\cite{Brox2004}:
 \[
-S_r (F) := G_r \star \{ \nabla_G  \cdot \nabla_G ^T   \}
+S_r (F) := G_r \ast \{ \nabla_G F^T  \nabla_G F    \}
 \]
 From this expression it is apparent that the operator introduces smoothing on two scales.
 However, because of its quadratic characters the scales do not compose.
@@ -335,7 +334,7 @@ In Cartesian coordinates, the Hessian can be specialized to the usual formula
 \mathbb{H}_G (F)=  \left( \begin{array}{ll}
 	G_{xx}  & G_{xy} \\
 	G_{xy} & G_{yy}
-\end{array} \right) \star F 
+\end{array} \right) \ast F 
 \]
 where  subscripts denote differentiation by coordinate variables. 
 The Hessian generates several  differential invariants.
@@ -433,13 +432,13 @@ The full output option outputs the components of the gradient and the Hessian.
 % Section
 %%%%%%%%%%%	
 \subsection{Weingarten Map}\label{sec:weing}
-The surface is represented locally at the point P (x,y) by the Monge patch
+The surface is represented locally at the point P(x,y) by the Monge patch
 \[
 \gamma = e_1 x +e_2 y + h (x,y) e_3
 \]
 We define the non-orthogonal un-normalized basis vectors
 \[
-D_1:= g_x \star \gamma =e_1 + e_3 g_x \star h , \quad D_2:= g_y \star \gamma = e_2 + e_3  g_y \star h, 
+D_1:= g_x \ast \gamma =e_1 + e_3 g_x \ast h , \quad D_2:= g_y \ast \gamma = e_2 + e_3  g_y \ast h, 
 \]
 %and further denote $ h_x \equiv   G_x \star h$, $ h_y \equiv   G_y \star h$.
 
@@ -464,7 +463,7 @@ or in components
 \]
 The determinant is
 \[
-\mathrm{det} I = 1 + G_x^2 + G_y^2
+\mathrm{det} [I] = 1 + G_x^2 + G_y^2
 \]
 It is identified with the coefficients of the arc-length differential on the surface patch in surface (u, v) coordinate
 \[
@@ -494,7 +493,7 @@ II = \begin{pmatrix}
 \]
 The components are given by
 \[
-[II]_{ij} = n \cdot  \partial_{i} D_j  = (n \wedge e_i) \cdot \nabla D_j
+[II]_{ij} = n \cdot  \partial_{i} D_j  % = ((n \wedge e_i) \cdot \nabla) D_j
 \]
 The second fundamental form describes the deviation of the surface
 from its tangent plane.
@@ -516,11 +515,11 @@ W: = I^{-1} II = \frac{1}{\sqrt{\left( 1 +h_x^2 + h_y^2 \right)^3 }}
 %The components of II give the normal curvature in the direction
 The eigenvalues $\lambda_{1,2}$ can be determined locally from the equation 
 \[
-\mathrm{det} (\mathbb{W} - \lambda \mathbb{I} )= 0
+\mathrm{det} ( {W} - \lambda  {I} )= 0
 \]
 This gives the quadratic equation
 \[
-\lambda^2 - \mathrm{Tr} \,\mathbb{W}  \lambda + 	\mathrm{det} \mathbb{W} =  0
+\lambda^2 - \mathrm{Tr} [W]  \lambda + 	\mathrm{det}  [W] =  0
 \]
 The plugin computes the eignevalues of the Weingarten maps.
 They are sensitive to ridge structures.

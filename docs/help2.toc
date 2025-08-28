@@ -1,0 +1,7 @@
+\contentsline {section}{\tocsection {}{1}{Image Moments}}{1}{}%
+\contentsline {section}{\tocsection {}{2}{Raw and Central Moments}}{1}{}%
+\contentsline {section}{\tocsection {}{3}{Legendre moments}}{2}{}%
+\contentsline {section}{\tocsection {}{4}{Zernike moments}}{2}{}%
+\contentsline {section}{\tocsection {}{5}{Haralick features}}{2}{}%
+\contentsline {section}{\tocsection {}{6}{ImageJ statistics}}{2}{}%
+\contentsline {section}{\tocsection {}{}{References}}{3}{}%

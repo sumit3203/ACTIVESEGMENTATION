@@ -1,0 +1,23 @@
+\contentsline {section}{\tocsection {}{1}{Gaussian Scale Spaces}}{1}{}%
+\contentsline {section}{\tocsection {}{2}{$\alpha $-Scale Spaces}}{2}{}%
+\contentsline {section}{\tocsection {}{3}{Weak differentiation}}{2}{}%
+\contentsline {section}{\tocsection {}{4}{Differential Invariants}}{3}{}%
+\contentsline {section}{\tocsection {}{5}{Orthogonal Laplacian Decomposition (LOD)}}{3}{}%
+\contentsline {section}{\tocsection {}{6}{Zero-order Geometric Features}}{4}{}%
+\contentsline {subsection}{\tocsubsection {}{6.1}{Gauss2D -- Gaussian smoothing}}{4}{}%
+\contentsline {subsection}{\tocsubsection {}{6.2}{FFT Gaussian smoothing}}{4}{}%
+\contentsline {section}{\tocsection {}{7}{First-order Geometric Features}}{4}{}%
+\contentsline {subsection}{\tocsubsection {}{7.1}{Gradient }}{4}{}%
+\contentsline {subsection}{\tocsubsection {}{7.2}{Gaussian Structure -- Structure tensor}}{4}{}%
+\contentsline {section}{\tocsection {}{8}{Second-order Geometric Features}}{5}{}%
+\contentsline {subsection}{\tocsubsection {}{8.1}{LoG -- Laplacian of Gaussian}}{5}{}%
+\contentsline {subsection}{\tocsubsection {}{8.2}{ALoG -- Anisotropic decomposition of LoG}}{5}{}%
+\contentsline {subsection}{\tocsubsection {}{8.3}{Hessian}}{5}{}%
+\contentsline {subsection}{\tocsubsection {}{8.4}{Curvature 2D}}{6}{}%
+\contentsline {subsection}{\tocsubsection {}{8.5}{Gaussian curvature}}{6}{}%
+\contentsline {subsection}{\tocsubsection {}{8.6}{Curvature 3D}}{6}{}%
+\contentsline {subsection}{\tocsubsection {}{8.7}{Weingarten Map}}{7}{}%
+\contentsline {section}{\tocsection {}{9}{Higher order Geometric Features}}{8}{}%
+\contentsline {subsection}{\tocsubsection {}{9.1}{Gaussian Jet}}{8}{}%
+\contentsline {subsection}{\tocsubsection {}{9.2}{Bi-Laplacian of Gaussian (BoG)}}{8}{}%
+\contentsline {section}{\tocsection {}{}{References}}{8}{}%

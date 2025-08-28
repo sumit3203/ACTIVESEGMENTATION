@@ -26,6 +26,16 @@
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/chiSquaredAttributeEval.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/SVMAttributeEval-1.0.1.jar"/>
 	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/fastCorrBasedFS.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcublas-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcuda-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcuda-natives-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcuda-natives-10.0.0-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcudnn-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcufft-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcurand-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcusolver-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jcusparse-10.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/GitHub/ACTIVESEGMENTATION2/jars/jcuda/jnvgraph-10.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
