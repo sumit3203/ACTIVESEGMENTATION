@@ -1,4 +1,6 @@
 package activeSegmentation.filter;
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -25,7 +27,7 @@ import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import activeSegmentation.gui.WebHelper;
-import dsp.Conv;
+import dsp.cpu.Conv;
 
 import static activeSegmentation.FilterType.*;
 import static java.lang.Math.*;
@@ -201,7 +203,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
-		Conv cnv=new Conv();
+		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
 			//System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kern_diff);			

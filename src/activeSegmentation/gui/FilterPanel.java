@@ -30,6 +30,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private Map<String,List<JComponent>> filerMap = new HashMap<>();
 	private JProgressBar progressBar;
 	private Thread computationThread;
+	private JCheckBox gpuToggle;
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
@@ -113,6 +114,17 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		scrollPane.setBackground(Color.GRAY);
 		panel.add(scrollPane);
 		updateFilterList();
+
+		gpuToggle = new JCheckBox("Use GPU");
+		gpuToggle.setFont(ASCommon.FONT.deriveFont(Font.BOLD, 11.5f));
+		gpuToggle.setForeground(Color.WHITE); // set text color
+		gpuToggle.setSelected(false); // Default to CPU
+		gpuToggle.setBounds(150, 420, 100, 35);
+		gpuToggle.setBackground(new Color(200, 200, 200)); // Light grey
+		gpuToggle.setOpaque(true);
+		gpuToggle.addActionListener(e -> toggleGPU());
+		panel.add(gpuToggle);
+
 		addButton(new JButton(), "Compute",null , 40,  420, 110, 35, panel, COMPUTE_BUTTON_PRESSED, null );
 		addButton(new JButton(), "Default",null , 266, 420, 100, 35, panel, DEFAULT_BUTTON_PRESSED, null );
 		addButton(new JButton(), "Save"   ,null , 376, 420, 100, 35, panel, SAVE_BUTTON_PRESSED,    null );
@@ -125,6 +137,19 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		setLocationRelativeTo(null);
 		setVisible(true);
 		isRunning=true;
+	}
+
+	// toggleGPU method
+	private void toggleGPU() {
+		boolean useGPU = gpuToggle.isSelected();
+		FilterManager fm = (FilterManager) filterManager;
+		fm.setUseGPU(useGPU);
+
+		if (useGPU) {
+			IJ.log("GPU acceleration enabled");
+		} else {
+			IJ.log("GPU acceleration disabled");
+		}
 	}
 
 
@@ -352,6 +377,11 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		if(event==COMPUTE_BUTTON_PRESSED){
 
 //			filterManager.applyFilters();
+
+			// Save GPU setting before starting computation
+			boolean useGPU = gpuToggle.isSelected();
+			FilterManager fm = (FilterManager) filterManager;
+			fm.setUseGPU(useGPU);
 
 			// Show the progress bar when computation starts
 			progressBar.setVisible(true);

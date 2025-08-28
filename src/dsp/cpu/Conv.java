@@ -1,5 +1,6 @@
-package dsp;
+package dsp.cpu;
 
+import dsp.IConv;
 import ij.IJ;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
@@ -45,7 +46,7 @@ import java.awt.Rectangle;
  *      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-public class Conv {
+public class Conv implements IConv {
 	
 	public static boolean debug=false;
 	

@@ -4,7 +4,9 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
+import dsp.ConvFactory;
+import dsp.IConv;
+import dsp.cpu.Conv;
 import ij.*;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
@@ -252,8 +254,8 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		
 		ImageStack is=new ImageStack(ip.getWidth(), ip.getHeight());
 		
-		long time=-System.nanoTime();	
-		Conv cnv=new Conv();
+		long time=-System.nanoTime();
+		IConv cnv = ConvFactory.createConv();
 		
 		for (int i=0; i <n; i++) { 
 			FloatProcessor fpaux= (FloatProcessor) ipaux.duplicate();

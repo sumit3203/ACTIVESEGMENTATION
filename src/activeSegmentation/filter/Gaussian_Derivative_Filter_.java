@@ -22,7 +22,8 @@ import java.util.List;
 import activeSegmentation.AFilter;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
+import dsp.IConv;
+import dsp.ConvFactory;
 
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
@@ -266,7 +267,8 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		long time=-System.nanoTime();	
 
 		FloatProcessor fpaux= (FloatProcessor) ipaux;
-		Conv cnv=new Conv();
+		IConv cnv = ConvFactory.createConv();
+
 		if (sep) {
 			cnv.convolveSep(fpaux, kernx, kerny);			
 		} else {		 

@@ -1,4 +1,6 @@
 package activeSegmentation.filter;
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -23,7 +25,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
+import dsp.cpu.Conv;
 
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
@@ -212,8 +214,8 @@ public class GaussK3_Filter_ implements ExtendedPlugInFilter, DialogListener,IFi
 	
 		
 		FloatProcessor fpaux= (FloatProcessor) ip;
-			
-		Conv cnv=new Conv();
+
+		IConv cnv = ConvFactory.createConv();
 	
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();

@@ -1,4 +1,6 @@
 package activeSegmentation.filter;
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -25,7 +27,7 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
+import dsp.cpu.Conv;
 
 import static activeSegmentation.FilterType.*;
 import static java.lang.Math.*;
@@ -191,7 +193,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 
 		FloatProcessor fpaux= (FloatProcessor) ip;
 
-		Conv cnv=new Conv();
+		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
 			//System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kernx);			

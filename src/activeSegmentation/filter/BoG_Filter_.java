@@ -1,4 +1,6 @@
 package activeSegmentation.filter;
+import dsp.ConvFactory;
+import dsp.IConv;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -23,7 +25,6 @@ import activeSegmentation.AFilter;
 import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
-import dsp.Conv;
 
 import static activeSegmentation.FilterType.SEGM;
 import static java.lang.Math.*;
@@ -238,8 +239,8 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		long time=-System.nanoTime();	
 		
 		FloatProcessor fpaux= (FloatProcessor) ip;
-	 		
-		Conv cnv=new Conv();
+
+		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
 			if (isotropic) {
 				FloatProcessor fpauxiso=(FloatProcessor) fpaux.duplicate();
