@@ -119,7 +119,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		gpuToggle.setFont(ASCommon.FONT.deriveFont(Font.BOLD, 11.5f));
 		gpuToggle.setForeground(Color.WHITE); // set text color
 		gpuToggle.setSelected(false); // Default to CPU
-		gpuToggle.setBounds(150, 420, 100, 35);
+		gpuToggle.setBounds(158, 420, 100, 35);
 		gpuToggle.setBackground(new Color(200, 200, 200)); // Light grey
 		gpuToggle.setOpaque(true);
 		gpuToggle.addActionListener(e -> toggleGPU());
@@ -128,7 +128,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		addButton(new JButton(), "Compute",null , 40,  420, 110, 35, panel, COMPUTE_BUTTON_PRESSED, null );
 		addButton(new JButton(), "Default",null , 266, 420, 100, 35, panel, DEFAULT_BUTTON_PRESSED, null );
 		addButton(new JButton(), "Save"   ,null , 376, 420, 100, 35, panel, SAVE_BUTTON_PRESSED,    null );
-		addButton(new JButton(), "Cancel"   ,null , 486, 420, 100, 35, panel, CANCEL_BUTTON_PRESSED,    null );
+		addButton(new JButton(), "Cancel" ,null , 486, 420, 100, 35, panel, CANCEL_BUTTON_PRESSED,  null );
 		addButton(new JButton(), "Help"   ,null , 605, 420, 100, 35, panel, HELP_BUTTON_PRESSED,    null );
 
 		getContentPane().add(pane);

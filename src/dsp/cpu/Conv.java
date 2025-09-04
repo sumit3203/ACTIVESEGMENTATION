@@ -56,6 +56,7 @@ public class Conv implements IConv {
 	 * @param kernx
 	 * @param kern_diff
 	 */
+	@Override
 	public void convolveSemiSep(FloatProcessor ip, float[] kernx, float[] kern_diff) {
 		FloatProcessor ip2 = null;
 		FloatProcessor ipx = null;
@@ -94,6 +95,7 @@ public class Conv implements IConv {
 	 * @param kernx
 	 * @param kern_diff
 	 */
+	@Override
 	public void convolveSemiSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
 		FloatProcessor ip2 = null;
 		FloatProcessor ipx = null;
@@ -123,6 +125,7 @@ public class Conv implements IConv {
 	 * @param kernx
 	 * @param kern_diff
 	 */
+	@Override
 	public void convolveSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
 		convolveFloat1D(ip, kern_diff, Ox); // x direction
 		//ipx.setSnapshotPixels(null);
@@ -135,6 +138,7 @@ public class Conv implements IConv {
 	 * @param kernx
 	 * @param kern_diff
 	 */
+	@Override
 	public void convolveSep(ImageProcessor ip, float[] kernx, float[] kern_diff) {
 		convolveFloat1D(ip, kern_diff, kern_diff.length, 1); // x direction
 		//ipx.setSnapshotPixels(null);
@@ -147,6 +151,7 @@ public class Conv implements IConv {
 	 * @param kernx
 	 * @param kernx
 	 */
+	@Override
 	public void convolveSemiSep(ImageStack xstack, float[] kernx, float[] kerny, float[] kernz) {
 		
 		long time=-System.nanoTime();
@@ -191,6 +196,7 @@ public class Conv implements IConv {
 	 * @param kern_diffx
 	 * @param kernz
 	 */
+	@Override
 	public void convolveSep3D(ImageStack xstack,  float[] kernx,
 			float[] kern_diffx, float[] kernz) {
 		 convolveFloat1D(xstack, kern_diffx, Ox);
@@ -293,6 +299,7 @@ public class Conv implements IConv {
 	 * @param scaled
 	 * @return
 	 */
+	@Override
 	public boolean convolveFloat(ImageProcessor ip, float[] kernel, int kw, int kh) {
 
 		int width = ip.getWidth();
@@ -342,6 +349,7 @@ public class Conv implements IConv {
 	}
 	
 	
+	@Override
 	public void convolveFloat1D(FloatProcessor fp, float[] kernel, int xdir) {
 		IJLineIteratorIP<float[]> iter= new IJLineIteratorIP<float[]>(fp, xdir);
 		
@@ -368,6 +376,7 @@ public class Conv implements IConv {
 		//new ImagePlus("cnv1", ret).show();
 	}
 	
+	@Override
 	public void convolveFloat1D(ImageStack is, float[] kernel, int xdir) {
 		IJLineIteratorStack<float[]> iter= new IJLineIteratorStack<float[]>(is, xdir);
 		final int width=is.getWidth();
@@ -412,6 +421,7 @@ public class Conv implements IConv {
 	 * @param kh
 	 * @param scaled
 	 */
+	@Override
 	public void convolveFloat1D(ImageProcessor ip, float[] kernel, int kw, int kh) {
 		int width = ip.getWidth();
 		int height = ip.getHeight();

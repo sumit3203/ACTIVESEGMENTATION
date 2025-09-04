@@ -66,7 +66,8 @@ public class ConvGpu implements IConv {
         }
     }
 
-    public void convolveSemiSep(FloatProcessor ip, float[] kernx, float[] kern_diff) {
+    @Override
+	public void convolveSemiSep(FloatProcessor ip, float[] kernx, float[] kern_diff) {
         FloatProcessor ip2 = null;
         FloatProcessor ipx = null;
         final Rectangle roi = ip.getRoi();
@@ -91,7 +92,8 @@ public class ConvGpu implements IConv {
         ip.setPixels(ip2.getPixels());
     }
 
-    public void convolveSemiSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
+    @Override
+	public void convolveSemiSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
         FloatProcessor ip2 = (FloatProcessor) ip.duplicate();
         FloatProcessor ipx = (FloatProcessor) ip.duplicate();
         final Rectangle roi = ip.getRoi();
@@ -109,17 +111,20 @@ public class ConvGpu implements IConv {
         ip.setPixels(ip2.getPixels());
     }
 
-    public void convolveSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
+    @Override
+	public void convolveSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {
         convolveFloat1D(ip, kern_diff, Ox); // x direction
         convolveFloat1D(ip, kernx, Oy); // y direction
     }
 
-    public void convolveSep(ImageProcessor ip, float[] kernx, float[] kern_diff) {
+    @Override
+	public void convolveSep(ImageProcessor ip, float[] kernx, float[] kern_diff) {
         convolveFloat1D(ip, kern_diff, kern_diff.length, 1); // x direction
         convolveFloat1D(ip, kernx, 1, kernx.length); // y direction
     }
 
-    public void convolveSemiSep(ImageStack xstack, float[] kernx, float[] kerny, float[] kernz) {
+    @Override
+	public void convolveSemiSep(ImageStack xstack, float[] kernx, float[] kerny, float[] kernz) {
         long time = -System.nanoTime();
         ImageStack ystack = cloneStack(xstack);
         ImageStack zstack = cloneStack(xstack);
@@ -149,7 +154,8 @@ public class ConvGpu implements IConv {
         System.out.println("processing time: " + time + " us");
     }
 
-    public void convolveSep3D(ImageStack xstack, float[] kernx, float[] kern_diffx, float[] kernz) {
+    @Override
+	public void convolveSep3D(ImageStack xstack, float[] kernx, float[] kern_diffx, float[] kernz) {
         convolveFloat1D(xstack, kern_diffx, Ox);
         convolveFloat1D(xstack, kernx, Oy);
         convolveFloat1D(xstack, kernz, Oz);
@@ -222,7 +228,8 @@ public class ConvGpu implements IConv {
         }
     }
 
-    public boolean convolveFloat(ImageProcessor ip, float[] kernel, int kw, int kh) {
+    @Override
+	public boolean convolveFloat(ImageProcessor ip, float[] kernel, int kw, int kh) {
         if (!gpuInitialized) {
             IJ.log("GPU not initialized - cannot perform convolution");
             return false;
@@ -307,7 +314,8 @@ public class ConvGpu implements IConv {
         }
     }
 
-    public void convolveFloat1D(FloatProcessor fp, float[] kernel, int xdir) {
+    @Override
+	public void convolveFloat1D(FloatProcessor fp, float[] kernel, int xdir) {
         IJLineIteratorIP<float[]> iter = new IJLineIteratorIP<float[]>(fp, xdir);
         final int width = fp.getWidth();
         final int height = fp.getHeight();
@@ -327,7 +335,8 @@ public class ConvGpu implements IConv {
         fp.setPixels(ret.getPixels());
     }
 
-    public void convolveFloat1D(ImageStack is, float[] kernel, int xdir) {
+    @Override
+	public void convolveFloat1D(ImageStack is, float[] kernel, int xdir) {
         IJLineIteratorStack<float[]> iter = new IJLineIteratorStack<float[]>(is, xdir);
         final int width = is.getWidth();
         final int height = is.getHeight();
@@ -347,7 +356,8 @@ public class ConvGpu implements IConv {
         }
     }
 
-    public void convolveFloat1D(ImageProcessor ip, float[] kernel, int kw, int kh) {
+    @Override
+	public void convolveFloat1D(ImageProcessor ip, float[] kernel, int kw, int kh) {
         convolveFloatGPU(ip, kernel, kw, kh);
     }
 
