@@ -24,6 +24,7 @@ public class ConvGpu implements IConv {
     private CUmodule module;
     private CUfunction function2D;
     private CUfunction function1D;
+    private CUfunction functionLineConvolve1D;
     private boolean gpuInitialized = false;
     private CUstream stream;
 
@@ -54,6 +55,9 @@ public class ConvGpu implements IConv {
 
             function1D = new CUfunction();
             JCudaDriver.cuModuleGetFunction(function1D, module, "convolve1DKernel");
+
+            functionLineConvolve1D = new CUfunction();
+            JCudaDriver.cuModuleGetFunction(functionLineConvolve1D, module, "lineConvolve1DKernel");
 
             // Create CUDA stream
             stream = new CUstream();
@@ -367,10 +371,76 @@ public class ConvGpu implements IConv {
         }
     }
 
-    public static float[] lineConvolveGPU(float[] arr, float[] kernel, boolean flip) {
-        // This should be implemented using GPU kernels
-        // For now, we'll just call the CPU version (you should replace this)
-        return lineConvolve(arr, kernel, flip);
+    public float[] lineConvolveGPU(float[] arr, float[] kernel, boolean flip) {
+        if (!gpuInitialized || arr == null || kernel == null || arr.length == 0) {
+            return lineConvolve(arr, kernel, flip);
+        }
+
+        long startTime = System.nanoTime();
+        int inputLength = arr.length;
+        int kernelSize = kernel.length;
+        float[] output = new float[inputLength];
+
+        try {
+            // Calculate memory sizes
+            long inputSize = inputLength * Sizeof.FLOAT;
+            long kernelSizeBytes = kernelSize * Sizeof.FLOAT;
+            long outputSize = inputLength * Sizeof.FLOAT;
+
+            //allocate device memory using memory pool
+            CUdeviceptr d_input = CudaMemoryManager.allocate(inputSize);
+            CUdeviceptr d_kernel = CudaMemoryManager.allocate(kernelSizeBytes);
+            CUdeviceptr d_output = CudaMemoryManager.allocate(outputSize);
+
+            // Copy data to device
+            JCudaDriver.cuMemcpyHtoDAsync(d_input, Pointer.to(arr), inputSize, stream);
+            JCudaDriver.cuMemcpyHtoDAsync(d_kernel, Pointer.to(kernel), kernelSizeBytes, stream);
+
+            // stup kernel parameters
+            Pointer kernelParameters = Pointer.to(
+                    Pointer.to(d_input),
+                    Pointer.to(d_kernel),
+                    Pointer.to(d_output),
+                    Pointer.to(new int[]{inputLength}),
+                    Pointer.to(new int[]{kernelSize}),
+                    Pointer.to(new int[]{flip ? 1 : 0})
+            );
+
+            //config launch param
+            int blockSize = 256;
+            int gridSize = (inputLength + blockSize - 1) / blockSize;
+
+            // Launch the kernel
+            JCudaDriver.cuLaunchKernel(functionLineConvolve1D,
+                    gridSize, 1, 1,      // grid dim
+                    blockSize, 1, 1,     // block dim
+                    0, stream,           // shared memory n stream
+                    kernelParameters, null);
+
+            // Copy result back to host
+            JCudaDriver.cuMemcpyDtoHAsync(Pointer.to(output), d_output, outputSize, stream);
+
+            // Wait for all operations to complete
+            JCudaDriver.cuStreamSynchronize(stream);
+
+            // Free memory back to pool
+            CudaMemoryManager.free(d_input, inputSize);
+            CudaMemoryManager.free(d_kernel, kernelSizeBytes);
+            CudaMemoryManager.free(d_output, outputSize);
+
+            long endTime = System.nanoTime();
+            if (debug) {
+                IJ.log(String.format("GPU 1D convolution time: %.2f ms (size: %d)",
+                        (endTime - startTime) / 1e6, inputLength));
+            }
+
+            return output;
+
+        } catch (Exception e) {
+            IJ.log("GPU 1D convolution failed: " + e.getMessage());
+            // Fall back to CPU implementation
+            return lineConvolve(arr, kernel, flip);
+        }
     }
 
     private static float[] lineConvolve(float[] arr, float[] kernel, boolean flip) {
