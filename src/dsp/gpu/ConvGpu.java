@@ -368,9 +368,56 @@ public class ConvGpu implements IConv {
     }
 
     public static float[] lineConvolveGPU(float[] arr, float[] kernel, boolean flip) {
-        // This should be implemented using GPU kernels
-        // For now, we'll just call the CPU version (you should replace this)
-        return lineConvolve(arr, kernel, flip);
+        if (flip) {
+            final int s = kernel.length - 1;
+            for (int i = 0; i < kernel.length / 2; i++) {
+                final float c = kernel[i];
+                kernel[i] = kernel[s - i];
+                kernel[s - i] = c;
+            }
+        }
+
+        float[] y = new float[arr.length];
+        int kw = kernel.length / 2;
+
+        // begin
+        for (int i = 0; i < kw; i++) {
+            int c = 0;
+            for (int k = -kw; k <= kw; k++) {
+                int q = i - k;
+                if (0 <= q && q < arr.length) {
+                    y[i] += arr[q] * kernel[c];
+                } else {
+                    y[i] += arr[0] * kernel[c];
+                }
+                c++;
+            }
+        }
+
+        //mid
+        for (int i = kw; i < arr.length - kw; i++) {
+            int c = 0;
+            for (int k = -kw; k <= kw; k++) {
+                y[i] += arr[i - k] * kernel[c];
+                c++;
+            }
+        }
+
+        // end
+        for (int i = arr.length - kw; i < arr.length; i++) {
+            int c = 0;
+            for (int k = -kw; k <= kw; k++) {
+                int q = i - k;
+                if (q < arr.length && 0 <= q) {
+                    y[i] += arr[q] * kernel[c];
+                } else {
+                    y[i] += arr[arr.length - 1] * kernel[c];
+                }
+                c++;
+            }
+        }
+
+        return y;
     }
 
     private static float[] lineConvolve(float[] arr, float[] kernel, boolean flip) {
