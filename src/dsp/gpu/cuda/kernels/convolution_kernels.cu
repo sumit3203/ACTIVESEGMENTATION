@@ -58,3 +58,38 @@ __global__ void convolve1DKernel(float* input, float* kernel, float* output,
 		output[idx] = sum;
 	}
 }
+
+extern "C"
+__global__ void lineConvolve1DKernel(float* input, float* kernel, float* output,
+                                    int inputLength, int kernelSize, int flip) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    
+    if (idx < inputLength) {
+        float sum = 0.0f;
+        int halfKernel = kernelSize / 2;
+        
+        // Handle kernel flipping
+        int kernelOffset = (flip) ? (kernelSize - 1) : 0;
+        int kernelStep = (flip) ? -1 : 1;
+        
+        for (int k = -halfKernel; k <= halfKernel; k++) {
+            int pos = idx + k;
+            float value;
+            
+            // Boundary handling with clamp-to-edge
+            if (pos < 0) {
+                value = input[0];
+            } else if (pos >= inputLength) {
+                value = input[inputLength - 1];
+            } else {
+                value = input[pos];
+            }
+            
+            // Calculate kernel index
+            int kernelIdx = kernelOffset + (k + halfKernel) * kernelStep;
+            sum += value * kernel[kernelIdx];
+        }
+        
+        output[idx] = sum;
+    }
+}
