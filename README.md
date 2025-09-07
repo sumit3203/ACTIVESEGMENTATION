@@ -23,5 +23,5 @@ Active Segmentation is an interactive segmentation and classification library th
     ```
 
 ### Step 3: Plugin: ImageJ and Weka
-1. ImageJ: [[https://imagej.nih.gov/](https://imagej.nih.gov/)](https://imagej.net/ij/index.html)
+1. ImageJ: [https://imagej.net/ij/index.html](https://imagej.net/ij/index.html)
 2. Weka: [https://www.cs.waikato.ac.nz/ml/weka/](https://www.cs.waikato.ac.nz/ml/weka/)
