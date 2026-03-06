@@ -103,7 +103,8 @@ public class GuiPanel extends JFrame implements ASCommon {
 		}
 
 		if (event == this.SESSIONGUI_BUTTON_PRESSED) {
-			new SessionGUI(projectManager); // Create and display the SessionGUI instance
+    		SessionGUI sessionGUI = new SessionGUI(projectManager);
+    		sessionGUI.setVisible(true);
 		}
 
 		if (event == this.VISUALIZATION_BUTTON_PRESSED) {
