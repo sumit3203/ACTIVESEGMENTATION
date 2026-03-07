@@ -17,6 +17,10 @@ import java.awt.event.ActionListener;
  * making the panel responsive and fully compatible with visual UI designers
  * such as Eclipse WindowBuilder.</p>
  *
+ * <p>Each navigation button is declared as an explicit named field, and each
+ * uses its own {@link GridBagConstraints} instance so that Eclipse WindowBuilder
+ * can parse, display, and edit all components correctly in Design view.</p>
+ *
  * @author Sumit Vohra, Dimiter Prodanov
  */
 public class GuiPanel extends JFrame implements ASCommon {
@@ -28,15 +32,26 @@ public class GuiPanel extends JFrame implements ASCommon {
     private FeaturePanel featurePanel;
     private ViewFilterOutputPanel filterOutputPanel;
 
-    final ActionEvent FEATURE_BUTTON_PRESSED     = new ActionEvent(this, 0, "Feature"      );
-    final ActionEvent FILTER_BUTTON_PRESSED      = new ActionEvent(this, 1, "Filter"       );
-    final ActionEvent LEARNING_BUTTON_PRESSED    = new ActionEvent(this, 2, "Learning"     );
-    final ActionEvent EVALUATION_BUTTON_PRESSED  = new ActionEvent(this, 3, "Evaluation"   );
-    final ActionEvent FILTERVIS_BUTTON_PRESSED   = new ActionEvent(this, 4, "FilterVis"    );
-    final ActionEvent SESSIONGUI_BUTTON_PRESSED  = new ActionEvent(this, 5, "SessionGUI"   );
+    // Navigation buttons — declared as named fields for WindowBuilder compatibility
+    private JButton btnSelectFilters;
+    private JButton btnFilterVisualization;
+    private JButton btnFeatureExtraction;
+    private JButton btnModelLearning;
+    private JButton btnEvaluation;
+    private JButton btnViewSessions;
+    private JButton btnVisualization;
+    private JButton btnBack;
+    private JButton btnExit;
+
+    final ActionEvent FEATURE_BUTTON_PRESSED       = new ActionEvent(this, 0, "Feature"      );
+    final ActionEvent FILTER_BUTTON_PRESSED        = new ActionEvent(this, 1, "Filter"       );
+    final ActionEvent LEARNING_BUTTON_PRESSED      = new ActionEvent(this, 2, "Learning"     );
+    final ActionEvent EVALUATION_BUTTON_PRESSED    = new ActionEvent(this, 3, "Evaluation"   );
+    final ActionEvent FILTERVIS_BUTTON_PRESSED     = new ActionEvent(this, 4, "FilterVis"    );
+    final ActionEvent SESSIONGUI_BUTTON_PRESSED    = new ActionEvent(this, 5, "SessionGUI"   );
     final ActionEvent VISUALIZATION_BUTTON_PRESSED = new ActionEvent(this, 8, "Visualization");
-    final ActionEvent BACK_BUTTON_PRESSED        = new ActionEvent(this, 6, "Back"         );
-    final ActionEvent EXIT_BUTTON_PRESSED        = new ActionEvent(this, 7, "Exit"         );
+    final ActionEvent BACK_BUTTON_PRESSED          = new ActionEvent(this, 6, "Back"         );
+    final ActionEvent EXIT_BUTTON_PRESSED          = new ActionEvent(this, 7, "Exit"         );
 
     private FeatureManager featureManager;
     private ClassifierManager learningManager;
@@ -75,31 +90,25 @@ public class GuiPanel extends JFrame implements ASCommon {
             filterPanel = new FilterPanel(projectManager, featureManager);
             SwingUtilities.invokeLater(filterPanel);
         }
-
         if (event.equals(this.FILTERVIS_BUTTON_PRESSED)) {
             filterOutputPanel = new ViewFilterOutputPanel(projectManager, featureManager);
             SwingUtilities.invokeLater(this.filterOutputPanel);
         }
-
         if (event.equals(this.FEATURE_BUTTON_PRESSED)) {
             featurePanel = new FeaturePanel(featureManager);
             SwingUtilities.invokeLater(this.featurePanel);
         }
-
         if (event.equals(this.LEARNING_BUTTON_PRESSED)) {
             learningPanel = new LearningPanel(projectManager, learningManager);
             SwingUtilities.invokeLater(learningPanel);
         }
-
         if (event.equals(this.EVALUATION_BUTTON_PRESSED)) {
             evaluationPanel = new EvaluationPanel(projectManager, null);
             SwingUtilities.invokeLater(evaluationPanel);
         }
-
         if (event.equals(this.SESSIONGUI_BUTTON_PRESSED)) {
             new SessionGUI(projectManager);
         }
-
         if (event.equals(this.VISUALIZATION_BUTTON_PRESSED)) {
             SwingUtilities.invokeLater(() -> {
                 JFrame frame = new JFrame("Visualization Panel");
@@ -110,12 +119,10 @@ public class GuiPanel extends JFrame implements ASCommon {
                 frame.setVisible(true);
             });
         }
-
         if (event.equals(this.BACK_BUTTON_PRESSED)) {
             mainFrame.dispose();
             new CreateOpenProjectGUI(projectManager).run();
         }
-
         if (event.equals(this.EXIT_BUTTON_PRESSED)) {
             int response = JOptionPane.showConfirmDialog(
                     mainFrame,
@@ -129,21 +136,15 @@ public class GuiPanel extends JFrame implements ASCommon {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Private helpers
-    // -------------------------------------------------------------------------
-
     /**
      * Initialises and displays the main application window.
      *
-     * <p>The control panel uses a {@link BorderLayout} at the frame level and a
-     * {@link GridBagLayout} for the button grid, replacing the former
-     * absolute-positioning approach.  This makes the layout responsive to
-     * window resizing and fully parseable by visual designers such as Eclipse
-     * WindowBuilder.</p>
+     * <p>Uses {@link BorderLayout} at the frame level and {@link GridBagLayout}
+     * for the button grid, replacing the former absolute-positioning approach.
+     * Each button uses its own {@link GridBagConstraints} instance for full
+     * Eclipse WindowBuilder Design view compatibility.</p>
      */
     private void initGUI() {
-        // --- Main frame setup ------------------------------------------------
         this.mainFrame = new JFrame("Active Segmentation v." + version);
         this.mainFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
         this.mainFrame.setLocationRelativeTo(null);
@@ -164,88 +165,125 @@ public class GuiPanel extends JFrame implements ASCommon {
             }
         });
 
-        // --- Control panel ---------------------------------------------------
+        // Control panel with BorderLayout
         this.controlPanel = new JPanel(new BorderLayout(10, 10));
         this.controlPanel.setBackground(Color.GRAY);
         this.controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
-        // Title label (NORTH)
+        // Title label in NORTH
         JLabel titleLabel = new JLabel("Active Segmentation", SwingConstants.CENTER);
         titleLabel.setFont(largeFONT);
         titleLabel.setForeground(Color.ORANGE);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         this.controlPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // Button grid (CENTER) ------------------------------------------------
+        // Button grid with GridBagLayout in CENTER
         JPanel buttonGrid = new JPanel(new GridBagLayout());
         buttonGrid.setBackground(Color.GRAY);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill    = GridBagConstraints.HORIZONTAL;
-        gbc.insets  = new Insets(6, 6, 6, 6);
-        gbc.weightx = 0.5;
-        gbc.ipadx   = 20;
-        gbc.ipady   = 10;
+        // Row 0 - col 0
+        btnSelectFilters = new JButton("Select Filters");
+        styleButton(btnSelectFilters, FILTER_BUTTON_PRESSED);
+        GridBagConstraints gbc00 = new GridBagConstraints();
+        gbc00.fill = GridBagConstraints.HORIZONTAL;
+        gbc00.insets = new Insets(6, 6, 6, 6);
+        gbc00.weightx = 0.5; gbc00.ipadx = 20; gbc00.ipady = 10;
+        gbc00.gridx = 0; gbc00.gridy = 0;
+        buttonGrid.add(btnSelectFilters, gbc00);
 
-        // Row 0
-        addButtonGBC(buttonGrid, gbc, "Select Filters",       0, 0, this.FILTER_BUTTON_PRESSED);
-        addButtonGBC(buttonGrid, gbc, "Filter Visualization", 1, 0, this.FILTERVIS_BUTTON_PRESSED);
+        // Row 0 - col 1
+        btnFilterVisualization = new JButton("Filter Visualization");
+        styleButton(btnFilterVisualization, FILTERVIS_BUTTON_PRESSED);
+        GridBagConstraints gbc01 = new GridBagConstraints();
+        gbc01.fill = GridBagConstraints.HORIZONTAL;
+        gbc01.insets = new Insets(6, 6, 6, 6);
+        gbc01.weightx = 0.5; gbc01.ipadx = 20; gbc01.ipady = 10;
+        gbc01.gridx = 1; gbc01.gridy = 0;
+        buttonGrid.add(btnFilterVisualization, gbc01);
 
-        // Row 1
-        addButtonGBC(buttonGrid, gbc, "Feature Extraction",   0, 1, this.FEATURE_BUTTON_PRESSED);
-        addButtonGBC(buttonGrid, gbc, "Model Learning",       1, 1, this.LEARNING_BUTTON_PRESSED);
+        // Row 1 - col 0
+        btnFeatureExtraction = new JButton("Feature Extraction");
+        styleButton(btnFeatureExtraction, FEATURE_BUTTON_PRESSED);
+        GridBagConstraints gbc10 = new GridBagConstraints();
+        gbc10.fill = GridBagConstraints.HORIZONTAL;
+        gbc10.insets = new Insets(6, 6, 6, 6);
+        gbc10.weightx = 0.5; gbc10.ipadx = 20; gbc10.ipady = 10;
+        gbc10.gridx = 0; gbc10.gridy = 1;
+        buttonGrid.add(btnFeatureExtraction, gbc10);
 
-        // Row 2
-        addButtonGBC(buttonGrid, gbc, "Evaluation",           0, 2, this.EVALUATION_BUTTON_PRESSED);
-        addButtonGBC(buttonGrid, gbc, "View Sessions",        1, 2, this.SESSIONGUI_BUTTON_PRESSED);
+        // Row 1 - col 1
+        btnModelLearning = new JButton("Model Learning");
+        styleButton(btnModelLearning, LEARNING_BUTTON_PRESSED);
+        GridBagConstraints gbc11 = new GridBagConstraints();
+        gbc11.fill = GridBagConstraints.HORIZONTAL;
+        gbc11.insets = new Insets(6, 6, 6, 6);
+        gbc11.weightx = 0.5; gbc11.ipadx = 20; gbc11.ipady = 10;
+        gbc11.gridx = 1; gbc11.gridy = 1;
+        buttonGrid.add(btnModelLearning, gbc11);
 
-        // Row 3
-        addButtonGBC(buttonGrid, gbc, "Visualization",        0, 3, this.VISUALIZATION_BUTTON_PRESSED);
+        // Row 2 - col 0
+        btnEvaluation = new JButton("Evaluation");
+        styleButton(btnEvaluation, EVALUATION_BUTTON_PRESSED);
+        GridBagConstraints gbc20 = new GridBagConstraints();
+        gbc20.fill = GridBagConstraints.HORIZONTAL;
+        gbc20.insets = new Insets(6, 6, 6, 6);
+        gbc20.weightx = 0.5; gbc20.ipadx = 20; gbc20.ipady = 10;
+        gbc20.gridx = 0; gbc20.gridy = 2;
+        buttonGrid.add(btnEvaluation, gbc20);
 
-        // Back and Exit share the right column of row 3 in a sub-panel
+        // Row 2 - col 1
+        btnViewSessions = new JButton("View Sessions");
+        styleButton(btnViewSessions, SESSIONGUI_BUTTON_PRESSED);
+        GridBagConstraints gbc21 = new GridBagConstraints();
+        gbc21.fill = GridBagConstraints.HORIZONTAL;
+        gbc21.insets = new Insets(6, 6, 6, 6);
+        gbc21.weightx = 0.5; gbc21.ipadx = 20; gbc21.ipady = 10;
+        gbc21.gridx = 1; gbc21.gridy = 2;
+        buttonGrid.add(btnViewSessions, gbc21);
+
+        // Row 3 - col 0
+        btnVisualization = new JButton("Visualization");
+        styleButton(btnVisualization, VISUALIZATION_BUTTON_PRESSED);
+        GridBagConstraints gbc30 = new GridBagConstraints();
+        gbc30.fill = GridBagConstraints.HORIZONTAL;
+        gbc30.insets = new Insets(6, 6, 6, 6);
+        gbc30.weightx = 0.5; gbc30.ipadx = 20; gbc30.ipady = 10;
+        gbc30.gridx = 0; gbc30.gridy = 3;
+        buttonGrid.add(btnVisualization, gbc30);
+
+        // Row 3 - col 1: Back and Exit side by side
         JPanel backExitPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         backExitPanel.setBackground(Color.GRAY);
-        backExitPanel.add(createButton("Back", this.BACK_BUTTON_PRESSED));
-        backExitPanel.add(createButton("Exit", this.EXIT_BUTTON_PRESSED));
 
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        buttonGrid.add(backExitPanel, gbc);
+        btnBack = new JButton("Back");
+        styleButton(btnBack, BACK_BUTTON_PRESSED);
+        backExitPanel.add(btnBack);
+
+        btnExit = new JButton("Exit");
+        styleButton(btnExit, EXIT_BUTTON_PRESSED);
+        backExitPanel.add(btnExit);
+
+        GridBagConstraints gbc31 = new GridBagConstraints();
+        gbc31.fill = GridBagConstraints.HORIZONTAL;
+        gbc31.insets = new Insets(6, 6, 6, 6);
+        gbc31.weightx = 0.5; gbc31.ipadx = 20; gbc31.ipady = 10;
+        gbc31.gridx = 1; gbc31.gridy = 3;
+        buttonGrid.add(backExitPanel, gbc31);
 
         this.controlPanel.add(buttonGrid, BorderLayout.CENTER);
 
-        // --- Attach and show -------------------------------------------------
         this.mainFrame.setContentPane(this.controlPanel);
         this.mainFrame.setVisible(true);
     }
 
     /**
-     * Creates a styled {@link JButton} and adds it to {@code panel} at the
-     * grid position specified by {@code col} and {@code row}.
+     * Applies consistent visual styling to a {@link JButton} and registers
+     * its action listener.
      *
-     * @param panel  the target {@link JPanel} using {@link GridBagLayout}
-     * @param gbc    the shared {@link GridBagConstraints} (gridx/gridy are set here)
-     * @param label  the button text
-     * @param col    the column index in the grid
-     * @param row    the row index in the grid
-     * @param action the {@link ActionEvent} to dispatch when the button is clicked
+     * @param button the button to style
+     * @param action the {@link ActionEvent} to dispatch when clicked
      */
-    private void addButtonGBC(JPanel panel, GridBagConstraints gbc,
-                               String label, int col, int row, ActionEvent action) {
-        gbc.gridx = col;
-        gbc.gridy = row;
-        panel.add(createButton(label, action), gbc);
-    }
-
-    /**
-     * Creates and returns a fully styled {@link JButton}.
-     *
-     * @param label  the button text
-     * @param action the {@link ActionEvent} to dispatch on click
-     * @return a configured {@link JButton}
-     */
-    private JButton createButton(String label, final ActionEvent action) {
-        JButton button = new JButton(label);
+    private void styleButton(JButton button, final ActionEvent action) {
         button.setFont(labelFONT);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
@@ -257,6 +295,5 @@ public class GuiPanel extends JFrame implements ASCommon {
                 doAction(action);
             }
         });
-        return button;
     }
 }
