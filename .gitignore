@@ -15,9 +15,11 @@
 *.xref
 /.temp-Active_Segmentation_-classpathOnly-1581890621933.jar
 .classpath
-.classpath
-.classpath
 .idea/
 *.iml
 resources/META-INF/
+*.db
+*.dbs
+*.dbs.bak
+*.sqbpro
 
