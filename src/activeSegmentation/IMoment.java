@@ -59,7 +59,7 @@ public interface IMoment<T> extends IAnnotated, IFilter {
         /**
          * Returns the computed features for this moment.
          *
-         * <p>The return type {@code T} is implementation-specific — commonly a
+         * <p>The return type {@code T} is implementation-specific commonly a
          * {@code double[]} array or a {@link Map} of feature names to values.
          * This method is typically called after {@link #apply(ImageProcessor, Roi)}
          * has been executed.</p>
@@ -69,9 +69,11 @@ public interface IMoment<T> extends IAnnotated, IFilter {
          *
          * @return the computed feature container of type {@code T}
          */
-        T getFeatures();
+        public T getFeatures();
 
         /**
          * Returns the set of unique feature names produced by this moment.
          *
          * <p>Feature names must be globally unique across all moments u
+        */
+}
