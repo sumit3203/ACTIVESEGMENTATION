@@ -74,4 +74,20 @@ public interface IMoment<T> extends IAnnotated, IFilter {
         /**
          * Returns the set of unique feature names produced by this moment.
          *
-         * <p>Feature names must be globally unique across all moments u
+         * <p>Feature names must be globally unique across all moments used in the
+         * same classification pipeline to avoid collisions in the feature vector.</p>
+         *
+         * @return a {@link Set} of {@link String} feature names
+         */
+        Set<String> getFeatureNames();
+
+    /**
+     * Applies this moment extractor to the given image region and returns
+     * a named feature result.
+     *
+     * @param ip  the {@link ImageProcessor} containing pixel data
+     * @param roi the {@link Roi} region of interest, or {@code null} for full image
+     * @return a {@link Pair} containing the moment name and its computed feature container
+     */
+    Pair<String, T> apply(ImageProcessor ip, Roi roi);
+}
