@@ -1,11 +1,10 @@
 package activeSegmentation;
 
-import java.util.HashMap;
+
 import java.util.Map;
-import java.util.Set;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
-import ijaux.datatype.Pair;
+
 
 /**
  * IMoment defines the contract for moment-based feature extractors in the Active Segmentation platform.
