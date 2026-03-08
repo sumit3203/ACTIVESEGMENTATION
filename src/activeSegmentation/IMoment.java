@@ -2,8 +2,11 @@ package activeSegmentation;
 
 
 import java.util.Map;
+import java.util.Set;
+
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
+import ijaux.datatype.Pair;
 
 
 /**
@@ -35,7 +38,7 @@ import ij.process.ImageProcessor;
  * @param <T> the type of the feature container returned by {@link #getFeatures()},
  *            typically {@code double[]} or a {@code Map}
  *
- * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IMEC
+ * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IICT-BAS
  * @version 1.0
  * @see IFilter
  * @see FilterType
@@ -70,9 +73,14 @@ public interface IMoment<T> extends IAnnotated, IFilter {
          */
         public T getFeatures();
 
+
         /**
          * Returns the set of unique feature names produced by this moment.
          *
          * <p>Feature names must be globally unique across all moments u
         */
+		Set<String> getFeatureNames();
+
+		Pair<String, double[]> apply(ImageProcessor imageProcessor, Roi roi);
+
 }

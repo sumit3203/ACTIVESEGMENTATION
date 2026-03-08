@@ -21,7 +21,7 @@ import java.util.Map;
  * classes must provide feature extraction logic via {@link #applyFilter}, along with
  * settings management via {@link #getDefaultSettings} and {@link #updateSettings}.</p>
  *
- * <p>Filters are extensible via the plugin mechanism — new filters are loaded automatically
+ * <p>Filters are extensible via the plugin mechanism new filters are loaded automatically
  * from the plugin path at startup.</p>
  *
  * <p>Example usage:</p>
@@ -31,7 +31,7 @@ import java.util.Map;
  *     filter.applyFilter(imageProcessor, outputPath, roiList);
  * </pre>
  *
- * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IMEC
+ * @author Sumit Kumar Vohra, ZIB and Dimiter Prodanov, IICT-BAS
  * @version 1.0
  * @see IMoment
  * @see FilterType

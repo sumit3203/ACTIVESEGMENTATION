@@ -110,4 +110,11 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 	}
 
 
+	@Override
+	public Map<String, String> getDefaultSettings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
