@@ -62,10 +62,10 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 	@Override
 	public void run() {
-		mainFrame = new JFrame();
+		mainFrame = new JFrame("Active Segmentation");
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(CreateOpenProjectGUI.class.getResource("logo.png")));
 		mainFrame.getContentPane().setBackground(Color.GRAY);
-		mainFrame.setSize(frameWidth, frameHeight);
+		mainFrame.setMinimumSize(new Dimension(600, 520));
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent the default close operation
@@ -140,7 +140,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 				currentDir = fileChooser.getSelectedFile();
 				String file = currentDir.toString();
 				if (projectManager.loadProject(file)) {
-					System.out.println(" GuiPanel ");
+//					System.out.println(" GuiPanel ");
 
 					// Updates mainFrame by replacing its content with the main panel of a new GuiPanel instance
 					GuiPanel guiPanel = new  GuiPanel(projectManager);
@@ -338,14 +338,15 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			trainingImageP.setColumns(200);
 			trainingImageP.setBounds(200, 270, 250, 30);
 			panel.add(trainingImageP);
-			panel.add(addButton("Folder", null, 240, 310, 100, 30, TRAININGF_BUTTON_PRESSED));
-			panel.add(addButton("Image Stack", null, 350, 310, 100, 30, Tiff_BUTTON_PRESSED));
+			panel.add(addButton("Folder", null, 200, 310, 120, 35, TRAININGF_BUTTON_PRESSED));
+			panel.add(addButton("Image Stack", null, 330, 310, 120, 35, Tiff_BUTTON_PRESSED));
+
 		}
 
-		panel.add(addButton("Finish", null, 80, 360, 120, 30, FINISH_BUTTON_PRESSED));
-		panel.add(addButton("Cancel", null, 240, 360, 100, 30, CANCEL_BUTTON_PRESSED));
-		panel.add(addButton("Back", null, 350, 360, 100, 30, BACK_BUTTON_PRESSED));
-		panel.add(addButton("Exit", null, 460, 360, 100, 30, EXIT_BUTTON_PRESSED));
+		panel.add(addButton("Finish", null, 200, 375, 120, 35, FINISH_BUTTON_PRESSED));
+		panel.add(addButton("Cancel", null, 330, 375, 120, 35, CANCEL_BUTTON_PRESSED));
+		panel.add(addButton("Back", null, 200, 420, 120, 35, BACK_BUTTON_PRESSED));
+		panel.add(addButton("Exit", null, 330, 420, 120, 35, EXIT_BUTTON_PRESSED));
 
 		return panel;
 	}
