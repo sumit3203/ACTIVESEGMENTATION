@@ -67,7 +67,6 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 		mainFrame.getContentPane().setBackground(Color.GRAY);
 		mainFrame.setMinimumSize(new Dimension(600, 520));
 		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent the default close operation
 
 		// Confirm Exit to intercept the window close event
@@ -131,10 +130,12 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			//fileChooser.setAcceptAllFileFilterUsed(false);
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JSON", "json" ));
 		 
-			
+			// Remember last-used directory
+			if (currentDir != null) {
+			    fileChooser.setCurrentDirectory(currentDir.getParentFile());
+			}
+
 			int rVal = fileChooser.showOpenDialog(null);
-			if (currentDir!=null)
-				fileChooser.setSelectedFile(currentDir);
 
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				currentDir = fileChooser.getSelectedFile();
