@@ -171,10 +171,9 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 		if(event== TRAININGF_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
-
-			// For Directory
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("TIFF Images", "tif", "tiff"));
+			fileChooser.setAcceptAllFileFilterUsed(true);
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				trainingImageP.setText(fileChooser.getSelectedFile().toString());
@@ -183,10 +182,9 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 		if(event== Tiff_BUTTON_PRESSED){
 			JFileChooser fileChooser = new JFileChooser();
-
-			// For Directory
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("TIFF Images", "tif", "tiff"));
+			fileChooser.setAcceptAllFileFilterUsed(true);
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				trainingImageP.setText(fileChooser.getSelectedFile().toString());
