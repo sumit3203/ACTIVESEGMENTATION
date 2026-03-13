@@ -133,6 +133,7 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
        }
 	}
 	
+	@Override
 	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
       return filter(imageProcessor, roi.getName());
 	}

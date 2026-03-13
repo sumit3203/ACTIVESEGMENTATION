@@ -60,9 +60,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 	@Override
 	public void run(ImageProcessor ip) {
 		// TODO Auto-generated method stub
-		//imageStack=new ImageStack(ip.getWidth(),ip.getHeight());
 
-		//img.show();
 	}
 
 	@Override
@@ -115,6 +113,7 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 
 	}
 	
+	@Override
 	public Pair<String,double[]> apply(ImageProcessor imageProcessor, Roi roi) {
 		
 		return filter(imageProcessor,  roi.getName());

@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Selector GUI class
- * @author Sumit Vohra, Dimiter Prodanov
+ * @author Sumit Vohra, Dimiter Prodanov, IICT-BAS
  *
  */
 public class GuiPanel extends JFrame implements ASCommon {
