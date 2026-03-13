@@ -119,11 +119,11 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	private static File currentDir=null;
 
 	private void doAction( final ActionEvent event ){
-		if(event ==CREATE_BUTTON_PRESSED ){
+		if(event.equals(CREATE_BUTTON_PRESSED )){
 			cardLayout.show(cardPanel, "createProjectPanel");
 		}
 
-		if(event ==OPEN_BUTTON_PRESSED ){
+		if(event.equals(OPEN_BUTTON_PRESSED )){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -140,7 +140,6 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 				currentDir = fileChooser.getSelectedFile();
 				String file = currentDir.toString();
 				if (projectManager.loadProject(file)) {
-					System.out.println(" GuiPanel ");
 
 					// Updates mainFrame by replacing its content with the main panel of a new GuiPanel instance
 					GuiPanel guiPanel = new  GuiPanel(projectManager);
@@ -157,7 +156,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-		if(event== BROWSE_BUTTON_PRESSED){
+		if(event.equals(BROWSE_BUTTON_PRESSED)){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -169,7 +168,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-		if(event== TRAININGF_BUTTON_PRESSED){
+		if(event.equals(TRAININGF_BUTTON_PRESSED)){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -181,7 +180,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-		if(event== Tiff_BUTTON_PRESSED){
+		if(event.equals(Tiff_BUTTON_PRESSED)){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -193,7 +192,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-		if(event== TESTINGF_BUTTON_PRESSED){
+		if(event.equals(TESTINGF_BUTTON_PRESSED)){
 			JFileChooser fileChooser = new JFileChooser();
 
 			// For Directory
@@ -206,7 +205,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			//}
 		}
 
-		if (event == CANCEL_BUTTON_PRESSED) {
+		if (event.equals(CANCEL_BUTTON_PRESSED)) {
 			// Reset fields or perform any necessary cleanup
 			projectNField.setText("");
 			projectDField.setText("");
@@ -220,7 +219,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 		}
 
 		// Creating project structure
-		if(event== FINISH_BUTTON_PRESSED){
+		if(event.equals(FINISH_BUTTON_PRESSED)){
 			String projectName=projectNField.getText();
 			String projectDirectory=projectFField.getText();
 			String projectDescription=projectDField.getText();
@@ -261,18 +260,18 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			}
 		}
 
-		if (event == BACK_BUTTON_PRESSED) {
+		if (event.equals(BACK_BUTTON_PRESSED)) {
 			cardLayout.show(cardPanel, "mainPanel"); // Switch back to the main panel
 			nextButton.setVisible(true);
 			exitButton.setVisible(true);
 		}
 
-		if (event == NEXT_BUTTON_PRESSED) {
+		if (event.equals(NEXT_BUTTON_PRESSED)) {
 			cardLayout.show(cardPanel, "createProjectPanel"); // Switch to the create project panel
 		}
 
 		// Confirm Exit
-		if (event == EXIT_BUTTON_PRESSED) {
+		if (event.equals(EXIT_BUTTON_PRESSED)) {
 			int response = javax.swing.JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
 					javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
 			if (response == javax.swing.JOptionPane.YES_OPTION) {
