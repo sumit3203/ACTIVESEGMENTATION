@@ -32,7 +32,7 @@ public class ConvGpu implements IConv {
         JCudaDriver.setExceptionsEnabled(true);
         JCudaDriver.cuInit(0);
     }
-
+    
     public ConvGpu() {
         try {
             // Initialize CUDA context

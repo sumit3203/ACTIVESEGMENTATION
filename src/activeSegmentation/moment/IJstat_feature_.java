@@ -72,7 +72,6 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
  
 	@Override
 	public boolean updateSettings(Map<String, String> settingsMap) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -105,6 +104,13 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 
 	@Override
 	public Pair<String, double[]> apply(ImageProcessor imageProcessor, Roi roi) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Map<String, String> getDefaultSettings() {
 		// TODO Auto-generated method stub
 		return null;
 	}

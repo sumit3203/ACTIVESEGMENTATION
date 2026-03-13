@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Selector GUI class
- * @author Sumit Vohra, Dimiter Prodanov
+ * @author Sumit Vohra, Dimiter Prodanov, IICT-BAS
  *
  */
 public class GuiPanel extends JFrame implements ASCommon {
@@ -64,7 +64,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 	}
 
 	public void doAction(ActionEvent event) 	{
-		if ((event.equals(this.FILTER_BUTTON_PRESSED))) {
+		if (event.equals(this.FILTER_BUTTON_PRESSED)) {
 			//if(this.filterPanel == null) {
 			// for time being feature manager is passed , will think
 			// of better design later
@@ -73,21 +73,21 @@ public class GuiPanel extends JFrame implements ASCommon {
 			SwingUtilities.invokeLater(filterPanel);
 		}
 
-		if(event.equals(this.FILTERVIS_BUTTON_PRESSED)){
+		if (event.equals(this.FILTERVIS_BUTTON_PRESSED)) {
 			//if (this.filterOutputPanel==null) {
 			filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
 			//}
 			SwingUtilities.invokeLater(this.filterOutputPanel);
 		}
 
-		if ((event.equals(this.FEATURE_BUTTON_PRESSED))) {
+		if (event.equals(this.FEATURE_BUTTON_PRESSED)) {
 			//if (this.featurePanel == null) {
 			featurePanel=new FeaturePanel(featureManager);
 			//}
 			SwingUtilities.invokeLater(this.featurePanel);
 		}
 
-		if (event.equals(this.LEARNING_BUTTON_PRESSED))	{
+		if (event.equals(this.LEARNING_BUTTON_PRESSED)) {
 			//if (this.learningPanel == null) {
 			learningPanel = new LearningPanel(projectManager, learningManager);
 			//}

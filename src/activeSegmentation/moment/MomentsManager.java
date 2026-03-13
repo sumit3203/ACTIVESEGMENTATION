@@ -29,7 +29,7 @@ import java.util.zip.ZipInputStream;
  * 				
  *   
  * 
- * @author Sumit Kumar Vohra and Dimiter Prodanov , IMEC
+ * @author Sumit Kumar Vohra and Dimiter Prodanov, IICT-BAS
  *
  *
  * @contents
