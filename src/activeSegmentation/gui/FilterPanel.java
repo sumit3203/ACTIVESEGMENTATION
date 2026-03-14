@@ -5,6 +5,7 @@ import activeSegmentation.ASCommon;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterManager;
 import activeSegmentation.ProjectType;
+import activeSegmentation.benchmark.ProfilingManager;
 import activeSegmentation.feature.FeatureManager;
 import activeSegmentation.filter.FilterManager;
 import activeSegmentation.moment.MomentsManager;
@@ -376,14 +377,12 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 		if(event==COMPUTE_BUTTON_PRESSED){
 
-//			filterManager.applyFilters();
-
 			// Save GPU setting before starting computation
 			boolean useGPU = gpuToggle.isSelected();
 			FilterManager fm = (FilterManager) filterManager;
 			fm.setUseGPU(useGPU);
 
-			// Show the progress bar when computation starts
+			// Progress bar setup
 			progressBar.setVisible(true);
 			progressBar.setValue(0);
 
@@ -391,16 +390,19 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			computationThread = new Thread(() -> {
 				try {
 					filterManager.applyFilters(progress -> {
-						// This method is called periodically by filterManager.applyFilters with the progress percentage
 						SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
 					});
 				} catch (InterruptedException e) {
 					System.out.println("Computation was canceled.");
 				} finally {
-					// Hide the progress bar when computation is done or canceled
 					SwingUtilities.invokeLater(() -> {
 						progressBar.setVisible(false);
-						progressBar.setValue(0); // reset
+						progressBar.setValue(0); 
+						// Showing benchmark results only if there is data
+						if (ProfilingManager.hasData()) {
+							String projectDir = System.getProperty("user.dir");
+							new BenchmarkPanel(projectDir);
+						}
 					});
 				}
 			});
