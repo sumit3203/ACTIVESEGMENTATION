@@ -19,7 +19,7 @@ import java.net.URL;
 public class CreateOpenProjectGUI implements Runnable, ASCommon {
 	
 	// Supported image formats
-	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = {"tif", "tiff", "jpg", "jpeg", "png", "bmp", "gif"};
+	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = {"tif", "tiff", "jpg", "jpeg", "png"};
 
 	//public static final Font FONT = new Font( "Arial", Font.BOLD, 13 );
 	/** This {@link ActionEvent} is fired when the 'previous' button is pressed. */
@@ -176,7 +176,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(
-					"Image Files (TIFF, JPG, PNG, BMP, GIF)", SUPPORTED_IMAGE_EXTENSIONS));
+				    "Image Files (TIFF, JPG, PNG)", SUPPORTED_IMAGE_EXTENSIONS));
 			fileChooser.setAcceptAllFileFilterUsed(true);
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
@@ -188,7 +188,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(
-					"Image Files (TIFF, JPG, PNG, BMP, GIF)", SUPPORTED_IMAGE_EXTENSIONS));
+				    "Image Files (TIFF, JPG, PNG)", SUPPORTED_IMAGE_EXTENSIONS));
 			fileChooser.setAcceptAllFileFilterUsed(true);
 			int rVal = fileChooser.showOpenDialog(null);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
@@ -247,7 +247,7 @@ public class CreateOpenProjectGUI implements Runnable, ASCommon {
 
 			// Check if training image directory is empty and no image is currently open
 			if ((null == WindowManager.getCurrentImage() && (trainingImage == null || trainingImage.isEmpty()))) {
-				IJ.error("Training folder cannot be empty and should contain supported image files (TIFF, JPG, PNG, BMP, GIF).");
+				IJ.error("Training folder cannot be empty and should contain supported image files (TIFF, JPG, PNG).");
 				return;
 			}
 
