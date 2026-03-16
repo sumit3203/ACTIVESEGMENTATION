@@ -57,6 +57,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JProgressBar;
+import javax.swing.JSplitPane;
+
 
 import activeSegmentation.ASCommon;
 import activeSegmentation.IUtil;
@@ -148,6 +153,8 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	private Map<String,JTextArea> jTextList;
 	private JComboBox<LearningType> learningType;
 	private JFrame frame;
+	private JProgressBar progressBar;
+	private JLabel trainingStatus;
 
 
 	private String ltype="TRAINING";
@@ -185,185 +192,222 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	}
 
 	public void showPanel() {
-		frame = new JFrame("Marking");	     
+		frame = new JFrame("Active Segmentation - Feature Marking");
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(FeaturePanel.class.getResource("logo.png")));
-		frame.setResizable(false);
- 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
- 
-		JList<String> frameList= GuiUtil.getFilterJList();
-		frameList.setForeground(Color.BLACK);
-		
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setFont(panelFONT);
-		panel.setBackground(Color.GRAY);
-		
-		imagePanel = new JPanel();	
-		roiPanel= new JPanel();
-		classPanel= new JPanel();
-		
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		imagePanel = new JPanel();
+		roiPanel = new JPanel();
+		classPanel = new JPanel();
+
 		/*
-		 * image panel
+		 * Image panel (left side)
 		 */
 		imagePanel.setLayout(new BorderLayout());
-		
-		ic=new SimpleCanvas(displayImage);
-		ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
-		loadImage(displayImage);
-		setOverlay();
-		imagePanel.setBackground(Color.GRAY);		
-		imagePanel.add(ic,BorderLayout.CENTER);
-		imagePanel.setBounds( 10, 10, IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION );		
-				
-		
-		panel.add(imagePanel);
-		
+		if (displayImage != null) {
+			ic = new SimpleCanvas(displayImage);
+			ic.setMinimumSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+			setOverlay();
+			imagePanel.add(ic, BorderLayout.CENTER);
+		}
+		imagePanel.setBackground(Color.GRAY);
+		imagePanel.setPreferredSize(new Dimension(IMAGE_CANVAS_DIMENSION, IMAGE_CANVAS_DIMENSION));
+
 		/*
-		 * class panel
+		 * Right-side controls panel (stacked vertically)
 		 */
-	 	
-		classPanel.setBounds(605,20,350,100);
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+		rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+		/*
+		 * Class panel
+		 */
 		classPanel.setPreferredSize(new Dimension(350, 100));
 		classPanel.setBorder(BorderFactory.createTitledBorder("Classes"));
-		
 		JScrollPane classScrolPanel = new JScrollPane(classPanel);
 		classScrolPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		classScrolPanel.setBounds(605,20,350,80);
-		addClassPanel();
-		panel.add(classScrolPanel);
-		
-		
-		/*
-		 * features
-		 */
-		JPanel features= new JPanel();
-		features.setBounds(605,120,350,120);
-		features.setBorder(BorderFactory.createTitledBorder("Learning"));
-		
-		addButton(new JButton(), "<<", null, 610, 130, 120, 20, features, PREVIOUS_BUTTON_PRESSED, null );
-		
-		imageNum= new JTextField();
-		imageNum.setColumns(5);
-		imageNum.setBounds( 630, 130, 10, 20 );
-		JLabel dasedLine= new JLabel("/");
-		dasedLine.setFont(new Font( "Arial", Font.PLAIN, 15 ));
-		dasedLine.setForeground(Color.BLACK);
-		dasedLine.setBounds(  670, 130, 10, 20 );
-		total= new JLabel("Total");
-		total.setFont(new Font( "Arial", Font.PLAIN, 15 ));
-		total.setForeground(Color.BLACK);
-		total.setBounds( 500, 600, 80, 30);		
-		imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
-		total.setText(Integer.toString(featureManager.getTotalSlice()));
-		features.add(imageNum);
-		features.add(dasedLine);
-		features.add(total);
-		
-		/*
-		 * compute panel
-		 */
-		
-		JPanel computePanel = new JPanel();
-		addButton(new JButton(), "Train", null, 550, 550, 350, 100, computePanel, TRAIN_BUTTON_PRESSED,null);
-		
-		addButton(new JButton(), ">>", null,  800, 130,  80,  20, features,NEXT_BUTTON_PRESSED,null );
-	
-		addButton(new JButton(), "Save",null,   550, 550, 350, 100, computePanel, SAVE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Overlay",null,550, 550, 350, 100, computePanel, TOGGLE_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Masks",null,  550, 550, 350, 100, computePanel, MASKS_BUTTON_PRESSED,null);
-		addButton(new JButton(), "Snap",null,   550, 650, 350, 100, computePanel, SNAP_BUTTON_PRESSED,null);
-		features.add(computePanel);
-		frame.add(features);
+		classScrolPanel.setPreferredSize(new Dimension(360, 100));
+		classScrolPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+		if (featureManager != null) {
+			addClassPanel();
+		} else {
+			// Mock data for WindowBuilder
+			classPanel.setPreferredSize(new Dimension(340, 110));
+			roiPanel.setPreferredSize(new Dimension(350, 175 * 2));
+			addButton(new JButton(), "Add Class", null, 0, 0, 0, 0, classPanel, ADDCLASS_BUTTON_PRESSED, null);
+			addButton(new JButton(), "Update Class", null, 0, 0, 0, 0, classPanel, UPDATECLASS_BUTTON_PRESSED, null);
+			addButton(new JButton(), "Delete Class", null, 0, 0, 0, 0, classPanel, DELETE_BUTTON_PRESSED, null);
+			addClasses("class_1", "Background", Color.RED);
+			addClasses("class_2", "Foreground", Color.GREEN);
+		}
+		rightPanel.add(classScrolPanel);
+		rightPanel.add(Box.createVerticalStrut(5));
 
-		JPanel sessionPanel = new JPanel();
-		addButton(new JButton(), "Save Session Data",null,   750, 750, 150, 100, sessionPanel, SAVE_SESSION_BUTTON_PRESSED,null); // New button
-		features.add(sessionPanel);
-		frame.add(features);
-		
 		/*
-		 *  training/testing panel
-		 *  makes sense only for classification projects because 
-		 *  for segmentation the testing instances are the rest of the dataset.
+		 * Learning panel (navigation + compute + progress)
 		 */
-		
-		if (featureManager.getProjectType()==ProjectType.CLASSIF) {
-			JPanel dataJPanel = new JPanel();
+		JPanel features = new JPanel();
+		features.setLayout(new BoxLayout(features, BoxLayout.Y_AXIS));
+		features.setBorder(BorderFactory.createTitledBorder("Learning"));
+		features.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
+
+		// Navigation row: << imageNum / total >>
+		JPanel navPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+		addButton(new JButton(), "<<", null, 0, 0, 0, 0, navPanel, PREVIOUS_BUTTON_PRESSED, null)
+				.setToolTipText("Previous image (\u2190 key)");
+		imageNum = new JTextField();
+		imageNum.setColumns(5);
+		JLabel dasedLine = new JLabel("/");
+		dasedLine.setFont(new Font("Arial", Font.PLAIN, 15));
+		dasedLine.setForeground(Color.BLACK);
+		total = new JLabel("Total");
+		total.setFont(new Font("Arial", Font.PLAIN, 15));
+		total.setForeground(Color.BLACK);
+		imageNum.setText(featureManager != null ? Integer.toString(featureManager.getCurrentSlice()) : "1");
+		total.setText(featureManager != null ? Integer.toString(featureManager.getTotalSlice()) : "1");
+		navPanel.add(imageNum);
+		navPanel.add(dasedLine);
+		navPanel.add(total);
+		addButton(new JButton(), ">>", null, 0, 0, 0, 0, navPanel, NEXT_BUTTON_PRESSED, null)
+				.setToolTipText("Next image (\u2192 key)");
+		features.add(navPanel);
+
+		// Compute row: Train, Save, Overlay, Masks, Snap
+		JPanel computePanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+		addButton(new JButton(), "Train", null, 0, 0, 0, 0, computePanel, TRAIN_BUTTON_PRESSED, null)
+				.setToolTipText("Train the classifier (Ctrl+T)");
+		addButton(new JButton(), "Save", null, 0, 0, 0, 0, computePanel, SAVE_BUTTON_PRESSED, null)
+				.setToolTipText("Save regions of interest (Ctrl+S)");
+		addButton(new JButton(), "Overlay", null, 0, 0, 0, 0, computePanel, TOGGLE_BUTTON_PRESSED, null)
+				.setToolTipText("Toggle result overlay (Ctrl+O)");
+		addButton(new JButton(), "Masks", null, 0, 0, 0, 0, computePanel, MASKS_BUTTON_PRESSED, null)
+				.setToolTipText("Show classification masks");
+		addButton(new JButton(), "Snap", null, 0, 0, 0, 0, computePanel, SNAP_BUTTON_PRESSED, null)
+				.setToolTipText("Take a screenshot of the canvas");
+		features.add(computePanel);
+
+		// Progress bar for training feedback
+		progressBar = new JProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setStringPainted(true);
+		progressBar.setString("Training in progress...");
+		progressBar.setVisible(false);
+		progressBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+		features.add(progressBar);
+
+		// Training status label
+		trainingStatus = new JLabel(" ");
+		trainingStatus.setForeground(new Color(0, 100, 200));
+		trainingStatus.setFont(new Font("Arial", Font.BOLD, 12));
+		trainingStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
+		features.add(trainingStatus);
+
+		// Session save
+		JPanel sessionPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+		addButton(new JButton(), "Save Session Data", null, 0, 0, 0, 0, sessionPanel,
+				SAVE_SESSION_BUTTON_PRESSED, null).setToolTipText("Save current session data");
+		features.add(sessionPanel);
+
+		rightPanel.add(features);
+		rightPanel.add(Box.createVerticalStrut(5));
+
+		/*
+		 * Training/testing panel (classification projects only)
+		 */
+		if (featureManager == null || featureManager.getProjectType() == ProjectType.CLASSIF) {
+			JPanel dataJPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER));
 			learningType = new JComboBox<>(LearningType.values());
 			learningType.setVisible(true);
-			learningType.addItemListener( new ItemListener() {
-	
+			learningType.addItemListener(new ItemListener() {
+
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					if(featureManager.getProjectType()==ProjectType.CLASSIF) {
-						if(showColorOverlay) {
+					if (featureManager.getProjectType() == ProjectType.CLASSIF) {
+						if (showColorOverlay) {
 							updateGui();
 							updateResultOverlay(null);
-						} else 
-							updateGui();			
-					} else 
+						} else
+							updateGui();
+					} else
 						updateGui();
-	
-					ltype=	learningType.getSelectedItem().toString();
-					System.out.println("ltype: "+ ltype);
+
+					ltype = learningType.getSelectedItem().toString();
+					System.out.println("ltype: " + ltype);
 				}
 			});
-			
-			dataJPanel.setBounds(720,240,100,60);
+
 			learningType.setSelectedIndex(0);
-			learningType.setFont( panelFONT );
+			learningType.setFont(panelFONT);
 			learningType.setBackground(Color.GRAY);
 			learningType.setForeground(Color.BLUE);
+			learningType.setToolTipText("Select training or testing mode");
 			dataJPanel.add(learningType);
 			dataJPanel.setBackground(Color.GRAY);
-			
-			panel.add(dataJPanel);
+			dataJPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+			rightPanel.add(dataJPanel);
+			rightPanel.add(Box.createVerticalStrut(5));
 		}
+
 		/*
 		 * ROI panel
 		 */
 		roiPanel.setBorder(BorderFactory.createTitledBorder("Regions Of Interest"));
-//		// mouse wheel listener to update the rois while scrolling
-//		roiPanel.addMouseWheelListener(new MouseWheelListener() {
-//
-//						@Override
-//						public void mouseWheelMoved(final MouseWheelEvent e) {
-//								//IJ.log("moving scroll");
-//									displayImage.killRoi();
-//									drawExamples();
-//									updateExampleLists();
-//									if(showColorOverlay)
-//									{
-//										updateResultOverlay(imp);
-//										displayImage.updateAndDraw();
-//									}
-//						}
-//
-//						 
-//						});
-				
-		//roiPanel.setPreferredSize(new Dimension(350, 400));
 		JScrollPane scrollPane = new JScrollPane(roiPanel);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
-		scrollPane.setBounds(605,300,350,250);
-		panel.add(scrollPane);
-		frame.add(panel);
-		
-		
-		
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setPreferredSize(new Dimension(360, 250));
+		rightPanel.add(scrollPane);
+
 		/*
-		 *  frame code
+		 * Main layout: image on left, controls on right via JSplitPane
+		 */
+		JScrollPane rightScrollPane = new JScrollPane(rightPanel);
+		rightScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, imagePanel, rightScrollPane);
+		splitPane.setResizeWeight(0.6);
+		splitPane.setDividerLocation(IMAGE_CANVAS_DIMENSION + 20);
+		splitPane.setOneTouchExpandable(true);
+		frame.add(splitPane);
+
+		/*
+		 * Keyboard shortcuts
+		 */
+		frame.setFocusable(true);
+		frame.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_LEFT:
+						doAction(PREVIOUS_BUTTON_PRESSED);
+						break;
+					case KeyEvent.VK_RIGHT:
+						doAction(NEXT_BUTTON_PRESSED);
+						break;
+					case KeyEvent.VK_T:
+						if (e.isControlDown()) doAction(TRAIN_BUTTON_PRESSED);
+						break;
+					case KeyEvent.VK_S:
+						if (e.isControlDown()) doAction(SAVE_BUTTON_PRESSED);
+						break;
+					case KeyEvent.VK_O:
+						if (e.isControlDown()) doAction(TOGGLE_BUTTON_PRESSED);
+						break;
+				}
+			}
+		});
+
+		/*
+		 * Frame setup
 		 */
 		frame.pack();
-		frame.setSize(largeframeWidth,largeframeHight);
-		//frame.setSize(getMaximumSize());		
+		frame.setSize(largeframeWidth, largeframeHight);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		frame.setFocusable(true);
 		WindowManager.addWindow(this);
 		updateGui();
-		isRunning=true;
+		isRunning = true;
 	}
+
 
 	private void addClassPanel(){
 		classPanel.removeAll();
@@ -618,13 +662,31 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				// removing previous markings and reset things
 				predictionResultClassification = null;
 				displayImage.setOverlay(null);
+				progressBar.setVisible(true);
 
-				// compute new predictions
-				featureManager.compute();				
-				predictionResultClassification = featureManager.getClassificationResultMap();
+				new javax.swing.SwingWorker<Void, Void>() {
+					@Override
+					protected Void doInBackground() {
+						featureManager.compute();
+						return null;
+					}
+					@Override
+					protected void done() {
+						progressBar.setIndeterminate(false);
+						progressBar.setString("Training complete!");
+						predictionResultClassification = featureManager.getClassificationResultMap();
+						classifiedImage = null;
+						updateGui();
+						new javax.swing.Timer(2000, e -> {
+							progressBar.setVisible(false);
+							progressBar.setIndeterminate(true);
+							progressBar.setString("Training in progress...");
+							((javax.swing.Timer) e.getSource()).stop();
+						}).start();
+					}
 
-				// we do not need to get any image in classification setting, only predictions are needed
-				classifiedImage = null;
+				}.execute();
+
 			}
 
 			//segmentation setting
@@ -632,8 +694,39 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 				// remove result overlay
 				displayImage.setOverlay(null);
 				displayImage.updateAndDraw();
-				classifiedImage=featureManager.compute();
-				toggleOverlay();
+				progressBar.setVisible(true);
+
+				new javax.swing.SwingWorker<ImagePlus, Void>() {
+					@Override
+					protected ImagePlus doInBackground() {
+						return featureManager.compute();
+					}
+					@Override
+					protected void done() {
+						try {
+							classifiedImage = get();
+							progressBar.setIndeterminate(false);
+							progressBar.setString("Training complete!");
+							toggleOverlay();
+							new javax.swing.Timer(2000, e -> {
+								progressBar.setVisible(false);
+								progressBar.setIndeterminate(true);
+								progressBar.setString("Training in progress...");
+								((javax.swing.Timer) e.getSource()).stop();
+							}).start();
+						} catch (Exception ex) {
+							progressBar.setVisible(false);
+							progressBar.setString("Training in progress...");
+							progressBar.setIndeterminate(true);
+							javax.swing.JOptionPane.showMessageDialog(null, 
+								"Training failed. Please ensure filters are computed and ROIs are drawn.",
+								"Training Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+						}
+
+					}
+
+				}.execute();
+
 			}
 			IJ.log("computing");
 
@@ -665,7 +758,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 
 		}
 		
-		if(event.getActionCommand()== "ColorButton"){	
+		if("ColorButton".equals(event.getActionCommand())){	
 			String key=((Component)event.getSource()).getName();
 			Color c;
 			c = JColorChooser.showDialog( new JFrame(),
@@ -676,7 +769,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			updateGui();
 		}// end if
 		
-		if(event.getActionCommand()== "AddButton"){	
+		if("AddButton".equals(event.getActionCommand())){	
 			String key=((Component)event.getSource()).getName();
 			final Roi r = displayImage.getRoi();
 			// key = "roi";
@@ -693,13 +786,13 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			
 		} //end if
 		
-		if(event.getActionCommand()== "UploadButton"){	
+		if("UploadButton".equals(event.getActionCommand())){	
 			String key=((Component)event.getSource()).getName();
 			uploadExamples(key);
 			updateGui();
 		}//end if
 		
-		if(event.getActionCommand()== "DownloadButton"){	
+		if("DownloadButton".equals(event.getActionCommand())){	
 			String key=((Component)event.getSource()).getName();
 			downloadRois(key);
 		}
