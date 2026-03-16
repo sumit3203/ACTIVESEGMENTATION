@@ -1089,4 +1089,4 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 	}
 
 
-}
+}
