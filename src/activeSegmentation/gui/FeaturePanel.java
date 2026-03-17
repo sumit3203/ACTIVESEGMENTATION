@@ -565,7 +565,7 @@ public class FeaturePanel extends ImageWindow implements Runnable, ASCommon, IUt
 			updateGui();
 		} // end if
 		
-		if(event == PREVIOUS_BUTTON_PRESSED){			
+		if(PREVIOUS_BUTTON_PRESSED.equals(event)){			
 			ImagePlus image=featureManager.getPreviousImage();
 			imageNum.setText(Integer.toString(featureManager.getCurrentSlice()));
 			loadImage(image);
