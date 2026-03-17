@@ -363,7 +363,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 				updateFilterList();
 			}
 		}
-		if(event == PREVIOUS_BUTTON_PRESSED ){
+		if(PREVIOUS_BUTTON_PRESSED.equals(event) ){
 			int currentIndex = pane.getSelectedIndex();
 			if (currentIndex > 0) {
 				pane.setSelectedIndex(currentIndex - 1);

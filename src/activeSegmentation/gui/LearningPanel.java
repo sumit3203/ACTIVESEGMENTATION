@@ -99,7 +99,7 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
    * @param event
    */
   public void doAction(ActionEvent event)  {
-    if (event == SAVE_BUTTON_PRESSED)     {
+    if (SAVE_BUTTON_PRESSED.equals(event))     {
       updateClassifier();    
       if (aclass!=null ) {
     	  IClassifier classifier = new WekaClassifier(aclass);
@@ -115,7 +115,7 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
       }
      
     } // end SAVE
-    if (event == LOAD_BUTTON_PRESSED)     {
+    if (LOAD_BUTTON_PRESSED.equals(event))     {
     	LearningInfo li=learningManager.getLearningMetaData();
     	String[] options= li.getOptionsArray();
   
@@ -123,7 +123,7 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
     	System.out.println("loading "+cname);
     	//GuiUtil.printStringArray(options);
     	try {
-    		if (cname!="") {
+    		if (cname.isEmpty()) {
     			// TODO change into loadClass from  TestLoadClass 
 				aclass = (AbstractClassifier) Class.forName(cname).newInstance();
 				//cls.setOptions(options);		

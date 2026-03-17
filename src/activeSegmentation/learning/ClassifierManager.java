@@ -237,7 +237,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 			LocalDateTime trainingEndTime;
 			
 			trainingStartTime = LocalDateTime.now();
-			if (cname!="")  {			
+			if (cname.isEmpty())  {			
 			 	IFeatureSelection cclass =featureMap.get(cname);
 			 	if (dataset==null) {
 			 		IJ.log("Classifier Manager: error in training:"+ cclass.getName() +" is null");
@@ -353,7 +353,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 			System.out.println("learning option "+ cname);
 			ApplyTask applyTask=null;
 			IDataSet fdata=null;
-			if (cname!="")  {
+			if (cname.isEmpty())  {
 				IFeatureSelection filter =featureMap.get(cname);
 				System.out.print("Classifier Manager: selecting feature " +filter. getName()+ " "+cname);
 				//fdata=filter.selectFeatures(dataSet);

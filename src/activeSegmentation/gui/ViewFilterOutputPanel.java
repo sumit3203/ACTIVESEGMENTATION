@@ -404,7 +404,7 @@ public class ViewFilterOutputPanel extends ImageWindow implements Runnable, IUti
 
 	public void doAction( final ActionEvent event )	{
 
-		if(event == PREVIOUS_BUTTON_PRESSED && featureNum >1){
+		if(PREVIOUS_BUTTON_PRESSED.equals(event) && featureNum >1){
 
 			//System.out.println("BUTTON PRESSED");
 			featureNum=featureNum-1;
