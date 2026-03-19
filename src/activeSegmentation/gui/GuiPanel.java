@@ -64,7 +64,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 	}
 
 	public void doAction(ActionEvent event) 	{
-		if ((event == this.FILTER_BUTTON_PRESSED)) {
+		if (event.equals(this.FILTER_BUTTON_PRESSED)) {
 			//if(this.filterPanel == null) {
 			// for time being feature manager is passed , will think
 			// of better design later
@@ -73,28 +73,28 @@ public class GuiPanel extends JFrame implements ASCommon {
 			SwingUtilities.invokeLater(filterPanel);
 		}
 
-		if(event==this.FILTERVIS_BUTTON_PRESSED){
+		if (event.equals(this.FILTERVIS_BUTTON_PRESSED)) {
 			//if (this.filterOutputPanel==null) {
 			filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
 			//}
 			SwingUtilities.invokeLater(this.filterOutputPanel);
 		}
 
-		if ((event == this.FEATURE_BUTTON_PRESSED)) {
+		if (event.equals(this.FEATURE_BUTTON_PRESSED)) {
 			//if (this.featurePanel == null) {
 			featurePanel=new FeaturePanel(featureManager);
 			//}
 			SwingUtilities.invokeLater(this.featurePanel);
 		}
 
-		if (event == this.LEARNING_BUTTON_PRESSED)	{
+		if (event.equals(this.LEARNING_BUTTON_PRESSED)) {
 			//if (this.learningPanel == null) {
 			learningPanel = new LearningPanel(projectManager, learningManager);
 			//}
 			SwingUtilities.invokeLater(learningPanel);
 		}
 
-		if (event == this.EVALUATION_BUTTON_PRESSED) {
+		if (event.equals(this.EVALUATION_BUTTON_PRESSED)) {
 			//if (evaluationPanel==null) {
 			evaluationPanel = new EvaluationPanel(projectManager, null);
 			//}
@@ -102,11 +102,11 @@ public class GuiPanel extends JFrame implements ASCommon {
 
 		}
 
-		if (event == this.SESSIONGUI_BUTTON_PRESSED) {
+		if (event.equals(this.SESSIONGUI_BUTTON_PRESSED)) {
 			new SessionGUI(projectManager); // Create and display the SessionGUI instance
 		}
 
-		if (event == this.VISUALIZATION_BUTTON_PRESSED) {
+		if (event.equals(this.VISUALIZATION_BUTTON_PRESSED)) {
 			SwingUtilities.invokeLater(() -> {
 				JFrame frame = new JFrame("Visualization Panel");
 				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -117,13 +117,13 @@ public class GuiPanel extends JFrame implements ASCommon {
 			});
 		}
 
-		if (event == this.BACK_BUTTON_PRESSED) {
+		if (event.equals(this.BACK_BUTTON_PRESSED)) {
 			mainFrame.dispose(); // Close the current window
 			new CreateOpenProjectGUI(projectManager).run(); // Reopen the main window
 		}
 
 		// Confirm Exit
-		if (event == this.EXIT_BUTTON_PRESSED) {
+		if (event.equals(this.EXIT_BUTTON_PRESSED)) {
 			int response = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to exit?", "Confirm Exit",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.YES_OPTION) {
