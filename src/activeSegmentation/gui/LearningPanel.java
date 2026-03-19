@@ -99,7 +99,7 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
    * @param event
    */
   public void doAction(ActionEvent event)  {
-    if (event == SAVE_BUTTON_PRESSED)     {
+    if (event.equals(SAVE_BUTTON_PRESSED))     {
       updateClassifier();    
       if (aclass!=null ) {
     	  IClassifier classifier = new WekaClassifier(aclass);
@@ -115,15 +115,15 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
       }
      
     } // end SAVE
-    if (event == LOAD_BUTTON_PRESSED)     {
+    if (event.equals(LOAD_BUTTON_PRESSED))     {
     	LearningInfo li=learningManager.getLearningMetaData();
     	String[] options= li.getOptionsArray();
   
     	String cname=li.getClassifierName();
-    	System.out.println("loading "+cname);
+
     	//GuiUtil.printStringArray(options);
     	try {
-    		if (cname!="") {
+    		if (!cname.isEmpty()) {
     			// TODO change into loadClass from  TestLoadClass 
 				aclass = (AbstractClassifier) Class.forName(cname).newInstance();
 				//cls.setOptions(options);		
@@ -131,13 +131,13 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
 		        learningManager.setClassifier(classifier);
 		        wekaClassifierEditor.setClassType(Classifier.class);
 		        Object obj =learningManager.getClassifier();
-		        System.out.println(obj);
 		    
 		        aclass.setOptions(options);
 		        wekaClassifierEditor.setValue(aclass);		        
 		        
 		        defaultOptions = Utils.joinOptions(options);
-		        System.out.println(defaultOptions);
+		        
+
     		}
 
 		} catch (Exception e) {
@@ -306,11 +306,11 @@ public class LearningPanel extends JFrame implements Runnable, ASCommon {
 	 * @return
 	 */
 	private void updateClassifier()   {
-		System.out.println("Learning panel: in updateClassifier");
+		
 		Object c = wekaClassifierEditor.getValue();
 		//String options = "updateClassifier: default options ";
 		String[] optionsArray = ((OptionHandler)c).getOptions();
-		System.out.println(""+defaultOptions);
+		
 	
 		try {
 			// TODO change into loadClass from  TestLoadClass 
