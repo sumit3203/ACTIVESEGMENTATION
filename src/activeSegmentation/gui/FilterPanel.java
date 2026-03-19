@@ -354,7 +354,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	public void doAction( final ActionEvent event )	{
 		Set<String> filters= filterManager.getAllFilters();  
 		for(String filter : filters){
-			if(event.getActionCommand()== filter){
+			if(filter.equals(event.getActionCommand())){
 
 				filterManager.enableFilter(filter);
 				//System.out.println(filter);
@@ -479,7 +479,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 		}
 
-		if (event.getActionCommand() == CANCEL_BUTTON_PRESSED.getActionCommand()) {
+		if (CANCEL_BUTTON_PRESSED.getActionCommand().equals(event.getActionCommand())) {
 			// Handle cancel button press
 			if (computationThread != null && computationThread.isAlive()) {
 				computationThread.interrupt();
