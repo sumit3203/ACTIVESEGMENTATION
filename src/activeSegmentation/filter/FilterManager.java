@@ -219,7 +219,8 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 					long benchStart = System.currentTimeMillis();
 					filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
 					long benchElapsed = System.currentTimeMillis() - benchStart;
-					String benchMode = dsp.ConvFactory.isUsingGPU() ? "GPU" : "CPU";
+					final String benchMode = dsp.ConvFactory.isUsingGPU() ? "GPU" : "CPU";
+					// profiling of filters
 					ProfilingManager.record(filter.getName(), benchMode, benchElapsed);
 
 
