@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ListSelectionModel;
 //import ij.*;
 
 
@@ -549,20 +551,28 @@ public class SessionGUI extends JFrame implements ASCommon {
     
     // Initialize the main user interface
     private void mainInterface() {
-        //frame = new JFrame("Sessions Database");
-    	setTitle("Sessions Database");
-        setSize(800, 800);
+        setTitle("Sessions Database");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(800, 700));
 
+        // --- Table Panel (top) ---
         dtm = new DefaultTableModel(header, 0);
         table = new JTable(dtm);
-        JTextArea jta_cellText = new JTextArea(10, 30);
+        table.setFillsViewportHeight(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane jsp = new JScrollPane(table);
+
+        // --- Cell Text Area (shown when a cell is selected) ---
+        JTextArea jta_cellText = new JTextArea(5, 30);
         jta_cellText.setLineWrap(true);
         jta_cellText.setWrapStyleWord(true);
-        JScrollPane jsp_cellText = new JScrollPane(jta_cellText, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        jsp_cellText.setBounds(180, 460, 350, 200);
+        jta_cellText.setEditable(false);
+        JScrollPane jsp_cellText = new JScrollPane(jta_cellText,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jsp_cellText.setBorder(BorderFactory.createTitledBorder("Cell Content"));
 
-        // Add ListSelectionListener to the JTable
+        // Cell selection listener
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = table.getSelectedRow();
@@ -579,87 +589,121 @@ public class SessionGUI extends JFrame implements ASCommon {
                 }
             }
         });
-        JScrollPane jsp = new JScrollPane(table);
-        jsp.setBounds(20, 20, 750, 300);
+
+        // --- Action Buttons Row ---
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        actionPanel.setBorder(BorderFactory.createTitledBorder("Actions"));
 
         jb_viewDetail = new JButton("View Data");
-        jb_viewDetail.setBounds(180, 420, 160, 30);
         configureButton(jb_viewDetail);
+        jb_viewDetail.setToolTipText("View session class list and probabilities");
         jb_viewDetail.addActionListener(viewSessionDetailListener);
-        getContentPane().add(jb_viewDetail);
 
         jb_viewFeatureDetail = new JButton("View Features");
-        jb_viewFeatureDetail.setBounds(370, 420, 160, 30);
         configureButton(jb_viewFeatureDetail);
+        jb_viewFeatureDetail.setToolTipText("View feature details for selected session");
         jb_viewFeatureDetail.addActionListener(viewFeatureDetailListener);
-        getContentPane().add(jb_viewFeatureDetail);
-        
-
-
-        lbl_sessionId = new JLabel("Session ID");
-        lbl_sessionId.setBounds(20, 340, 100, 20);
-        jtf_sessionId = new JTextField();
-        jtf_sessionId.setBounds(130, 340, 200, 20);
-
-        lbl_startTime = new JLabel("Start Time");
-        lbl_startTime.setBounds(20, 380, 100, 20);
-        jtf_startTime = new JTextField();
-        jtf_startTime.setBounds(130, 380, 200, 20);
-
-        lbl_endTime = new JLabel("End Time");
-        lbl_endTime.setBounds(20, 420, 100, 20);
-        jtf_endTime = new JTextField();
-        jtf_endTime.setBounds(130, 420, 200, 20);
-
-        lbl_datasetPath = new JLabel("Dataset Path");
-        lbl_datasetPath.setBounds(20, 460, 100, 20);
-        jtf_datasetPath = new JTextField();
-        jtf_datasetPath.setBounds(130, 460, 200, 20);
-
-        lbl_classifierOutput = new JLabel("Classifier Output");
-        lbl_classifierOutput.setBounds(20, 500, 100, 20);
-        jtf_classifierOutput = new JTextField();
-        jtf_classifierOutput.setBounds(130, 500, 200, 20);
-
-
 
         jb_delete = new JButton("Delete");
-        jb_delete.setBounds(305, 380, 100, 30);
         configureButton(jb_delete);
+        jb_delete.setToolTipText("Delete the selected session");
         jb_delete.addActionListener(deleteSessionListener);
 
         jb_search = new JButton("Fetch");
-        jb_search.setBounds(180, 380, 100, 30);
         configureButton(jb_search);
+        jb_search.setToolTipText("Search for a session by ID");
         jb_search.addActionListener(searchSessionListener);
 
         jb_refresh = new JButton("Refresh");
-        jb_refresh.setBounds(430, 380, 100, 30);
         configureButton(jb_refresh);
+        jb_refresh.setToolTipText("Reload data from database");
         jb_refresh.addActionListener(refreshListener);
-        
-        getContentPane().add(jb_refresh);
-        getContentPane().add(jsp_cellText);
 
-        getContentPane().add(jsp);
+        actionPanel.add(jb_viewDetail);
+        actionPanel.add(jb_viewFeatureDetail);
+        actionPanel.add(jb_delete);
+        actionPanel.add(jb_search);
+        actionPanel.add(jb_refresh);
 
-        getContentPane().add(jb_delete);
-        getContentPane().add(jb_search);
+        // --- Input Form Panel ---
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createTitledBorder("Add New Session"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(4, 8, 4, 8);
+        gbc.anchor = GridBagConstraints.WEST;
 
+        lbl_sessionId = new JLabel("Session ID");
+        jtf_sessionId = new JTextField(15);
+        lbl_startTime = new JLabel("Start Time");
+        jtf_startTime = new JTextField(15);
+        lbl_endTime = new JLabel("End Time");
+        jtf_endTime = new JTextField(15);
+        lbl_datasetPath = new JLabel("Dataset Path");
+        jtf_datasetPath = new JTextField(15);
+        lbl_classifierOutput = new JLabel("Classifier Output");
+        jtf_classifierOutput = new JTextField(15);
 
-        getContentPane().setLayout(null);
+        // Row 0
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(lbl_sessionId, gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        formPanel.add(jtf_sessionId, gbc);
+        gbc.gridx = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        formPanel.add(lbl_startTime, gbc);
+        gbc.gridx = 3; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        formPanel.add(jtf_startTime, gbc);
+
+        // Row 1
+        gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        formPanel.add(lbl_endTime, gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        formPanel.add(jtf_endTime, gbc);
+        gbc.gridx = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        formPanel.add(lbl_datasetPath, gbc);
+        gbc.gridx = 3; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        formPanel.add(jtf_datasetPath, gbc);
+
+        // Row 2
+        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        formPanel.add(lbl_classifierOutput, gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        formPanel.add(jtf_classifierOutput, gbc);
+
+        JButton jb_add = new JButton("Add Session");
+        configureButton(jb_add);
+        jb_add.setToolTipText("Add a new session to the database");
+        jb_add.addActionListener(addSessionListener);
+        gbc.gridx = 2; gbc.gridy = 2; gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        formPanel.add(jb_add, gbc);
+
+        // --- Assemble main layout ---
+        JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
+        bottomPanel.add(actionPanel, BorderLayout.NORTH);
+        bottomPanel.add(formPanel, BorderLayout.CENTER);
+        bottomPanel.add(jsp_cellText, BorderLayout.SOUTH);
+
+        getContentPane().setLayout(new BorderLayout(10, 10));
+        getContentPane().add(jsp, BorderLayout.CENTER);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+        pack();
+        setSize(800, 700);
+        setLocationRelativeTo(null);
         setVisible(true);
         populateTable(sessionList);
     }
 
+
     private void configureButton(JButton button) {
-        Font labelFONT = new Font("Arial", Font.BOLD, 12);
         button.setFont(labelFONT);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setBackground(buttonBGColor);
         button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(130, 35));
     }
+
     
     // Main method
     public static void main(String[] args) {
