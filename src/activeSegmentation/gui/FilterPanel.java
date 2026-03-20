@@ -12,6 +12,8 @@ import activeSegmentation.moment.MomentsManager;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 import ij.IJ;
+import ij.ImagePlus;
+import ij.WindowManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.*;
 
@@ -32,6 +36,13 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private JProgressBar progressBar;
 	private Thread computationThread;
 	private JCheckBox gpuToggle;
+	private final Map<String, javax.swing.Timer> previewTimers = new HashMap<>();
+	private final Object previewLock = new Object();
+	private volatile boolean previewRunning = false;
+	private volatile String pendingPreviewFilter = null;
+	private volatile boolean suppressRealtimePreview = false;
+	private static final int PREVIEW_DEBOUNCE_MS = 250;
+	private static final String PREVIEW_TITLE_PREFIX = "AS Preview - ";
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
@@ -242,6 +253,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 
 		filerMap.put(filterName, inputComponents);
+		attachRealtimePreviewListeners(filterName, inputComponents);
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button, 1 , filterName);
 		addButton( button,ASCommon.ENABLED, null, 495, 300 , 90, 30,p ,event, Color.GREEN);
@@ -319,6 +331,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 
 		filerMap.put(filterName, inputComponents);
+		attachRealtimePreviewListeners(filterName, inputComponents);
 
 //		filerMap2.put(filterName, jcboxList);
 		
@@ -345,6 +358,152 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 			textField.setFont(ASCommon.FONT);
 			return textField;
 		}
+	}
+
+	private void attachRealtimePreviewListeners(String filterName, List<JComponent> inputComponents) {
+		for (JComponent inputComponent : inputComponents) {
+			if (inputComponent instanceof JSpinner) {
+				((JSpinner) inputComponent).addChangeListener(e -> scheduleRealtimePreview(filterName));
+			} else if (inputComponent instanceof JCheckBox) {
+				((JCheckBox) inputComponent).addActionListener(e -> scheduleRealtimePreview(filterName));
+			}
+		}
+	}
+
+	private void scheduleRealtimePreview(String filterName) {
+		if (suppressRealtimePreview) {
+			return;
+		}
+		javax.swing.Timer timer = previewTimers.computeIfAbsent(filterName, key -> {
+			javax.swing.Timer t = new javax.swing.Timer(PREVIEW_DEBOUNCE_MS, e -> requestPreviewRun(key));
+			t.setRepeats(false);
+			return t;
+		});
+		timer.restart();
+	}
+
+	private void requestPreviewRun(String filterName) {
+		synchronized (previewLock) {
+			if (previewRunning) {
+				pendingPreviewFilter = filterName;
+				return;
+			}
+			previewRunning = true;
+		}
+
+		new Thread(() -> {
+			String currentFilter = filterName;
+			while (currentFilter != null) {
+				runPreviewForFilter(currentFilter);
+				synchronized (previewLock) {
+					if (pendingPreviewFilter != null) {
+						currentFilter = pendingPreviewFilter;
+						pendingPreviewFilter = null;
+					} else {
+						previewRunning = false;
+						currentFilter = null;
+					}
+				}
+			}
+		}, "AS-RealtimePreview").start();
+	}
+
+	private void runPreviewForFilter(String filterName) {
+		try {
+			ImagePlus sourceImage = IJ.getImage();
+			if (sourceImage == null) {
+				return;
+			}
+
+			Map<String, String> settingsMap = collectSettingsFromInputs(filterName);
+			if (settingsMap.isEmpty()) {
+				return;
+			}
+			filterManager.updateFilterSettings(filterName, settingsMap);
+
+			IFilter filter = filterManager.getInstance(filterName);
+			if (filter == null) {
+				return;
+			}
+
+			File previewDir = new File(System.getProperty("java.io.tmpdir"), "as_filter_preview");
+			if (!previewDir.exists() && !previewDir.mkdirs()) {
+				return;
+			}
+
+			File[] previousOutputs = previewDir.listFiles((dir, name) -> name.startsWith(filter.getKey() + "_") && name.endsWith(".tif"));
+			if (previousOutputs != null) {
+				for (File file : previousOutputs) {
+					file.delete();
+				}
+			}
+
+			filter.applyFilter(sourceImage.getProcessor().duplicate(), previewDir.getAbsolutePath(), null);
+
+			File latestOutput = findLatestPreviewFile(previewDir, filter.getKey() + "_");
+			if (latestOutput == null) {
+				return;
+			}
+
+			ImagePlus previewImage = IJ.openImage(latestOutput.getAbsolutePath());
+			if (previewImage == null) {
+				return;
+			}
+
+			String previewTitle = PREVIEW_TITLE_PREFIX + filterName;
+			SwingUtilities.invokeLater(() -> showOrUpdatePreview(previewTitle, previewImage));
+		} catch (Exception ex) {
+			IJ.log("Realtime preview failed for " + filterName + ": " + ex.getMessage());
+		}
+	}
+
+	private File findLatestPreviewFile(File previewDir, String prefix) {
+		File[] files = previewDir.listFiles((dir, name) -> name.startsWith(prefix) && name.endsWith(".tif"));
+		if (files == null || files.length == 0) {
+			return null;
+		}
+		return Arrays.stream(files)
+				.max(Comparator.comparingLong(File::lastModified))
+				.orElse(null);
+	}
+
+	private void showOrUpdatePreview(String title, ImagePlus previewImage) {
+		ImagePlus existingPreview = WindowManager.getImage(title);
+		if (existingPreview != null) {
+			existingPreview.setProcessor(previewImage.getProcessor());
+			existingPreview.updateAndDraw();
+		} else {
+			previewImage.setTitle(title);
+			previewImage.show();
+		}
+	}
+
+	private Map<String, String> collectSettingsFromInputs(String filterKey) {
+		Map<String, String> settingsMap = new HashMap<>();
+		List<JComponent> inputComponents = filerMap.get(filterKey);
+		if (inputComponents == null) {
+			return settingsMap;
+		}
+
+		Iterator<JComponent> iter = inputComponents.iterator();
+		for (String settingsKey : filterManager.getDefaultFilterSettings(filterKey).keySet()) {
+			if (!iter.hasNext()) {
+				break;
+			}
+			JComponent inputComponent = iter.next();
+			String value = "";
+
+			if (inputComponent instanceof JTextField) {
+				value = ((JTextField) inputComponent).getText();
+			} else if (inputComponent instanceof JSpinner) {
+				value = ((JSpinner) inputComponent).getValue().toString();
+			} else if (inputComponent instanceof JCheckBox) {
+				value = Boolean.toString(((JCheckBox) inputComponent).isSelected());
+			}
+
+			settingsMap.put(settingsKey, value);
+		}
+		return settingsMap;
 	}
 
 
@@ -411,49 +570,10 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 		if(event==SAVE_BUTTON_PRESSED){
 
-			//System.out.println("");
 			final String key= pane.getTitleAt( pane.getSelectedIndex());
-//			int i=0;
-			final Map<String,String> settingsMap= new HashMap<>();
-
-//			List<JTextField> l=filerMap.get(key);
-//			ListIterator<JTextField> iter=l.listIterator();
-			//Set<String> ks=filterManager.getDefaultFilterSettings(key).keySet();
-			//System.out.println(ks);
-
-			List<JComponent> inputComponents = filerMap.get(key);
-			Iterator<JComponent> iter = inputComponents.iterator();
-
-			for (String settingsKey: filterManager.getDefaultFilterSettings(key).keySet()){
-
-				JComponent inputComponent = iter.next();
-				String value = "";
-
-				if (inputComponent instanceof JTextField) {
-					value = ((JTextField) inputComponent).getText();
-				} else if (inputComponent instanceof JSpinner) {
-					value = ((JSpinner) inputComponent).getValue().toString();
-				} else if (inputComponent instanceof JCheckBox) {
-					value = Boolean.toString(((JCheckBox) inputComponent).isSelected());
-				}
-
-				settingsMap.put(settingsKey, value);
-				System.out.println("save/button " + settingsKey + " " + value);
-
-//					settingsMap.put(settingsKey, f.getText());
-				//	settingsMap.put(settingsKey, filerMap.get(key).get(i).getText());	
-				//settingsMap.put(settingsKey, l.get(i).getText());	
-//				final String strval= iter.next().getText();
-//				System.out.println("save/button "+settingsKey+" " + strval );
-//				settingsMap.put(settingsKey, strval );
-	
-//				System.out.println("save/button "+settingsKey+" "+ l.get(i).getText() +" :: " + strval );
-//				List<JCheckBox> l2 = filerMap2.get(key);
-//				for (JCheckBox c:l2) {
-//					String bs=   Boolean.toString( c.isSelected());
-//					settingsMap.put(settingsKey, bs );
-//				}
-//				i++;
+			final Map<String,String> settingsMap = collectSettingsFromInputs(key);
+			for (Map.Entry<String, String> entry : settingsMap.entrySet()) {
+				System.out.println("save/button " + entry.getKey() + " " + entry.getValue());
 			}
 			/*
 			 List<JCheckBox> lb = filerMap2.get(key);
@@ -543,6 +663,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		List<JComponent> inputComponents = filerMap.get(key);
 		Iterator<JComponent> iter = inputComponents.iterator();
 		
+		suppressRealtimePreview = true;
 		for (String settingsKey: settingsMap.keySet() ){
 
 			String value = settingsMap.get(settingsKey);
@@ -568,6 +689,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 //			System.out.println("default/button "+settingsKey+" " + strval );
 			//i++;
 		}
+		suppressRealtimePreview = false;
 
 	}
 
