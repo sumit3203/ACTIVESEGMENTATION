@@ -370,7 +370,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	            
 				@Override
 	            public void run() {
-	                javafx.application.Application.launch(WebHelper.class, hlp);
+	                WebHelper.openHelp(hlp);
 	            }
 	        }.start();
 	}

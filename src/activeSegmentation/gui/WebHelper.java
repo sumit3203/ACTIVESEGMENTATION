@@ -1,106 +1,58 @@
 package activeSegmentation.gui;
 
-import java.util.List;
- 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-//import javafx.application.Platform;
-
-import javafx.concurrent.Worker;
-import javafx.scene.web.WebEngine;
-import java.io.InputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import ij.IJ;
- 
-public class WebHelper extends Application {
-    private Scene scene;
-    
-    private static String webhlp="";
-   
-    private ABrowser browser;
 
-	private static String cssfile="";
-     
-    @Override 
-    public void start(Stage stage) {
-        stage.setTitle("Help Browser");
-        IJ.log("browser ... ");
-        browser = new ABrowser(webhlp);
-        scene = new Scene(browser, 750, 500, Color.web("#666970"));
-        stage.setScene(scene);
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URL;
 
-        scene.getStylesheets().add(cssfile);
+/**
+ * Opens help resources without JavaFX.
+ */
+public class WebHelper {
 
-        // Load and inject JavaScript after the page is loaded
-        /*
-        WebEngine engine = browser.getEngine();
-        engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                // Read the JS file as a String
-                try (InputStream in = getClass().getResourceAsStream("/tex-chtml-full.js")) {
-                    if (in != null) {
-                        String js = new String(in.readAllBytes(), StandardCharsets.UTF_8);
-                        engine.executeScript(js);
-                    } else {
-                        System.err.println("JS file not found!");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private static String webhlp = "";
+
+    public static void openHelp(String helpPathOrUrl) {
+        String target = resolveHelpTarget(helpPathOrUrl);
+        if (target == null || target.isEmpty()) {
+            IJ.log("Help resource not found: " + helpPathOrUrl);
+            return;
+        }
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(target));
+            } else {
+                IJ.log("Desktop browser not supported. Help URL: " + target);
             }
-        });*/
-
-        stage.show();
-    }
-    
-    @Override
-	public void init() {
-    	Parameters params =getParameters();
-    	List<String> lst=params.getRaw();
-    	//System.out.println(lst);
-    	
-    	if (!lst.isEmpty()) {
-    		 IJ.log("init "+lst.get(0));
-    		setWebHelp(lst.get(0));
-    	}
-    }
-    
-    /**
-     * 
-     * @param args
-     */
-    public static void main(String[] args){
-        launch("/help.html");         
+        } catch (Exception e) {
+            IJ.log("Unable to open help URL: " + target);
+        }
     }
 
-    /**
-     * 
-     * @return
-     */
-	public String getWebHelp() {
-		return webhlp;
-	}
+    private static String resolveHelpTarget(String path) {
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("file:")) {
+            return path;
+        }
+        URL local = WebHelper.class.getResource(path);
+        if (local != null) {
+            return local.toExternalForm();
+        }
+        return path;
+    }
 
-	/**
-	 * 
-	 * @param webhlp
-	 */
-	public void setWebHelp(String webhlp) {
-		
-		String hlpfile=  WebHelper.class.getResource(webhlp).toExternalForm();
-		IJ.log("local "+hlpfile);
-		this.webhlp = hlpfile;
-		String ker= webhlp.substring(0, webhlp.length()-4);
-		//System.out.println(ker+"css");
-		 cssfile=WebHelper.class.getResource(ker+"css").toExternalForm();
-       // scene.getStylesheets().add(cssfile);        
-        IJ.log("local "+cssfile);
-	}
+    public String getWebHelp() {
+        return webhlp;
+    }
 
-
-
+    public void setWebHelp(String path) {
+        String resolved = resolveHelpTarget(path);
+        if (resolved != null) {
+            webhlp = resolved;
+            IJ.log("help " + resolved);
+        }
+    }
 }
