@@ -64,7 +64,9 @@ public class GuiPanel extends JFrame implements ASCommon {
 	}
 
 	public void doAction(ActionEvent event) 	{
+
 		if (this.FILTER_BUTTON_PRESSED.equals(event)) {
+
 			//if(this.filterPanel == null) {
 			// for time being feature manager is passed , will think
 			// of better design later
@@ -73,14 +75,18 @@ public class GuiPanel extends JFrame implements ASCommon {
 			SwingUtilities.invokeLater(filterPanel);
 		}
 
+
 		if(this.FILTERVIS_BUTTON_PRESSED.equals(event)){
+
 			//if (this.filterOutputPanel==null) {
 			filterOutputPanel=new ViewFilterOutputPanel(projectManager,featureManager);
 			//}
 			SwingUtilities.invokeLater(this.filterOutputPanel);
 		}
 
+
 		if (this.FEATURE_BUTTON_PRESSED.equals(event)) {
+
 			//if (this.featurePanel == null) {
 			featurePanel=new FeaturePanel(featureManager);
 			//}
@@ -88,6 +94,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 		}
 
 		if (this.LEARNING_BUTTON_PRESSED.equals(event))	{
+
 			//if (this.learningPanel == null) {
 			learningPanel = new LearningPanel(projectManager, learningManager);
 			//}
@@ -95,6 +102,7 @@ public class GuiPanel extends JFrame implements ASCommon {
 		}
 
 		if (this.EVALUATION_BUTTON_PRESSED.equals(event)) {
+		if (event.equals(this.EVALUATION_BUTTON_PRESSED)) {
 			//if (evaluationPanel==null) {
 			evaluationPanel = new EvaluationPanel(projectManager, null);
 			//}

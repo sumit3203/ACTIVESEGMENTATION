@@ -1,5 +1,6 @@
 package activeSegmentation;
 
+import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
@@ -89,6 +90,27 @@ public interface IFilter extends IAnnotated {
          *                  pass an empty list to process the entire image
          */
         public void applyFilter(ImageProcessor image, String path, List<Roi> roiList);
+        
+
+        /**
+         * Applies this filter to the given image and writes the output to the specified path.
+         *
+         * <p>When a non-empty {@code roiList} is provided, the filter operates only within
+         * those regions of interest rather than on the full image, improving performance
+         * for large images.</p>
+         *
+         * @param image     the {@link ImageProcessor} containing the pixel data of the 2D image
+         * @param path      the folder path where the filter output will be stored
+         * @param roiList   a {@link List} of {@link Roi} regions to restrict processing;
+         *                  pass an empty list to process the entire image
+         * @return	{@link long}		execution time 
+         */
+        public default long applyFilterProfiled(ImageProcessor image, String path, List<Roi> roiList) {
+			long benchStart = System.currentTimeMillis();
+			applyFilter(  image,   path, roiList);
+			long benchElapsed = System.currentTimeMillis() - benchStart;       	
+        	return benchElapsed;
+        }
 
         /**
          * Returns the unique key identifying this filter.
