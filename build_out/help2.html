@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>Active Segmentation Moments and Texture Features</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (https://tug.org/tex4ht/)"> 
+<meta name="originator" content="TeX4ht (https://tug.org/tex4ht/)"> 
+<!-- html,mathjax --> 
+<meta name="src" content="help2.tex"> 
+<link rel="stylesheet" type="text/css" href="help2.css"> 
+<script>window.MathJax = { tex: { tags: "ams", }, }; </script> 
+ <script type="text/javascript" async="async" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>  
+</head><body 
+>
+  <div class="maketitle">
+  <h2 class="titleHead">
+ACTIVE SEGMENTATION MOMENTS AND TEXTURE
+FEATURES
+</h2>
+<!--l. 23--><p class="noindent" >DIMITER PRODANOV<sup class="textsuperscript"><span 
+class="cmr-9">1,2</span></sup>
+<!--l. 23--><p class="noindent" ><sup class="textsuperscript"><span 
+class="cmti-9">1</span></sup><span 
+class="cmti-10">NERF, IMEC, Kapeldreef 75, 3001 Leuven, Belgium; </span><sup class="textsuperscript"><span 
+class="cmti-9">2</span></sup><span 
+class="cmti-10">PAML-LN, IICT,</span>
+<span 
+class="cmti-10">Bulgarian Academy of Sciences, Sofia, Bulgaria</span>
+<div class="submaketitle">
+<div class="date" >
+<!--l. 23--><p class="noindent" ><span 
+class="cmti-10">Date</span>:&#x00A0;March 30, 2025.</div></div></div>
+  <h3 class="sectionHead"><a 
+ id="x1-1000"></a>Contents</h3>
+  <div class="tableofcontents"><span class="sectionToc" ><a 
+href="#x1-1000" id="QQ2-1-1">Contents</a></span><br /><span class="sectionToc" >&#x00A0;1.&#x00A0;&#x00A0;<a 
+href="#x1-20001" id="QQ2-1-2">Image Moments</a></span><br /><span class="sectionToc" >&#x00A0;2.&#x00A0;&#x00A0;<a 
+href="#x1-30002" id="QQ2-1-3">Raw and Central Moments</a></span><br /><span class="sectionToc" >&#x00A0;3.&#x00A0;&#x00A0;<a 
+href="#x1-40003" id="QQ2-1-4">Legendre
+moments</a></span><br /><span class="sectionToc" >&#x00A0;4.&#x00A0;&#x00A0;<a 
+href="#x1-50004" id="QQ2-1-5">Zernike moments</a></span><br /><span class="sectionToc" >&#x00A0;5.&#x00A0;&#x00A0;<a 
+href="#x1-60005" id="QQ2-1-6">Haralick features</a></span><br /><span class="sectionToc" >&#x00A0;6.&#x00A0;&#x00A0;<a 
+href="#x1-70006" id="QQ2-1-7">ImageJ statistics</a></span><br /><span class="sectionToc" ><a 
+href="#x1-8000" id="QQ2-1-8">References</a></span><br />
+  </div>
+  <h3 class="sectionHead"><span class="titlemark">1. </span> <a 
+ id="x1-20001"></a>Image Moments</h3>
+<!--l. 34--><p class="noindent" >Spatial and central moments are important statistical properties of an image.
+Mathematically, the image moment is generally defined as the inner product of the image
+intensity function f(x,y) and a certain basis function \( P_{m,n}\). In the continuous approximation,
+the moments of a function are computed by the integral \[ M_{m,n} = \iint \limits _{I} P_{m,n}(x,y) f(x,y) dx dy \] where \( P_{m,n}(x,y)\) is polynomial,
+parameterized by the integers <span 
+class="cmti-10">m </span>and <span 
+class="cmti-10">n</span>. depending on whether the basis functions satisfy
+orthogonality, the image moments can be classified into orthogonal moments and
+non-orthogonal moments.
+  <h3 class="sectionHead"><span class="titlemark">2. </span> <a 
+ id="x1-30002"></a>Raw and Central Moments</h3>
+<!--l. 48--><p class="noindent" >For example, the raw image moments are given by the homogeneous form \(P_{m,n}(x,y)= x^m y^n\). The
+moments, can be referred to the center of the image frame or to the center of mass of the
+image \((x_c, y_c)\), in which case, \(P_{m,n}(x,y) = (x-x_c)^m (y-y_c)^n\). The two main problems with such a choice is that the moments
+contain redundant information because the homogeneous polynomials are not
+orthogonal; also the computation loses numerical precision due to cancellation of large
+terms. Mathematically, a better choice of polynomials is a polynomial from
+an orthogonal family. Such polynomials enjoy an expansion property, that is
+\[ f(x,y) = \sum _{m=0}^{\infty } \sum _{n=0}^{\infty } M_{m,n} P_{m,n}(x,y) \] Useful examples of such orthogonal families are the Legendre and Zernike
+polynomials.
+
+  <h3 class="sectionHead"><span class="titlemark">3. </span> <a 
+ id="x1-40003"></a>Legendre moments</h3>
+<!--l. 64--><p class="noindent" >The Legendre polynomials form an orthogonal set on the interval \([-1, 1]\) The Legendre
+polynomials enjoy a two term recurrence relation \begin {equation}  (n+1)L_{n+1} (x)= (2 n + 1) x L_{n} (x) - n L_{n-1}(x) , \quad L_0(x)=1, \quad L_1(x)= x  \end {equation}<a 
+ id="x1-4001r1"></a> that was used for their computation in
+the present paper. The advantage of the recursion relation is that all Legendre moments
+up to a user-defined order can be computed simultaneously.
+  <h3 class="sectionHead"><span class="titlemark">4. </span> <a 
+ id="x1-50004"></a>Zernike moments</h3>
+<!--l. 80--><p class="noindent" >The Zernike polynomials are normalized on the unit disk in the complex plane. The
+radial Zernike polynomials can be defined for \(n-m\) even as: \begin {equation}  R_{n}^{m} (r) = \sum _{l=0}^{ (n-m)/2 } \frac {(-)^l (n-l)! }{l! ( (n+m)/2 -l )! ( (n-m)/2 -l)! } r^{n - 2 l}  \end {equation}<a 
+ id="x1-5001r2"></a> and 0 otherwise. The present
+paper implemented a recursive computation method given by the formula <span class="cite">[<a 
+href="#XShakibaei2013">2</a>]</span> \begin {equation}  R^m_n(r)=r \left ( R^{|m-1|}_{n-1} (r) + R^{m+1}_{n-1} (r) \right ) - R^{m}_{n-2} (r), \quad R^0_0=1  \end {equation}<a 
+ id="x1-5002r3"></a> The
+orthogonal Zernike polynomials then are \begin {equation}  V_{mn}(r, \theta ):= R_{n}^{m} (r) e^{-i m \theta }  \end {equation}<a 
+ id="x1-5003r4"></a> The normalization of the polynomials for
+grayscale images is not an issue because they have a fixed dynamic range, so an
+image can be always normalized to unit range prior to computation of an image
+moment.
+  <h3 class="sectionHead"><span class="titlemark">5. </span> <a 
+ id="x1-60005"></a>Haralick features</h3>
+<!--l. 102--><p class="noindent" >Haralick features <span class="cite">[<a 
+href="#XHaralick1973">1</a>]</span> are coded as following 0 &#8211; Angular 2<sup class="textsuperscript"><span 
+class="cmr-9">nd</span></sup> Moment; 1 &#8211; Contrast; 2 &#8211;
+Correlation; 3 &#8211; Dissimilarity; 4 &#8211; Energy; 5 &#8211; Entropy; 6 &#8211; Homogeneity.
+  <h3 class="sectionHead"><span class="titlemark">6. </span> <a 
+ id="x1-70006"></a>ImageJ statistics</h3>
+<!--l. 115--><p class="noindent" >The following ImageJ statistics are computed: Area, mean, stdev, min, max, centroid,
+center of mass, perimeter, ellipse, shape descriptors, Ferret&#8217;s diameter, integrated density,
+median, skewness, kurtosis, area fraction.
+  <h3 class="sectionHead"><a 
+ id="x1-8000"></a>References</h3>
+<!--l. 1--><p class="noindent" >
+   <div class="thebibliography">
+   <p class="bibitem" ><span class="biblabel">
+<span 
+class="cmr-8">[1]</span> <span class="bibsp"><span 
+class="cmr-8">&#x00A0;</span><span 
+class="cmr-8">&#x00A0;</span><span 
+class="cmr-8">&#x00A0;</span></span></span><a 
+ id="XHaralick1973"></a><span 
+class="cmr-8">R.</span><span 
+class="cmr-8">&#x00A0;M.   Haralick,   K.</span><span 
+class="cmr-8">&#x00A0;Shanmugam,   and   I.</span><span 
+class="cmr-8">&#x00A0;Dinstein.   Textural   features   for   image</span>
+   <span 
+class="cmr-8">classification. </span><span 
+class="cmti-8">IEEE Transactions on Systems, Man, and Cybernetics</span><span 
+class="cmr-8">, SMC-3(6):610&#8211;621, nov</span>
+   <span 
+class="cmr-8">1973.</span>
+   </p>
+   <p class="bibitem" ><span class="biblabel">
+<span 
+class="cmr-8">[2]</span> <span class="bibsp"><span 
+class="cmr-8">&#x00A0;</span><span 
+class="cmr-8">&#x00A0;</span><span 
+class="cmr-8">&#x00A0;</span></span></span><a 
+ id="XShakibaei2013"></a><span 
+class="cmr-8">Barmak</span><span 
+class="cmr-8">&#x00A0;Honarvar Shakibaei and Raveendran Paramesran. Recursive formula to compute</span>
+   <span 
+class="cmr-8">zernike radial polynomials. </span><span 
+class="cmti-8">Optics Letters</span><span 
+class="cmr-8">, 38(14):2487, jul 2013.</span>
+</p>
+   </div>
+  <div class="addresses">
+  </div> 
+</body></html> 
+
+
+

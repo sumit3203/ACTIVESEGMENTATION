@@ -143,10 +143,20 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	@Override
 	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
 		String key=getKey();	
+		
+		// PREVIEW MODE: If filterPath is null, do not save to disk.
+		// Just run the filter at the initial scale ('sz') and update the image processor in-place.
+		if (filterPath == null) {
+			GScaleSpace sp = new GScaleSpace(sz);
+			ImageProcessor fp = filter(image, sp, sep, scnorm);
+			image.insert(fp, 0, 0);
+			return;
+		}
+
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
-				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
+				String imageName=filterPath+java.io.File.separator+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
 				
 

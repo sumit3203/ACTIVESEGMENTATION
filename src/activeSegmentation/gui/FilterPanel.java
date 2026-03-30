@@ -12,6 +12,8 @@ import activeSegmentation.moment.MomentsManager;
 import activeSegmentation.prj.ProjectManager;
 import activeSegmentation.util.GuiUtil;
 import ij.IJ;
+import ij.ImagePlus;
+import ij.WindowManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -32,6 +34,12 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	private JProgressBar progressBar;
 	private Thread computationThread;
 	private JCheckBox gpuToggle;
+
+	/** Preview manager for real-time filter preview */
+	private PreviewManager previewManager;
+
+	/** Map of filter name to its preview checkbox */
+	private Map<String, JCheckBox> previewCheckboxMap = new HashMap<>();
 	
 	//private Map<String,List<JCheckBox>> filerMap2  = new HashMap<>();
 
@@ -54,6 +62,9 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	final ActionEvent HELP_BUTTON_PRESSED = new ActionEvent( this, 6, "Help" );
 
 	final ActionEvent CANCEL_BUTTON_PRESSED = new ActionEvent( this, 7, "Cancel" );
+
+	/** This {@link ActionEvent} is fired when the 'preview' checkbox is toggled. */
+	final ActionEvent PREVIEW_TOGGLED = new ActionEvent( this, 8, "Preview" );
 	
 	//final JFrame frame = new JFrame("Filters");
 	
@@ -73,6 +84,15 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 	
 		this.filterList =GuiUtil.getFilterJList();
 		this.filterList.setForeground(Color.ORANGE);
+
+		// Initialize the preview manager with the currently active image
+		ImagePlus currentImage = WindowManager.getCurrentImage();
+		if (currentImage != null) {
+			this.previewManager = new PreviewManager(currentImage);
+		} else {
+			this.previewManager = null;
+			System.out.println("FilterPanel: No active image — preview will be unavailable");
+		}
 
 		progressBar = new JProgressBar(0, 100); // Initialize progress bar
 		progressBar.setStringPainted(true); // Show the progress percentage
@@ -156,7 +176,24 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 	private void loadFilters(){
 		// gets all detected filters in the path
-		Set<String> filters= filterManager.getAllFilters();  
+		Set<String> filtersSet= filterManager.getAllFilters();  
+		List<String> filters = new java.util.ArrayList<>(filtersSet);
+		
+		// Sort alphabetically first
+		java.util.Collections.sort(filters);
+		
+		// Robustly find GAUSS ignoring spaces and cases
+		String gaussKey = null;
+		for (String f : filters) {
+			if (f.trim().equalsIgnoreCase("GAUSS")) {
+				gaussKey = f;
+				break;
+			}
+		}
+		// Move Gauss to the absolute front
+		if (gaussKey != null && filters.remove(gaussKey)) {
+			filters.add(0, gaussKey);
+		}
 
 		System.out.println(filters);
 		int tabNum=1;
@@ -234,7 +271,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 			JComponent inputComponent = createInputComponent(settingsMap.get(key));
 			inputComponent.setFont(ASCommon.FONT);
-			inputComponent.setBounds(380, y, 40, 25);
+			inputComponent.setBounds(380, y, 60, 25);
 			p.add(inputComponent);
 			inputComponents.add(inputComponent);
 
@@ -242,6 +279,46 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 
 		filerMap.put(filterName, inputComponents);
+
+		// ===== REAL-TIME PREVIEW SUPPORT =====
+		// Add preview checkbox
+		JCheckBox previewCB = new JCheckBox("Preview");
+		previewCB.setFont(ASCommon.FONT.deriveFont(Font.BOLD, 11f));
+		previewCB.setForeground(new Color(0, 100, 200));
+		previewCB.setBounds(430, 300, 90, 30);
+		previewCB.setToolTipText("Toggle real-time preview of this filter on the active image");
+		previewCB.addActionListener(e -> handlePreviewToggle(filterName, previewCB.isSelected()));
+		p.add(previewCB);
+		previewCheckboxMap.put(filterName, previewCB);
+
+		// Attach ChangeListeners to spinners for real-time preview updates
+		for (JComponent comp : inputComponents) {
+			if (comp instanceof JSpinner) {
+				JSpinner spinner = (JSpinner) comp;
+				spinner.addChangeListener(e -> {
+					if (previewCB.isSelected()) {
+						triggerPreview(filterName);
+					}
+				});
+				
+				// Make typing update the preview immediately
+				JComponent editor = spinner.getEditor();
+				if (editor instanceof JSpinner.DefaultEditor) {
+					((JSpinner.DefaultEditor) editor).getTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+						public void keyReleased(java.awt.event.KeyEvent e) {
+							javax.swing.JFormattedTextField tf = ((JSpinner.DefaultEditor) editor).getTextField();
+							int caretPos = tf.getCaretPosition();
+							try {
+								spinner.commitEdit();
+								tf.setCaretPosition(Math.min(caretPos, tf.getText().length()));
+							} catch (Exception ignored) {}
+						}
+					});
+				}
+			}
+		}
+		// ===== END PREVIEW SUPPORT =====
+
 		JButton button= new JButton();
 		ActionEvent event = new ActionEvent( button, 1 , filterName);
 		addButton( button,ASCommon.ENABLED, null, 495, 300 , 90, 30,p ,event, Color.GREEN);
@@ -311,7 +388,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 
 			JComponent inputComponent = createInputComponent(settingsMap.get(key));
 			inputComponent.setFont(ASCommon.FONT);
-			inputComponent.setBounds(380, y, 40, 25);
+			inputComponent.setBounds(380, y, 60, 25);
 			panel.add(inputComponent);
 			inputComponents.add(inputComponent);
 
@@ -321,6 +398,43 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		filerMap.put(filterName, inputComponents);
 
 //		filerMap2.put(filterName, jcboxList);
+
+		// ===== REAL-TIME PREVIEW SUPPORT =====
+		JCheckBox previewCB = new JCheckBox("Preview");
+		previewCB.setFont(ASCommon.FONT.deriveFont(Font.BOLD, 11f));
+		previewCB.setForeground(new Color(0, 100, 200));
+		previewCB.setBounds(430, 300, 90, 30);
+		previewCB.setToolTipText("Toggle real-time preview of this filter on the active image");
+		previewCB.addActionListener(e -> handlePreviewToggle(filterName, previewCB.isSelected()));
+		panel.add(previewCB);
+		previewCheckboxMap.put(filterName, previewCB);
+
+		for (JComponent comp : inputComponents) {
+			if (comp instanceof JSpinner) {
+				JSpinner spinner = (JSpinner) comp;
+				spinner.addChangeListener(e -> {
+					if (previewCB.isSelected()) {
+						triggerPreview(filterName);
+					}
+				});
+				
+				// Make typing update the preview immediately
+				JComponent editor = spinner.getEditor();
+				if (editor instanceof JSpinner.DefaultEditor) {
+					((JSpinner.DefaultEditor) editor).getTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+						public void keyReleased(java.awt.event.KeyEvent e) {
+							javax.swing.JFormattedTextField tf = ((JSpinner.DefaultEditor) editor).getTextField();
+							int caretPos = tf.getCaretPosition();
+							try {
+								spinner.commitEdit();
+								tf.setCaretPosition(Math.min(caretPos, tf.getText().length()));
+							} catch (Exception ignored) {}
+						}
+					});
+				}
+			}
+		}
+		// ===== END PREVIEW SUPPORT =====
 		
 		// enable button
 		JButton button= new JButton();
@@ -570,6 +684,80 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 		}
 
 	}
+
+	// ==================== PREVIEW METHODS ====================
+
+	/**
+	 * Handles the preview checkbox toggle for a filter.
+	 * Activates preview mode and applies the filter, or deactivates and restores the image.
+	 *
+	 * @param filterName the filter key
+	 * @param enabled    whether preview was just enabled
+	 */
+	private void handlePreviewToggle(String filterName, boolean enabled) {
+		if (previewManager == null) {
+			// Try to get current image if it wasn't available at startup
+			ImagePlus img = WindowManager.getCurrentImage();
+			if (img != null) {
+				previewManager = new PreviewManager(img);
+			} else {
+				IJ.showMessage("Preview", "Please open an image first to use preview.");
+				JCheckBox cb = previewCheckboxMap.get(filterName);
+				if (cb != null) cb.setSelected(false);
+				return;
+			}
+		}
+
+		if (enabled) {
+			// Deactivate any other active preview first
+			for (Map.Entry<String, JCheckBox> entry : previewCheckboxMap.entrySet()) {
+				if (!entry.getKey().equals(filterName) && entry.getValue().isSelected()) {
+					entry.getValue().setSelected(false);
+				}
+			}
+			IFilter filter = filterManager.getInstance(filterName);
+			previewManager.activatePreview(filter);
+			triggerPreview(filterName);
+			IJ.log("PREVIEW ON: " + filterName);
+		} else {
+			previewManager.deactivatePreview();
+			IJ.log("PREVIEW OFF: " + filterName);
+		}
+	}
+
+	/**
+	 * Collects current parameter values from the GUI and sends them
+	 * to the PreviewManager for a debounced preview update.
+	 *
+	 * @param filterName the filter key
+	 */
+	private void triggerPreview(String filterName) {
+		if (previewManager == null || !previewManager.isPreviewActive()) return;
+
+		// Collect current settings from the input components
+		List<JComponent> inputComponents = filerMap.get(filterName);
+		if (inputComponents == null) return;
+
+		Map<String, String> settingsMap = new HashMap<>();
+		Iterator<JComponent> compIter = inputComponents.iterator();
+		for (String settingsKey : filterManager.getDefaultFilterSettings(filterName).keySet()) {
+			if (!compIter.hasNext()) break;
+			JComponent comp = compIter.next();
+			String value = "";
+			if (comp instanceof JTextField) {
+				value = ((JTextField) comp).getText();
+			} else if (comp instanceof JSpinner) {
+				value = ((JSpinner) comp).getValue().toString();
+			} else if (comp instanceof JCheckBox) {
+				value = Boolean.toString(((JCheckBox) comp).isSelected());
+			}
+			settingsMap.put(settingsKey, value);
+		}
+
+		previewManager.requestPreviewUpdate(settingsMap);
+	}
+
+	// ==================== END PREVIEW METHODS ====================
 
 	private void updateFilterList() {
 		Set<String> filters= filterManager.getAllFilters();  
