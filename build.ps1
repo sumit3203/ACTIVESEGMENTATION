@@ -1,11 +1,26 @@
 # Build script for ACTIVESEGMENTATION — excludes test files
 $ErrorActionPreference = "Continue"
 
-$FIJI_DIR     = "C:\Users\prasa\Downloads\fiji-latest-win64-jdk\Fiji"
-$JAVA_HOME    = "$FIJI_DIR\java\win64\zulu21.42.19-ca-jdk21.0.7-win_x64"
-$JAVAC        = "$JAVA_HOME\bin\javac.exe"
-$JAR_TOOL     = "$JAVA_HOME\bin\jar.exe"
-$PROJECT_DIR  = "c:\Users\prasa\Downloads\ImageJ Active Segmentation platform - GSOC\ACTIVESEGMENTATION"
+$PROJECT_DIR  = "$PSScriptRoot"
+$FIJI_DIR     = "$env:FIJI_DIR" # Set this environment variable or edit here
+if (-not $FIJI_DIR) {
+    if (Test-Path "C:\Fiji.app") { $FIJI_DIR = "C:\Fiji.app" }
+    elseif (Test-Path "D:\Fiji.app") { $FIJI_DIR = "D:\Fiji.app" }
+    else {
+        Write-Host "[WARNING] FIJI_DIR not set. Using default but build may fail if not found." -ForegroundColor Yellow
+        $FIJI_DIR = "C:\Fiji.app" 
+    }
+}
+
+$JAVA_HOME    = "$env:JAVA_HOME" # Use system JAVA_HOME if available
+if (-not $JAVA_HOME) { $JAVA_HOME = "$FIJI_DIR\java\win64\jdk-latest" }
+
+$JAVAC        = "javac.exe" # Assume in PATH or JAVA_HOME
+if (Test-Path "$JAVA_HOME\bin\javac.exe") { $JAVAC = "$JAVA_HOME\bin\javac.exe" }
+
+$JAR_TOOL     = "jar.exe"
+if (Test-Path "$JAVA_HOME\bin\jar.exe") { $JAR_TOOL = "$JAVA_HOME\bin\jar.exe" }
+
 $SRC_DIR      = "$PROJECT_DIR\src"
 $RES_DIR      = "$PROJECT_DIR\resources"
 $JARS_DIR     = "$PROJECT_DIR\jars"
