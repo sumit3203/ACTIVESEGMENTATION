@@ -8,7 +8,10 @@ import activeSegmentation.prj.ProjectInfo;
 import activeSegmentation.prj.ProjectManager;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
 import ijaux.datatype.Pair;
+import ijaux.scale.GScaleSpace;
 
 import java.awt.*;
 import java.io.File;
@@ -80,10 +83,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		this.projectManager= projectManager;
 		this.projectInfo=projectManager.getMetaInfo();
 		this.projectType=this.projectInfo.getProjectType();
-
-
+		
+		
 		System.out.println("Project Type: "+projectType +" pt ");
 		IJ.log("Loading Filters");
+		System.out.println("Loading Filters");
 
 		try {
 			List<String> jars=projectInfo.getPluginPath();
@@ -91,10 +95,12 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			if (jars!=null)
 				loadFilters(jars);
 			IJ.log("Filters loaded");
+			System.out.println("Filters loaded");
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 			IJ.log("Filters NOT loaded. Check pluginPath variable");
+			System.out.println("Filters NOT loaded. Check pluginPath variable");
 		}
  
 	}
@@ -109,6 +115,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		//System.out.println("home: "+home);
 		List<String> classes=new ArrayList<>();
 		String cp=System.getProperty("java.class.path");
+		// CH - prints all the classes inside the plugin
 		for(String plugin: plugins){
 			if(plugin.endsWith(ASCommon.JAR))	{ 
 				classes.addAll(installJarPlugins(plugin));
@@ -122,7 +129,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		System.setProperty("java.class.path", cp);
 		ClassLoader classLoader= FilterManager.class.getClassLoader();
 
-		
+		// CH - finds all the classes that are a part of the IFilter category; IFilter is an interface to define filters
 		for(String plugin: classes){
 			//System.out.println("checking "+ plugin);
 			try {
@@ -131,7 +138,7 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 				
 				for(Class<?> cs:classesList){
 					// we load only IFilter classes
-					//System.out.println(cs.getSimpleName());
+					System.out.println(cs.getSimpleName());
 					
 					if (cs.getSimpleName().equals(ASCommon.IFILTER) && !isInterface){
 
@@ -182,7 +189,68 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			}
 		}
 	}
+	
+	//CH - warmup
+	/**
+	 * Pre-warms the GPU convolution graphs so the one-time TornadoVM costs
+	 * (runtime init, per-graph kernel compilation, first-execute allocation)
+	 * happen here instead of during timed filter execution.
+	 *
+	 * Builds one graph per distinct kernel length used by the enabled filters,
+	 * at the real image size, and executes each twice so it lands on the
+	 * cheap steady-state path. Any failure is non-fatal: the per-call
+	 * try/catch inside convolveSep3 still falls back to CPU.
+	 *
+	 * @param projectString path prefix for the project images
+	 */
+	private void warmupGPU(String projectString) {
+	    try {
+	        dsp.IConv warm = dsp.ConvFactory.createConv();
+	        // --- 1. real image size from the first image ---
+	        List<String> warmImages = loadImages(projectString, false);
+	        if (warmImages == null || warmImages.isEmpty()) {
+	            System.out.println("GPU warmup skipped -> no images found");
+	            return;
+	        }
+	        ImageProcessor sampleIp = new ImagePlus(projectString + warmImages.get(0)).getProcessor();
+	        int W = sampleIp.getWidth();
+	        int H = sampleIp.getHeight();
+	        // --- 2. derive kernel lengths the SAME way the filters do ---
+	        java.util.Set<Integer> lengths = new java.util.LinkedHashSet<>();
+	        for (IFilter f : filterMap.values()) {
+	            if (!f.isEnabled()) continue;
+	            int fSz = 2, fMaxSz = 8;   // defaults; matches Prefs defaults across filters
+	            for (int sigma = fSz; sigma <= fMaxSz; sigma *= 2) {
+	                lengths.add(new GScaleSpace(sigma).gauss1D().length);
+	            }
+	        }
+	        if (lengths.isEmpty()) {
+	            System.out.println("GPU warmup skipped -> no enabled filters");
+	            return;
+	        }
+	        // --- 3. warm one graph per length, execute twice ---
+	        for (int L : lengths) {
+	            FloatProcessor src = new FloatProcessor(W, H);
+	            FloatProcessor a = new FloatProcessor(W, H);
+	            FloatProcessor b = new FloatProcessor(W, H);
+	            FloatProcessor c = new FloatProcessor(W, H);
+	            FloatProcessor d = new FloatProcessor(W, H);
+	            FloatProcessor e = new FloatProcessor(W, H);
+	            float[] k = new float[L];
+	            k[L / 2] = 1f;
+	            warm.convolveSep3(src, k, k, k, a, b, c, d, e); // build + first-execute
+	            warm.convolveSep3(src, k, k, k, a, b, c, d, e); // second execute -> warm
+	            warm.convolveSep(src,k,k);
+	            warm.convolveSep(src,k,k);
+	            warm.convolveSemiSep(src, k, k);   // build + first-execute
+	            warm.convolveSemiSep(src, k, k);   // second execute -> warm
+	        }
+	        System.out.println("GPU warmup done for lengths " + lengths);
 
+	    } catch (Throwable t) {
+	        System.out.println("GPU warmup skipped -> " + t);
+	    }
+	}
 
 	@Override
 	public void applyFilters(ProgressCallback callback) throws InterruptedException {
@@ -193,6 +261,11 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 		String projectString=projectInfo.getProjectDirectory().get(ASCommon.K_IMAGESDIR);
 		String filterString=projectInfo.getProjectDirectory().get(ASCommon.K_FILTERSDIR);
 
+		// CH - added warmup to get gpu start and running 
+		if (this.useGPU) {
+			warmupGPU(projectString);
+		}
+		
 		Map<String,List<Pair<String,double[]>>> featureList= new HashMap<>();
 		Map<String,Set<String>> features= new HashMap<>();
 			
@@ -216,13 +289,27 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 					}
 
 					// Benchmark: record per filter wall clock time
+					//CH - adding try catch to see if this catches the error in filter loading on tornado 
 					long benchStart = System.currentTimeMillis();
-					filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
+					try {
+						filter.applyFilter(new ImagePlus(projectString+image).getProcessor(),filterString+image.substring(0, image.lastIndexOf(".")), null);
+					}
+					catch(Throwable t)
+					{
+						System.out.println("SKIP (error): " + filter.getName() + " -> " + t);
+						//CH - adding commands to generate logs for gpu failure 
+						t.printStackTrace();                    
+					       Throwable c = t.getCause();
+					       while (c != null) {                     
+					           System.out.println("CAUSED BY: " + c);
+					           c.printStackTrace();
+					           c = c.getCause();
+					       }
+					}
 					long benchElapsed = System.currentTimeMillis() - benchStart;
 					final String benchMode = dsp.ConvFactory.isUsingGPU() ? "GPU" : "CPU";
 					// profiling of filters
 					ProfilingManager.record(filter.getName(), benchMode, benchElapsed);
-
 
 					// Update progress
 					step++;
@@ -234,9 +321,17 @@ public class FilterManager extends URLClassLoader implements IFilterManager, IUt
 			}
 
 		}
+		
+//	System.out.println("---- PARITY (" +
+//			 (dsp.ConvFactory.isUsingGPU() ? "after GPU run" : "after CPU run") + ") ----");
+//		for (activeSegmentation.benchmark.ProfilingManager.ParityRecord r
+//			        : activeSegmentation.benchmark.ProfilingManager.getParityResults())
+//		System.out.printf("%-24s parity=%s%n", r.filterName, r.getParity());
+//			
 		if(featureList!=null && featureList.size()>0) {
 
 			IJ.log("Features computed "+featureList.size());
+			System.out.println("Features computed "+featureList.size());
 			projectInfo.setFeatures(featureList);
 			projectInfo.setFeatureNames(features);
 

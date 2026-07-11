@@ -7,6 +7,7 @@ import activeSegmentation.IFilterViz;
 import dsp.ConvFactory;
 import dsp.IConv;
 import dsp.cpu.Conv;
+import dsp.tornado.ConvTornado;
 import ij.*;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
@@ -254,8 +255,15 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		
 		ImageStack is=new ImageStack(ip.getWidth(), ip.getHeight());
 		
+		//CH - parity check
+//		if (n > 1)
+//			ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[1]);
+//		else
+//			ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[0]);
+		
 		long time=-System.nanoTime();
 		IConv cnv = ConvFactory.createConv();
+		
 		
 		for (int i=0; i <n; i++) { 
 			FloatProcessor fpaux= (FloatProcessor) ipaux.duplicate();

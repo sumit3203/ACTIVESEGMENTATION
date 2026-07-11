@@ -15,4 +15,5 @@ public interface IConv {
     void convolveFloat1D(FloatProcessor fp, float[] kernel, int xdir);
     void convolveFloat1D(ImageStack is, float[] kernel, int xdir);
     void convolveFloat1D(ImageProcessor ip, float[] kernel, int kw, int kh);
+    void convolveSep3(FloatProcessor src, float[] kernx, float[] kern_diff1, float[] kern_diff2,FloatProcessor gradx, FloatProcessor grady,FloatProcessor lap_xx, FloatProcessor lap_yy, FloatProcessor lap_xy);
 }

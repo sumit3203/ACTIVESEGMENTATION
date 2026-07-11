@@ -116,6 +116,9 @@ public class FeatureManager implements IUtil, ASCommon {
 		} else {
 			featureMap.put(ProjectType.CLASSIF, new RoiInstanceCreator(projectInfo));
 		}
+		//CH - added comment to check end of FeatureManager 
+		System.out.println("FeatureManager: end");	
+		
 	}
 
 	/**

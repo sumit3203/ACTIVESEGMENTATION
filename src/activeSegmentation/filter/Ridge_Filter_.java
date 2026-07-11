@@ -219,26 +219,33 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 
 		IConv cnv = ConvFactory.createConv();
 
+		//CH - parity check
+//		dsp.tornado.ConvTornado.parityCheck(fpaux, kernx, kern_diff1, kern_diff2);
+
+		
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
 
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
+//		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+//		cnv.convolveFloat1D(grady, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
+//		cnv.convolveFloat1D(lap_xx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
+//		cnv.convolveFloat1D(lap_yy, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+		
+		cnv.convolveSep3(fpaux, kernx, kern_diff1, kern_diff2, gradx, grady, lap_xx, lap_yy, lap_xy);
 
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-		cnv.convolveFloat1D(lap_xx, kernx, Oy);
-
-		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-		cnv.convolveFloat1D(lap_yy, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
@@ -324,6 +331,19 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		imageStack.addSlice(fkey+"_Tr_"+sz, luv); 
 		luv.resetMinAndMax();
  
+		//CH - recording the results in the run for parity check
+		// --- PARITY: hash the finished output stack ---
+//				{
+//					double sum=0, sumAbs=0; float max=Float.NEGATIVE_INFINITY;
+//					for (int s=1; s<=imageStack.getSize(); s++) {
+//						float[] px = (float[]) imageStack.getProcessor(s).convertToFloat().getPixels();
+//						for (float v : px){ sum+=v; sumAbs+=Math.abs(v); if(v>max)max=v; }
+//					}
+//					String mode = dsp.ConvFactory.isUsingGPU() ? "GPU" : "CPU";
+//					activeSegmentation.benchmark.ProfilingManager.recordParity(getKey(), mode, sum, sumAbs, max);
+//				}
+
+		
 		return imageStack;
 	}
 

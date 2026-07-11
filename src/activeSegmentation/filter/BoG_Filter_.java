@@ -244,7 +244,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		if (seperable) {
 			if (isotropic) {
 				FloatProcessor fpauxiso=(FloatProcessor) fpaux.duplicate();
-								
+//				dsp.tornado.ConvTornado.parityCheckSemiSep((FloatProcessor) fpaux.duplicate(), kernx, kern_diff_4);			
 				cnv.convolveSemiSep(fpaux, kernx, kern_diff_4);	
 				for (int i=0; i<kern_diff_2.length; i++)
 					kern_diff_2[i]*=Math.sqrt(2.0);

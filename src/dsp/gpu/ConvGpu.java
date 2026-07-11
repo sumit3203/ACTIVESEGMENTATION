@@ -95,6 +95,14 @@ public class ConvGpu implements IConv {
         add(ip2, ipx, ip2.getRoi());
         ip.setPixels(ip2.getPixels());
     }
+    
+    @Override
+    public void convolveSep3(FloatProcessor src, float[] kernx, float[] kern_diff1, float[] kern_diff2,
+			FloatProcessor gradx, FloatProcessor grady,
+			FloatProcessor lap_xx, FloatProcessor lap_yy, FloatProcessor lap_xy)
+    {
+    	
+    }
 
     @Override
 	public void convolveSemiSepIter(FloatProcessor ip, float[] kernx, float[] kern_diff) {

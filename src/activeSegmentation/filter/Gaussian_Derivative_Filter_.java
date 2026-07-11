@@ -270,7 +270,12 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		IConv cnv = ConvFactory.createConv();
 
 		if (sep) {
-			cnv.convolveSep(fpaux, kernx, kerny);			
+			cnv.convolveSep(fpaux, kernx, kerny);
+//			if (n > 1)
+//				ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[1]);
+//			else
+//				ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[0]);
+			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel_xy, sp.getSize(), sp.getSize());
 		}

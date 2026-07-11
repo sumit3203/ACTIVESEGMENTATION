@@ -167,6 +167,7 @@ public class FilterPanel extends JFrame implements Runnable, ASCommon {
 				//filterManager.get
 				if (annotations.isEmpty()) {
 					System.out.println("tab-"+filter);
+					System.out.println("checker_5");
 					pane.addTab(filter,null,
 							createTab(settings,	filterManager.getFilterImage(filter), tabNum, filters.size(),filter)
 							);

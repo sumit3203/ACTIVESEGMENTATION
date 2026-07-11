@@ -205,7 +205,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
-			//System.out.println("SEPRABLE");
+			System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kern_diff);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);

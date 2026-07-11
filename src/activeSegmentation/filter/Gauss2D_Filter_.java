@@ -196,6 +196,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
 			//System.out.println("SEPRABLE");
+//			dsp.tornado.ConvTornado.parityCheckSemiSep((FloatProcessor) fpaux.duplicate(), kernx, kernx);
 			cnv.convolveSemiSep(fpaux, kernx, kernx);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);

@@ -142,39 +142,40 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 		
 		String cpath=System.getProperty("java.class.path");
 		System.out.println ("classpath "+ cpath);
-		/*
+		
 		System.out.println("load Selection filters: setting classpath:  "+cp);
 		System.setProperty("java.class.path", cp);
-		*/
+		
 		ClassLoader classLoader= ClassifierManager.class.getClassLoader();
 
 		for(String plugin: classes){
-			//System.out.println("checking "+ plugin);
+			System.out.println("checking "+ plugin);
 			try {
 				Class<?>[] classesList=(classLoader.loadClass(plugin)).getInterfaces();
 
 				for(Class<?> cs:classesList){
-					// we load only IFeature classes
-					//System.out.println(cs.getSimpleName());
+//					 we load only IFeature classes
+					// CH - self understanding
+					System.out.println("** "+ cs.getSimpleName());
 
 					if (cs.getSimpleName().equals(ASCommon.IFEATURE) && !classLoader.loadClass(plugin).isInterface()){
 
 						IFeatureSelection	ianno =(IFeatureSelection) (classLoader.loadClass(plugin)).newInstance(); 
 						Pair<String, String> p=ianno.getKeyVal();
 						String pkey=p.first;
-						//System.out.println(" IFilter " + pkey);
+						System.out.println(" IFilter " + pkey);
 
 						FilterType ft=ianno.getAType();
 						System.out.println(pkey+ " class, type " + ft);
 						IFeatureSelection	filter =(IFeatureSelection) ianno;
-						//Map<String, String> fmap=filter.getAnotatedFileds();
-						//	annotationMap.put(pkey, fmap);
+//						Map<String, String> fmap=filter.getAnotatedFileds();
+//							annotationMap.put(pkey, fmap);
 						featureMap.put(pkey, filter);
 
 					} 
 
-				} // end for
-			} catch (  Exception ex) {
+				} // end for; CH - changed Exception ex to Throwable ex
+			} catch (  Throwable ex) {
 				System.out.println("error:" + plugin +" not found");
 			}
 
@@ -213,14 +214,14 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
     	File folder = new File(projectInfo.getProjectDirectory().get(ASCommon.K_LEARNINGDIR));
     	
 		try {
-			//System.out.println("Classifier Manager: in training");
+			System.out.println("Classifier Manager: in training");
 			// SQLSESSIONTABLE CHECK  ROI -- CLASS_LABEL
 			String filename=folder.getCanonicalPath()+fs+projectInfo.getGroundtruth();
 			//IJ.log(filename);
 			if (projectInfo.getGroundtruth()!=null && !projectInfo.getGroundtruth().isEmpty()){
 				System.out.println("Classifier Manager: reading ground truth "+filename);
 				dataset=InstanceUtil.readDataFromARFF(filename);
-				//System.out.println("ClassifiegrManager: in learning");
+				System.out.println("ClassifiegrManager: in learning");
 			}
 			if(dataset!=null) {
 				IDataSet data = projectMan.getDataSet();
@@ -232,7 +233,7 @@ public class ClassifierManager extends URLClassLoader implements ASCommon, IClas
 		
 			LearningInfo li= projectInfo.getLearning();
 			String cname= li.getLearningOption();
-			//System.out.println("cname "+ cname);
+			System.out.println("cname "+ cname);
 			LocalDateTime trainingStartTime;
 			LocalDateTime trainingEndTime;
 			

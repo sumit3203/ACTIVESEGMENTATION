@@ -11,6 +11,39 @@ import java.util.Map;
  Keeps track of the best/latest timing for both modes per filter.
  */
 public class ProfilingManager {
+	
+	// CH - ADD: parity record (mirrors ComparisonRecord's shape) ----
+//	public static class ParityRecord {
+//	    public final String filterName;
+//	    public double cpuSum = Double.NaN, cpuSumAbs = Double.NaN, cpuMax = Double.NaN;
+//	    public double gpuSum = Double.NaN, gpuSumAbs = Double.NaN, gpuMax = Double.NaN;
+//
+//	    public ParityRecord(String filterName) { this.filterName = filterName; }
+//
+//	    public String getParity() {
+//	        if (Double.isNaN(cpuSum) || Double.isNaN(gpuSum)) return "N/A";
+//	        double rel = Math.abs(cpuSum - gpuSum) / (Math.abs(cpuSum) + 1e-9);
+//	        double relAbs = Math.abs(cpuSumAbs - gpuSumAbs) / (Math.abs(cpuSumAbs) + 1e-9);
+//	        double relMax = Math.abs(cpuMax - gpuMax) / (Math.abs(cpuMax) + 1e-9);
+//	        double worst = Math.max(rel, Math.max(relAbs, relMax));
+//	        return String.format("%.2e %s", worst, worst < 1e-4 ? "OK" : "*** CHECK ***");
+//	    }
+//	}
+//
+//	private static final Map<String, ParityRecord> parity = new LinkedHashMap<>();
+//
+//	/** Record output signature (sum, sumAbs, max) for a filter+mode. */
+//	public static synchronized void recordParity(String filterName, String mode,
+//	                                             double sum, double sumAbs, double max) {
+//	    ParityRecord r = parity.getOrDefault(filterName, new ParityRecord(filterName));
+//	    if ("GPU".equalsIgnoreCase(mode)) { r.gpuSum=sum; r.gpuSumAbs=sumAbs; r.gpuMax=max; }
+//	    else                              { r.cpuSum=sum; r.cpuSumAbs=sumAbs; r.cpuMax=max; }
+//	    parity.put(filterName, r);
+//	}
+//
+//	public static synchronized List<ParityRecord> getParityResults() {
+//	    return new ArrayList<>(parity.values());
+//	}
 
     public static class ComparisonRecord {
         public final String filterName;

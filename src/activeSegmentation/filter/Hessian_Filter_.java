@@ -27,6 +27,7 @@ import activeSegmentation.AFilterField;
 import activeSegmentation.IFilter;
 import activeSegmentation.IFilterViz;
 import dsp.cpu.Conv;
+import dsp.tornado.ConvTornado;
 
 /**
  * @version 	
@@ -194,6 +195,7 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		float[] kern_diff1=sp.diffGauss1D();
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
+		
 
 		kernel=new float[4][];
 		kernel[0]=kernx;
@@ -222,6 +224,9 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		}
 
 		FloatProcessor fpaux= (FloatProcessor) ip;
+		
+//		ConvTornado.parityCheck(fpaux, kernx, kern_diff1, kern_diff2);
+
 
 		IConv cnv = ConvFactory.createConv();
 
@@ -231,20 +236,22 @@ public class Hessian_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
 
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
-
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-		cnv.convolveFloat1D(lap_xx, kernx, Oy);
-
-		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-		cnv.convolveFloat1D(lap_yy, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+//		cnv.convolveFloat1D(grady, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
+//		cnv.convolveFloat1D(lap_xx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
+//		cnv.convolveFloat1D(lap_yy, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+		
+		cnv.convolveSep3(fpaux, kernx, kern_diff1, kern_diff2, gradx, grady, lap_xx, lap_yy, lap_xy);
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
