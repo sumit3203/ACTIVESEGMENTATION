@@ -207,15 +207,21 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList, boolean save) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
-				ImageProcessor ip=filter(image,  sp,sep, scnorm,nn,mm);			
+				ImageProcessor ip=filter(image,  sp,sep, scnorm,nn,mm);	
+				if(save) {
 				String imageName=filterPath+fs+FILTER_KEY+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, ip),imageName );
 			}
-
+		}
 	}
 	
 	private FloatProcessor filter(ImageProcessor ip,GScaleSpace sp, final boolean sep,final boolean scnorm, int n,
@@ -270,8 +276,14 @@ public class Gaussian_Derivative_Filter_ implements ExtendedPlugInFilter, Dialog
 		IConv cnv = ConvFactory.createConv();
 
 		if (sep) {
-			cnv.convolveSep(fpaux, kernx, kerny);			
-		} else {		 
+			cnv.convolveSep(fpaux, kernx, kerny);
+//			if (n > 1)
+//				ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[1]);
+//			else
+//				ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[0]);
+			
+		} else {	
+//			dsp.tornado.ConvTornado.parityConv2D((FloatProcessor)fpaux.duplicate(), kernel_xy, sp.getSize(), sp.getSize());
 			cnv.convolveFloat(fpaux, kernel_xy, sp.getSize(), sp.getSize());
 		}
 

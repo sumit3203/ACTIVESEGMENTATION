@@ -84,6 +84,10 @@ public class TestFilter implements IFilter {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public void applyFilter(ImageProcessor imageProcessor, String s, List<Roi> list, boolean save) {
+	}
 
 	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {

@@ -76,6 +76,10 @@ public class IJstat_feature_ implements IMoment<ArrayList<?>>{
 	}
 
 	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList, boolean save) {
+	}
+	
+	@Override
 	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
 		// TODO Auto-generated method stub
 		

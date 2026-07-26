@@ -91,6 +91,21 @@ public interface IFilter extends IAnnotated {
          */
         public void applyFilter(ImageProcessor image, String path, List<Roi> roiList);
         
+        /**
+         * Applies this filter to the given image and writes the output to the specified path.
+         *
+         * <p>When a non-empty {@code roiList} is provided, the filter operates only within
+         * those regions of interest rather than on the full image, improving performance
+         * for large images.</p>
+         *
+         * @param image     the {@link ImageProcessor} containing the pixel data of the 2D image
+         * @param path      the folder path where the filter output will be stored
+         * @param roiList   a {@link List} of {@link Roi} regions to restrict processing;
+         *                  pass an empty list to process the entire image
+         * @param save      toggle for benchmarking as may be required
+         */
+        public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList, boolean save);
+        
 
         /**
          * Applies this filter to the given image and writes the output to the specified path.

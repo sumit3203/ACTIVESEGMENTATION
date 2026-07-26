@@ -144,17 +144,23 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList,boolean save) {
 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
 				GScaleSpace sp=new GScaleSpace(sigma);
 				imageStack=filter(image, sp,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
+					if(save) {
 					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 				}
-
+				}
 			}
 
 	}
@@ -219,26 +225,33 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 
 		IConv cnv = ConvFactory.createConv();
 
+		//CH - parity check
+//		dsp.tornado.ConvTornado.parityCheck(fpaux, kernx, kern_diff1, kern_diff2);
+
+		
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_yy=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor lap_xy=(FloatProcessor) fpaux.duplicate();
 
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
+//		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+//		cnv.convolveFloat1D(grady, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
+//		cnv.convolveFloat1D(lap_xx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
+//		cnv.convolveFloat1D(lap_yy, kernx, Ox);
+//
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
+//		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
+		
+		cnv.convolveSep3(fpaux, kernx, kern_diff1, kern_diff2, gradx, grady, lap_xx, lap_yy, lap_xy);
 
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xx, kern_diff2, Ox);
-		cnv.convolveFloat1D(lap_xx, kernx, Oy);
-
-		cnv.convolveFloat1D(lap_yy, kern_diff2, Oy);
-		cnv.convolveFloat1D(lap_yy, kernx, Ox);
-
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Oy);
-		cnv.convolveFloat1D(lap_xy, kern_diff1, Ox);
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
@@ -324,6 +337,7 @@ public class Ridge_Filter_ implements ExtendedPlugInFilter, DialogListener, IFil
 		imageStack.addSlice(fkey+"_Tr_"+sz, luv); 
 		luv.resetMinAndMax();
  
+		
 		return imageStack;
 	}
 

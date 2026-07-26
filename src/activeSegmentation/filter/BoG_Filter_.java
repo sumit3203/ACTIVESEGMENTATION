@@ -169,16 +169,21 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
+
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList, boolean save) {
 		String key=getKey();
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){
 			GScaleSpace sp=new GScaleSpace(sigma);
 			ImageProcessor fp=filter(image, sp, sep, isiso);
-			String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
-			IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
-
+			if (save) {                                           // <-- add this guard
+				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
+				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
+			}
 		}
-
 	}
 
 
@@ -244,7 +249,7 @@ public class BoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		if (seperable) {
 			if (isotropic) {
 				FloatProcessor fpauxiso=(FloatProcessor) fpaux.duplicate();
-								
+//				dsp.tornado.ConvTornado.parityCheckSemiSep((FloatProcessor) fpaux.duplicate(), kernx, kern_diff_4);			
 				cnv.convolveSemiSep(fpaux, kernx, kern_diff_4);	
 				for (int i=0; i<kern_diff_2.length; i++)
 					kern_diff_2[i]*=Math.sqrt(2.0);

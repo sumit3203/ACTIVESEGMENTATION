@@ -213,8 +213,8 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		new ImagePlus("kernel",ckern.stackviz()).show();
 		
 		FFTLoG_Filter_ filter=new FFTLoG_Filter_();
-		System.out.println("annotated fields");
-		System.out.println(filter.getAnotatedFileds());
+//		System.out.println("annotated fields");
+//		System.out.println(filter.getAnotatedFileds());
 	}
 
 	@Override
@@ -234,17 +234,23 @@ public class FFTLoG_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		even=Boolean.parseBoolean(settingsMap.get(GEV));
 		return true;
 	}
-
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList, boolean save) {
 		String key=getKey();
 		// re-prarametrization by sz
 		final int sord=(int) (order*10);
-		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
+		for (int sigma=sz; sigma<= max_sz; sigma *=2){	
 			ImageProcessor fp=filter(image, order, sigma);
+			if(save) {
 			String imageName=path+"/"+key+"_"+sord+"_"+sigma+".tif" ;
 			IJ.save(new ImagePlus(key+"_"+sord+"_" + sigma, fp),imageName );
+		}
 		}
 	}
 

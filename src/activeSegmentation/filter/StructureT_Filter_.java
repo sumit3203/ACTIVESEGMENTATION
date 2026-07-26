@@ -151,20 +151,24 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		image.show();
 	}
 
-	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList,boolean save) {
 		GScaleSpace sp=new GScaleSpace(sz);
 			for (int sigma=sz2; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
 				GScaleSpace sp2=new GScaleSpace(sigma);
 				imageStack=filter2(image, sp, sp2, imageStack, sigma);
 				for(int j=1;j<=imageStack.getSize();j++){
+					if(save) {
 					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
 				}
-
+				}
 			}
 
 	}
@@ -198,6 +202,8 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		float[] kern_diff1=sp.diffGauss1D();
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
+		
+//		dsp.tornado.ConvTornado.parityStructFull((FloatProcessor)((FloatProcessor)ip).duplicate(), kernx, kern_diff1);
 		
 		int sigmaname=0;
         if(sigmaFixed >0) {
@@ -240,12 +246,14 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
 		
  
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
-
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
- 
+//		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+//		cnv.convolveFloat1D(grady, kernx, Ox);
+		
+		cnv.convolveStructGrad(fpaux, kernx, kern_diff1, gradx, grady);
+		
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 
@@ -310,14 +318,16 @@ public class StructureT_Filter_ implements ExtendedPlugInFilter, DialogListener,
 		
 		//double sigma=sp.getSigma();
 		
-		cnv.convolveFloat1D(gx2, kern_diff1, Ox);
-		cnv.convolveFloat1D(gx2, kernx, Oy);
-
-		cnv.convolveFloat1D(gy2, kern_diff1, Oy);
-		cnv.convolveFloat1D(gy2, kernx, Ox);
+//		cnv.convolveFloat1D(gx2, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gx2, kernx, Oy);
+//
+//		cnv.convolveFloat1D(gy2, kern_diff1, Oy);
+//		cnv.convolveFloat1D(gy2, kernx, Ox);
+//		
+//		cnv.convolveFloat1D(gxy, kern_diff1, Oy);
+//		cnv.convolveFloat1D(gxy, kernx, Ox);
 		
-		cnv.convolveFloat1D(gxy, kern_diff1, Oy);
-		cnv.convolveFloat1D(gxy, kernx, Ox);
+		cnv.convolveStructSmooth(kernx, kern_diff1, gx2, gy2, gxy);
 		
 		for (int i=0; i<width*height; i++) {
 			double xx=gx2.getf(i);

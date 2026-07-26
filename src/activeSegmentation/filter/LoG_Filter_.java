@@ -150,16 +150,21 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 		image.updateAndDraw();
 	}
 
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList,boolean save) {
 		final String key=getKey();	
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
+				if(save) {
 				final String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
-
+				}
 			}
 
 	}
@@ -205,7 +210,7 @@ public class LoG_Filter_ implements ExtendedPlugInFilter, DialogListener, IFilte
 
 		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
-			//System.out.println("SEPRABLE");
+			System.out.println("SEPRABLE");
 			cnv.convolveSemiSep(fpaux, kernx, kern_diff);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);

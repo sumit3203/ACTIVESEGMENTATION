@@ -82,6 +82,10 @@ public class Zernike_feature_ implements PlugInFilter, DialogListener, IMoment<A
 		return true;
 	}
 
+	@Override
+	public void applyFilter(ImageProcessor imageProcessor, String s, List<Roi> list, boolean save) {
+		applyFilter(imageProcessor, s, list);
+	}
 	
 	@Override
 	public void applyFilter(ImageProcessor imageProcessor, String s,List<Roi> list) {

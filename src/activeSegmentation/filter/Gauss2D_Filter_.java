@@ -141,14 +141,20 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList,boolean save) {
 		String key=getKey();	
 		for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
 				ImageProcessor fp=filter(image, sp,sep, scnorm);
+				if(save) {
 				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, fp),imageName );
-				
+				}
 
 			}
 
@@ -196,6 +202,7 @@ public class Gauss2D_Filter_ implements ExtendedPlugInFilter, DialogListener, IF
 		IConv cnv = ConvFactory.createConv();
 		if (seperable) {
 			//System.out.println("SEPRABLE");
+//			dsp.tornado.ConvTornado.parityCheckSemiSep((FloatProcessor) fpaux.duplicate(), kernx, kernx);
 			cnv.convolveSemiSep(fpaux, kernx, kernx);			
 		} else {		 
 			cnv.convolveFloat(fpaux, kernel2, sz, sz);

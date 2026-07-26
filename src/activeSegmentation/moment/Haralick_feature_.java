@@ -144,6 +144,10 @@ public class Haralick_feature_ implements IMoment<ArrayList<?>>  {
 		//degree=Integer.parseInt(settingsMap.get(DEGREE));
 		return true;
 	}
+	
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList, boolean save) {
+	    applyFilter(image, filterPath, roiList);   // default: ignore save, call the 3-arg
+	}
 
 	@Override
 	public void applyFilter(ImageProcessor imageProcessor, String s, List<Roi> list) {

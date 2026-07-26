@@ -145,18 +145,23 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 		image.show();
 	}
 
-	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 	
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList, boolean save) {
 	 
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				ImageStack imageStack=new ImageStack(image.getWidth(),image.getHeight());
 				GScaleSpace sp2=new GScaleSpace(sigma);
 				imageStack=filter(image, sp2,  imageStack);
 				for(int j=1;j<=imageStack.getSize();j++){
+					if(save) {
 					String imageName=filterPath+fs+imageStack.getSliceLabel(j)+".tif" ;
 					IJ.save(new ImagePlus(imageStack.getSliceLabel(j), imageStack.getProcessor(j)),imageName );
+				}
 				}
 
 			}
@@ -191,6 +196,7 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 		//System.out.println("kernx1:"+kern_diff1.length);
 		GScaleSpace.flip(kern_diff1);
 		
+//		dsp.tornado.ConvTornado.parityStructFull((FloatProcessor)((FloatProcessor)ip).duplicate(), kernx, kern_diff1);
 		//double sigma=sp.getSize();//sp.getSigma();
 
 		kernel=new float[2][];
@@ -224,13 +230,16 @@ public class Gradient_Filter_ implements ExtendedPlugInFilter, DialogListener, I
 		FloatProcessor gradx=(FloatProcessor) fpaux.duplicate();
 		FloatProcessor grady=(FloatProcessor) fpaux.duplicate();
 		
+		
  
-		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
-		cnv.convolveFloat1D(gradx, kernx, Oy);
-
-		cnv.convolveFloat1D(grady, kern_diff1, Oy);
-		cnv.convolveFloat1D(grady, kernx, Ox);
+//		cnv.convolveFloat1D(gradx, kern_diff1, Ox);
+//		cnv.convolveFloat1D(gradx, kernx, Oy);
+//
+//		cnv.convolveFloat1D(grady, kern_diff1, Oy);
+//		cnv.convolveFloat1D(grady, kernx, Ox);
  
+		cnv.convolveStructGrad(fpaux, kernx, kern_diff1, gradx, grady);
+		
 		int width=ip.getWidth();
 		int height=ip.getHeight();
 

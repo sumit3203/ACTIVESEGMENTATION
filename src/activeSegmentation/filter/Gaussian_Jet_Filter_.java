@@ -7,6 +7,7 @@ import activeSegmentation.IFilterViz;
 import dsp.ConvFactory;
 import dsp.IConv;
 import dsp.cpu.Conv;
+import dsp.tornado.ConvTornado;
 import ij.*;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
@@ -200,17 +201,23 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		//initialseimageStack(imageStack);
 		return new Pair<Integer,ImageStack>(index, imageStack);
 	}
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String filterPath,List<Roi> roiList,boolean save) {
 		String key=getKey();	
 			for (int sigma=sz; sigma<= max_sz; sigma *=2){		
 				GScaleSpace sp=new GScaleSpace(sigma);
-				ImageStack is=filter(image,  sp, scnorm, nn);			
+				ImageStack is=filter(image,  sp, scnorm, nn);	
+				if(save) {
 				String imageName=filterPath+fs+key+"_"+sigma+".tif" ;
 				IJ.save(new ImagePlus(key+"_" + sigma, is),imageName );
 			}
-
+		}
 	}
 	
 	private ImageStack filter(ImageProcessor ip, GScaleSpace sp, final boolean scnorm, int n){
@@ -254,8 +261,15 @@ public class Gaussian_Jet_Filter_ implements ExtendedPlugInFilter, DialogListene
 		
 		ImageStack is=new ImageStack(ip.getWidth(), ip.getHeight());
 		
+		//CH - parity check
+//		if (n > 1)
+//			ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[1]);
+//		else
+//			ConvTornado.parityCheckSep((FloatProcessor) ipaux.duplicate(), kernel[0], kernel[0]);
+		
 		long time=-System.nanoTime();
 		IConv cnv = ConvFactory.createConv();
+		
 		
 		for (int i=0; i <n; i++) { 
 			FloatProcessor fpaux= (FloatProcessor) ipaux.duplicate();

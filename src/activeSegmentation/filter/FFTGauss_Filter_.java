@@ -211,14 +211,20 @@ public class FFTGauss_Filter_  implements PlugInFilter, IFilter, IFilterViz {
 		max_sz=Integer.parseInt(settingsMap.get(MAX_LEN));
 		return true;
 	}
-
+	
+	@Override
+	public void applyFilter(ImageProcessor image, String filterPath, List<Roi> roiList) {
+	    applyFilter(image, filterPath, roiList, true);
+	}
 
 	@Override
-	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList) {
+	public void applyFilter(ImageProcessor image, String path, List<Roi> roiList, boolean save) {
 		for (int sigma=sz; sigma<= max_sz; sigma +=2){		
 			ImageProcessor fp=filter(image, sigma);
+			if(save) {
 			String imageName=path+"/"+FILTER_KEY+"_"+sigma+".tif" ;
 			IJ.save(new ImagePlus(FILTER_KEY+"_" + sigma, fp),imageName );
+		}
 		}
 	}
 	

@@ -98,6 +98,11 @@ public class Legendre_feature_ implements IMoment<ArrayList<?>> {
 		degree=Integer.parseInt(settingsMap.get(DEGREE));
 		return true;
 	}
+	
+	@Override
+	public void applyFilter(ImageProcessor imageProcessor, String s, List<Roi> list, boolean save) {
+		applyFilter(imageProcessor, s, list);
+	}
 
 	@Override
 	public void applyFilter(ImageProcessor imageProcessor, String s, List<Roi> list) {
