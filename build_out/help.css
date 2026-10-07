@@ -1,0 +1,74 @@
+/* ===== JavaFX-compatible CSS ===== */
+
+img.math { -fx-translate-y: 0; }
+
+div.par-math-display, div.math-display { -fx-text-alignment: center; }
+
+li p:first-child { -fx-padding: 0 0 0 0; }
+li p:last-child, li div:last-child { -fx-padding: 0 0 0.5em 0; }
+li p~ul:last-child, li p~ol:last-child { -fx-padding: 0 0 0.5em 0; }
+
+div.newtheorem { -fx-padding: 2em 0 2em 0; }
+div.newtheorem .head { -fx-font-weight: bold; }
+
+div.obeylines-v p { -fx-padding: 0 0 0 0; }
+
+.centerline { -fx-text-alignment: center; }
+.rightline { -fx-text-alignment: right; }
+
+pre.verbatim { -fx-font-family: monospace; -fx-text-alignment: left; }
+
+.fbox { 
+    -fx-padding: 3px 3px 3px 3px; 
+    -fx-border-color: black; 
+    -fx-border-width: 0.4pt; 
+}
+
+.underline { -fx-underline: true; }
+.underline img { 
+    -fx-border-color: transparent transparent black transparent; 
+    -fx-border-width: 0 0 1 0; 
+}
+
+.framebox-c, .framebox-l, .framebox-r { 
+    -fx-padding: 3px 3px 3px 3px; 
+    -fx-border-color: black; 
+    -fx-border-width: 0.4pt; 
+}
+.framebox-c { -fx-text-alignment: center; }
+.framebox-l { -fx-text-alignment: left; }
+.framebox-r { -fx-text-alignment: right; }
+
+span.thank-mark { -fx-translate-y: -0.2em; }
+span.footnote-mark { -fx-font-size: 80%; -fx-translate-y: -0.2em; }
+
+div.tabular { -fx-alignment: center; -fx-padding: 0.5em 0.5em 0.5em 0.5em; }
+table.tabular { -fx-alignment: center; }
+
+td p:first-child { -fx-padding: 0 0 0 0; }
+td p:last-child { -fx-padding: 0 0 0 0; }
+
+.hline { 
+    -fx-border-color: black transparent transparent transparent; 
+    -fx-border-width: 1 0 0 0; 
+}
+
+.tabbing-right { -fx-text-alignment: right; }
+
+div.float, div.figure { -fx-alignment: center; }
+div.caption { -fx-padding: 0 1em 0 1em; -fx-text-alignment: left; }
+
+.qed { -fx-min-width: 2ex; -fx-alignment: center-right; }
+
+.sectionHead { -fx-text-alignment: center; }
+h2.titleHead { -fx-text-alignment: center; }
+
+div.maketitle { -fx-padding: 0 0 2em 0; -fx-text-alignment: center; }
+
+div.submaketitle { 
+    -fx-text-alignment: left; 
+    -fx-border-color: black; 
+    -fx-border-width: 1 0 1 0; 
+    -fx-padding: 2em 5% 2em 5%; 
+    -fx-font-size: 85%; 
+}

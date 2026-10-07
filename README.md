@@ -11,6 +11,7 @@ Active Segmentation is an interactive image segmentation and classification plug
 ## 📌 Table of Contents
 - [About](#about)
 - [Features](#features)
+- [⚡ Activation Guide](#-activation-guide)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -45,6 +46,18 @@ Originally developed at Zuse Institute Berlin (ZIB) and published in:
 - SQLite-based feature model persistence
 - Extensible filter and transform plugin architecture
 - Works as an ImageJ plugin — no separate installation needed
+
+---
+
+## ⚡ Filter Preview Guide
+
+> [!IMPORTANT]
+> To understand the **Filter Preview** contribution, please refer to our dedicated [Filter Preview Activation Guide](ACTIVATION.md).
+
+The Filter Preview Guide covers:
+1. **Activation Workflow**: Step-by-step instructions to enable the real-time preview.
+2. **Technical Architecture**: Details on the **Snapshot/Restore Pattern** and background threading.
+3. **Performance**: How the **GAUSS** filter tuning is optimized using debouncing.
 
 ---
 
